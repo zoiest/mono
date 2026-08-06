@@ -1,0 +1,102 @@
+name: Build and Release CV
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'cv-*' ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build PDF
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate Semantic Versioning Increase (on tag)
+        if: startsWith(github.ref, 'refs/tags/cv-')
+        run: |
+          NEW_TAG="${GITHUB_REF_NAME}"
+          NEW_VER="${NEW_TAG#cv-}"
+          
+          echo "Validating monorepo tag version: ${NEW_VER}"
+          
+          # Enforce SemVer format X.Y.Z
+          if ! [[ "$NEW_VER" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "::error::Tag version '${NEW_VER}' is not valid SemVer format (MAJOR.MINOR.PATCH)."
+            exit 1
+          fi
+          
+          PREV_TAGS=$(git tag -l 'cv-*' | grep -v "^${NEW_TAG}$" | sed 's/^cv-//' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+' || true)
+          
+          if [ -n "$PREV_TAGS" ]; then
+            python3 -c "
+          import re, sys
+
+          def parse_ver(v):
+              m = re.match(r'^(\d+)\.(\d+)\.(\d+)', v)
+              return tuple(map(int, m.groups())) if m else (0, 0, 0)
+
+          new_v = parse_ver('$NEW_VER')
+          raw_tags = '''$PREV_TAGS'''.strip().splitlines()
+          prev_versions = [(parse_ver(t), t) for t in raw_tags if t.strip()]
+
+          if prev_versions:
+              highest_v, highest_str = max(prev_versions, key=lambda x: x[0])
+              print(f'Highest existing version: {highest_str}')
+              if new_v <= highest_v:
+                  print(f'::error::Version {new_v} is not strictly greater than highest version {highest_v}')
+                  sys.exit(1)
+
+          print('SemVer increase check passed!')
+          "
+          fi
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Install TeX Live & XeLaTeX
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-plain-generic
+
+      - name: Build CV PDF
+        run: |
+          bazel build //:cv
+
+      - name: Determine Monorepo Version & Package PDF
+        run: |
+          mkdir -p dist
+          if [[ "${GITHUB_REF}" == refs/tags/cv-* ]]; then
+            VERSION="${GITHUB_REF_NAME#cv-}"
+          else
+            VERSION="0.0.1"
+          fi
+          
+          OUTPUT_NAME="cv-Hieu_Nguyen-${VERSION}.pdf"
+          cp bazel-bin/cv.pdf "dist/${OUTPUT_NAME}"
+          echo "OUTPUT_NAME=${OUTPUT_NAME}" >> $GITHUB_ENV
+
+      - name: Upload Workflow Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OUTPUT_NAME }}
+          path: dist/${{ env.OUTPUT_NAME }}
+
+      - name: Create GitHub Release (on cv-* tag)
+        if: startsWith(github.ref, 'refs/tags/cv-')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/${{ env.OUTPUT_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

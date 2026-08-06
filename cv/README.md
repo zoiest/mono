@@ -85,14 +85,38 @@ bazel-bin/cv.pdf
 
 ---
 
+# Automated Monorepo GitHub Releases
+
+A GitHub Actions workflow is included at
+`.github/workflows/build-cv.yml`:
+
+1. **Strict SemVer Validation**: Automatically verifies that new tag
+   versions (`cv-X.Y.Z`) follow Semantic Versioning (`MAJOR.MINOR.PATCH`)
+   and are strictly greater than all previous tagged versions.
+2. **Monorepo Tag Trigger (`cv-*`)**: Pushing a tag like `cv-1.0.0`
+   extracts `1.0.0` and generates `cv-Hieu_Nguyen-1.0.0.pdf`.
+3. **Build on Push & PR**: Untagged commits on `main`/`master` build
+   `cv-Hieu_Nguyen-0.0.1.pdf` as a workflow artifact.
+4. **Publishing a CV Release**:
+
+   ```bash
+   git tag cv-1.0.0
+   git push origin cv-1.0.0
+   ```
+
+---
+
 # Repository Structure
 
 ```
 .
-├── BUILD.bazel      # Bazel target definitions (//:cv)
-├── MODULE.bazel     # Bazel module configuration
-├── latex.bzl        # Custom Starlark rule for LaTeX compilation
-├── cv.tex           # Main ATS-friendly LaTeX source file
-├── .gitignore       # Git ignore rules for Bazel & TeX temp files
-└── README.md        # Documentation and build instructions
+├── .github/
+│   └── workflows/
+│       └── build-cv.yml # GitHub Actions CI/CD workflow
+├── BUILD.bazel          # Bazel target definitions (//:cv)
+├── MODULE.bazel         # Bazel module configuration
+├── latex.bzl            # Custom Starlark rule for LaTeX compilation
+├── cv.tex               # Main ATS-friendly LaTeX source file
+├── .gitignore           # Git ignore rules for Bazel & TeX temp files
+└── README.md            # Documentation and build instructions
 ```
