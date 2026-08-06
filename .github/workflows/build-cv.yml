@@ -2,10 +2,16 @@ name: Build and Release CV
 
 on:
   push:
-    branches: [ main, master ]
-    tags: [ 'cv-*' ]
+    branches:
+      - main
+      - master
+    tags:
+      - 'cv-*'
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
+  workflow_dispatch:
 
 jobs:
   build:
