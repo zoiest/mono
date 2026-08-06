@@ -1,0 +1,18 @@
+# Bazel convenience symlinks and build output
+bazel-*
+.bazelrc.user
+
+# IDE Bazel plugin directories
+.clwb/
+.ijwb/
+.userwb/
+.vscode/
+
+# TeX auxiliary build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

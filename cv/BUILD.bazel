@@ -1,0 +1,9 @@
+load("//:latex.bzl", "latex_pdf")
+
+package(default_visibility = ["//visibility:public"])
+
+latex_pdf(
+    name = "cv",
+    main = "cv.tex",
+    compiler = "xelatex",
+)

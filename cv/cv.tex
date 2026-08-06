@@ -1,0 +1,155 @@
+\documentclass[10pt,a4paper]{article}
+
+% --- ATS Compatibility & Character Encoding ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Ensure text mapping to Unicode for ATS parsing in PDF readers
+\ifdefined\pdfgentounicode
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+\fi
+
+% --- Page Setup ---
+\usepackage[top=0.45in, bottom=0.45in, left=0.5in, right=0.5in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks,
+            pdfauthor={Hieu Nguyen},
+            pdftitle={CV - Hieu Nguyen},
+            pdfsubject={Curriculum Vitae},
+            pdfkeywords={Software Developer, DevOps, CI/CD, Kubernetes, Cloud Native}]{hyperref}
+
+% --- Formatting Styles ---
+\pagestyle{empty} % ATS preference: clean page without headers/footers
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Color Palette
+\definecolor{primary}{RGB}{30, 41, 59}       % Dark Slate
+\definecolor{secondary}{RGB}{71, 85, 105}     % Muted Slate
+\definecolor{linkblue}{RGB}{29, 78, 216}      % Professional Blue
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkblue,
+    urlcolor=linkblue
+}
+
+% Section Headers: Bold uppercase with subtle bottom accent line
+\titleformat{\section}{
+  \vspace{-3pt}\color{primary}\scshape\large\bfseries\raggedright
+}{}{0em}{}[\color{primary}\titlerule \vspace{-3pt}]
+
+% List spacing optimization for ATS readability and compactness
+\setlist[itemize]{leftmargin=1.1em, itemsep=1.5pt, parsep=0pt, topsep=1.5pt}
+
+\begin{document}
+
+% ================= HEADER =================
+\begin{center}
+    {\LARGE \bfseries \color{primary} HIÊU NGUYÊN} \\[3pt]
+    \color{secondary}\small
+    Vantaa, Finland \quad|\quad
+    \href{mailto:tofunth@gmail.com}{tofunth@gmail.com} \quad|\quad
+    \href{https://www.linkedin.com/in/hieu611}{linkedin.com/in/hieu611}
+\end{center}
+
+\vspace{-4pt}
+
+% ================= INTRODUCTION =================
+\section*{Introduction}
+\small
+Software generalist experienced in CI/CD pipeline optimization, infrastructure automation across baremetal, VMs, and Kubernetes (OpenStack \& baremetal). Skilled in building and maintaining internal web applications (Flask, Django, Spring Boot, AngularJS, Angular, ReactJS) and custom developer tooling in Go (Golang), Python, Bash, and Groovy.
+
+% ================= PROFESSIONAL EXPERIENCE =================
+\section*{Professional Experience}
+\small
+
+\textbf{OY L M ERICSSON AB} \hfill Kirkkonummi, Finland \\
+\textit{Senior Developer} \hfill June 2023 -- Present
+\begin{itemize}
+    \item Contributing to Ericsson Transport Automation service development (Ericsson R6000 router adapter).
+    \item Contributing to Ericsson Transport Automation CI/CD pipelines.
+    \item Contributing to Ericsson Transport Automation release automation.
+    \item Contributing to Ericsson Transport Automation infrastructure setup (KVM, Kubernetes, k3s).
+\end{itemize}
+
+\vspace{2pt}
+\textit{Experienced Developer} \hfill April 2018 -- June 2023
+\begin{itemize}
+    \item Contributing to Ericsson IoT Platform.
+    \item Contributing to Ericsson MGW product lines running on Cloud-native platform.
+    \item Contributing to Ericsson MGW CI/CD pipelines.
+    \item Contributing to Ericsson MGW infrastructure setup (Kubernetes on nested Openstack VMs and baremetals).
+\end{itemize}
+
+\vspace{2pt}
+\textit{Software Developer Trainee} \hfill May 2017 -- April 2018
+\begin{itemize}
+    \item Contributing to dimension tools for MGW.
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Aalto University} \hfill Espoo, Finland \\
+\textit{Research Assistant} \hfill June 2016 -- July 2016
+\begin{itemize}
+    \item Surveying software pipelines for sound event recognition.
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Lekasteel Oy} \hfill Tuusniemi, Finland \\
+\textit{Software Developer} \hfill March 2013 -- August 2014
+\begin{itemize}
+    \item Developing motorbike simulation using Unity Engine \& Arduino Board.
+    \item Developing Dynamometer software using .NET framework.
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Savonia University of Applied Sciences} \hfill Kuopio, Finland \\
+\textit{Software Developer} \hfill September 2013 -- December 2013
+\begin{itemize}
+    \item Developing data acquisition software for electrical measurement using .NET framework.
+\end{itemize}
+
+% ================= EDUCATION =================
+\section*{Education}
+\small
+
+\textbf{Aalto University} \hfill Espoo, Finland \\
+\textit{Master of Science in Machine Learning and Data Mining} \hfill September 2014 -- December 2020 \\
+Master thesis: \textit{Machine Learning Model Management using Cloud-Native Technologies for IoT} \hfill \href{https://aaltodoc.aalto.fi/handle/123456789/102472}{[Thesis Link]}
+
+\vspace{2pt}
+\textbf{Savonia University of Applied Sciences} \hfill Kuopio, Finland \\
+\textit{Bachelor of Engineering in Information Technology} \hfill September 2011 -- June 2014 \\
+Specialization: Telecom and Embedded System
+
+% ================= PUBLICATIONS =================
+\section*{Publications}
+\small
+\begin{itemize}
+    \item Hieu Nguyen, Kiran Garimella. \textit{Understanding International Migration using Tensor Factorization}. Proceedings of the 26th International Conference on World Wide Web Companion (WWW '17), 2017. \href{https://doi.org/10.1145/3041021.3054222}{doi:10.1145/3041021.3054222}
+\end{itemize}
+
+% ================= STRENGTHS =================
+\section*{Strengths \& Competencies}
+\small
+\begin{itemize}
+    \item \textbf{Cloud \& Infrastructure:} Kubernetes, k3s, KVM, OpenStack, Baremetal deployment, Docker.
+    \item \textbf{CI/CD \& Automation:} Pipeline design, Release automation, Robot Framework, Jenkins, Git, Groovy, Bash, Python.
+    \item \textbf{Software Development:} Go (Golang), Python (Flask, Django), Java (Spring Boot), JavaScript (ReactJS, Angular, AngularJS), C\# (.NET).
+    \item \textbf{Data \& Analytics:} Machine Learning, Data Mining, Bayesian Statistical Data Analysis.
+    \item Highly adaptable and motivated to tackle complex engineering challenges.
+\end{itemize}
+
+% ================= LANGUAGES & NATIONALITY =================
+\section*{Languages \& Nationality}
+\small
+\textbf{Languages:} Vietnamese (Native), English (Proficient), Finnish (Basic) \hfill \textbf{Nationality:} Finnish, Vietnamese
+
+\end{document}
