@@ -70,9 +70,10 @@ distribution with `xelatex` or `pdflatex`.
 
 # Building the Project
 
-Run Bazel to build the PDF output:
+Run Bazel from the `cv/` directory:
 
 ```bash
+cd cv
 bazel build //:cv
 ```
 
@@ -80,14 +81,14 @@ bazel build //:cv
 
 After a successful build, the compiled PDF will be located at:
 ```bash
-bazel-bin/cv.pdf
+cv/bazel-bin/cv.pdf
 ```
 
 ---
 
 # Automated Monorepo GitHub Releases
 
-A GitHub Actions workflow is included at
+The root GitHub Actions workflow is located at
 `.github/workflows/build-cv.yml`:
 
 1. **Strict SemVer Validation**: Automatically verifies that new tag
@@ -109,14 +110,15 @@ A GitHub Actions workflow is included at
 # Repository Structure
 
 ```
-.
+<monorepo-root>/
 ├── .github/
 │   └── workflows/
-│       └── build-cv.yml # GitHub Actions CI/CD workflow
-├── BUILD.bazel          # Bazel target definitions (//:cv)
-├── MODULE.bazel         # Bazel module configuration
-├── latex.bzl            # Custom Starlark rule for LaTeX compilation
-├── cv.tex               # Main ATS-friendly LaTeX source file
-├── .gitignore           # Git ignore rules for Bazel & TeX temp files
-└── README.md            # Documentation and build instructions
+│       └── build-cv.yml # Root GitHub Actions CI/CD workflow
+└── cv/
+    ├── BUILD.bazel      # Bazel target definitions (//:cv)
+    ├── MODULE.bazel     # Bazel module configuration
+    ├── latex.bzl        # Custom Starlark rule for LaTeX compilation
+    ├── cv.tex           # Main ATS-friendly LaTeX source file
+    ├── .gitignore       # Git ignore rules for Bazel & TeX temp files
+    └── README.md        # Documentation and build instructions
 ```
