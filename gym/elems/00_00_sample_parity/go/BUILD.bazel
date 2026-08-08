@@ -1,0 +1,14 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "parity",
+    srcs = ["parity.go"],
+    importpath = "github.com/zoiest/mono/gym/elems/sample_parity/go",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "parity_test",
+    srcs = ["parity_test.go"],
+    embed = [":parity"],
+)

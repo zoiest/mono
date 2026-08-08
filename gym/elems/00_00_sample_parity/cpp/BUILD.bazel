@@ -1,0 +1,13 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
+
+cc_library(
+    name = "parity",
+    srcs = ["parity.cc"],
+    hdrs = ["parity.h"],
+)
+
+cc_test(
+    name = "parity_test",
+    srcs = ["parity_test.cc"],
+    deps = [":parity"],
+)
