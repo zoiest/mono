@@ -1,9 +1,8 @@
-Zoïe Street's Monorepo
-----------------------
+# Zoïe Street's Monorepo
 
 One repo to rule them all.
 
-# Projects
+## Projects
 
-- **gym**: Practice coding in the AI era not to rot skills.
-- **cv**: Latest CV to apply for jobs.
+- [**gym**](./gym): Practice coding in the AI era not to rot skills.
+- [**cv**](./cv): Latest CV to apply for jobs.
