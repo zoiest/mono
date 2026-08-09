@@ -1,0 +1,15 @@
+load("@rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "interconvert",
+    srcs = ["interconvert.go"],
+    importpath = "github.com/zoiest/mono/gym/elems/interconvert_string_int/go",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "interconvert_test",
+    srcs = ["interconvert_test.go"],
+    embed = [":interconvert"],
+    size = "small",
+)
