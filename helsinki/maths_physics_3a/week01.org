@@ -1,0 +1,290 @@
+:PROPERTIES:
+:ID:       384bff66-f65e-4144-b64e-8a200dd58044
+:ROAM_ALIASES: "Week 01 Lecture Notes" "Week 1 Notes" "MMP IIIa Week 1"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Week 01: Foundations of Groups, Permutations, and Finite Symmetries
+#+subtitle: Mathematical Methods for Physics IIIa — Lecture Notes (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :physics:math:helsinki:week01:groups:foundations:permutations:finite-groups:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:5b295c08-7bb4-4d5d-b6be-6fa096201e4d][Topic: Groups & Elementary Properties]] | [[id:206fb1b4-ba32-4675-921a-1b0864eae8e8][Topic: Smallest Finite Groups]] | [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Topic: Homomorphisms & Isomorphisms]]
+
+* Overview and Syllabus Mapping
+
+This document provides the foundational lecture notes for *Week 01* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week01-topics.txt=.
+Topics are drawn from textbook sections *2.1*, *2.3*, and *2.4* of /Mathematical Methods for Physics: An Introduction to Group Theory, Topology, and Geometry/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
+
+#+caption: Summary of Lecture Topics
+#+begin_quote
+1. *Algebraic Hierarchy:* Sets with binary operations; Magma $\to$ Semigroup $\to$ Monoid $\to$ Group $\to$ Abelian Group (§2.1).
+2. *Group Realizations and Homomorphisms:* Abstract groups vs. concrete realizations (matrices, permutations, functions) and structural mappings (§2.1, §2.3).
+3. *Permutations and Symmetric Groups:* The symmetric group $S_n$, bijections, and cycle notations (§2.4).
+4. *Cyclic Groups and Roots of Unity:* $\mathbb{Z}_n$, generators, and representation via complex roots of unity $e^{2\pi i k / n}$ (§2.4).
+5. *Orders and Classification:* Order of elements $\mathrm{ord}(g)$, group order $|G|$, and structural isomorphism (§2.1, §2.4).
+6. *Small Finite Groups ($N \le 8$):* The Klein four-group $V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2$, dihedral group $D_3 \cong S_3$, and external direct products $G_1 \times G_2$ (§2.4).
+7. *Cayley Tables and Rearrangement:* Group multiplication tables and the Latin square property (Rearrangement Theorem) (§2.1).
+8. *Dihedral Groups $D_n$ and Geometric Symmetries:* Symmetries of regular polygons, order $2n$, generators/relations, and commutativity conditions (§2.4).
+#+end_quote
+
+---
+
+* 1. The Algebraic Hierarchy of Sets with Binary Operations (§2.1)
+
+In physics, symmetries form sets equipped with a rule of combination (composition of transformations). The mathematical framework formalizes this through an algebraic hierarchy based on four core axioms.
+
+Let $S$ be a non-empty set and $\cdot : S \times S \to S$ a binary operation that maps each ordered pair $(a, b) \in S \times S$ to a unique element $a \cdot b \in S$.
+
+** 1.1 Axioms of Algebraic Structures
+
+#+caption: The Four Core Axioms
+#+begin_quote
+- *(G0) Closure (Internal Operation):*
+  $$ \forall a, b \in S, \quad a \cdot b \in S $$
+- *(G1) Associativity:*
+  $$ \forall a, b, c \in S, \quad (a \cdot b) \cdot c = a \cdot (b \cdot c) $$
+- *(G2) Identity Element:*
+  $$ \exists e \in S \quad \text{such that} \quad \forall a \in S, \quad a \cdot e = e \cdot a = a $$
+- *(G3) Inverse Element:*
+  $$ \forall a \in S, \quad \exists a^{-1} \in S \quad \text{such that} \quad a \cdot a^{-1} = a^{-1} \cdot a = e $$
+- *(AG4) Commutativity (Abelian Property):*
+  $$ \forall a, b \in S, \quad a \cdot b = b \cdot a $$
+#+end_quote
+
+** 1.2 Hierarchy of Structures
+
+By successively adding axioms, we construct a hierarchy:
+$$ \text{Magma} \xrightarrow{+\text{G1}} \text{Semigroup} \xrightarrow{+\text{G2}} \text{Monoid} \xrightarrow{+\text{G3}} \text{Group} \xrightarrow{+\text{AG4}} \text{Abelian Group} $$
+
+1. *Magma:* Satisfies *(G0)* only. A set with an internal binary operation.
+   - /Example:/ $(\mathbb{R}, \star)$ with $x \star y = x^y$ is *not* a magma on all of $\mathbb{R}$ because $0^0$ or $(-2)^{1/2}$ are undefined or complex; restricted to $\mathbb{R}_{>0}$, it is a magma, but non-associative: $(2^3)^2 = 8^2 = 64 \neq 2^{(3^2)} = 2^9 = 512$.
+2. *Semigroup:* Satisfies *(G0)* and *(G1)* (Closure + Associativity).
+   - /Example:/ $(\mathbb{N}, +)$ where $\mathbb{N} = \{1, 2, 3, \dots\}$ (without 0). Addition is associative, but there is no identity in $\mathbb{N}$.
+3. *Monoid:* Satisfies *(G0)*, *(G1)*, and *(G2)* (Closure + Associativity + Identity).
+   - /Example:/ $(\mathbb{N} \cup \{0\}, +)$ with identity $0$.
+   - /Example:/ $(\mathbb{N}, \gcd)$ with identity (if defined on $\mathbb{N} \cup \{0\}$, $\gcd(n, 0) = n$). However, elements do not possess inverses.
+4. *Group:* Satisfies *(G0)*, *(G1)*, *(G2)*, and *(G3)*.
+   - /Example:/ $(\mathbb{Z}, +)$ with identity $0$ and inverse $-n$.
+   - /Example:/ $(\mathbb{Q} \setminus \{0\}, \cdot)$ with identity $1$ and inverse $1/q$.
+5. *Abelian (Commutative) Group:* A group satisfying *(AG4)*.
+   - /Example:/ $(\mathbb{R}^n, +)$, cyclic groups $\mathbb{Z}_n$, $(\mathbb{C} \setminus \{0\}, \cdot)$.
+   - /Non-Abelian Groups:/ General linear group $\mathrm{GL}(n, \mathbb{R})$ for $n \ge 2$, permutation groups $S_n$ for $n \ge 3$.
+
+** 1.3 Fundamental Properties of Groups
+
+From the group axioms, several foundational theorems follow immediately:
+- *Uniqueness of Identity:* If $e, e' \in G$ both satisfy (G2), then $e = e \cdot e' = e'$.
+- *Uniqueness of Inverses:* If $b, c$ are both inverses of $a$, then $b = b \cdot e = b \cdot (a \cdot c) = (b \cdot a) \cdot c = e \cdot c = c$.
+- *Double Inverse and Product Inverse:*
+  $$ (a^{-1})^{-1} = a, \qquad (a \cdot b)^{-1} = b^{-1} \cdot a^{-1} $$
+- *Cancellation Laws:*
+  $$ a \cdot b = a \cdot c \implies b = c \quad (\text{left}), \qquad b \cdot a = c \cdot a \implies b = c \quad (\text{right}) $$
+
+---
+
+* 2. Realizations of Abstract Groups via Homomorphisms (§2.1, §2.3)
+
+** 2.1 Abstract Groups vs. Concrete Realizations
+An *abstract group* is defined entirely by its set of elements and its multiplication table (or presentation), independent of what the elements physically represent.
+A *realization* (or representation) of an abstract group $G$ is a concrete group $H$ (whose elements are matrices, geometric motions, permutations, or differential operators) together with a structure-preserving map.
+
+** 2.2 Group Homomorphisms and Isomorphisms
+Let $(G, \cdot)$ and $(H, \ast)$ be groups.
+- *Homomorphism:* A mapping $\phi : G \to H$ such that:
+  $$ \phi(a \cdot b) = \phi(a) \ast \phi(b), \quad \forall a, b \in G $$
+  Immediate consequences:
+  1. $\phi(e_G) = e_H$
+  2. $\phi(a^{-1}) = [\phi(a)]^{-1}$
+- *Isomorphism:* A bijective homomorphism ($\phi$ is both injective and surjective).
+  - If an isomorphism exists, $G$ and $H$ are called *isomorphic*, denoted $G \cong H$.
+  - Isomorphic groups have identical algebraic structure; they differ only in the labeling of their elements.
+- *Kernel and Image:*
+  $$ \mathrm{Ker}(\phi) = \{g \in G \mid \phi(g) = e_H\} \triangleleft G, \qquad \mathrm{Im}(\phi) = \{\phi(g) \mid g \in G\} \le H $$
+  The homomorphism is injective (a *monomorphism* or *faithful realization*) if and only if $\mathrm{Ker}(\phi) = \{e_G\}$.
+
+---
+
+* 3. Symmetric Groups $S_n$ and Cyclic Groups $\mathbb{Z}_n$ (§2.4)
+
+** 3.1 The Symmetric Group $S_n$
+Let $X = \{1, 2, \dots, n\}$ be a finite set.
+- *Permutation:* A bijection $\pi : X \to X$.
+- *Symmetric Group $S_n$:* The set of all permutations of $n$ elements, equipped with function composition:
+  $$ (\pi_1 \circ \pi_2)(k) = \pi_1(\pi_2(k)) $$
+- *Order:* The number of elements in $S_n$ is:
+  $$ |S_n| = n! $$
+- *Cauchy Two-Line Notation:*
+  $$ \pi = \begin{pmatrix} 1 & 2 & \cdots & n \\ \pi(1) & \pi(2) & \cdots & \pi(n) \end{pmatrix} $$
+- *Cycle Notation:* A cycle $(a_1 \, a_2 \, \dots \, a_k)$ maps $a_1 \mapsto a_2 \mapsto \dots \mapsto a_k \mapsto a_1$, leaving all other elements invariant.
+  - Every permutation in $S_n$ decomposes uniquely into a product of disjoint cycles.
+  - Non-Abelian for all $n \ge 3$ (e.g., in $S_3$, $(12)(23) = (123) \neq (23)(12) = (132)$).
+
+** 3.2 Cyclic Groups $\mathbb{Z}_n$
+A group $G$ is *cyclic* if it can be generated by a single element $g \in G$:
+$$ G = \langle g \rangle = \{g^k \mid k \in \mathbb{Z}\} $$
+- *Finite Cyclic Group $\mathbb{Z}_n$:* If $g^n = e$ and $n$ is the smallest positive integer with this property:
+  $$ \mathbb{Z}_n = \{e, g, g^2, \dots, g^{n-1}\} \cong (\mathbb{Z} / n\mathbb{Z}, +) $$
+- *Properties:*
+  1. Every cyclic group is *Abelian*: $g^p g^q = g^{p+q} = g^q g^p$.
+  2. Any subgroup of a cyclic group is cyclic.
+- *Complex Roots of Unity Realization:*
+  Let $\omega = e^{2\pi i / n} \in \mathbb{C}$. The set of $n$-th roots of unity:
+  $$ U_n = \{1, \omega, \omega^2, \dots, \omega^{n-1}\} $$
+  forms a group under ordinary complex multiplication that is isomorphic to $\mathbb{Z}_n$ via $\phi(g^k) = \omega^k = e^{2\pi i k / n}$.
+
+---
+
+* 4. Orders of Elements and Groups (§2.1, §2.4)
+
+** 4.1 Group Order $|G|$
+The *order of a group*, denoted $|G|$ or $\mathrm{ord}(G)$, is the cardinality of the underlying set:
+- If $|G| < \infty$, $G$ is a *finite group*.
+- If $|G| = \infty$, $G$ is an *infinite group* (discrete, e.g. $\mathbb{Z}$, or continuous, e.g. $\mathrm{SO}(2)$).
+
+** 4.2 Element Order $\mathrm{ord}(g)$
+Let $g \in G$.
+- The *order of an element* $g$, denoted $\mathrm{ord}(g)$, is the smallest positive integer $m \in \mathbb{Z}^+$ such that:
+  $$ g^m = e $$
+- If no such positive integer exists, $g$ is said to have *infinite order*.
+- *Subgroup generated by $g$:* The set $\langle g \rangle = \{g^k \mid k \in \mathbb{Z}\}$ forms a cyclic subgroup of $G$ with $|\langle g \rangle| = \mathrm{ord}(g)$.
+- *Divisibility Property:* For any $k \in \mathbb{Z}$, $g^k = e \iff \mathrm{ord}(g) \mid k$.
+
+---
+
+* 5. Small Finite Groups ($N \le 8$) and Direct Products (§2.4)
+
+** 5.1 External Direct Product $G_1 \times G_2$
+Given two groups $(G_1, \cdot_1)$ and $(G_2, \cdot_2)$:
+- The *direct product* $G_1 \times G_2$ is the Cartesian product set $G_1 \times G_2$ equipped with component-wise multiplication:
+  $$ (g_1, g_2) \cdot (h_1, h_2) = (g_1 \cdot_1 h_1, \, g_2 \cdot_2 h_2) $$
+- Identity: $(e_1, e_2)$.
+- Inverse: $(g_1, g_2)^{-1} = (g_1^{-1}, g_2^{-1})$.
+- Order: $|G_1 \times G_2| = |G_1| \cdot |G_2|$.
+- Commutativity: $G_1 \times G_2$ is Abelian if and only if both $G_1$ and $G_2$ are Abelian.
+
+** 5.2 Classification of Small Finite Groups
+
+#+caption: Complete Catalog of Groups of Order $N \le 8$
+| Order $N$ | Group $G$ | Structure / Isomorphism | Type | Notes |
+|---+---+---+---+---|
+| 1 | $\mathbb{Z}_1$ | Trivial group $\{e\}$ | Abelian | Unique |
+| 2 | $\mathbb{Z}_2$ | Cyclic group | Abelian | Prime order |
+| 3 | $\mathbb{Z}_3$ | Cyclic group | Abelian | Prime order |
+| 4 | $\mathbb{Z}_4$ | Cyclic group | Abelian | Generated by element of order 4 |
+| 4 | $V_4$ | Klein four-group $\mathbb{Z}_2 \times \mathbb{Z}_2$ | Abelian | All non-identity elements have order 2 |
+| 5 | $\mathbb{Z}_5$ | Cyclic group | Abelian | Prime order |
+| 6 | $\mathbb{Z}_6$ | $\mathbb{Z}_2 \times \mathbb{Z}_3$ | Abelian | Cyclic ($\gcd(2,3)=1$) |
+| 6 | $S_3 \cong D_3$ | Symmetric group / Dihedral group | *Non-Abelian* | Smallest non-Abelian group |
+| 7 | $\mathbb{Z}_7$ | Cyclic group | Abelian | Prime order |
+| 8 | $\mathbb{Z}_8$ | Cyclic group | Abelian | Single generator of order 8 |
+| 8 | $\mathbb{Z}_4 \times \mathbb{Z}_2$ | Direct product | Abelian | Exponent 4 |
+| 8 | $\mathbb{Z}_2^3$ | Elementary Abelian 2-group | Abelian | Symmetries of 3D reflection cube |
+| 8 | $D_4$ | Dihedral group of square | *Non-Abelian* | Symmetries of square, order 8 |
+| 8 | $Q_8$ | Quaternion group | *Non-Abelian* | $\{\pm 1, \pm i, \pm j, \pm k\}$ |
+
+** 5.3 The Klein Four-Group $V_4$
+The Klein four-group $V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2 = \{e, a, b, c\}$ is the smallest non-cyclic group:
+- Every non-identity element satisfies:
+  $$ a^2 = b^2 = c^2 = e $$
+- Pairwise products satisfy:
+  $$ ab = ba = c, \quad bc = cb = a, \quad ca = ac = b $$
+- Physical realization: Symmetries of a non-square rectangle (horizontal reflection $h$, vertical reflection $v$, $\pi$-rotation $r = hv$).
+
+---
+
+* 6. Cayley Tables and the Rearrangement Theorem (§2.1)
+
+** 6.1 Cayley Multiplication Table
+For a finite group $G = \{g_1, g_2, \dots, g_n\}$, the group structure is displayed in an $n \times n$ table where the cell at row $i$ and column $j$ contains $g_i \cdot g_j$.
+
+** 6.2 The Rearrangement Theorem (Latin Square Property)
+#+begin_quote
+*Theorem (Rearrangement Theorem):*
+In the Cayley table of a finite group $G$, each group element appears *exactly once in every row* and *exactly once in every column*.
+#+end_quote
+*Proof:*
+Consider row $g \in G$. The entries in row $g$ are $\{g \cdot x \mid x \in G\}$.
+1. If $g \cdot x_1 = g \cdot x_2$, multiplying on the left by $g^{-1}$ gives $x_1 = x_2$. Thus all elements in the row are distinct.
+2. Since $|G| = n$ and there are $n$ distinct entries, the set $\{g \cdot x \mid x \in G\}$ must equal $G$.
+The identical argument using right cancellation applies to each column $\{x \cdot g \mid x \in G\}$. $\blacksquare$
+
+Consequently, every group Cayley table is a *Latin square*. (The converse is not true in general, because a Latin square need not satisfy associativity).
+
+---
+
+* 7. Dihedral Groups $D_n$ and Symmetries of Regular Polygons (§2.4)
+
+** 7.1 Geometric Definition
+The dihedral group $D_n$ is the symmetry group (isometry group) of a regular $n$-sided polygon in the Euclidean plane $\mathbb{R}^2$.
+- The polygon is preserved by:
+  1. *Rotations:* Counterclockwise rotations around the center by multiples of $2\pi/n$:
+     $$ r_k = \text{rot}\left(\frac{2\pi k}{n}\right), \quad k = 0, 1, \dots, n-1 $$
+  2. *Reflections:* Reflections across symmetry axes passing through the center.
+
+** 7.2 Proof of Group Order $|D_n| = 2n$
+- Label the vertices cyclically as $1, 2, \dots, n$.
+- Any symmetry is an isometry of $\mathbb{R}^2$ preserving the polygon:
+  1. Vertex $1$ must be mapped to one of the $n$ vertices: $n$ choices.
+  2. Because distance between adjacent vertices must be preserved, adjacent vertex $2$ must map to one of the two neighbors of the image of vertex $1$: $2$ choices.
+  3. Once the images of vertex $1$ and vertex $2$ are determined, the images of all remaining vertices $3, \dots, n$ are uniquely fixed by edge-length preservation.
+- Hence, the total number of symmetries cannot exceed:
+  $$ |D_n| \le n \times 2 = 2n $$
+- Since we can explicitly construct $n$ rotations $r^k$ ($0 \le k \le n-1$) and $n$ reflections $s r^k$ ($0 \le k \le n-1$), the group has *exactly* $2n$ elements:
+  $$ |D_n| = 2n $$
+
+** 7.3 Generators and Relations Presentation
+The dihedral group $D_n$ is generated by a rotation $a$ (by $2\pi/n$) and a reflection $b$:
+$$ D_n = \langle a, b \mid a^n = e, \quad b^2 = e, \quad bab = a^{-1} \rangle $$
+- The reflection-conjugation relation $bab = a^{-1}$ is equivalent to:
+  $$ ba = a^{-1} b = a^{n-1} b $$
+- All $2n$ elements can be written uniquely in normal form:
+  $$ D_n = \{ a^k b^m \mid 0 \le k \le n-1, \, m \in \{0, 1\} \} $$
+
+** 7.4 When is $D_n$ Abelian?
+- If $D_n$ is Abelian, then $ba = ab$.
+- From the dihedral relation, $ba = a^{-1}b$.
+- Therefore, $ab = a^{-1}b \implies a = a^{-1} \implies a^2 = e$.
+- Since $a$ has order $n$, $a^2 = e$ requires $n \mid 2$.
+- Thus, $D_n$ is Abelian *if and only if* $n = 1$ or $n = 2$:
+  - $n = 1$: $D_1 \cong \mathbb{Z}_2$ (bilateral symmetry of a 2-gon / isosceles segment).
+  - $n = 2$: $D_2 \cong \mathbb{Z}_2 \times \mathbb{Z}_2 = V_4$ (symmetries of a rectangle).
+  - For all $n \ge 3$: $a \neq a^{-1}$, so $ba \neq ab$, and $D_n$ is *strictly non-Abelian*.
+
+---
+
+* 8. Continuous and Discrete Symmetry Groups on Spheres
+
+In physical systems (e.g., central potentials, marked spherical shells), one investigates the subgroups of the orthogonal group $\mathrm{O}(3)$ that preserve designated geometric features.
+
+** 8.1 The 2-Sphere $S^2$ and $\mathrm{O}(3)$
+The 2-sphere is defined by:
+$$ S^2 = \{(x, y, z) \in \mathbb{R}^3 \mid x^2 + y^2 + z^2 = 1\} $$
+- The full continuous symmetry group leaving $S^2$ invariant is the full orthogonal group $\mathrm{O}(3) = \mathrm{SO}(3) \times \mathbb{Z}_2$ (rotations and spatial inversion $\vec{x} \mapsto -\vec{x}$).
+- Dimension of the group manifold: $\dim \mathrm{O}(3) = \frac{3(3-1)}{2} = 3$.
+
+** 8.2 Invariance Groups with Marked Points
+When points $p_1, p_2 \in S^2$ are marked on the sphere, the symmetry group is restricted to the subgroup of $\mathrm{O}(3)$ preserving the set $\{p_1, p_2\}$.
+
+*** Case 1: Antipodal Points ($p_2 = -p_1$)
+Rotate coordinates so $p_1 = (0, 0, 1)$ (North Pole) and $p_2 = (0, 0, -1)$ (South Pole).
+- *Distinguishable Points:* Any symmetry must fix $p_1$ and $p_2$ individually:
+  - Rotations about the $z$-axis by any angle $\theta \in [0, 2\pi)$: $\mathrm{SO}(2)$.
+  - Reflections across any vertical plane containing the $z$-axis: adding these gives the full 1D orthogonal group $\mathrm{O}(2)$.
+  - Symmetries: $\mathrm{O}(2)$ (continuous, 1-parameter Lie group).
+- *Indistinguishable Points:* The symmetry operation can either fix each pole or swap $p_1 \leftrightarrow p_2$:
+  - The pole-swapping transformation is given by a $\pi$-rotation about any axis in the equatorial $xy$-plane (or spatial inversion $\vec{x} \mapsto -\vec{x}$).
+  - Symmetries: $\mathrm{O}(2) \times \mathbb{Z}_2$ (or $\mathrm{O}(2) \rtimes \mathbb{Z}_2 \cong \mathrm{D}_{\infty h}$).
+
+*** Case 2: Non-Antipodal Points ($p_1 \neq \pm p_2$)
+Let $\theta \in (0, \pi)$ be the geodesic angular separation between $p_1$ and $p_2$.
+There is a unique great circle passing through $p_1$ and $p_2$, defining a unique plane $\Pi_{12}$ through the origin.
+- *Distinguishable Points:*
+  - No continuous rotation can preserve two non-antipodal fixed points (as rotations have only a single 1D axis).
+  - The only non-trivial isometry of $\mathbb{R}^3$ fixing $p_1$ and $p_2$ individually is reflection $\sigma$ across the plane $\Pi_{12}$.
+  - Symmetries: Discrete group $\{e, \sigma\} \cong \mathbb{Z}_2$.
+- *Indistinguishable Points:*
+  - In addition to $\sigma$, a symmetry can swap $p_1 \leftrightarrow p_2$.
+  - The rotation $R_\pi$ by $\pi$ around the angle bisector of $\vec{p}_1$ and $\vec{p}_2$ swaps the two points.
+  - The composition $\sigma' = \sigma \circ R_\pi$ is reflection across the plane perpendicular to the segment $p_1 p_2$ bisecting it.
+  - Symmetries: $\{e, \sigma, R_\pi, \sigma'\} \cong \mathbb{Z}_2 \times \mathbb{Z}_2 \cong V_4$ (discrete Klein four-group).

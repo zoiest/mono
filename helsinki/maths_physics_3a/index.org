@@ -24,8 +24,14 @@
 
 ** Course Worksheets & Weekly Guides
 
+- [[id:384bff66-f65e-4144-b64e-8a200dd58044][Week 01: Foundations of Groups, Permutations, and Finite Symmetries]]
+  - Comprehensive lecture notes for Week 01 covering the algebraic hierarchy (Magma $\to$ Semigroup $\to$ Monoid $\to$ Group), homomorphisms, symmetric groups $S_n$, cyclic groups $\mathbb{Z}_n$, roots of unity, small finite groups, Cayley tables, and dihedral groups $D_n$ (§2.1, §2.3, §2.4).
+- [[id:ac781a59-5875-4809-ab88-ce4e8a047809][Week 02: Subgroups, Lie Groups, and Young Diagrams]]
+  - Comprehensive lecture notes for Week 02 covering subgroup criteria, permutation cycles, alternating group $A_n$, permutation matrices, Young diagrams and integer partitions, Cayley's embedding theorem, classical matrix Lie groups ($\mathrm{GL}, \mathrm{SL}, \mathrm{O}, \mathrm{SO}, \mathrm{U}, \mathrm{SU}, \mathrm{Sp}$), and group actions (§2.2, §2.4, §2.5, §2.8).
+- [[id:1f68893e-e151-4c70-a79e-b0f3104e3696][Week 03: Group Actions, Orbits, Cosets, and Quotients]]
+  - Comprehensive lecture notes for Week 03 covering equivalence relations, quotient spaces, group actions (translation, conjugation), orbits, stabilizers, Lagrange's theorem, Orbit-Stabilizer theorem, Burnside's lemma, normal subgroups, group centers, and the First Isomorphism Theorem (§2.2, §2.3, §2.9).
 - [[id:dfd66ae0-7e03-4e2b-b527-55a902f24962][Week 04: Group Representations, Presentations, and Vector Spaces]]
-  - Comprehensive lecture notes for Week 04 covering Sections 2.7, 3.1, 3.1.1, and 3.6.2.
+  - Comprehensive lecture notes for Week 04 covering free groups, presentations $\langle X \mid R \rangle$, Artin braid groups $B_n$, complex vector spaces, linear representations, unitary operators, quantum symmetries, and direct sums / tensor products (§2.7, §3.1, §3.1.1, §3.6.2).
 
 ** Chapter 2: Group Theory
 

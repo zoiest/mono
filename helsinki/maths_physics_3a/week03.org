@@ -1,0 +1,275 @@
+:PROPERTIES:
+:ID:       1f68893e-e151-4c70-a79e-b0f3104e3696
+:ROAM_ALIASES: "Week 03 Lecture Notes" "Week 3 Notes" "MMP IIIa Week 3"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Week 03: Group Actions, Orbits, Cosets, and Quotients
+#+subtitle: Mathematical Methods for Physics IIIa — Lecture Notes (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :physics:math:helsinki:week03:actions:orbits:cosets:quotients:lagrange:burnside:isomorphism-theorems:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][Topic: Subgroups & Cosets]] | [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Topic: Homomorphisms & Quotients]] | [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][Topic: Groups Acting on a Set]]
+
+* Overview and Syllabus Mapping
+
+This document provides the lecture notes for *Week 03* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week03-topics.txt=.
+Topics are drawn from textbook section *2.9* (with foundations in *2.2* and *2.3*) of /Mathematical Methods for Physics/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
+
+#+caption: Summary of Lecture Topics
+#+begin_quote
+1. *Equivalence Relations, Partitions, and Quotient Spaces:* Reflexivity, symmetry, transitivity, and quotient sets $X/\sim$ (§2.9).
+2. *Group Actions on Sets:* Left/right translations, conjugation actions, and transformation spaces (§2.9).
+3. *Orbits and the Orbit Space:* $\mathcal{O}_x = G \cdot x$, equivalence classes of orbits, and quotient spaces $X/G$ (§2.9).
+4. *Transitive Actions and Homogeneous Spaces:* Transitivity and identifying $X \cong G/G_x$ (§2.9).
+5. *Conjugacy Classes:* Orbits under the inner conjugation action and the class equation (§2.9).
+6. *Cosets and Lagrange's Theorem:* Left and right cosets $gH, Hg$, quotient spaces $G/H$, and $[G:H] = |G|/|H|$ (§2.2).
+7. *Isotropy Groups (Stabilizers / Little Groups):* $G_x \le G$ and proof of subgroup nature (§2.9).
+8. *The Orbit-Stabilizer Theorem:* Bijection $\mathcal{O}_x \cong G/G_x$ and cardinality relation $|\mathcal{O}_x| = [G:G_x]$ (§2.9).
+9. *Fixed Points and Burnside's Lemma:* Invariant sets $X^g$ and orbit counting $|X/G| = \frac{1}{|G|}\sum |X^g|$ (§2.9).
+10. *Normal Subgroups and Quotient Groups:* $N \triangleleft G$, well-defined group operation on $G/N$ (§2.3).
+11. *The Center of a Group:* $Z(G) \triangleleft G$ as an Abelian normal subgroup (§2.2, §2.9).
+12. *Homomorphisms and the First Isomorphism Theorem:* Kernel $\mathrm{Ker}(\phi) \triangleleft G$, image $\mathrm{Im}(\phi) \le H$, and $G/\mathrm{Ker}(\phi) \cong \mathrm{Im}(\phi)$ (§2.3).
+#+end_quote
+
+---
+
+* 1. Equivalence Relations, Partitions, and Quotient Spaces (§2.9)
+
+** 1.1 Equivalence Relations
+A binary relation $\sim$ on a set $X$ is an *equivalence relation* if it satisfies three axioms for all $x, y, z \in X$:
+1. *Reflexivity:* $x \sim x$
+2. *Symmetry:* $x \sim y \implies y \sim x$
+3. *Transitivity:* $x \sim y \text{ and } y \sim z \implies x \sim z$
+
+** 1.2 Equivalence Classes and Quotient Spaces
+- *Equivalence Class:* The subset of all elements equivalent to $x \in X$:
+  $$ [x] = \{y \in X \mid y \sim x\} $$
+- *Fundamental Partition Theorem:*
+  Every equivalence relation on $X$ partitions $X$ into disjoint, non-empty equivalence classes:
+  $$ X = \bigcup_{i} [x_i], \quad [x_i] \cap [x_j] = \emptyset \quad (i \neq j) $$
+- *Quotient Space:* The set of all equivalence classes:
+  $$ X / \sim \; = \{[x] \mid x \in X\} $$
+  The canonical projection map is $\pi : X \to X/\sim, \, x \mapsto [x]$.
+
+---
+
+* 2. Group Actions: Translations, Conjugation, and Orbits (§2.9)
+
+Let $G$ be a group acting on a set $X$ via a left action $\cdot : G \times X \to X$ satisfying $e \cdot x = x$ and $g_1 \cdot (g_2 \cdot x) = (g_1 g_2) \cdot x$.
+
+** 2.1 Canonical Actions of $G$ on Itself ($X = G$)
+When the set $X$ is the group $G$ itself, three fundamental actions arise:
+1. *Left Translation:*
+   $$ L_g : G \to G, \quad L_g(x) = g x $$
+2. *Right Translation:*
+   $$ R_g : G \to G, \quad R_g(x) = x g^{-1} $$
+   /(The inverse $g^{-1}$ ensures the left-action compatibility: $R_{g_1 g_2}(x) = x(g_1 g_2)^{-1} = x g_2^{-1} g_1^{-1} = R_{g_1}(R_{g_2}(x))$)/.
+3. *Conjugation (Inner Automorphism):*
+   $$ C_g : G \to G, \quad C_g(x) = g x g^{-1} $$
+
+** 2.2 Orbits and the Orbit Space $X/G$
+- *Orbit of a point $x \in X$:* The set of all destinations of $x$ under the group action:
+  $$ \mathcal{O}_x = G \cdot x = \{g \cdot x \mid g \in G\} \subseteq X $$
+- *Orbit Equivalence Relation:*
+  Define $x \sim y \iff \exists g \in G \text{ such that } y = g \cdot x$.
+  - Reflexive: $x = e \cdot x \implies x \sim x$.
+  - Symmetric: $y = g \cdot x \implies x = g^{-1} \cdot y \implies y \sim x$.
+  - Transitive: $y = g \cdot x$ and $z = h \cdot y \implies z = (hg) \cdot x \implies x \sim z$.
+- *Orbit Space:* The quotient space of orbits:
+  $$ X/G = \{\mathcal{O}_x \mid x \in X\} $$
+  The orbits partition $X$ into disjoint subsets: $X = \bigsqcup \mathcal{O}_x$.
+
+** 2.3 Transitive Actions and Homogeneous Spaces
+- An action of $G$ on $X$ is called *transitive* if there is only a single orbit:
+  $$ \forall x, y \in X, \quad \exists g \in G \quad \text{such that} \quad y = g \cdot x $$
+  In this case, $\mathcal{O}_x = X$ for any $x \in X$, and $X/G$ consists of a single point.
+- *Homogeneous Space:* A space $X$ equipped with a transitive $G$-action. Every point in $X$ looks geometrically identical.
+  - /Example:/ The 2-sphere $S^2$ is a homogeneous space under $\mathrm{SO}(3)$: any unit vector can be rotated into any other unit vector.
+
+---
+
+* 3. Conjugacy Classes and the Class Equation (§2.9)
+
+** 3.1 Conjugacy Classes
+When $G$ acts on itself by conjugation $C_g(x) = g x g^{-1}$, the orbits are called *conjugacy classes*:
+$$ \mathrm{Cl}(x) = \{g x g^{-1} \mid g \in G\} $$
+- Two elements $a, b \in G$ are *conjugate* ($a \sim b$) if $\exists g \in G$ such that $b = g a g^{-1}$.
+- In matrix groups, conjugacy corresponds to similarity transformations ($B = P A P^{-1}$), meaning conjugate matrices share the same eigenvalues, trace, and determinant.
+- In symmetric groups $S_n$, conjugate elements have identical cycle structures.
+
+** 3.2 The Class Equation
+Since conjugacy classes partition $G$:
+$$ |G| = |Z(G)| + \sum_{i} |\mathrm{Cl}(x_i)| $$
+where $Z(G)$ is the center (elements whose conjugacy class has size 1) and the sum runs over representatives of non-central conjugacy classes.
+
+---
+
+* 4. Cosets, Quotient Spaces $G/H$, and Lagrange's Theorem (§2.2)
+
+** 4.1 Left and Right Cosets
+Let $H \le G$ be a subgroup.
+- *Left Coset of $H$ containing $g$:*
+  $$ g H = \{g h \mid h \in H\} $$
+- *Right Coset of $H$ containing $g$:*
+  $$ H g = \{h g \mid h \in H\} $$
+- *Properties:*
+  1. $e \in H \implies g \in gH$.
+  2. Two left cosets are either identical or disjoint: $g_1 H = g_2 H \iff g_1^{-1} g_2 \in H$.
+  3. Every coset has the same cardinality as $H$: $|gH| = |H|$ (via the bijection $h \mapsto gh$).
+  4. The left cosets partition $G$:
+     $$ G = \bigsqcup_{i=1}^k g_i H $$
+
+** 4.2 The Quotient Space $G/H$ and Index $[G:H]$
+- The set of all left cosets is the *quotient space*:
+  $$ G/H = \{gH \mid g \in G\} $$
+- The *index* of $H$ in $G$, denoted $[G : H]$, is the number of distinct left cosets:
+  $$ [G : H] = |G/H| $$
+
+** 4.3 Lagrange's Theorem
+#+begin_quote
+*Theorem (Lagrange):*
+If $G$ is a finite group and $H$ is a subgroup of $G$, then the order of $H$ divides the order of $G$:
+$$ |G| = [G : H] \cdot |H| $$
+#+end_quote
+*Immediate Corollaries:*
+1. *Element Order Divisibility:* For any $g \in G$, $\mathrm{ord}(g)$ divides $|G|$ (since $\mathrm{ord}(g) = |\langle g \rangle|$).
+2. *Groups of Prime Order:* If $|G| = p$ (prime), then $G$ has no non-trivial proper subgroups, and $G \cong \mathbb{Z}_p$ is cyclic.
+3. *Euler-Fermat Theorem:* In modular arithmetic, $a^{\phi(n)} \equiv 1 \pmod n$.
+
+---
+
+* 5. Isotropy Groups and the Orbit-Stabilizer Theorem (§2.9)
+
+** 5.1 Isotropy Group (Stabilizer / Little Group)
+Let $G$ act on $X$, and let $x \in X$.
+The *isotropy group* (or *stabilizer*, *little group*) of $x$ is:
+$$ G_x \equiv \mathrm{Stab}_G(x) = \{g \in G \mid g \cdot x = x\} $$
+
+#+begin_quote
+*Theorem:* The isotropy group $G_x$ is a subgroup of $G$ ($G_x \le G$).
+#+end_quote
+*Proof:*
+1. *Identity:* By definition of group action, $e \cdot x = x$, so $e \in G_x$.
+2. *Closure:* Let $g, h \in G_x$. Then $(gh) \cdot x = g \cdot (h \cdot x) = g \cdot x = x$, so $gh \in G_x$.
+3. *Inverses:* Let $g \in G_x$, so $g \cdot x = x$. Acting on the left with $g^{-1}$:
+   $$ g^{-1} \cdot (g \cdot x) = g^{-1} \cdot x \implies (g^{-1} g) \cdot x = g^{-1} \cdot x \implies e \cdot x = g^{-1} \cdot x \implies x = g^{-1} \cdot x $$
+   Thus $g^{-1} \in G_x$. $\blacksquare$
+
+** 5.2 The Orbit-Stabilizer Theorem
+#+begin_quote
+*Theorem (Orbit-Stabilizer Theorem):*
+Let $G$ be a group acting on a set $X$. For any point $x \in X$, there is a natural canonical bijection between the orbit $\mathcal{O}_x$ and the quotient space of left cosets $G / G_x$:
+$$ \mathcal{O}_x \cong G / G_x $$
+Consequently, for a finite group $G$:
+$$ |\mathcal{O}_x| = [G : G_x] = \frac{|G|}{|G_x|} $$
+#+end_quote
+*Proof:*
+Define the mapping $f : G / G_x \to \mathcal{O}_x$ by $f(g G_x) = g \cdot x$.
+1. *Well-defined:* If $g_1 G_x = g_2 G_x$, then $g_2^{-1} g_1 \in G_x \implies (g_2^{-1} g_1) \cdot x = x$.
+   Applying $g_2$ gives $g_1 \cdot x = g_2 \cdot x$, so $f(g_1 G_x) = f(g_2 G_x)$.
+2. *Injective:* If $g_1 \cdot x = g_2 \cdot x$, then $(g_2^{-1} g_1) \cdot x = x \implies g_2^{-1} g_1 \in G_x \implies g_1 G_x = g_2 G_x$.
+3. *Surjective:* Any element in $\mathcal{O}_x$ is of the form $g \cdot x = f(g G_x)$.
+Hence $f$ is a bijection. $\blacksquare$
+
+** 5.3 Application: Homogeneous Spaces as Coset Manifolds
+When $G$ acts transitively on $X$, $X = \mathcal{O}_x$ for any $x \in X$, yielding the geometric isomorphism:
+$$ X \cong G / G_x $$
+- /Example:/ $\mathrm{SO}(3)$ acts transitively on $S^2$. The stabilizer of the North Pole $\vec{e}_3$ is $\mathrm{SO}(2)$ (rotations around the $z$-axis).
+  Therefore, the 2-sphere is realized as the coset manifold:
+  $$ S^2 \cong \mathrm{SO}(3) / \mathrm{SO}(2) $$
+
+---
+
+* 6. Fixed Points and Burnside's Lemma (§2.9)
+
+** 6.1 Fixed-Point Sets (Invariant Sets)
+For a group element $g \in G$, the *invariant set* (or *fixed-point set*) is the subset of $X$ left fixed by $g$:
+$$ X^g = \{x \in X \mid g \cdot x = x\} $$
+
+** 6.2 Burnside's Lemma (Cauchy-Frobenius Lemma)
+#+begin_quote
+*Theorem (Burnside's Lemma):*
+Let a finite group $G$ act on a finite set $X$. The number of distinct orbits $|X/G|$ is equal to the average number of points fixed by elements of $G$:
+$$ |X/G| = \frac{1}{|G|} \sum_{g \in G} |X^g| $$
+#+end_quote
+*Proof:*
+Count the set of pairs $S = \{(g, x) \in G \times X \mid g \cdot x = x\}$ in two ways:
+$$ \sum_{g \in G} |X^g| = |S| = \sum_{x \in X} |G_x| $$
+By the Orbit-Stabilizer Theorem, $|G_x| = \frac{|G|}{|\mathcal{O}_x|}$. Therefore:
+$$ \sum_{g \in G} |X^g| = \sum_{x \in X} \frac{|G|}{|\mathcal{O}_x|} = |G| \sum_{x \in X} \frac{1}{|\mathcal{O}_x|} $$
+In the sum $\sum_{x \in \mathcal{O}} \frac{1}{|\mathcal{O}|}$, there are $|\mathcal{O}|$ terms each equal to $\frac{1}{|\mathcal{O}|}$, so each orbit contributes exactly $1$.
+Thus $\sum_{x \in X} \frac{1}{|\mathcal{O}_x|} = |X/G|$, which completes the proof. $\blacksquare$
+
+---
+
+* 7. Normal Subgroups and Quotient Groups (§2.3)
+
+** 7.1 Normal Subgroup Definition
+A subgroup $N \le G$ is called a *normal subgroup* (denoted $N \triangleleft G$) if it is invariant under conjugation by all elements of $G$:
+$$ g N g^{-1} = N, \quad \forall g \in G $$
+Equivalently:
+- $g N = N g$ for all $g \in G$ (left cosets equal right cosets).
+- $g n g^{-1} \in N$ for all $g \in G$ and all $n \in N$.
+
+** 7.2 Quotient Group $G/N$
+If and only if $N$ is normal, the quotient space $G/N$ can be endowed with a natural, well-defined group multiplication:
+$$ (g_1 N) \cdot (g_2 N) \equiv (g_1 g_2) N $$
+- *Well-definedness:* If $g_1' = g_1 n_1$ and $g_2' = g_2 n_2$, then:
+  $$ g_1' g_2' = g_1 n_1 g_2 n_2 = g_1 g_2 (g_2^{-1} n_1 g_2) n_2 = (g_1 g_2) n_3 \in (g_1 g_2) N $$
+  because normality guarantees $g_2^{-1} n_1 g_2 \in N$.
+- *Group Properties of $G/N$:*
+  - Identity: $e N = N$.
+  - Inverses: $(g N)^{-1} = g^{-1} N$.
+  - Associativity: Inherited from $G$.
+
+---
+
+* 8. The Center of a Group (§2.2, §2.9)
+
+The *center* of a group $G$, denoted $Z(G)$, is the set of elements that commute with every element of $G$:
+$$ Z(G) = \{z \in G \mid z g = g z, \, \forall g \in G\} $$
+
+#+begin_quote
+*Theorem:* The center $Z(G)$ is an Abelian normal subgroup of $G$ ($Z(G) \triangleleft G$).
+#+end_quote
+*Proof:*
+1. $e \in Z(G)$ trivially.
+2. If $z_1, z_2 \in Z(G)$, $(z_1 z_2) g = z_1 (z_2 g) = z_1 (g z_2) = (z_1 g) z_2 = g (z_1 z_2) \implies z_1 z_2 \in Z(G)$.
+3. If $z \in Z(G)$, $z g = g z \implies g z^{-1} = z^{-1} g \implies z^{-1} \in Z(G)$.
+4. *Normality:* For any $g \in G$ and $z \in Z(G)$, $g z g^{-1} = z g g^{-1} = z \in Z(G)$.
+5. *Abelian:* By definition, all elements in $Z(G)$ commute with all elements of $G$, and hence with each other. $\blacksquare$
+
+---
+
+* 9. Homomorphisms and the First Isomorphism Theorem (§2.3)
+
+** 9.1 Kernel and Image
+Let $\phi : G \to H$ be a group homomorphism ($\phi(a b) = \phi(a) \phi(b)$).
+- *Image:*
+  $$ \mathrm{Im}(\phi) = \{\phi(g) \mid g \in G\} \le H $$
+- *Kernel:*
+  $$ \mathrm{Ker}(\phi) = \{g \in G \mid \phi(g) = e_H\} $$
+
+#+begin_quote
+*Theorem:* The kernel $\mathrm{Ker}(\phi)$ is always a *normal subgroup* of $G$ ($\mathrm{Ker}(\phi) \triangleleft G$).
+#+end_quote
+*Proof:*
+Let $k \in \mathrm{Ker}(\phi)$ and $g \in G$. Then:
+$$ \phi(g k g^{-1}) = \phi(g) \phi(k) \phi(g^{-1}) = \phi(g) e_H \phi(g)^{-1} = \phi(g) \phi(g)^{-1} = e_H $$
+Hence $g k g^{-1} \in \mathrm{Ker}(\phi)$, proving normality. $\blacksquare$
+
+** 9.2 The First Isomorphism Theorem
+#+begin_quote
+*Theorem (First Isomorphism Theorem):*
+Let $\phi : G \to H$ be a group homomorphism. Then the quotient group $G / \mathrm{Ker}(\phi)$ is isomorphic to the image $\mathrm{Im}(\phi)$:
+$$ G / \mathrm{Ker}(\phi) \cong \mathrm{Im}(\phi) $$
+#+end_quote
+*Proof:*
+Define $\Phi : G / \mathrm{Ker}(\phi) \to \mathrm{Im}(\phi)$ by $\Phi(g \mathrm{Ker}(\phi)) = \phi(g)$.
+1. *Well-defined and Injective:*
+   $g_1 \mathrm{Ker}(\phi) = g_2 \mathrm{Ker}(\phi) \iff g_2^{-1} g_1 \in \mathrm{Ker}(\phi) \iff \phi(g_2^{-1} g_1) = e_H \iff \phi(g_1) = \phi(g_2)$.
+2. *Homomorphism:*
+   $\Phi(g_1 N \cdot g_2 N) = \Phi(g_1 g_2 N) = \phi(g_1 g_2) = \phi(g_1)\phi(g_2) = \Phi(g_1 N)\Phi(g_2 N)$.
+3. *Surjective:* Every element in $\mathrm{Im}(\phi)$ is of the form $\phi(g) = \Phi(g N)$.
+Thus $\Phi$ is an isomorphism. $\blacksquare$
