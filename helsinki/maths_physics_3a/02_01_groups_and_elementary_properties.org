@@ -11,9 +11,9 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][Next: Subgroups and Cosets →]]
 
-* 1. Definition of a Group and the Algebraic Hierarchy
+* Definition of a Group and the Algebraic Hierarchy
 
-** 1.1 The Group Axioms
+** The Group Axioms
 Consider an arbitrary non-empty set $G$ and an internal composition law (binary operation)
 $$ \cdot : G \times G \to G, \quad (a, b) \mapsto a \cdot b $$
 The algebraic pair $(G, \cdot)$ is defined to be a *group* if the following four conditions simultaneously hold:
@@ -32,14 +32,14 @@ The algebraic pair $(G, \cdot)$ is defined to be a *group* if the following four
 
 When the binary operation is clear from the context, we simply refer to the group as $G$ and omit the symbol $\cdot$, writing $ab$ instead of $a \cdot b$.
 
-** 1.2 Abelian (Commutative) Groups
+** Abelian (Commutative) Groups
 A group $(G, \cdot)$ is said to be *Abelian* (or *commutative*) if it satisfies the additional axiom:
 - *AG4 (Commutativity):*
   For all $a, b \in G$,
   $$ a \cdot b = b \cdot a $$
 Abelian groups are named after the Norwegian mathematician Niels Henrik Abel.
 
-** 1.3 The Hierarchy of Algebraic Structures
+** The Hierarchy of Algebraic Structures
 Before groups, several weaker structures are defined in abstract algebra by relaxing axioms:
 - *Magma:* A set $M$ equipped with a well-defined binary operation closed on $M$ (satisfies G0).
 - *Semigroup:* An associative magma (satisfies G0, G1).
@@ -55,9 +55,9 @@ Before groups, several weaker structures are defined in abstract algebra by rela
 | *Group*             | *Yes*        | *Yes*              | *Yes*         | *Yes*         | Optional            |
 | *Abelian Group*     | *Yes*        | *Yes*              | *Yes*         | *Yes*         | *Yes*               |
 
-* 2. Elementary Theorems and Properties
+* Elementary Theorems and Properties
 
-** 2.1 Uniqueness of the Identity Element
+** Uniqueness of the Identity Element
 #+begin_quote
 *Theorem:* In any group $G$, the identity element $e$ is unique.
 #+end_quote
@@ -67,7 +67,7 @@ Suppose both $e$ and $e'$ are identity elements in $G$.
 2. Since $e'$ is an identity: $e \cdot e' = e$.
 Therefore, $e = e \cdot e' = e'$, proving $e = e'$. $\blacksquare$
 
-** 2.2 Uniqueness of Inverses
+** Uniqueness of Inverses
 #+begin_quote
 *Theorem:* For every element $a \in G$, its inverse $a^{-1}$ is unique.
 #+end_quote
@@ -77,7 +77,7 @@ Consider the product $b a b'$:
 $$ b = be = b(ab') = (ba)b' = eb' = b' $$
 Thus $b = b'$. $\blacksquare$
 
-** 2.3 Algebraic Consequences
+** Algebraic Consequences
 - *Inverse of an Inverse:*
   $$ (a^{-1})^{-1} = a $$
 - *Inverse of a Product (Shoe-Sock Theorem):*
@@ -87,16 +87,16 @@ Thus $b = b'$. $\blacksquare$
   - Left cancellation: $a b = a c \implies b = c$ (multiply on left by $a^{-1}$).
   - Right cancellation: $b a = c a \implies b = c$ (multiply on right by $a^{-1}$).
 
-* 3. Orders of Groups and Elements
+* Orders of Groups and Elements
 
-** 3.1 Group Order
+** Group Order
 - The *order of a group* $G$, denoted $|G|$, is the cardinality of the underlying set.
 - If $|G| < \infty$, $G$ is called a *finite group*.
 - If $|G| = \aleph_0$ (countably infinite), $G$ is a *discrete group* (e.g., $(\mathbb{Z}, +)$).
 - If $G$ is uncountably infinite and parameterized by continuous parameters, $G$ is a *continuous group* (e.g., $(\mathbb{R}, +)$, $\mathrm{SO}(3)$).
 - The *trivial group* $Z_1 = \{e\}$ has order $|Z_1| = 1$. There is no group of order 0 because G2 demands the existence of at least $e$.
 
-** 3.2 Element Order
+** Element Order
 Let $g \in G$. We define powers of $g$:
 $$ g^0 = e, \quad g^n = \underbrace{g \cdot g \cdots g}_{n \text{ times}}, \quad g^{-n} = (g^{-1})^n $$
 The *order of an element* $g$, denoted $\mathrm{ord}(g)$ or $|g|$, is the smallest positive integer $n \in \mathbb{Z}^+$ such that:
@@ -104,9 +104,9 @@ $$ g^n = e $$
 If no such positive integer exists, $g$ is said to have *infinite order*.
 In a finite group $G$, every element has finite order (by Lagrange's theorem, $\mathrm{ord}(g)$ must divide $|G|$).
 
-* 4. Cayley Tables and the Rearrangement Theorem
+* Cayley Tables and the Rearrangement Theorem
 
-** 4.1 Cayley Table (Multiplication Table)
+** Cayley Table (Multiplication Table)
 For a finite group $G = \{g_1, g_2, \dots, g_n\}$, the Cayley table is an $n \times n$ grid whose $(i, j)$-entry is the group product $g_i \cdot g_j$:
 
 #+caption: Cayley table for the cyclic group $\mathbb{Z}_2 = \{e, a\}$ where $a^2 = e$
@@ -115,7 +115,7 @@ For a finite group $G = \{g_1, g_2, \dots, g_n\}$, the Cayley table is an $n \ti
 | $e$     | $e$ | $a$ |
 | $a$     | $a$ | $e$ |
 
-** 4.2 The Rearrangement Theorem (Latin Square Property)
+** The Rearrangement Theorem (Latin Square Property)
 #+begin_quote
 *Theorem (Rearrangement Theorem):*
 In the Cayley table of a finite group $G$, each element of $G$ appears *exactly once* in each row and *exactly once* in each column.
@@ -128,12 +128,12 @@ An identical argument using right multiplication shows each element appears exac
 
 *Consequence:* The Cayley table forms a *Latin square*. A group is Abelian if and only if its Cayley table is symmetric under reflection across the main diagonal.
 
-* 5. Abstract Groups vs. Realizations and Representations
+* Abstract Groups vs. Realizations and Representations
 
 An *abstract group* is defined entirely by the multiplication law between elements without reference to what the elements represent.
 A *realization* of an abstract group $G$ is an injective group homomorphism from $G$ to a concrete mathematical set equipped with a binary operation.
 
-** 5.1 Realizations of the Cyclic Group $\mathbb{Z}_2$
+** Realizations of the Cyclic Group $\mathbb{Z}_2$
 The abstract group $\mathbb{Z}_2 = \{e, a\}$ with $a^2 = e$ can be realized in many contexts:
 1. *Modular arithmetic:* $(\{0, 1\}, + \pmod 2)$ with $e \mapsto 0$, $a \mapsto 1$.
 2. *Multiplicative signs:* $(\{1, -1\}, \times)$ with $e \mapsto 1$, $a \mapsto -1$.
@@ -143,7 +143,7 @@ The abstract group $\mathbb{Z}_2 = \{e, a\}$ with $a^2 = e$ can be realized in m
    $$ D(e) = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}, \quad D(a) = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \quad \text{or} \quad D(a) = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} $$
 Realizations via linear transformations on vector spaces are called *group representations* (see [[id:ef2abac8-273c-404c-8140-d048794366d9][Complex Vector Spaces and Representations]]).
 
-* 6. Direct Product of Groups
+* Direct Product of Groups
 
 Given two groups $(G_1, \cdot_1)$ and $(G_2, \cdot_2)$, their *external direct product* is:
 $$ G_1 \times G_2 = \{ (g_1, g_2) \mid g_1 \in G_1, g_2 \in G_2 \} $$
@@ -153,9 +153,9 @@ $$ (g_1, g_2) \cdot (g_1', g_2') = (g_1 \cdot_1 g_1', g_2 \cdot_2 g_2') $$
 - *Inverses:* $(g_1, g_2)^{-1} = (g_1^{-1}, g_2^{-1})$
 - *Order:* If $G_1$ and $G_2$ are finite, $|G_1 \times G_2| = |G_1| \cdot |G_2|$.
 
-* 7. Examples of Groups and Non-Groups
+* Examples of Groups and Non-Groups
 
-** 7.1 Standard Examples of Groups
+** Standard Examples of Groups
 1. $(\mathbb{Z}, +)$: Discrete, countably infinite Abelian group. Identity is $0$, inverse of $a$ is $-a$.
 2. $(\mathbb{R}, +)$ and $(\mathbb{C}, +)$: Continuous Abelian groups of dimensions 1 and 2, respectively.
 3. $(\mathbb{R} \setminus \{0\}, \cdot)$ and $(\mathbb{C} \setminus \{0\}, \cdot)$: Multiplicative groups of non-zero numbers. Identity is $1$, inverse of $x$ is $1/x$.
@@ -165,7 +165,7 @@ $$ (g_1, g_2) \cdot (g_1', g_2') = (g_1 \cdot_1 g_1', g_2 \cdot_2 g_2') $$
 7. *Orthogonal Group* $O(2)$: The group of $2 \times 2$ real matrices preserving distances in $\mathbb{R}^2$:
    $$ A = \begin{pmatrix} \cos\alpha & \sin\alpha \\ \mp\sin\alpha & \pm\cos\alpha \end{pmatrix}, \quad \alpha \in \mathbb{R} $$
 
-** 7.2 Counterexamples: Sets That Are NOT Groups
+** Counterexamples: Sets That Are NOT Groups
 1. *$(\mathbb{N}, +)$ (Natural numbers with addition):*
    Not a group. It is closed and associative, and has identity $0$, but no non-zero element has an additive inverse in $\mathbb{N}$. It is merely a *monoid*.
 2. *$(\mathbb{R}^3, \times)$ (Vector cross product):*

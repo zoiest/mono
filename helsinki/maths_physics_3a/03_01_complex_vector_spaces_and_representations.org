@@ -11,9 +11,9 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2bf3d940-6290-4682-841f-acf960308d2e][← Previous: Ch 2 Problems]] | [[id:9548a93b-2f08-4eaa-8c7d-d4a757aed1df][Next: Symmetries in Quantum Mechanics →]]
 
-* 1. Complex Vector Spaces
+* Complex Vector Spaces
 
-** 1.1 Axiomatic Definition
+** Axiomatic Definition
 A *complex vector space* $V$ is an Abelian group $(V, +)$ (with additive identity $\vec{0}$) equipped with scalar multiplication by complex numbers $\mu \in \mathbb{C}$:
 $$ \cdot : \mathbb{C} \times V \to V, \quad (\mu, \vec{v}) \mapsto \mu \vec{v} $$
 satisfying the following axioms for all $\mu, \mu_1, \mu_2 \in \mathbb{C}$ and $\vec{v}, \vec{v}_1, \vec{v}_2 \in V$:
@@ -23,7 +23,7 @@ satisfying the following axioms for all $\mu, \mu_1, \mu_2 \in \mathbb{C}$ and $
 - *VS4:* $1 \vec{v} = \vec{v}$
 - *VS5:* $0 \vec{v} = \vec{0}$
 
-** 1.2 Linear Independence, Dimension, and Bases
+** Linear Independence, Dimension, and Bases
 - A set of vectors $\{\vec{v}_1, \dots, \vec{v}_k\}$ is *linearly independent* if:
   $$ \sum_{i=1}^k \mu_i \vec{v}_i = \vec{0} \implies \mu_1 = \mu_2 = \cdots = \mu_k = 0 $$
 - The *dimension* of $V$, denoted $\dim V$, is the maximum number of linearly independent vectors in $V$.
@@ -31,16 +31,16 @@ satisfying the following axioms for all $\mu, \mu_1, \mu_2 \in \mathbb{C}$ and $
   Every vector $\vec{v} \in V$ has a unique expansion:
   $$ \vec{v} = \sum_{i=1}^n v_i \vec{e}_i $$
 
-* 2. Linear Maps and Automorphisms
+* Linear Maps and Automorphisms
 
-** 2.1 Linear Maps
+** Linear Maps
 A map $L : V_1 \to V_2$ between vector spaces is a *linear map* (or *linear operator*) if:
 $$ L(\mu_1 \vec{v}_1 + \mu_2 \vec{v}_2) = \mu_1 L(\vec{v}_1) + \mu_2 L(\vec{v}_2), \quad \forall \mu_1, \mu_2 \in \mathbb{C}, \, \vec{v}_1, \vec{v}_2 \in V_1 $$
 - *Isomorphism:* A bijective linear map. If $V_1 \cong V_2$, then $\dim V_1 = \dim V_2$.
 - *Automorphism:* An isomorphism from $V$ to itself ($L : V \to V$).
   The set of all automorphisms forms the *automorphism group* $\mathrm{Aut}(V)$ under map composition.
 
-** 2.2 Kernel, Image, and Fundamental Theorems
+** Kernel, Image, and Fundamental Theorems
 - *Image:* $\mathrm{Im}(L) = \{ L(\vec{v}) \mid \vec{v} \in V_1 \} \subseteq V_2$ (a subspace of $V_2$).
 - *Kernel:* $\mathrm{Ker}(L) = \{ \vec{v} \in V_1 \mid L(\vec{v}) = \vec{0}_2 \} \subseteq V_1$ (a subspace of $V_1$).
 
@@ -54,7 +54,7 @@ $$ \dim V_1 = \dim \mathrm{Ker}(L) + \dim \mathrm{Im}(L) $$
 A linear map $L : V \to V$ is an automorphism if and only if $\mathrm{Ker}(L) = \{\vec{0}\}$.
 #+end_quote
 
-** 2.3 Matrix Representation of Linear Operators
+** Matrix Representation of Linear Operators
 Given a basis $\{\vec{e}_1, \dots, \vec{e}_n\}$, the action of $L$ is uniquely fixed by its action on the basis vectors:
 $$ L(\vec{e}_i) = \sum_{j=1}^n L^j_i \vec{e}_j $$
 The components of the image $\vec{w} = L(\vec{v})$ are:
@@ -62,9 +62,9 @@ $$ w_j = \sum_{i=1}^n L^j_i v_i \iff \begin{pmatrix} w_1 \\ \vdots \\ w_n \end{p
 Thus, for $\dim V = n$:
 $$ \mathrm{Aut}(V) \cong \mathrm{GL}(n, \mathbb{C}) $$
 
-* 3. Group Representations
+* Group Representations
 
-** 3.1 Definition of a Linear Representation
+** Definition of a Linear Representation
 A *linear representation* $D$ of a group $G$ in a vector space $V$ is a group homomorphism:
 $$ D : G \to \mathrm{Aut}(V), \quad g \mapsto D(g) $$
 Properties:
@@ -73,33 +73,33 @@ Properties:
 3. $D(e) = \mathbf{1}_V$ (identity operator).
 The *dimension of the representation* is the dimension of the carrier vector space: $\dim D = \dim V$.
 
-** 3.2 Faithful Representations
+** Faithful Representations
 A representation $D$ is called *faithful* if the homomorphism $D$ is an injection:
 $$ \mathrm{Ker}(D) = \{ g \in G \mid D(g) = \mathbf{1}_V \} = \{e\} $$
 In a faithful representation, distinct group elements are represented by distinct linear operators ($g_1 \neq g_2 \implies D(g_1) \neq D(g_2)$).
 
-** 3.3 Example: Representation of $\mathbb{Z}_4$ in $\mathbb{R}^2$
+** Example: Representation of $\mathbb{Z}_4$ in $\mathbb{R}^2$
 Let $\mathbb{Z}_4 = \{e, c, c^2, c^3\}$ where $c^4 = e$. In $V = \mathbb{R}^2$:
 $$ D(c) = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}, \quad D(c^2) = \begin{pmatrix} -1 & 0 \\ 0 & -1 \end{pmatrix} = -\mathbf{1}_2 $$
 $$ D(c^3) = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}, \quad D(e) = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = \mathbf{1}_2 $$
 $D(c)$ represents a counterclockwise rotation by $\pi/2$ in the plane.
 
-* 4. Intertwining Operators and Equivalence of Representations
+* Intertwining Operators and Equivalence of Representations
 
-** 4.1 Intertwining Operators
+** Intertwining Operators
 Let $D_1 : G \to \mathrm{Aut}(V_1)$ and $D_2 : G \to \mathrm{Aut}(V_2)$ be two representations.
 A linear map $A : V_1 \to V_2$ is called an *intertwining operator* (or *G-morphism*) if:
 $$ D_2(g) A = A D_1(g), \quad \forall g \in G $$
 
-** 4.2 Equivalent Representations
+** Equivalent Representations
 If the intertwining operator $A$ is an isomorphism (requiring $\dim V_1 = \dim V_2$), then $D_1$ and $D_2$ are said to be *equivalent* ($D_1 \sim D_2$):
 $$ D_2(g) = A D_1(g) A^{-1}, \quad \forall g \in G $$
 Equivalent representations correspond to the same abstract representation expressed in different choices of basis.
 *Consequence:* Any $n$-dimensional complex representation is equivalent to a representation by $n \times n$ invertible matrices $D : G \to \mathrm{GL}(n, \mathbb{C})$.
 
-* 5. Scalar Products and Gram-Schmidt Orthonormalization
+* Scalar Products and Gram-Schmidt Orthonormalization
 
-** 5.1 The Hermitian Scalar Product
+** The Hermitian Scalar Product
 A *scalar product* (Hermitian inner product) on $V$ is a map $\langle \cdot \mid \cdot \rangle : V \times V \to \mathbb{C}$ satisfying:
 1. *Linearity in the second argument:*
    $$ \langle \vec{v} \mid \mu_1 \vec{v}_1 + \mu_2 \vec{v}_2 \rangle = \mu_1 \langle \vec{v} \mid \vec{v}_1 \rangle + \mu_2 \langle \vec{v} \mid \vec{v}_2 \rangle $$
@@ -109,7 +109,7 @@ A *scalar product* (Hermitian inner product) on $V$ is a map $\langle \cdot \mid
 3. *Positive definiteness:*
    $$ \langle \vec{v} \mid \vec{v} \rangle \ge 0, \quad \text{and } \langle \vec{v} \mid \vec{v} \rangle = 0 \iff \vec{v} = \vec{0} $$
 
-** 5.2 Gram-Schmidt Orthonormalization Algorithm
+** Gram-Schmidt Orthonormalization Algorithm
 Given an arbitrary linearly independent basis $\{\vec{u}_1, \vec{u}_2, \dots, \vec{u}_n\}$, an orthonormal basis $\{\vec{e}_1, \dots, \vec{e}_n\}$ ($\langle \vec{e}_i \mid \vec{e}_j \rangle = \delta_{ij}$) is constructed as follows:
 1. Normalize the first vector:
    $$ \vec{e}_1 = \frac{\vec{u}_1}{\sqrt{\langle \vec{u}_1 \mid \vec{u}_1 \rangle}} $$
@@ -118,9 +118,9 @@ Given an arbitrary linearly independent basis $\{\vec{u}_1, \vec{u}_2, \dots, \v
    and normalize:
    $$ \vec{e}_i = \frac{\vec{w}_i}{\sqrt{\langle \vec{w}_i \mid \vec{w}_i \rangle}} $$
 
-* 6. Unitary Operators and Unitary Representations
+* Unitary Operators and Unitary Representations
 
-** 6.1 Adjoint and Unitary Operators
+** Adjoint and Unitary Operators
 - *Adjoint Operator $A^\dagger$:* The unique operator satisfying:
   $$ \langle \vec{v} \mid A^\dagger \vec{w} \rangle = \langle A \vec{v} \mid \vec{w} \rangle, \quad \forall \vec{v}, \vec{w} \in V $$
   In an orthonormal basis, $(A^\dagger)_{ij} = (A_{ji})^*$ (conjugate transpose).
@@ -128,7 +128,7 @@ Given an arbitrary linearly independent basis $\{\vec{u}_1, \vec{u}_2, \dots, \v
   $$ \langle U\vec{v} \mid U\vec{w} \rangle = \langle \vec{v} \mid \vec{w} \rangle \iff U^\dagger U = \mathbf{1}_V $$
   The set of unitary operators forms the group $\mathrm{Unit}(V) \cong \mathrm{U}(n)$, a subgroup of $\mathrm{Aut}(V) \cong \mathrm{GL}(n, \mathbb{C})$.
 
-** 6.2 Unitary Representations
+** Unitary Representations
 A *unitary representation* of a group $G$ in an inner product space $V$ is a homomorphism:
 $$ D : G \to \mathrm{Unit}(V), \quad g \mapsto D(g) $$
 satisfying $D(g)^\dagger = D(g)^{-1} = D(g^{-1})$.

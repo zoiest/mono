@@ -12,6 +12,9 @@
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:5b295c08-7bb4-4d5d-b6be-6fa096201e4d][Topic: Groups & Elementary Properties]] | [[id:206fb1b4-ba32-4675-921a-1b0864eae8e8][Topic: Smallest Finite Groups]] | [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Topic: Homomorphisms & Isomorphisms]]
 
 * Overview and Syllabus Mapping
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 This document provides the foundational self-study lecture notes for *Week 01* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week01-topics.txt=.
 Topics are drawn from textbook sections *2.1*, *2.3*, and *2.4* of /Mathematical Methods for Physics: An Introduction to Group Theory, Topology, and Geometry/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
@@ -19,19 +22,21 @@ Topics are drawn from textbook sections *2.1*, *2.3*, and *2.4* of /Mathematical
 #+caption: Summary of Lecture Topics
 #+begin_quote
 1. *The Algebraic Hierarchy:* Binary operations; Magma $\to$ Semigroup $\to$ Monoid $\to$ Group $\to$ Abelian Group (§2.1).
-2. *Group Realizations and Homomorphisms:* Abstract groups vs. concrete realizations (matrices, permutations, functions) (§2.1, §2.3).
-3. *Permutations and Symmetric Groups:* The symmetric group $S_n$, cycle notation, and permutation matrices (§2.4).
-4. *Cyclic Groups and Roots of Unity:* $\mathbb{Z}_n$, generators, and the complex unit circle $e^{2\pi i k / n}$ (§2.4).
-5. *Orders and Classification:* Order of elements $\mathrm{ord}(g)$, group order $|G|$, and structural isomorphism (§2.1, §2.4).
-6. *Small Finite Groups ($N \le 8$):* The Klein four-group $V_4$, dihedral group $D_3 \cong S_3$, and direct products $G_1 \times G_2$ (§2.4).
-7. *Cayley Tables and Rearrangement:* Latin square property and multiplication table structure (§2.1).
-8. *Dihedral Groups $D_n$ and Symmetries of Polygons:* Generators/relations, order $2n$, and commutativity conditions (§2.4).
-9. *Continuous & Discrete Symmetries on $S^2$:* Invariance groups fixing points on spheres (§2.4).
+2. *Realizations and Homomorphisms:* Abstract groups vs. concrete realizations (matrices, permutations, functions) (§2.1, §2.3).
+3. *Symmetric and Cyclic Groups:* The symmetric group $S_n$, cycle notation, $\mathbb{Z}_n$, generators, and roots of unity (§2.4).
+4. *Orders of Elements and Groups:* Order of elements $\mathrm{ord}(g)$, group order $|G|$, and structural isomorphism (§2.1, §2.4).
+5. *Small Finite Groups and Direct Products:* The Klein four-group $V_4$, dihedral group $D_3 \cong S_3$, and direct products $G_1 \times G_2$ (§2.4).
+6. *Cayley Tables and the Rearrangement Theorem:* Latin square property and multiplication table structure (§2.1).
+7. *Dihedral Groups and Regular Polygons:* Generators/relations, order $2n$, and commutativity conditions (§2.4).
+8. *Continuous and Discrete Spherical Symmetries on $S^2$:* Invariance groups fixing points on spheres (§2.4).
 #+end_quote
 
 ---
 
-* 0. Intuitive "Mental Map" for Week 01
+* Intuitive "Mental Map" for Week 01
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 In physics, a *symmetry* is a transformation that leaves the equations of motion or Hamiltonian invariant. When we combine two symmetries sequentially, we obtain another symmetry.
 Abstract algebra classifies these systems by asking: *What minimum rules does this combination operation satisfy?*
@@ -47,11 +52,11 @@ Abstract algebra classifies these systems by asking: *What minimum rules does th
 
 ---
 
-* 1. The Algebraic Hierarchy of Sets with Binary Operations (§2.1)
+* The Algebraic Hierarchy of Sets with Binary Operations (§2.1)
 
 Let $S$ be a non-empty set and $\cdot : S \times S \to S$ a binary operation that maps each ordered pair $(a, b) \in S \times S$ to a unique element $a \cdot b \in S$.
 
-** 1.1 Axioms of Algebraic Structures
+** Axioms of Algebraic Structures
 
 #+caption: The Core Axioms
 #+begin_quote
@@ -62,7 +67,7 @@ Let $S$ be a non-empty set and $\cdot : S \times S \to S$ a binary operation tha
 - *(AG4) Commutativity (Abelian Property):* $\forall a, b \in S \implies a \cdot b = b \cdot a$.
 #+end_quote
 
-*** Worked Example 1.1: Diagnosing Algebraic Structures
+*** Worked Example: Diagnosing Algebraic Structures
 Let us test various sets and operations to pinpoint their exact algebraic classification:
 
 1. *$(\mathbb{Z}, -)$ (Integers under Subtraction):*
@@ -83,7 +88,7 @@ Let us test various sets and operations to pinpoint their exact algebraic classi
    - *Commutativity:* $x \star y = x + y + xy = y + x + yx = y \star x$. $\checkmark$
    - *Conclusion:* $(\mathbb{R} \setminus \{-1\}, \star)$ is an *Abelian Group*!
 
-** 1.2 Fundamental Properties of Groups
+** Fundamental Properties of Groups
 - *Uniqueness of Identity and Inverses:* Follows directly from cancellation:
   $$ a \cdot b = a \cdot c \implies b = c \quad (\text{left}), \qquad b \cdot a = c \cdot a \implies b = c \quad (\text{right}) $$
 - *Shoe-Sock Theorem:* The inverse of a product reverses order:
@@ -92,19 +97,19 @@ Let us test various sets and operations to pinpoint their exact algebraic classi
 
 ---
 
-* 2. Realizations of Abstract Groups via Homomorphisms (§2.1, §2.3)
+* Realizations of Abstract Groups via Homomorphisms (§2.1, §2.3)
 
-** 2.1 Abstract Groups vs. Concrete Realizations
+** Abstract Groups vs. Concrete Realizations
 An *abstract group* is defined entirely by its multiplication rules (its Cayley table), independent of what the objects are.
 A *realization* is a concrete physical or mathematical system (matrices, rotations, permutations) that obeys those rules.
 
-** 2.2 Homomorphisms and Isomorphisms
+** Homomorphisms and Isomorphisms
 A map $\phi : G \to H$ is a *homomorphism* if it preserves the group operation:
 $$ \phi(a \cdot b) = \phi(a) \ast \phi(b), \quad \forall a, b \in G $$
 - *Kernel:* $\mathrm{Ker}(\phi) = \{g \in G \mid \phi(g) = e_H\}$. Measures how many elements collapse to the identity.
 - *Isomorphism:* A bijective homomorphism ($G \cong H$). Two isomorphic groups are algebraically identical.
 
-*** Worked Example 2.1: The Determinant Homomorphism
+*** Worked Example: The Determinant Homomorphism
 Consider the map $\phi : \mathrm{GL}(n, \mathbb{R}) \to (\mathbb{R} \setminus \{0\}, \times)$ defined by:
 $$ \phi(M) = \det(M) $$
 1. *Homomorphism property:* By the determinant multiplication theorem:
@@ -116,15 +121,15 @@ $$ \phi(M) = \det(M) $$
 
 ---
 
-* 3. Symmetric Groups $S_n$ and Cyclic Groups $\mathbb{Z}_n$ (§2.4)
+* Symmetric Groups $S_n$ and Cyclic Groups $\mathbb{Z}_n$ (§2.4)
 
-** 3.1 The Symmetric Group $S_n$
+** The Symmetric Group $S_n$
 The symmetric group $S_n$ consists of all permutations of $n$ objects under function composition:
 - Order: $|S_n| = n!$.
 - *Cycle Notation:* $(a_1 \, a_2 \, \dots \, a_k)$ sends $a_1 \mapsto a_2 \mapsto \dots \mapsto a_k \mapsto a_1$.
 - *Non-Abelian:* For $n \ge 3$, permutations do *not* commute in general.
 
-*** Worked Example 3.1: Cycle Multiplication in $S_3$
+*** Worked Example: Cycle Multiplication in $S_3$
 Let $\pi_1 = (1 \, 2)$ (swap 1 and 2) and $\pi_2 = (2 \, 3)$ (swap 2 and 3).
 Recall: permutations compose *from right to left* ($\pi_1 \pi_2(x) = \pi_1(\pi_2(x))$):
 - Start with 1: $\pi_2(1) = 1 \implies \pi_1(1) = 2$. (So $1 \mapsto 2$).
@@ -140,12 +145,12 @@ Therefore:
 $$ (2 \, 3)(1 \, 2) = (1 \, 3 \, 2) \neq (1 \, 2 \, 3) $$
 *Conclusion:* $(12)(23) \neq (23)(12)$. $S_3$ is the smallest non-Abelian group!
 
-** 3.2 Cyclic Groups $\mathbb{Z}_n$ and Roots of Unity
+** Cyclic Groups $\mathbb{Z}_n$ and Roots of Unity
 A group is *cyclic* if a single generator $g$ produces all elements: $\mathbb{Z}_n = \{e, g, g^2, \dots, g^{n-1}\}$.
 - *Complex Roots of Unity Realization:*
   Let $\omega = e^{2\pi i / n}$. The set $U_n = \{1, \omega, \omega^2, \dots, \omega^{n-1}\}$ under complex multiplication is isomorphic to $\mathbb{Z}_n$.
 
-*** Worked Example 3.2: $\mathbb{Z}_4$ as Roots of Unity
+*** Worked Example: $\mathbb{Z}_4$ as Roots of Unity
 For $n = 4$, $\omega = e^{2\pi i / 4} = e^{i\pi/2} = i$.
 - Elements: $\{1, i, i^2, i^3\} = \{1, i, -1, -i\}$.
 - Geometrically, multiplying by $i$ rotates points in the complex plane counterclockwise by $90^\circ$.
@@ -155,14 +160,14 @@ For $n = 4$, $\omega = e^{2\pi i / 4} = e^{i\pi/2} = i$.
 
 ---
 
-* 4. Orders of Elements and Groups (§2.1, §2.4)
+* Orders of Elements and Groups (§2.1, §2.4)
 
 - *Group Order $|G|$:* Number of elements in $G$.
 - *Element Order $\mathrm{ord}(g)$:* Smallest integer $m \ge 1$ such that $g^m = e$.
   - If no such $m$ exists, $g$ has infinite order.
   - *Key Property:* $g^k = e \iff \mathrm{ord}(g) \mid k$.
 
-*** Worked Example 4.1: Orders in $\mathbb{Z}_6$ vs. $S_3$ (Both have Order 6)
+*** Worked Example: Orders in $\mathbb{Z}_6$ vs. $S_3$ (Both have Order 6)
 Both $\mathbb{Z}_6$ and $S_3$ have 6 elements ($|G| = 6$). Let us examine the orders of their elements:
 1. *Cyclic Group $\mathbb{Z}_6 = \{0, 1, 2, 3, 4, 5\}$ (under addition modulo 6):*
    - $\mathrm{ord}(0) = 1$
@@ -181,9 +186,9 @@ Both $\mathbb{Z}_6$ and $S_3$ have 6 elements ($|G| = 6$). Let us examine the or
 
 ---
 
-* 5. Small Finite Groups ($N \le 8$) and Direct Products (§2.4)
+* Small Finite Groups ($N \le 8$) and Direct Products (§2.4)
 
-** 5.1 External Direct Product $G_1 \times G_2$
+** External Direct Product $G_1 \times G_2$
 Given groups $G_1$ and $G_2$, their direct product is the Cartesian product $G_1 \times G_2$ with component-wise multiplication:
 $$ (g_1, g_2) \cdot (h_1, h_2) = (g_1 h_1, \, g_2 h_2) $$
 - Order: $|G_1 \times G_2| = |G_1| \cdot |G_2|$.
@@ -191,12 +196,12 @@ $$ (g_1, g_2) \cdot (h_1, h_2) = (g_1 h_1, \, g_2 h_2) $$
   - /Example:/ $\mathbb{Z}_2 \times \mathbb{Z}_3 \cong \mathbb{Z}_6$ (since $\gcd(2, 3) = 1$).
   - /Example:/ $\mathbb{Z}_2 \times \mathbb{Z}_2 \not\cong \mathbb{Z}_4$ (since $\gcd(2, 2) = 2 \neq 1$).
 
-** 5.2 The Klein Four-Group $V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2$
+** The Klein Four-Group $V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2$
 The smallest non-cyclic group is $V_4 = \{e, a, b, c\}$:
 - Every non-identity element has order 2: $a^2 = b^2 = c^2 = e$.
 - $a b = ba = c, \quad b c = cb = a, \quad c a = ac = b$.
 
-*** Worked Example 5.1: Physical Realization of $V_4$ (Rectangle Symmetries)
+*** Worked Example: Physical Realization of $V_4$ (Rectangle Symmetries)
 Consider a non-square rectangle centered at the origin in $\mathbb{R}^2$:
 - $e$: Identity (do nothing).
 - $h$: Horizontal reflection across the $x$-axis ($y \mapsto -y$): $h^2 = e$.
@@ -213,7 +218,7 @@ This table is symmetric across the main diagonal (Abelian), and every diagonal e
 
 ---
 
-* 6. Cayley Tables and the Rearrangement Theorem (§2.1)
+* Cayley Tables and the Rearrangement Theorem (§2.1)
 
 #+begin_quote
 *Theorem (Rearrangement Theorem):*
@@ -223,7 +228,7 @@ In the Cayley table of any group, every element appears *exactly once in every r
 
 ---
 
-* 7. Dihedral Groups $D_n$ and Symmetries of Regular Polygons (§2.4)
+* Dihedral Groups $D_n$ and Symmetries of Regular Polygons (§2.4)
 
 The dihedral group $D_n$ is the symmetry group of a regular $n$-sided polygon in $\mathbb{R}^2$.
 - *Order:* $|D_n| = 2n$ ($n$ rotations + $n$ reflections).
@@ -231,7 +236,7 @@ The dihedral group $D_n$ is the symmetry group of a regular $n$-sided polygon in
   $$ D_n = \langle a, b \mid a^n = e, \quad b^2 = e, \quad bab = a^{-1} \iff ba = a^{n-1}b \rangle $$
   where $a$ is rotation by $2\pi/n$ and $b$ is reflection.
 
-*** Worked Example 7.1: Symmetries of a Square ($D_4$)
+*** Worked Example: Symmetries of a Square ($D_4$)
 A square has $n = 4$ vertices, so $|D_4| = 2 \times 4 = 8$ elements.
 - Rotation generator: $a$ (counterclockwise rotation by $90^\circ$, order 4).
 - Reflection generator: $b$ (horizontal reflection, order 2).
@@ -243,12 +248,12 @@ A square has $n = 4$ vertices, so $|D_4| = 2 \times 4 = 8$ elements.
 
 ---
 
-* 8. Continuous and Discrete Spherical Symmetries on $S^2$
+* Continuous and Discrete Spherical Symmetries on $S^2$
 
 Consider the 2-sphere $S^2 = \{(x, y, z) \in \mathbb{R}^3 \mid x^2 + y^2 + z^2 = 1\}$ with full isometry group $\mathrm{O}(3)$.
 What subgroup of $\mathrm{O}(3)$ preserves two marked points $p_1, p_2 \in S^2$?
 
-*** Worked Example 8.1: Antipodal vs. Non-Antipodal Marked Points
+*** Worked Example: Antipodal vs. Non-Antipodal Marked Points
 1. *Antipodal Points ($p_2 = -p_1$, North & South Poles):*
    - *Distinguishable points:* Must fix the $z$-axis pointwise $\implies$ Continuous 2D rotations around the $z$-axis plus vertical reflections:
      $$ G = \mathrm{O}(2) \quad (\text{continuous 1D Lie group}) $$

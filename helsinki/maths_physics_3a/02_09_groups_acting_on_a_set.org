@@ -11,9 +11,9 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:16fe12b7-9348-4965-a3b7-73ec71993c39][← Previous: Continuous Groups and Lie Groups]] | [[id:2bf3d940-6290-4682-841f-acf960308d2e][Next: Chapter 2 Selected Problems →]]
 
-* 1. Group Actions on Sets
+* Group Actions on Sets
 
-** 1.1 Definitions: Left and Right Actions
+** Definitions: Left and Right Actions
 Let $G$ be a group and $X$ an arbitrary set.
 - A *left action* of $G$ on $X$ is a group homomorphism:
   $$ L : G \to \mathrm{Perm}(X), \quad g \mapsto L_g $$
@@ -23,13 +23,13 @@ Let $G$ be a group and $X$ an arbitrary set.
   A set $X$ equipped with a left action is called a *left $G$-space*. We often write $g \cdot x$ instead of $L_g(x)$.
 - A *right action* of $G$ on $X$ is an antihomomorphism $R : G \to \mathrm{Perm}(X)$ satisfying $R_{g_1 g_2}(x) = R_{g_2}(R_{g_1}(x))$.
 
-** 1.2 Equivalence of $G$-Spaces
+** Equivalence of $G$-Spaces
 Two left $G$-spaces $X$ and $X'$ are *equivalent* (or isomorphic) if there exists a bijection $i : X \to X'$ that intertwines the $G$-actions:
 $$ i(L_g(x)) = L'_g(i(x)), \quad \forall g \in G, \, \forall x \in X $$
 
-* 2. Orbits and Classifications of Actions
+* Orbits and Classifications of Actions
 
-** 2.1 Orbits
+** Orbits
 Given a left $G$-space $X$ and $x \in X$, the *orbit* of $x$ is the subset of points reachable from $x$ under $G$:
 $$ \mathcal{O}_x = \{ L_g(x) \mid g \in G \} \subseteq X $$
 
@@ -40,22 +40,22 @@ $$ \mathcal{O}_x = \{ L_g(x) \mid g \in G \} \subseteq X $$
 $$ X = \bigcup_{x \in X/G} \mathcal{O}_x, \quad \text{with } \mathcal{O}_x \cap \mathcal{O}_y = \emptyset \text{ or } \mathcal{O}_x = \mathcal{O}_y $$
 The set of all orbits is denoted by the orbit space $X / G$.
 
-** 2.2 Character of Actions
+** Character of Actions
 - *Transitive Action:* An action is *transitive* if there is only a single orbit: $\mathcal{O}_x = X$ for any $x \in X$. (Any point in $X$ can be mapped to any other point by some group element.)
 - *Faithful Action:* An action is *faithful* if distinct group elements induce distinct permutations:
   $$ \mathrm{Ker}(L) = \{ g \in G \mid L_g = \mathrm{id}_X \} = \{e\} $$
 - *Free Action:* An action is *free* if no non-identity element fixes any point:
   $$ L_g(x) = x \text{ for some } x \implies g = e $$
 
-* 3. Stabilizers (Isotropy Groups) and Fixed Points
+* Stabilizers (Isotropy Groups) and Fixed Points
 
-** 3.1 The Stabilizer / Isotropy Group
+** The Stabilizer / Isotropy Group
 Given $x \in X$, the *stabilizer* (also called the *isotropy group* or *little group*) is:
 $$ G_x \equiv \mathrm{Stab}(x) = \{ g \in G \mid L_g(x) = x \} \le G $$
 - $G_x$ is a subgroup of $G$ (if $g_1, g_2 \in G_x$, $L_{g_1 g_2^{-1}}(x) = L_{g_1}(L_{g_2}^{-1}(x)) = L_{g_1}(x) = x$).
 - A point $x$ is a *fixed point* of the action if $G_x = G$.
 
-** 3.2 Conjugacy of Stabilizers Along an Orbit
+** Conjugacy of Stabilizers Along an Orbit
 #+begin_quote
 *Theorem:* For any $y = L_g(x) \in \mathcal{O}_x$, the stabilizer of $y$ is conjugate to the stabilizer of $x$:
 $$ G_{L_g(x)} = g G_x g^{-1} $$
@@ -63,12 +63,12 @@ $$ G_{L_g(x)} = g G_x g^{-1} $$
 *Proof:*
 $h \in G_{L_g(x)} \iff L_h(L_g(x)) = L_g(x) \iff L_{g^{-1} h g}(x) = x \iff g^{-1}hg \in G_x \iff h \in g G_x g^{-1}$. $\blacksquare$
 
-** 3.3 Fixed Point Sets
+** Fixed Point Sets
 For any element $g \in G$, the set of points in $X$ left invariant by $g$ is:
 $$ X^g = \{ x \in X \mid L_g(x) = x \} $$
 For the identity element: $X^e = X$.
 
-* 4. The Orbit-Stabilizer Theorem
+* The Orbit-Stabilizer Theorem
 
 #+begin_quote
 *Theorem 2.4 (Orbit-Stabilizer Theorem):*
@@ -84,7 +84,7 @@ Define $i : G / G_x \to \mathcal{O}_x$ by $i(g G_x) = L_g(x)$.
 3. *Surjective:* Every element of $\mathcal{O}_x$ is $L_g(x) = i(g G_x)$ by definition.
 Thus $i$ is a bijection. $\blacksquare$
 
-** 4.1 Physical Example: Geometry of the Sphere $S^2$
+** Physical Example: Geometry of the Sphere $S^2$
 Let $G = \mathrm{SO}(3)$ act on $\mathbb{R}^3$ via matrix-vector multiplication.
 - For any $r > 0$, the sphere $S^2_r = \{ \vec{x} \in \mathbb{R}^3 \mid |\vec{x}| = r \}$ is an orbit.
 - Pick the north pole $x = (0, 0, r)^T$.
@@ -94,7 +94,7 @@ Let $G = \mathrm{SO}(3)$ act on $\mathbb{R}^3$ via matrix-vector multiplication.
   $$ S^2 \cong \mathrm{SO}(3) / \mathrm{SO}(2) $$
 This coset space formulation is foundational to modern differential geometry and nonlinear sigma models in physics.
 
-* 5. Burnside's Lemma (Cauchy-Frobenius Lemma)
+* Burnside's Lemma (Cauchy-Frobenius Lemma)
 
 #+begin_quote
 *Lemma 2.5 (Burnside's Lemma):*
@@ -108,7 +108,7 @@ By the Orbit-Stabilizer Theorem, $|G_x| = \frac{|G|}{|\mathcal{O}_x|}$. Substitu
 $$ \sum_{g \in G} |X^g| = \sum_{x \in X} \frac{|G|}{|\mathcal{O}_x|} = |G| \sum_{\text{orbits } \mathcal{O}} \sum_{x \in \mathcal{O}} \frac{1}{|\mathcal{O}|} = |G| \sum_{\text{orbits } \mathcal{O}} 1 = |G| \cdot |X/G| $$
 Dividing by $|G|$ yields the result. $\blacksquare$
 
-** 5.1 Combinatorial Example: Two-Color Bracelets
+** Combinatorial Example: Two-Color Bracelets
 Consider a circular bracelet with 6 beads, where 3 beads are red and 3 beads are blue.
 - The unconstrained arrangements without symmetry have size $|X| = \binom{6}{3} = \frac{6!}{3! 3!} = 20$.
 - The symmetry group of the bracelet is the dihedral group $D_6 = \{e, r, r^2, \dots, r^5, s, rs, \dots, r^5s\}$ of order $|D_6| = 12$ (rotations and flips).
@@ -122,7 +122,7 @@ Applying Burnside's Lemma:
 $$ |X/D_6| = \frac{1}{12} [20 + 0 + 2 + 0 + 2 + 0 + (3 \times 2) + (3 \times 0)] = \frac{1}{12} [20 + 4 + 6] = \frac{30}{12} \dots $$
 (With exact reflection configurations detailed in text, $|X/D_6| = 3$ distinct physical bracelets).
 
-* 6. Group Acting on Itself: Centers of Groups
+* Group Acting on Itself: Centers of Groups
 
 A group $G$ can act on its own underlying set ($X = G$):
 1. *Left translation:* $L_g(x) = gx$. Always transitive ($G \cdot e = G$) and free ($gx = x \implies g = e$).
@@ -146,14 +146,14 @@ A group $G$ can act on its own underlying set ($X = G$):
 | $E_6$                   | $\mathbb{Z}_3$                                     | $\mathbb{Z}_3$         |
 | $E_7$                   | $\mathbb{Z}_2$                                     | $\mathbb{Z}_2$         |
 
-* 7. The $\mathrm{SU}(2) \to \mathrm{SO}(3)$ Homomorphism
+* The $\mathrm{SU}(2) \to \mathrm{SO}(3)$ Homomorphism
 
-** 7.1 Defining the Adjoint Map
+** Defining the Adjoint Map
 Define the mapping $\mu : \mathrm{SU}(2) \to \mathrm{SO}(3)$ whose matrix elements are:
 $$ \mu(A)_{ab} = \frac{1}{2} \mathrm{Tr}(\sigma_a A \sigma_b A^{-1}), \quad a, b \in \{1, 2, 3\} $$
 where $\sigma_a$ are the Pauli matrices and $A \in \mathrm{SU}(2)$.
 
-** 7.2 Proof that $\mu$ is a Homomorphism
+** Proof that $\mu$ is a Homomorphism
 We must verify that $\mu(A)\mu(B) = \mu(AB)$:
 $$ [\mu(A)\mu(B)]_{ac} = \sum_{b=1}^3 \mu(A)_{ab} \mu(B)_{bc} = \frac{1}{4} \sum_{b=1}^3 \mathrm{Tr}(\sigma_a A \sigma_b A^{-1}) \mathrm{Tr}(\sigma_b B \sigma_c B^{-1}) $$
 Writing out matrix indices with $A^{-1} = A^\dagger$:
@@ -166,7 +166,7 @@ Summing over $b=1, 2, 3$ using the Pauli completeness relation $\sum_{b=1}^3 (\s
    since Pauli matrices are traceless ($\mathrm{Tr}(\sigma_a) = 0$).
 Thus $[\mu(A)\mu(B)]_{ac} = \mu(AB)_{ac}$, proving $\mu$ is a group homomorphism.
 
-** 7.3 Kernel and the Double Cover Isomorphism
+** Kernel and the Double Cover Isomorphism
 Let $A \in \mathrm{Ker}(\mu) \implies \mu(A) = \mathbf{1}_3$:
 $$ \frac{1}{2}\mathrm{Tr}(\sigma_a A \sigma_b A^{-1}) = \delta_{ab} \implies A \sigma_b A^{-1} = \sigma_b \implies A \sigma_b = \sigma_b A, \quad \forall b $$
 Since $A$ commutes with all three Pauli matrices and $\mathbf{1}_2$, Schur's lemma implies $A = c\mathbf{1}_2$.

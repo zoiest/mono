@@ -11,9 +11,9 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][← Previous: Subgroups and Cosets]] | [[id:206fb1b4-ba32-4675-921a-1b0864eae8e8][Next: Smallest Finite Groups →]]
 
-* 1. Group Homomorphisms and Isomorphisms
+* Group Homomorphisms and Isomorphisms
 
-** 1.1 Group Homomorphisms
+** Group Homomorphisms
 Let $(G, \cdot)$ and $(H, \bullet)$ be two groups. A mapping $\phi : G \to H$ is called a *group homomorphism* if it preserves the group operation:
 $$ \forall g_1, g_2 \in G, \quad \phi(g_1 \cdot g_2) = \phi(g_1) \bullet \phi(g_2) $$
 
@@ -27,7 +27,7 @@ $$ \forall g_1, g_2 \in G, \quad \phi(g_1 \cdot g_2) = \phi(g_1) \bullet \phi(g_
 3. *Preservation of Powers:*
    $$ \phi(g^n) = (\phi(g))^n, \quad \forall n \in \mathbb{Z} $$
 
-** 1.2 Group Isomorphisms
+** Group Isomorphisms
 A group homomorphism $\phi : G \to H$ is a *group isomorphism* if it is a bijection (both injective and surjective).
 If an isomorphism exists between $G$ and $H$, the groups are called *isomorphic*, denoted:
 $$ G \cong H $$
@@ -47,29 +47,29 @@ Define $f : \mathbb{R}^+ \to \mathbb{R}$ by $f(x) = \ln x$:
 $$ f(xy) = \ln(xy) = \ln x + \ln y = f(x) + f(y) $$
 $f$ is bijective, and its inverse is $f^{-1}(y) = e^y$. Thus $(\mathbb{R}^+, \cdot) \cong (\mathbb{R}, +)$.
 
-** 1.3 Automorphisms
+** Automorphisms
 An isomorphism from a group $G$ to itself is called an *automorphism*.
 The set of all automorphisms of $G$ forms a group under function composition, denoted $\mathrm{Aut}(G)$.
 
-* 2. Kernel and Image
+* Kernel and Image
 
 Let $\phi : G \to H$ be a group homomorphism.
 
-** 2.1 The Kernel
+** The Kernel
 The *kernel* of $\phi$ is the preimage of the identity in $H$:
 $$ \mathrm{Ker}(\phi) = \{ g \in G \mid \phi(g) = e_H \} $$
 - $\mathrm{Ker}(\phi)$ is a subgroup of $G$:
   - $e_G \in \mathrm{Ker}(\phi)$ since $\phi(e_G) = e_H$.
   - If $k_1, k_2 \in \mathrm{Ker}(\phi)$, $\phi(k_1 k_2^{-1}) = \phi(k_1) \phi(k_2)^{-1} = e_H e_H^{-1} = e_H \implies k_1 k_2^{-1} \in \mathrm{Ker}(\phi)$.
 
-** 2.2 The Image
+** The Image
 The *image* of $\phi$ is the range of $\phi$ in $H$:
 $$ \mathrm{Im}(\phi) = \phi(G) = \{ h \in H \mid \exists g \in G, \, h = \phi(g) \} $$
 - $\mathrm{Im}(\phi)$ is a subgroup of $H$:
   - $e_H = \phi(e_G) \in \mathrm{Im}(\phi)$.
   - If $h_1 = \phi(g_1)$ and $h_2 = \phi(g_2)$, then $h_1 h_2^{-1} = \phi(g_1) \phi(g_2^{-1}) = \phi(g_1 g_2^{-1}) \in \mathrm{Im}(\phi)$.
 
-** 2.3 Injectivity Criterion
+** Injectivity Criterion
 #+begin_quote
 *Proposition:* A group homomorphism $\phi : G \to H$ is injective if and only if $\mathrm{Ker}(\phi) = \{e_G\}$.
 #+end_quote
@@ -79,16 +79,16 @@ $$ \mathrm{Im}(\phi) = \phi(G) = \{ h \in H \mid \exists g \in G, \, h = \phi(g)
   $$ \phi(g_1)\phi(g_2)^{-1} = e_H \implies \phi(g_1 g_2^{-1}) = e_H \implies g_1 g_2^{-1} \in \mathrm{Ker}(\phi) = \{e_G\} $$
   Hence $g_1 g_2^{-1} = e_G \implies g_1 = g_2$. Thus $\phi$ is injective. $\blacksquare$
 
-* 3. Normal Subgroups and Conjugacy
+* Normal Subgroups and Conjugacy
 
-** 3.1 Normal (Invariant) Subgroups
+** Normal (Invariant) Subgroups
 A subgroup $N \le G$ is called a *normal subgroup* (or *invariant subgroup*), denoted $N \triangleleft G$, if it is invariant under conjugation by all elements of $G$:
 $$ \forall g \in G, \forall n \in N, \quad g n g^{-1} \in N $$
 Equivalently:
 $$ g N g^{-1} = N \quad \iff \quad gN = Ng, \quad \forall g \in G $$
 (Every left coset of $N$ equals its right coset.)
 
-** 3.2 The Fundamental Link: Kernels are Normal Subgroups
+** The Fundamental Link: Kernels are Normal Subgroups
 #+begin_quote
 *Theorem:* The kernel of every group homomorphism $\phi : G \to H$ is a normal subgroup of $G$.
 #+end_quote
@@ -97,18 +97,18 @@ Let $k \in \mathrm{Ker}(\phi)$ and $g \in G$. Consider the conjugate element $g 
 $$ \phi(g k g^{-1}) = \phi(g) \phi(k) \phi(g^{-1}) = \phi(g) e_H \phi(g)^{-1} = \phi(g) \phi(g)^{-1} = e_H $$
 Therefore, $g k g^{-1} \in \mathrm{Ker}(\phi)$. Thus $\mathrm{Ker}(\phi) \triangleleft G$. $\blacksquare$
 
-** 3.3 Simple and Semisimple Groups
+** Simple and Semisimple Groups
 - *Simple Group:* A group $G$ is *simple* if it has no proper normal subgroups (its only normal subgroups are $\{e\}$ and $G$ itself).
 - *Semisimple Group:* A group $G$ is *semisimple* if it contains no non-trivial, proper normal *Abelian* subgroups.
 - Every simple group is semisimple, but not vice versa (e.g., $\mathrm{SO}(4)$ is semisimple but not simple).
 
-* 4. Quotient Groups (Factor Groups)
+* Quotient Groups (Factor Groups)
 
 Let $N \triangleleft G$ be a normal subgroup.
 The coset space $G/N = \{ gN \mid g \in G \}$ can be endowed with a natural binary operation:
 $$ (g_1 N) \cdot (g_2 N) \equiv (g_1 g_2) N $$
 
-** 4.1 Well-Definedness of Coset Multiplication
+** Well-Definedness of Coset Multiplication
 #+begin_quote
 *Theorem:* The coset multiplication $(g_1 N)(g_2 N) = (g_1 g_2)N$ is well-defined if and only if $N \triangleleft G$.
 #+end_quote
@@ -120,14 +120,14 @@ Since $N \triangleleft G$, the conjugate $n_1' = g_2^{-1} n_1 g_2 \in N$.
 Hence $g_1' g_2' = (g_1 g_2) (n_1' n_2)$. Since $N$ is a subgroup, $n_3 = n_1' n_2 \in N$.
 Thus $g_1' g_2' \in (g_1 g_2)N$, which proves $(g_1' g_2')N = (g_1 g_2)N$. $\blacksquare$
 
-** 4.2 Group Properties of $G/N$
+** Group Properties of $G/N$
 Under this multiplication, $G/N$ forms a group, called the *quotient group* (or *factor group*):
 1. *Associativity:* Inherited from $G$: $((g_1 N)(g_2 N))(g_3 N) = (g_1 g_2 g_3)N = (g_1 N)((g_2 N)(g_3 N))$.
 2. *Identity:* The identity element is the coset $eN = N$.
 3. *Inverses:* $(gN)^{-1} = g^{-1}N$.
 4. *Order:* If $G$ is finite, $|G/N| = [G:N] = |G|/|N|$.
 
-* 5. The First Isomorphism Theorem
+* The First Isomorphism Theorem
 
 #+begin_quote
 *Theorem 2.6 (First Isomorphism Theorem / Fundamental Homomorphism Theorem):*

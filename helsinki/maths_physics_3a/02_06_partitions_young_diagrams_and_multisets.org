@@ -11,9 +11,9 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:e61da419-8849-4086-bc86-0892d092c8f4][← Previous: Permutations and Symmetric Group]] | [[id:311c6a8f-4c6b-49aa-8d55-ce17aae8415f][Next: Free Groups, Presentations, and Braids →]]
 
-* 1. Integer Partitions
+* Integer Partitions
 
-** 1.1 Cycle Types in $S_N$ and Partitions
+** Cycle Types in $S_N$ and Partitions
 In the symmetric group $S_N$, any permutation decomposes into disjoint cycles. The sum of the lengths of all cycles (including 1-cycles) equals $N$.
 For example, in $S_4$:
 #+caption: Conjugacy classes of $S_4$ and their associated partitions
@@ -25,14 +25,14 @@ For example, in $S_4$:
 | One 2-cycle, two 1-cycles | $(12)(3)(4)$     | 2 + 1 + 1     | $2 + 1 + 1$    |
 | Four 1-cycles          | $(1)(2)(3)(4) = E$  | 1 + 1 + 1 + 1 | $1 + 1 + 1 + 1$ |
 
-** 1.2 Definition of a Partition
+** Definition of a Partition
 A *partition* of an integer $N \in \mathbb{Z}^+$ is a representation of $N$ as a sum of positive integers:
 $$ N = \sum_{i=1}^k n_i = n_1 + n_2 + \cdots + n_k $$
 conventionally arranged in weakly descending order:
 $$ n_1 \ge n_2 \ge \cdots \ge n_k \ge 1 $$
 The integers $n_i$ are called the *parts* of the partition.
 
-** 1.3 The Partition Function $p(N)$
+** The Partition Function $p(N)$
 The number of distinct partitions of $N$ is denoted by the *partition function* $p(N)$ (with $p(0) \equiv 1$):
 - $p(1) = 1$: $1$
 - $p(2) = 2$: $2, \, 1+1$
@@ -56,15 +56,15 @@ $$ p(N) \sim \frac{1}{4N\sqrt{3}} \exp\left( \pi \sqrt{\frac{2N}{3}} \right), \q
 In string theory, $p(N)$ counts the number of transverse oscillation states at mass level $N$ of a bosonic string. The exponential growth $\exp(\text{const} \cdot \sqrt{N})$ leads directly to the *Hagedorn temperature*, a limiting temperature for hadronic/stringy matter.
 #+end_note
 
-* 2. Young Diagrams
+* Young Diagrams
 
-** 2.1 Graphical Construction
+** Graphical Construction
 A partition $N = n_1 + n_2 + \cdots + n_k$ with $n_1 \ge n_2 \ge \cdots \ge n_k$ is represented graphically by a *Young diagram* (named after Alfred Young):
 - Row 1 has $n_1$ adjacent square boxes.
 - Row 2 has $n_2$ adjacent square boxes beneath Row 1, aligned to the left.
 - Row $i$ has $n_i$ adjacent square boxes.
 
-** 2.2 Complete Young Diagrams for Small $N$
+** Complete Young Diagrams for Small $N$
 *** For $N = 3$ ($p(3) = 3$):
 - Partition $[3]$:
   #+begin_example
@@ -98,32 +98,32 @@ A partition $N = n_1 + n_2 + \cdots + n_k$ with $n_1 \ge n_2 \ge \cdots \ge n_k$
 - $[2, 1, 1]$: row of 2, two rows of 1 box.
 - $[1^4]$: single vertical column of 4 boxes (totally antisymmetric).
 
-** 2.3 Fundamental Role in Physics
+** Fundamental Role in Physics
 Young diagrams provide a triple correspondence in modern physics:
 1. *Conjugacy Classes of $S_N$:* Each Young diagram labels a conjugacy class of $S_N$.
 2. *Irreducible Representations (Irreps) of $S_N$:* By Frobenius character theory, each Young diagram of $N$ boxes uniquely labels an inequivalent irrep of $S_N$.
 3. *Representations of $\mathrm{SU}(N)$ and $\mathrm{GL}(N)$:* Young diagrams classify irreducible tensor representations of $\mathrm{SU}(N)$ gauge theories and quarks (Chapter 6).
 
-* 3. Multisets and Multinomial Coefficients
+* Multisets and Multinomial Coefficients
 
-** 3.1 Multisets
+** Multisets
 A *multiset* is a collection of elements where elements may appear more than once, each with an associated *multiplicity* $m_i$:
 $$ X = \{ x_1^{m_1}, x_2^{m_2}, \dots, x_k^{m_k} \} $$
 The total number of elements (with multiplicity) is:
 $$ N = \sum_{i=1}^k m_i $$
 
-** 3.2 Distinct Reorderings (Permutations of a Multiset)
+** Distinct Reorderings (Permutations of a Multiset)
 A priori, $N$ distinct items can be permuted in $N!$ ways.
 However, permuting identical items among themselves ($m_i!$ ways for item $x_i$) produces an identical configuration.
 Therefore, the number of distinct permutations is given by the *multinomial coefficient*:
 $$ \binom{N}{m_1, m_2, \dots, m_k} \equiv \frac{N!}{m_1! m_2! \cdots m_k!} $$
 where $\sum_{i=1}^k m_i = N$ is an integer partition of $N$.
 
-** 3.3 The Multinomial Theorem
+** The Multinomial Theorem
 The multinomial coefficient appears as the expansion coefficient of powers of sums:
 $$ (x_1 + x_2 + \cdots + x_k)^N = \sum_{\substack{m_1, \dots, m_k \ge 0 \\ \sum m_i = N}} \binom{N}{m_1, m_2, \dots, m_k} x_1^{m_1} x_2^{m_2} \cdots x_k^{m_k} $$
 
-** 3.4 Worked Example: Anagrams of `ABRACADABRA`
+** Worked Example: Anagrams of `ABRACADABRA`
 Consider the 11-letter word =ABRACADABRA=.
 The letters form the multiset:
 - Multiplicities: $m_A = 5$, $m_B = 2$, $m_R = 2$, $m_C = 1$, $m_D = 1$.

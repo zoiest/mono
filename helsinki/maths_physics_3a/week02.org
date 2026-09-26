@@ -12,6 +12,9 @@
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][Topic: Subgroups & Cosets]] | [[id:e61da419-8849-4086-bc86-0892d092c8f4][Topic: Permutations & Cayley Theorem]] | [[id:9231c23d-0041-4dcc-9c4b-8684eeae1b76][Topic: Partitions & Young Diagrams]] | [[id:16fe12b7-9348-4965-a3b7-73ec71993c39][Topic: Continuous & Lie Groups]]
 
 * Overview and Syllabus Mapping
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 This document provides the self-study lecture notes for *Week 02* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week02-topics.txt=.
 Topics are drawn from textbook sections *2.2*, *2.4*, *2.5*, and *2.8* of /Mathematical Methods for Physics: An Introduction to Group Theory, Topology, and Geometry/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
@@ -19,18 +22,20 @@ Topics are drawn from textbook sections *2.2*, *2.4*, *2.5*, and *2.8* of /Mathe
 #+caption: Summary of Lecture Topics
 #+begin_quote
 1. *Subgroups & Subgroup Criteria:* One-step, two-step, and finite subgroup criteria (§2.2).
-2. *Permutations, Cycles, and Parity:* Transpositions, signature $\mathrm{sgn}(\pi)$, alternating group $A_n$, and generating $A_n$ with 3-cycles (§2.5).
-3. *Permutation Matrices:* Matrix representations in $\mathrm{GL}(n, \mathbb{R})$, orthogonality, and determinants (§2.5).
-4. *Integer Partitions & Young Diagrams:* Partitions $p(N)$, Ferrers shapes, conjugacy classes of $S_N$, and multiparticle statistics (§2.6).
-5. *Cayley's Embedding Theorem:* The regular representation and universal embedding $G \hookrightarrow S_{|G|}$ (§2.5).
-6. *Continuous Groups & Lie Groups:* Group manifolds, coordinates, tangent spaces, and Lie algebras (§2.8).
-7. *Classical Matrix Lie Groups:* $\mathrm{GL}, \mathrm{SL}, \mathrm{O}, \mathrm{SO}, \mathrm{U}, \mathrm{SU}, \mathrm{Sp}$ with dimension derivations (§2.8).
-8. *Group Actions on Sets:* Left and right actions, active vs. passive field transformations (§2.8, §2.9).
+2. *Permutation Theory, Cycles, Alternating Groups & Matrices:* Transpositions, signature $\mathrm{sgn}(\pi)$, alternating group $A_n$, 3-cycles, and permutation matrices (§2.5).
+3. *Integer Partitions & Young Diagrams:* Partitions $p(N)$, Ferrers shapes, conjugacy classes of $S_N$, and multiparticle statistics (§2.6).
+4. *Cayley's Classification Theorem:* The regular representation and universal embedding $G \hookrightarrow S_{|G|}$ (§2.5).
+5. *Continuous Groups & Lie Groups:* Group manifolds, coordinates, tangent spaces, and Lie algebras (§2.8).
+6. *Classical Matrix Lie Groups & Real Dimensions:* $\mathrm{GL}, \mathrm{SL}, \mathrm{O}, \mathrm{SO}, \mathrm{U}, \mathrm{SU}, \mathrm{Sp}$ with Lie algebra dimension derivations (§2.8).
+7. *Group Actions on Sets:* Left and right actions, active vs. passive field transformations (§2.8, §2.9).
 #+end_quote
 
 ---
 
-* 0. Intuitive "Mental Map" for Week 02
+* Intuitive "Mental Map" for Week 02
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 Week 02 bridges two major domains of symmetry in physics:
 1. *Discrete Symmetries (Permutations & Partitions):* Governs identical particles in quantum mechanics (bosons vs. fermions via symmetric/antisymmetric representations of $S_N$, classified by Young diagrams).
@@ -48,14 +53,14 @@ Week 02 bridges two major domains of symmetry in physics:
 
 ---
 
-* 1. Subgroups and Subgroup Criteria (§2.2)
+* Subgroups and Subgroup Criteria (§2.2)
 
-** 1.1 Definition of Subgroup
+** Definition of Subgroup
 A non-empty subset $H \subseteq G$ of a group $(G, \cdot)$ is a *subgroup* (denoted $H \le G$) if $H$ forms a group under the restricted operation of $G$.
 - *Proper Subgroup:* $H < G$ where $H \neq G$.
 - *Trivial Subgroups:* The identity $\{e\}$ and $G$ itself.
 
-** 1.2 Subgroup Criteria
+** Subgroup Criteria
 Instead of checking all 4 group axioms, one can use compact tests:
 1. *One-Step Subgroup Test:*
    $$ H \le G \iff \forall a, b \in H, \quad a \cdot b^{-1} \in H $$
@@ -64,7 +69,7 @@ Instead of checking all 4 group axioms, one can use compact tests:
    $$ H \le G \iff \forall a, b \in H, \quad a \cdot b \in H $$
    *(For finite sets, closure alone automatically guarantees the existence of inverses!)*
 
-*** Worked Example 1.1: Applying Subgroup Tests
+*** Worked Example: Applying Subgroup Tests
 1. *Test that $\mathrm{SL}(n, \mathbb{R}) \le \mathrm{GL}(n, \mathbb{R})$ using the One-Step Test:*
    Let $A, B \in \mathrm{SL}(n, \mathbb{R})$, so $\det A = 1$ and $\det B = 1$.
    Compute $\det(A B^{-1})$:
@@ -78,9 +83,9 @@ Instead of checking all 4 group axioms, one can use compact tests:
 
 ---
 
-* 2. Permutation Theory, Cycles, and Alternating Groups (§2.5)
+* Permutation Theory, Cycles, and Alternating Groups (§2.5)
 
-** 2.1 Cycle Decompositions and Transpositions
+** Cycle Decompositions and Transpositions
 Let $S_n$ be the symmetric group on $\{1, 2, \dots, n\}$.
 - *Cycle of Length $k$ ($k$-cycle):* $(a_1 \, a_2 \, \dots \, a_k)$ maps $a_1 \mapsto a_2 \mapsto \dots \mapsto a_k \mapsto a_1$.
   - Disjoint cycles share no common elements and *always commute*: $\sigma \tau = \tau \sigma$.
@@ -90,7 +95,7 @@ Let $S_n$ be the symmetric group on $\{1, 2, \dots, n\}$.
     $$ (a_1 \, a_2 \, a_3 \, \dots \, a_k) = (a_1 \, a_k)(a_1 \, a_{k-1}) \cdots (a_1 \, a_3)(a_1 \, a_2) $$
   - Consequently, *every permutation is a product of transpositions*.
 
-** 2.2 Signature Homomorphism and $A_n$
+** Signature Homomorphism and $A_n$
 The *signature* (or parity) of a permutation $\pi$ is:
 $$ \mathrm{sgn}(\pi) = (-1)^N $$
 where $N$ is the number of transpositions in any decomposition of $\pi$.
@@ -102,7 +107,7 @@ where $N$ is the number of transpositions in any decomposition of $\pi$.
 - *Alternating Group $A_n$:* The normal subgroup of all even permutations ($\mathrm{Ker}(\mathrm{sgn})$):
   $$ |A_n| = \frac{n!}{2} $$
 
-*** Worked Example 2.1: Cycle Decomposition, Signature, and 3-Cycles
+*** Worked Example: Cycle Decomposition, Signature, and 3-Cycles
 Consider the permutation in Cauchy two-line notation in $S_6$:
 $$ \pi = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\ 3 & 5 & 4 & 1 & 2 & 6 \end{pmatrix} $$
 1. *Disjoint Cycle Decomposition:*
@@ -126,7 +131,7 @@ $$ \pi = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\ 3 & 5 & 4 & 1 & 2 & 6 \end{pma
 
 ---
 
-** 2.3 Permutation Matrices
+** Permutation Matrices
 To each permutation $\pi \in S_n$, we associate an $n \times n$ matrix $D(\pi) \in \mathrm{GL}(n, \mathbb{R})$ defined by:
 $$ [D(\pi)]_{ij} = \delta_{i, \pi(j)} $$
 - *Properties:*
@@ -134,7 +139,7 @@ $$ [D(\pi)]_{ij} = \delta_{i, \pi(j)} $$
   2. $D(\pi)^T D(\pi) = \mathbf{1}_n$ (Orthogonal matrix).
   3. $\det D(\pi) = \mathrm{sgn}(\pi) = \pm 1$.
 
-*** Worked Example 2.2: Permutation Matrices in $S_3$
+*** Worked Example: Permutation Matrices in $S_3$
 In $S_3$, consider the transposition $\pi_1 = (1 \, 2)$ and the 3-cycle $\pi_2 = (1 \, 2 \, 3)$:
 $$ D((1 \, 2)) = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix}, \qquad D((1 \, 2 \, 3)) = \begin{pmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{pmatrix} $$
 Compute determinants:
@@ -143,14 +148,14 @@ Compute determinants:
 
 ---
 
-* 3. Integer Partitions and Young Diagrams (§2.6)
+* Integer Partitions and Young Diagrams (§2.6)
 
-** 3.1 Integer Partitions
+** Integer Partitions
 An *integer partition* of $N \in \mathbb{N}$ is a representation of $N$ as a sum of positive integers in non-increasing order:
 $$ N = \lambda_1 + \lambda_2 + \dots + \lambda_k, \quad \lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_k \ge 1 $$
 The total number of partitions is denoted $p(N)$.
 
-** 3.2 Young Diagrams and Physical Quantum States
+** Young Diagrams and Physical Quantum States
 A *Young diagram* represents a partition by rows of empty square boxes:
 - Row $i$ has $\lambda_i$ boxes.
 - *Total boxes:* $N$.
@@ -160,7 +165,7 @@ A *Young diagram* represents a partition by rows of empty square boxes:
 $$ \text{Partitions } \lambda \vdash N \longleftrightarrow \text{Young Diagrams of size } N \longleftrightarrow \text{Conjugacy Classes of } S_N \longleftrightarrow \text{Irreducible Reps of } S_N $$
 #+end_quote
 
-*** Worked Example 3.1: All Partitions and Young Diagrams for $N = 4$ ($p(4) = 5$)
+*** Worked Example: All Partitions and Young Diagrams for $N = 4$ ($p(4) = 5$)
 There are exactly 5 partitions of $4$:
 
 1. *$\lambda = (4)$:* Four boxes in a single row:
@@ -188,7 +193,7 @@ There are exactly 5 partitions of $4$:
 
 ---
 
-* 4. Cayley's Classification Theorem (§2.5)
+* Cayley's Classification Theorem (§2.5)
 
 #+begin_quote
 *Theorem (Cayley):*
@@ -197,7 +202,7 @@ $$ G \hookrightarrow S_n $$
 #+end_quote
 *Intuition:* Every group element $g$ can be viewed as an operator that permutes the $n$ entries of the group's own Cayley table via left multiplication $L_g(x) = g x$.
 
-*** Worked Example 4.1: Embedding the Klein Four-Group $V_4 \hookrightarrow S_4$
+*** Worked Example: Embedding the Klein Four-Group $V_4 \hookrightarrow S_4$
 Let $V_4 = \{e, a, b, c\}$ where $a^2 = b^2 = c^2 = e$ and $ab = ba = c$.
 Label the 4 elements as indices: $1 = e$, $2 = a$, $3 = b$, $4 = c$.
 Compute the permutation induced by left multiplication $L_g(x) = g x$:
@@ -216,9 +221,9 @@ Compute the permutation induced by left multiplication $L_g(x) = g x$:
 
 ---
 
-* 5. Continuous Groups and Lie Groups (§2.8)
+* Continuous Groups and Lie Groups (§2.8)
 
-** 5.1 Lie Groups and Lie Algebras
+** Lie Groups and Lie Algebras
 A *Lie group* is a group that is also a smooth manifold.
 - *Group Dimension:* The dimension $\dim G = d$ is the number of independent continuous real parameters needed to specify an element near the identity.
 - *Lie Algebra $\mathfrak{g} = T_e G$:* The tangent space at the identity element $e = \mathbf{1}$.
@@ -228,7 +233,7 @@ A *Lie group* is a group that is also a smooth manifold.
 
 ---
 
-* 6. Classical Matrix Lie Groups and Real Dimensions (§2.8)
+* Classical Matrix Lie Groups and Real Dimensions (§2.8)
 
 #+caption: Classical Matrix Groups and Their Lie Algebra Dimensions
 | Group | Invariance Condition | Lie Algebra Condition | Real Dimension | Physical Application |
@@ -241,7 +246,7 @@ A *Lie group* is a group that is also a smooth manifold.
 | $\mathrm{SU}(n)$ | $U^\dagger U = \mathbf{1}, \, \det U = 1$ | Skew-Hermitian + Traceless | $n^2 - 1$ | Electroweak & Strong gauge groups ($\mathrm{SU}(2), \mathrm{SU}(3)$) |
 | $\mathrm{Sp}(2n, \mathbb{R})$ | $M^T \Omega M = \Omega$ | $\Omega X$ is symmetric | $n(2n + 1)$ | Classical Hamiltonian mechanics |
 
-*** Worked Example 6.1: Deriving the Dimensions of $\mathrm{SO}(3)$ and $\mathrm{SU}(2)$
+*** Worked Example: Deriving the Dimensions of $\mathrm{SO}(3)$ and $\mathrm{SU}(2)$
 1. *$\mathrm{SO}(3)$ (3D Spatial Rotations):*
    - Group condition: $R^T R = \mathbf{1}_3$ and $\det R = 1$.
    - Lie algebra $\mathfrak{so}(3)$: Expand $R = \mathbf{1} + \epsilon X$:
@@ -262,13 +267,13 @@ A *Lie group* is a group that is also a smooth manifold.
 
 ---
 
-* 7. Group Actions on Sets (§2.8, §2.9)
+* Group Actions on Sets (§2.8, §2.9)
 
-** 7.1 Left Action vs. Right Action
+** Left Action vs. Right Action
 - *Left Action:* $g_1 \cdot (g_2 \cdot x) = (g_1 g_2) \cdot x$.
 - *Right Action:* $(x \cdot g_1) \cdot g_2 = x \cdot (g_1 g_2)$.
 
-*** Worked Example 7.1: Active vs. Passive Transformations in Physics
+*** Worked Example: Active vs. Passive Transformations in Physics
 In field theory, how does a spatial rotation $R \in \mathrm{SO}(3)$ act on a scalar field $\phi(x)$?
 - *Active Transformation on Coordinates (Left Action):*
   $$ x \mapsto x' = R x $$

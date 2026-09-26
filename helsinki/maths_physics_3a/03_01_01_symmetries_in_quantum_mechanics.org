@@ -11,16 +11,16 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:ef2abac8-273c-404c-8140-d048794366d9][← Previous: Complex Vector Spaces and Representations]]
 
-* 1. The Mathematical Framework of Quantum Mechanics
+* The Mathematical Framework of Quantum Mechanics
 
-** 1.1 Hilbert Space $\mathcal{H}$
+** Hilbert Space $\mathcal{H}$
 In quantum mechanics, the state of a physical system is described by a vector in a *Hilbert space* $\mathcal{H}$:
 - $\mathcal{H}$ is a complex vector space equipped with a positive-definite Hermitian inner product $\langle \cdot \mid \cdot \rangle$.
 - $\mathcal{H}$ is *complete* with respect to the norm induced by the inner product $\|\psi\| = \sqrt{\langle\psi \mid \psi\rangle}$ (every Cauchy sequence converges to a limit inside $\mathcal{H}$).
 - State vectors are denoted using Dirac ket notation: $|\psi\rangle \in \mathcal{H}$.
 - Dual vectors are denoted by bras: $\langle\phi| \in \mathcal{H}^*$.
 
-** 1.2 Ray Representation of Physical States
+** Ray Representation of Physical States
 In quantum mechanics, physical observables depend only on probability densities and transition probabilities:
 $$ P(\phi \to \psi) = \frac{|\langle\phi \mid \psi\rangle|^2}{\langle\phi \mid \phi\rangle \langle\psi \mid \psi\rangle} $$
 Multiplying a state vector by an arbitrary global phase factor leaves all physical predictions unchanged:
@@ -29,16 +29,16 @@ Therefore, a pure physical state corresponds not to an individual vector, but to
 $$ \underline{\psi} = \{ c |\psi\rangle \mid c \in \mathbb{C} \setminus \{0\} \} \in \mathbb{P}\mathcal{H} $$
 This formulation is known as the *ray representation* of quantum physical states.
 
-** 1.3 Quantum Dynamics: The Schrödinger Equation
+** Quantum Dynamics: The Schrödinger Equation
 The time evolution of a quantum state is governed by the *Schrödinger equation*:
 $$ i\hbar \frac{d}{dt} |\psi(t)\rangle = H |\psi(t)\rangle $$
 where $H$ is the *Hamiltonian operator* (energy observable).
 Because probabilities must be conserved over time ($\frac{d}{dt}\langle\psi(t)\mid\psi(t)\rangle = 0$), $H$ must be a self-adjoint (Hermitian) operator:
 $$ H^\dagger = H $$
 
-* 2. Symmetries in Quantum Mechanics
+* Symmetries in Quantum Mechanics
 
-** 2.1 Definition of a Symmetry Transformation
+** Definition of a Symmetry Transformation
 A physical system possesses a symmetry under a transformation group $G$ if all measurable physical properties—specifically, transition probabilities—remain invariant under the transformations:
 $$ |\langle U_g \phi \mid U_g \psi\rangle|^2 = |\langle\phi \mid \psi\rangle|^2, \quad \forall |\phi\rangle, |\psi\rangle \in \mathcal{H}, \, \forall g \in G $$
 By *Wigner's Theorem*, any symmetry transformation on the space of rays can be lifted to an operator on $\mathcal{H}$ that is either:
@@ -48,7 +48,7 @@ By *Wigner's Theorem*, any symmetry transformation on the space of rays can be l
 For continuous groups, we are exclusively concerned with *unitary representations*:
 $$ g \mapsto U_g, \quad U_g^\dagger U_g = U_g U_g^\dagger = \mathbf{1}_\mathcal{H} $$
 
-** 2.2 Invariance of Dynamics and Commutation with $H$
+** Invariance of Dynamics and Commutation with $H$
 In a closed quantum system, the symmetry must also be preserved under time evolution.
 Suppose $|\psi(t)\rangle$ is a solution to the Schrödinger equation:
 $$ i\hbar \frac{d}{dt} |\psi(t)\rangle = H |\psi(t)\rangle $$
@@ -70,9 +70,9 @@ A group $G$ is a symmetry group of a quantum system if and only if its unitary r
 $$ [H, U_g] = 0, \quad \forall g \in G $$
 #+end_important
 
-* 3. Energy Eigenspaces and Spectral Degeneracy
+* Energy Eigenspaces and Spectral Degeneracy
 
-** 3.1 Stationary States and Eigenspaces
+** Stationary States and Eigenspaces
 Consider the time-independent Schrödinger equation (energy eigenvalue problem):
 $$ H |\phi_n\rangle = E_n |\phi_n\rangle $$
 An energy level $E_n$ is said to be *degenerate* if there exist $k > 1$ linearly independent eigenstates $\{|\phi_{n,1}\rangle, |\phi_{n,2}\rangle, \dots, |\phi_{n,k}\rangle\}$ with the same energy $E_n$.
@@ -80,7 +80,7 @@ The set of all linear combinations forms the *eigenspace* $\mathcal{H}_n$:
 $$ \mathcal{H}_n = \mathrm{span}\{ |\phi_{n,1}\rangle, \dots, |\phi_{n,k}\rangle \} \subset \mathcal{H} $$
 $\mathcal{H}_n$ is a $k$-dimensional vector subspace of $\mathcal{H}$.
 
-** 3.2 Action of Symmetry on Eigenspaces
+** Action of Symmetry on Eigenspaces
 Now apply the symmetry operator $U_g$ to an eigenstate $|\phi_n\rangle$:
 $$ H (U_g |\phi_n\rangle) = U_g H |\phi_n\rangle = U_g (E_n |\phi_n\rangle) = E_n (U_g |\phi_n\rangle) $$
 #+begin_quote
@@ -93,9 +93,9 @@ Therefore:
   $$ U_g : \mathcal{H}_n \to \mathcal{H}_n $$
 - The restriction $D^{(n)}(g) \equiv U_g|_{\mathcal{H}_n}$ forms a $k$-dimensional linear representation of the symmetry group $G$ acting on $\mathcal{H}_n$!
 
-* 4. The Representation-Theoretic Origin of Degeneracy
+* The Representation-Theoretic Origin of Degeneracy
 
-** 4.1 Symmetry-Enforced Degeneracy
+** Symmetry-Enforced Degeneracy
 #+begin_important
 *The Core Principle:*
 If a quantum system possesses a symmetry group $G$, then the dimensions of the irreducible representations (irreps) of $G$ dictate the possible degeneracies of the energy spectrum of $H$.
@@ -107,7 +107,7 @@ If a quantum system possesses a symmetry group $G$, then the dimensions of the i
   - *Parity symmetry ($\mathbb{Z}_2$):* Energy eigenstates have definite parity (even or odd).
   - *Permutation symmetry ($S_N$):* Exchange degeneracy of $N$ identical particles (Slater determinants for fermions, symmetric states for bosons).
 
-** 4.2 "Accidental" Degeneracy and Hidden Symmetries
+** "Accidental" Degeneracy and Hidden Symmetries
 When an energy eigenspace $\mathcal{H}_n$ decomposes into multiple irreducible representations of $G$, the degeneracy is historically termed *accidental*.
 However, in theoretical physics, "accidental" degeneracies almost always signify a *larger, hidden dynamical symmetry group* that was not initially apparent:
 1. *Hydrogen Atom Coulomb Potential ($V(r) \propto -1/r$):*

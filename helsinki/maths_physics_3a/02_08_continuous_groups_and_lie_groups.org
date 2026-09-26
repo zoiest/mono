@@ -11,9 +11,9 @@
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:311c6a8f-4c6b-49aa-8d55-ce17aae8415f][← Previous: Free Groups, Presentations, and Braids]] | [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][Next: Groups Acting on a Set →]]
 
-* 1. Continuous Groups and Lie Groups
+* Continuous Groups and Lie Groups
 
-** 1.1 Continuous Groups
+** Continuous Groups
 A *continuous group* is a group containing an uncountably infinite number of elements parameterized by real variables (coordinates).
 - *Dimension of a Continuous Group ($\dim G$):*
   The minimal number of independent real parameters required to uniquely label its elements in a neighborhood of the identity.
@@ -23,12 +23,12 @@ A *continuous group* is a group containing an uncountably infinite number of ele
   - $\dim(\mathbb{C}, +) = 2$.
   - $\dim\mathrm{U}(1) = 1$ (parameterized by phase $e^{i\theta}$, $\theta \in [0, 2\pi)$).
 
-** 1.2 Lie Groups
+** Lie Groups
 A *Lie group* (named after Sophus Lie) is a continuous group $G$ whose underlying set is a smooth ($C^\infty$) differentiable manifold (the *group manifold*), such that:
 1. *Group multiplication:* $(g_1, g_2) \mapsto g_1 g_2$ is a smooth map $G \times G \to G$.
 2. *Inversion:* $g \mapsto g^{-1}$ is a smooth map $G \to G$.
 
-** 1.3 Topology of Lie Groups
+** Topology of Lie Groups
 - *Compactness:* A Lie group is *compact* if its group manifold is closed and bounded as a subset of Euclidean matrix space.
   - Compact: $\mathrm{U}(1) \cong S^1$, $\mathrm{SO}(n)$, $\mathrm{SU}(n)$, $\mathrm{Sp}(n)$.
   - Non-compact: $(\mathbb{R}, +)$, $\mathrm{GL}(n, \mathbb{R})$, $\mathrm{SL}(n, \mathbb{R})$, $\mathrm{SO}(1, 3)$ (Lorentz group).
@@ -37,7 +37,7 @@ A *Lie group* (named after Sophus Lie) is a continuous group $G$ whose underlyin
   - $\mathrm{O}(n)$ has two disconnected components ($\det = +1$ and $\det = -1$).
   - $\mathrm{SO}(n)$, $\mathrm{U}(n)$, $\mathrm{SU}(n)$ are connected.
 
-* 2. Classical Matrix Lie Groups
+* Classical Matrix Lie Groups
 
 Matrix Lie groups are closed subgroups of $\mathrm{GL}(n, \mathbb{C})$ under matrix multiplication.
 
@@ -54,7 +54,7 @@ Matrix Lie groups are closed subgroups of $\mathrm{GL}(n, \mathbb{C})$ under mat
 | $\mathrm{SU}(n)$        | $U^\dagger U = \mathbf{1}_n, \, \det U = 1$     | $\mathbb{C}$ | $n^2 - 1$         | *Yes*    | *Yes*      |
 | $\mathrm{Sp}(2n, \mathbb{R})$ | $M^T \Omega M = \Omega$                         | $\mathbb{R}$ | $n(2n+1)$         | No       | *Yes*      |
 
-** 2.1 Derivation of Dimensions
+** Derivation of Dimensions
 
 *** Dimension of $\mathrm{O}(n)$ and $\mathrm{SO}(n)$
 An $n \times n$ real matrix has $n^2$ entries. The constraint $A^T A = \mathbf{1}_n$ is symmetric ($A^T A = (A^T A)^T$):
@@ -82,9 +82,9 @@ $$ \dim \mathrm{Sp}(2n, \mathbb{R}) = 4n^2 - \frac{2n(2n-1)}{2} = 4n^2 - n(2n-1)
 Using the Pfaffian identity $\mathrm{Pf}(M^T \Omega M) = \det M \cdot \mathrm{Pf}(\Omega)$, every symplectic matrix automatically satisfies $\det M = +1$.
 For $n=1$: $\mathrm{Sp}(2, \mathbb{R}) = \mathrm{SL}(2, \mathbb{R})$.
 
-* 3. Deep Dive: $\mathrm{SU}(2)$ and Pauli Matrices
+* Deep Dive: $\mathrm{SU}(2)$ and Pauli Matrices
 
-** 3.1 Defining Form and Geometry
+** Defining Form and Geometry
 A generic $2 \times 2$ matrix in $\mathrm{SU}(2)$ satisfies $A^\dagger = A^{-1}$ and $\det A = 1$:
 $$ A = \begin{pmatrix} \alpha & \beta \\ -\beta^* & \alpha^* \end{pmatrix}, \quad \text{with } |\alpha|^2 + |\beta|^2 = 1 $$
 Decomposing into real and imaginary parts: $\alpha = x_4 + i x_3$, $\beta = x_2 + i x_1$:
@@ -95,7 +95,7 @@ The group manifold of $\mathrm{SU}(2)$ is the *3-dimensional sphere $S^3$* embed
 Consequently, $\mathrm{SU}(2)$ is compact, connected, and simply connected ($\pi_1(\mathrm{SU}(2)) = 0$).
 #+end_important
 
-** 3.2 The Pauli Matrices
+** The Pauli Matrices
 Named after Wolfgang Pauli, the three hermitian, traceless matrices are:
 $$ \sigma_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_2 = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad \sigma_3 = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} $$
 
@@ -110,13 +110,13 @@ $$ \sigma_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_2 = \be
    The set $\{\mathbf{1}_2, \sigma_1, \sigma_2, \sigma_3\}$ forms a complete orthogonal basis for the vector space of $2 \times 2$ Hermitian matrices over $\mathbb{R}$:
    $$ H = a\mathbf{1}_2 + b_1 \sigma_1 + b_2 \sigma_2 + b_3 \sigma_3, \quad a, b_i \in \mathbb{R} $$
 
-** 3.3 Exponential Parameterization
+** Exponential Parameterization
 Every element of $\mathrm{SU}(2)$ can be expressed as a matrix exponential:
 $$ A = \exp\left( i \frac{\phi}{2} \hat{v} \cdot \vec{\sigma} \right) = \cos\left(\frac{\phi}{2}\right)\mathbf{1}_2 + i \sin\left(\frac{\phi}{2}\right) \hat{v} \cdot \vec{\sigma} $$
 where $\hat{v} \in \mathbb{R}^3$ with $|\hat{v}|=1$, and $\phi \in [0, 4\pi]$.
 This provides the direct physical connection between $\mathrm{SU}(2)$ and spatial rotations by angle $\phi$ around axis $\hat{v}$.
 
-* 4. Octonions and the Exceptional Lie Groups
+* Octonions and the Exceptional Lie Groups
 
 Beyond classical matrix Lie algebras ($A_n, B_n, C_n, D_n$), the Killing-Cartan classification uncovered five *exceptional Lie groups*:
 
