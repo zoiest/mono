@@ -4,28 +4,30 @@
 :ROAM_REFS: [cite:@keskivakkuri2022mathematical]
 :END:
 #+title: Week 04: Group Representations, Presentations, and Vector Spaces
-#+subtitle: Mathematical Methods for Physics IIIa — Lecture Notes (Keski-Vakkuri, Montonen, Panero)
+#+subtitle: Mathematical Methods for Physics IIIa — Lecture Notes with Worked Examples (Keski-Vakkuri, Montonen, Panero)
 #+author: Antigravity Notes
 #+date: [2026-09-26]
-#+filetags: :physics:math:helsinki:week04:representations:presentations:vector-spaces:
+#+filetags: :physics:math:helsinki:week04:representations:presentations:vector-spaces:worked-examples:
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:311c6a8f-4c6b-49aa-8d55-ce17aae8415f][Topic: Free Groups & Braids]] | [[id:ef2abac8-273c-404c-8140-d048794366d9][Topic: Vector Spaces & Representations]] | [[id:9548a93b-2f08-4eaa-8c7d-d4a757aed1df][Topic: QM Symmetries]]
 
 * Overview and Syllabus Mapping
 
-This document provides the lecture notes for *Week 04* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week04-topics.txt=.
-Topics are drawn from textbook sections *2.7*, *3.1*, *3.1.1*, and *3.6.2* of /Mathematical Methods for Physics/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
+This document provides the self-study lecture notes for *Week 04* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week04-topics.txt=.
+Topics are drawn from textbook sections *2.7*, *3.1*, *3.1.1*, and *3.6.2* of /Mathematical Methods for Physics: An Introduction to Group Theory, Topology, and Geometry/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
+
+Each theoretical section is enriched with *step-by-step worked examples*, *physical applications*, and *visual diagrams* to facilitate independent study without lecture attendance.
 
 #+caption: Summary of Lecture Topics
 #+begin_quote
-1. Free groups, reduced words, and group presentations $\langle X \mid R \rangle$ (§2.7).
-2. Artin braid groups $B_n$, strand diagrams, and Yang-Baxter relations (§2.7.2).
-3. Complex vector spaces, bases, dimension, and linear operators (§3.1).
-4. Linear group representations: homomorphisms $D : G \to \mathrm{Aut}(V)$, dimension, and faithfulness (§3.1).
-5. Intertwining operators, representation equivalence, and similarity transformations (§3.1).
-6. Hermitian inner products, Gram-Schmidt orthonormalization, and unitary representations (§3.1).
-7. Symmetries in quantum mechanics: $[H, U_g] = 0$ and spectral degeneracies (§3.1.1).
-8. Vector space constructions: Direct sums $V \oplus W$ and tensor products $V \otimes W$ (§3.6.2).
+1. *Free Groups and Group Presentations:* Reduced words, reduction algorithms, generators, and relations $\langle X \mid R \rangle$ (§2.7).
+2. *Artin Braid Groups $B_n$:* Strand crossings, Artin relations, Yang-Baxter moves, and connections to anyons in $(2+1)$D (§2.7.2).
+3. *Complex Vector Spaces & Linear Operators:* Bases, dimension, image, kernel, and the Rank-Nullity Theorem (§3.1).
+4. *Linear Group Representations:* Homomorphisms $D : G \to \mathrm{Aut}(V)$, dimension, and faithfulness (§3.1).
+5. *Intertwining Operators & Equivalence:* Similarity transformations and basis independence of characters (§3.1).
+6. *Inner Product Spaces & Unitary Representations:* Hermitian products, Gram-Schmidt algorithm, and unitary operators (§3.1).
+7. *Symmetries in Quantum Mechanics:* Commuting Hamiltonians $[H, U_g] = 0$, eigenspace representations, and spectral degeneracies (§3.1.1).
+8. *Direct Sums vs. Tensor Products:* External sums $V \oplus W$, tensor products $V \otimes W$, composite quantum systems, and Clebsch-Gordan series (§3.6.2).
 #+end_quote
 
 ---
@@ -41,41 +43,111 @@ Let $X = \{g_1, g_2, \dots, g_n\}$ be a non-empty set of symbols called *letters
   2. No two adjacent letters are identical ($g_{j_k} \neq g_{j_{k+1}}$).
   3. The empty word is denoted by $e$ (the identity element).
 - *Reduction Algorithm:* If a word is not reduced, iteratively cancel adjacent pairs of inverses $g g^{-1} \to e$ and combine adjacent powers $g^p g^q \to g^{p+q}$ until a reduced word is obtained.
-- *The Free Group $F(X)$:* The set of all reduced words formed from letters of $X$. Multiplication is concatenation followed by reduction.
+- *The Free Group $F(X)$:* The set of all reduced words formed from letters of $X$. Group multiplication is concatenation followed by reduction.
   - For $X = \{a\}$: $F(\{a\}) = \{a^n \mid n \in \mathbb{Z}\} \cong (\mathbb{Z}, +)$.
-  - For $|X| \ge 2$: $F(X)$ is non-Abelian and infinitely generated.
+  - For $|X| \ge 2$: $F(X)$ is non-Abelian and has infinite cardinality.
+
+*** Worked Example 1.1: Word Reduction in $F(\{a, b, c\})$
+Consider the unreduced word in $F(\{a, b, c\})$:
+$$ w = a^2 b c c^{-1} b^{-1} a^{-1} b a b^{-1} $$
+Let us reduce $w$ step-by-step:
+1. Identify the adjacent inverse pair $c c^{-1} \to e$:
+   $$ w \to a^2 b e b^{-1} a^{-1} b a b^{-1} = a^2 b b^{-1} a^{-1} b a b^{-1} $$
+2. Identify the adjacent inverse pair $b b^{-1} \to e$:
+   $$ \to a^2 e a^{-1} b a b^{-1} = a^2 a^{-1} b a b^{-1} $$
+3. Combine adjacent powers $a^2 a^{-1} = a^{2-1} = a^1 = a$:
+   $$ \to a b a b^{-1} $$
+4. Check remaining letters: $a, b, a, b^{-1}$. No adjacent identical symbols or inverse pairs exist.
+*Final Reduced Word:* $w_{\mathrm{red}} = a b a b^{-1}$.
+- *Inverse of the Word:*
+  $$ (w_{\mathrm{red}})^{-1} = (a b a b^{-1})^{-1} = (b^{-1})^{-1} a^{-1} b^{-1} a^{-1} = b a^{-1} b^{-1} a^{-1} $$
+  Verify: $w_{\mathrm{red}} (w_{\mathrm{red}})^{-1} = (a b a b^{-1})(b a^{-1} b^{-1} a^{-1}) = a b a (b^{-1}b) a^{-1} b^{-1} a^{-1} = a b (a a^{-1}) b^{-1} a^{-1} = a (b b^{-1}) a^{-1} = a a^{-1} = e$.
+
+---
 
 ** 1.2 Group Presentations $\langle X \mid R \rangle$
-In concrete groups, generators satisfy constraints called *relations*:
+In concrete physical groups, generators are not free; they satisfy constraints called *relations*:
 $$ r \equiv g_{j_1}^{i_1} g_{j_2}^{i_2} \cdots g_{j_m}^{i_m} = e $$
-A group presentation $\langle X \mid R \rangle$ defines a group $G$ as the quotient of the free group $F(X)$ by the normal closure $N(R)$ of the relations $R$:
+A group presentation $\langle X \mid R \rangle$ defines a group $G$ as the quotient of the free group $F(X)$ by the normal closure $N(R)$ of the relations:
 $$ G = \langle g_1, \dots, g_n \mid r_1 = e, \dots, r_m = e \rangle \cong F(X) / N(R) $$
 
-*** Canonical Examples
+*** Canonical Presentation Examples
 1. *Cyclic Group $\mathbb{Z}_n$:*
    $$ \mathbb{Z}_n = \langle a \mid a^n = e \rangle $$
-2. *Dihedral Group $D_4$ (Symmetries of a Square):*
-   Generated by rotation $a$ (by $\pi/2$) and reflection $b$:
-   $$ D_4 = \langle a, b \mid a^4 = e, \, b^2 = e, \, (ab)^2 = e \rangle $$
-   Note that $(ab)^2 = e \iff bab = a^{-1} = a^3$.
+2. *Dihedral Group $D_n$ (Regular $n$-gon Symmetries):*
+   $$ D_n = \langle a, b \mid a^n = e, \, b^2 = e, \, bab = a^{-1} \rangle $$
+   The relation $bab = a^{-1}$ is equivalent to $ba = a^{-1}b = a^{n-1}b$.
 3. *Free Abelian Group on Two Generators:*
    $$ \langle a, b \mid a b a^{-1} b^{-1} = e \rangle \cong (\mathbb{Z} \times \mathbb{Z}, +) $$
+
+*** Worked Example 1.2: Reducing Words to Normal Form in $D_3 \cong S_3$
+Let $D_3 = \langle a, b \mid a^3 = e, \, b^2 = e, \, ba = a^2b \rangle$.
+Reduce the arbitrary word $w = a^2 b a^2 b a b$ into canonical normal form $a^k b^m$ ($k \in \{0, 1, 2\}$, $m \in \{0, 1\}$):
+1. Notice the subword $b a^2$:
+   $$ b a^2 = (ba)a = (a^2 b) a = a^2 (ba) = a^2 (a^2 b) = a^4 b = a b $$
+   (Rule: moving $b$ past $a^k$ inverts the exponent: $b a^k = a^{-k} b = a^{3-k} b$).
+2. Apply this to the first occurrence in $w = a^2 (b a^2) b a b$:
+   $$ w = a^2 (a b) b a b = a^3 b^2 a b $$
+3. Use $a^3 = e$ and $b^2 = e$:
+   $$ w = e \cdot e \cdot a b = a b $$
+*Conclusion:* The word $w$ is simply the single reflection $ab$.
+
+---
 
 ** 1.3 Artin Braid Groups $B_n$ (§2.7.2)
 Geometric braids consist of $n$ vertical strands hanging from top to bottom.
 - *Generator $\sigma_i$ ($1 \le i \le n-1$):* Moves strand $i$ *over* strand $i+1$.
-- *Inverse $\sigma_i^{-1}$:* Moves strand $i+1$ *over* strand $i$ (i.e., strand $i$ passes *under* strand $i+1$).
-- *Re-indexing Rule:* After each crossing operation, the strands are re-indexed strictly from left to right as $1, 2, \dots, n$ before the next operation is applied.
-- *Drawing Rule:* Read the letters of the braid word from *left to right*, performing the operations from *top to bottom*.
+- *Inverse $\sigma_i^{-1}$:* Moves strand $i+1$ *over* strand $i$ (strand $i$ passes *under*).
+- *Re-indexing Rule:* After each crossing, strands are re-indexed $1, 2, \dots, n$ from left to right before the next crossing.
+- *Drawing Rule:* Read braid words from *left to right*, drawing crossings sequentially from *top to bottom*.
 - *Artin Relations:*
   1. *Far Commutativity:*
      $$ \sigma_i \sigma_j = \sigma_j \sigma_i \quad \text{for } |i - j| \ge 2 $$
-  2. *Third Reidemeister Move / Yang-Baxter Relation:*
+  2. *Yang-Baxter Relation (Third Reidemeister Move):*
      $$ \sigma_i \sigma_{i+1} \sigma_i = \sigma_{i+1} \sigma_i \sigma_{i+1} \quad \text{for } 1 \le i \le n-2 $$
-- *Presentation of $B_n$:*
-  $$ B_n = \langle \sigma_1, \dots, \sigma_{n-1} \mid \sigma_i \sigma_j = \sigma_j \sigma_i \; (|i-j|\ge 2), \; \sigma_i \sigma_{i+1} \sigma_i = \sigma_{i+1} \sigma_i \sigma_{i+1} \; (1 \le i \le n-2) \rangle $$
-- *Connection to the Symmetric Group $S_n$:* Imposing $\sigma_i^2 = e$ yields $B_n / \langle \sigma_i^2 = e \rangle \cong S_n$.
-- *Physical Applications:* Particle statistics in $(2+1)$D spacetime; anyons and topological quantum computation.
+
+*** Worked Example 1.3: Visualizing the Yang-Baxter Move in $B_3$
+Consider the relation $\sigma_1 \sigma_2 \sigma_1 = \sigma_2 \sigma_1 \sigma_2$ on 3 strands:
+
+#+begin_example
+      Left Side: sigma_1 sigma_2 sigma_1                Right Side: sigma_2 sigma_1 sigma_2
+            1       2       3                                 1       2       3
+            |       |       |                                 |       |       |
+Level 1:     \     /        |   (sigma_1: 1 over 2)           |        \     /    (sigma_2: 2 over 3)
+              \   /         |                                 |         \   /
+               \ /          |                                 |          \ /
+                \           |                                 |           \
+               / \          |                                 |          / \
+              /   \         |                                 |         /   \
+             /     \        |                                 |        /     \
+            |       |       |                                 |       |       |
+Level 2:    |        \     /    (sigma_2: 2 over 3)            \     /        |   (sigma_1: 1 over 2)
+            |         \   /                                     \   /         |
+            |          \ /                                       \ /          |
+            |           \                                         \           |
+            |          / \                                       / \          |
+            |         /   \                                     /   \         |
+            |        /     \                                   /     \        |
+            |       |       |                                 |       |       |
+Level 3:     \     /        |   (sigma_1: 1 over 2)           |        \     /    (sigma_2: 2 over 3)
+              \   /         |                                 |         \   /
+               \ /          |                                 |          \ /
+                \           |                                 |           \
+               / \          |                                 |          / \
+              /   \         |                                 |         /   \
+             /     \        |                                 |        /     \
+            |       |       |                                 |       |       |
+Bottom:     3       2       1                                 3       2       1
+#+end_example
+
+- *Physical Interpretation:*
+  Strand 3 passes underneath the crossing of Strands 1 and 2. Sliding the crossing from above Strand 3 to below Strand 3 changes nothing topologically.
+- *Permutation Projection:*
+  Projecting $B_n \to S_n$ by setting $\sigma_i^2 = e$:
+  $$ \sigma_1 \mapsto (1 \, 2), \quad \sigma_2 \mapsto (2 \, 3) $$
+  $$ (1 \, 2)(2 \, 3)(1 \, 2) = (1 \, 3) = (2 \, 3)(1 \, 2)(2 \, 3) $$
+- *Physical Application (Anyons):*
+  In $(2+1)$ dimensions, particle worldlines in spacetime can become braided. Because strands cannot pass through each other, $\sigma_i^2 \neq e$ in general: exchanging two identical anyons twice produces a non-trivial topological phase $e^{2i\theta}$ (fractional statistics), providing the mathematical foundation for topological quantum computation.
 
 ---
 
@@ -84,38 +156,43 @@ Geometric braids consist of $n$ vertical strands hanging from top to bottom.
 ** 2.1 Complex Vector Spaces
 A complex vector space $V$ is an Abelian group $(V, +)$ equipped with scalar multiplication by complex numbers $\mu \in \mathbb{C}$:
 $$ \cdot : \mathbb{C} \times V \to V, \quad (\mu, \vec{v}) \mapsto \mu \vec{v} $$
-satisfying the following axioms for all $\mu, \mu_1, \mu_2 \in \mathbb{C}$ and $\vec{v}, \vec{v}_1, \vec{v}_2 \in V$:
-- *VS1:* $\mu (\vec{v}_1 + \vec{v}_2) = \mu \vec{v}_1 + \mu \vec{v}_2$
-- *VS2:* $(\mu_1 + \mu_2) \vec{v} = \mu_1 \vec{v} + \mu_2 \vec{v}$
-- *VS3:* $\mu_1 (\mu_2 \vec{v}) = (\mu_1 \mu_2) \vec{v}$
-- *VS4:* $1 \vec{v} = \vec{v}$
-- *VS5:* $0 \vec{v} = \vec{0}$
+satisfying the standard axioms (distributivity, associativity, identity $1\vec{v} = \vec{v}$, zero $0\vec{v} = \vec{0}$).
 
 ** 2.2 Linear Independence, Basis, and Dimension
-- *Linear Independence:* A set of vectors $\{\vec{v}_1, \dots, \vec{v}_k\}$ is linearly independent if:
+- *Linear Independence:* $\{\vec{v}_1, \dots, \vec{v}_k\}$ is linearly independent if:
   $$ \sum_{i=1}^k \mu_i \vec{v}_i = \vec{0} \implies \mu_1 = \mu_2 = \cdots = \mu_k = 0 $$
-- *Basis:* A maximal linearly independent set $\{\vec{e}_1, \dots, \vec{e}_n\}$ that spans $V$.
-- *Dimension:* The number of vectors in a basis: $\dim V = n$. Every vector $\vec{v} \in V$ has a unique coordinate expansion:
-  $$ \vec{v} = \sum_{i=1}^n v_i \vec{e}_i $$
+- *Basis:* A maximal linearly independent set spanning $V$.
+- *Dimension:* $\dim V = n$ is the number of basis vectors.
 
-** 2.3 Linear Maps, Image, Kernel, and Automorphisms
-A map $L : V_1 \to V_2$ is a linear map (or linear operator) if:
-$$ L(\mu_1 \vec{v}_1 + \mu_2 \vec{v}_2) = \mu_1 L(\vec{v}_1) + \mu_2 L(\vec{v}_2), \quad \forall \mu_1, \mu_2 \in \mathbb{C}, \, \vec{v}_1, \vec{v}_2 \in V_1 $$
-- *Image:* $\mathrm{Im}(L) = \{ L(\vec{v}) \mid \vec{v} \in V_1 \} \subseteq V_2$ (a subspace of $V_2$).
-- *Kernel:* $\mathrm{Ker}(L) = \{ \vec{v} \in V_1 \mid L(\vec{v}) = \vec{0}_2 \} \subseteq V_1$ (a subspace of $V_1$).
+** 2.3 Linear Maps, Image, Kernel, and Rank-Nullity
+For a linear operator $L : V_1 \to V_2$:
+- *Kernel (Null Space):* $\mathrm{Ker}(L) = \{ \vec{v} \in V_1 \mid L(\vec{v}) = \vec{0}_2 \} \subseteq V_1$.
+- *Image (Range):* $\mathrm{Im}(L) = \{ L(\vec{v}) \mid \vec{v} \in V_1 \} \subseteq V_2$.
 
 #+begin_quote
-*Theorem 3.1 (Rank-Nullity Theorem):*
-$$ \dim V_1 = \dim \mathrm{Ker}(L) + \dim \mathrm{Im}(L) $$
+*Theorem (Rank-Nullity Theorem):*
+$$ \dim V_1 = \dim \mathrm{Ker}(L) + \dim \mathrm{Im}(L) = \mathrm{nullity}(L) + \mathrm{rank}(L) $$
 #+end_quote
 
-#+begin_quote
-*Theorem 3.2:*
-A linear map $L : V \to V$ is an automorphism if and only if $\mathrm{Ker}(L) = \{\vec{0}\}$.
-#+end_quote
-
-- *Matrix Representation:* In a chosen basis, $L(\vec{e}_i) = \sum_{j=1}^n L^j_i \vec{e}_j$. The group of all linear automorphisms $\mathrm{Aut}(V)$ is isomorphic to the general linear group:
-  $$ \mathrm{Aut}(V) \cong \mathrm{GL}(n, \mathbb{C}) \quad (\text{or } \mathrm{GL}(n, \mathbb{R}) \text{ if real}) $$
+*** Worked Example 2.1: Kernel, Image, and Rank-Nullity
+Let $L : \mathbb{C}^3 \to \mathbb{C}^3$ be defined in the standard basis by the matrix:
+$$ M = \begin{pmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 0 & -1 \end{pmatrix} $$
+1. *Find $\mathrm{Ker}(L)$:* Solve $M \vec{v} = \vec{0}$ for $\vec{v} = (x, y, z)^T$:
+   $$ \begin{cases} x + 2y + z = 0 \\ 2x + 4y + 2z = 0 \\ x - z = 0 \end{cases} $$
+   From equation (3), $z = x$.
+   Substitute into equation (1): $x + 2y + x = 0 \implies 2x + 2y = 0 \implies y = -x$.
+   Thus every vector in the kernel has the form:
+   $$ \vec{v} = \begin{pmatrix} x \\ -x \\ x \end{pmatrix} = x \begin{pmatrix} 1 \\ -1 \\ 1 \end{pmatrix} $$
+   Hence $\mathrm{Ker}(L) = \mathrm{span}\left\{ (1, -1, 1)^T \right\}$, so:
+   $$ \dim \mathrm{Ker}(L) = 1 \quad (\text{nullity} = 1) $$
+2. *Find $\mathrm{Im}(L)$:*
+   The image is spanned by the columns of $M$:
+   $\vec{c}_1 = (1, 2, 1)^T$, $\vec{c}_2 = (2, 4, 0)^T$, $\vec{c}_3 = (1, 2, -1)^T$.
+   Notice $\vec{c}_2 = \vec{c}_1 + \vec{c}_3$, while $\vec{c}_1$ and $\vec{c}_3$ are linearly independent.
+   Thus $\mathrm{Im}(L) = \mathrm{span}\{\vec{c}_1, \vec{c}_3\}$, so:
+   $$ \dim \mathrm{Im}(L) = 2 \quad (\text{rank} = 2) $$
+3. *Check Rank-Nullity:*
+   $$ \dim \mathbb{C}^3 = 3 = 1 + 2 = \dim \mathrm{Ker}(L) + \dim \mathrm{Im}(L) \quad \checkmark $$
 
 ---
 
@@ -124,23 +201,53 @@ A linear map $L : V \to V$ is an automorphism if and only if $\mathrm{Ker}(L) = 
 ** 3.1 Definition of a Linear Representation
 A *linear representation* $D$ of a group $G$ in a vector space $V$ is a group homomorphism:
 $$ D : G \to \mathrm{Aut}(V), \quad g \mapsto D(g) $$
-satisfying:
+such that:
 1. $D(g_1 g_2) = D(g_1) D(g_2)$ for all $g_1, g_2 \in G$.
 2. $D(g^{-1}) = (D(g))^{-1}$.
 3. $D(e) = \mathbf{1}_V$.
 The *dimension* of the representation is $\dim D = \dim V$.
 
 ** 3.2 Faithful Representations
-A representation $D$ is called *faithful* if the homomorphism $D$ is an injection:
-$$ \mathrm{Ker}(D) = \{ g \in G \mid D(g) = \mathbf{1}_V \} = \{e\} $$
-In a faithful representation, distinct group elements are represented by distinct operators ($g_1 \neq g_2 \implies D(g_1) \neq D(g_2)$).
-- If $\mathrm{Ker}(D) \neq \{e\}$, the representation is *non-faithful*.
-- If $D(g) = \mathbf{1}_V$ for all $g \in G$, $D$ is the *trivial representation*.
+- *Faithful Representation:* $\mathrm{Ker}(D) = \{g \in G \mid D(g) = \mathbf{1}_V\} = \{e\}$. Distinct group elements correspond to distinct linear transformations.
+- *Non-Faithful Representation:* $\mathrm{Ker}(D) \neq \{e\}$.
+- *Trivial Representation:* $D(g) = \mathbf{1}_V$ for all $g \in G$ ($\mathrm{Ker}(D) = G$).
 
-** 3.3 Intertwining Operators and Equivalence
-Two representations $D_1 : G \to \mathrm{Aut}(V_1)$ and $D_2 : G \to \mathrm{Aut}(V_2)$ are *equivalent* ($D_1 \sim D_2$) if there exists an invertible linear operator (intertwining isomorphism) $A : V_1 \to V_2$ such that:
-$$ D_2(g) A = A D_1(g) \iff D_2(g) = A D_1(g) A^{-1}, \quad \forall g \in G $$
-Equivalence corresponds to expressing the same abstract representation in different bases.
+*** Worked Example 3.1: Faithful vs. Non-Faithful Representations of $\mathbb{Z}_4$
+Let $\mathbb{Z}_4 = \langle r \mid r^4 = e \rangle = \{e, r, r^2, r^3\}$.
+1. *Representation 1 ($D_1$, 2-Dimensional):*
+   Map generator $r$ to the $90^\circ$ planar rotation matrix:
+   $$ D_1(r) = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix} $$
+   Powers:
+   $$ D_1(r^2) = \begin{pmatrix} -1 & 0 \\ 0 & -1 \end{pmatrix} = -\mathbf{1}_2, \quad D_1(r^3) = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}, \quad D_1(r^4) = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = \mathbf{1}_2 $$
+   Check homomorphism: $D_1(r^a) D_1(r^b) = D_1(r^{a+b \bmod 4})$.
+   Kernel: Only $r^0 = e$ yields $\mathbf{1}_2$.
+   *Conclusion:* $D_1$ is a *faithful 2D representation* ($\dim D_1 = 2$).
+2. *Representation 2 ($D_2$, 1-Dimensional Parity):*
+   Map $r \mapsto -1 \in \mathbb{C}$:
+   $$ D_2(e) = 1, \quad D_2(r) = -1, \quad D_2(r^2) = 1, \quad D_2(r^3) = -1 $$
+   Kernel: $\mathrm{Ker}(D_2) = \{e, r^2\} \neq \{e\}$.
+   *Conclusion:* $D_2$ is a *non-faithful 1D representation* ($\dim D_2 = 1$).
+
+---
+
+** 3.3 Intertwining Operators and Representation Equivalence
+Two representations $D_1 : G \to \mathrm{Aut}(V_1)$ and $D_2 : G \to \mathrm{Aut}(V_2)$ are *equivalent* ($D_1 \sim D_2$) if there exists an invertible linear operator $S : V_1 \to V_2$ such that:
+$$ D_2(g) = S D_1(g) S^{-1}, \quad \forall g \in G $$
+*Physical Meaning:* Equivalent representations describe the exact same physical transformations, expressed in two different coordinate systems related by the basis transformation matrix $S$.
+
+*** Worked Example 3.2: Equivalence and Invariance of Characters
+Consider the representation $D_1$ of $\mathbb{Z}_4$ from Example 3.1:
+$$ D_1(r) = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix} $$
+Diagonalize $D_1(r)$ using its eigenvectors $\vec{v}_1 = \begin{pmatrix} i \\ 1 \end{pmatrix}$ (eigenvalue $i$) and $\vec{v}_2 = \begin{pmatrix} -i \\ 1 \end{pmatrix}$ (eigenvalue $-i$).
+Construct the change-of-basis matrix $S$:
+$$ S = \begin{pmatrix} i & -i \\ 1 & 1 \end{pmatrix}, \quad S^{-1} = \frac{1}{2i} \begin{pmatrix} 1 & i \\ -1 & i \end{pmatrix} = \frac{1}{2} \begin{pmatrix} -i & 1 \\ i & 1 \end{pmatrix} $$
+Compute the equivalent representation $D_2(r) = S^{-1} D_1(r) S$:
+$$ D_2(r) = \begin{pmatrix} i & 0 \\ 0 & -i \end{pmatrix} $$
+Notice that:
+- *Trace (Character $\chi(g) \equiv \mathrm{Tr}(D(g))$) is invariant:*
+  $$ \mathrm{Tr}(D_1(r)) = 0 + 0 = 0, \qquad \mathrm{Tr}(D_2(r)) = i + (-i) = 0 $$
+  $$ \mathrm{Tr}(D_1(r^2)) = -1 + (-1) = -2, \qquad \mathrm{Tr}(D_2(r^2)) = i^2 + (-i)^2 = -1 - 1 = -2 $$
+  *Characters are basis-independent invariants of group representations!*
 
 ---
 
@@ -154,53 +261,133 @@ A scalar product on a complex vector space $V$ is a map $\langle \cdot \mid \cdo
 
 ** 4.2 Gram-Schmidt Orthonormalization
 Given an arbitrary linearly independent basis $\{\vec{u}_1, \dots, \vec{u}_n\}$, an orthonormal basis $\{\vec{e}_1, \dots, \vec{e}_n\}$ ($\langle \vec{e}_i \mid \vec{e}_j \rangle = \delta_{ij}$) is constructed by:
-$$ \vec{e}_1 = \frac{\vec{u}_1}{\|\vec{u}_1\|}, \quad \vec{w}_i = \vec{u}_i - \sum_{j=1}^{i-1} \langle \vec{e}_j \mid \vec{u}_i \rangle \vec{e}_j, \quad \vec{e}_i = \frac{\vec{w}_i}{\|\vec{w}_i\|} $$
+$$ \vec{w}_1 = \vec{u}_1, \quad \vec{e}_1 = \frac{\vec{w}_1}{\|\vec{w}_1\|} $$
+$$ \vec{w}_i = \vec{u}_i - \sum_{j=1}^{i-1} \langle \vec{e}_j \mid \vec{u}_i \rangle \vec{e}_j, \quad \vec{e}_i = \frac{\vec{w}_i}{\|\vec{w}_i\|} $$
 
-** 4.3 Unitary Operators and Unitary Representations
-- *Adjoint $A^\dagger$:* Defined by $\langle \vec{v} \mid A^\dagger \vec{w} \rangle = \langle A\vec{v} \mid \vec{w} \rangle$.
+*** Worked Example 4.1: Gram-Schmidt in $\mathbb{C}^2$
+Let $V = \mathbb{C}^2$ with standard inner product $\langle \vec{v} \mid \vec{w} \rangle = v_1^* w_1 + v_2^* w_2$.
+Orthonormalize the non-orthogonal basis:
+$$ \vec{u}_1 = \begin{pmatrix} 1 \\ i \end{pmatrix}, \quad \vec{u}_2 = \begin{pmatrix} 2 \\ 0 \end{pmatrix} $$
+1. *Step 1: Normalize $\vec{u}_1$:*
+   $$ \|\vec{u}_1\|^2 = \langle \vec{u}_1 \mid \vec{u}_1 \rangle = 1^* \cdot 1 + i^* \cdot i = 1 + 1 = 2 \implies \|\vec{u}_1\| = \sqrt{2} $$
+   $$ \vec{e}_1 = \frac{\vec{u}_1}{\sqrt{2}} = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ i \end{pmatrix} $$
+2. *Step 2: Project $\vec{u}_2$ onto $\vec{e}_1$:*
+   $$ \langle \vec{e}_1 \mid \vec{u}_2 \rangle = \frac{1}{\sqrt{2}} \left( 1^* \cdot 2 + i^* \cdot 0 \right) = \frac{2}{\sqrt{2}} = \sqrt{2} $$
+3. *Step 3: Subtract projection from $\vec{u}_2$:*
+   $$ \vec{w}_2 = \vec{u}_2 - \langle \vec{e}_1 \mid \vec{u}_2 \rangle \vec{e}_1 = \begin{pmatrix} 2 \\ 0 \end{pmatrix} - \sqrt{2} \left[ \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ i \end{pmatrix} \right] = \begin{pmatrix} 2 \\ 0 \end{pmatrix} - \begin{pmatrix} 1 \\ i \end{pmatrix} = \begin{pmatrix} 1 \\ -i \end{pmatrix} $$
+4. *Step 4: Normalize $\vec{w}_2$:*
+   $$ \|\vec{w}_2\|^2 = 1^* \cdot 1 + (-i)^* \cdot (-i) = 1 + 1 = 2 \implies \|\vec{w}_2\| = \sqrt{2} $$
+   $$ \vec{e}_2 = \frac{\vec{w}_2}{\sqrt{2}} = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ -i \end{pmatrix} $$
+5. *Verification of Orthogonality:*
+   $$ \langle \vec{e}_1 \mid \vec{e}_2 \rangle = \frac{1}{2} [ 1^* \cdot 1 + i^* \cdot (-i) ] = \frac{1}{2} [ 1 + (-i)(-i) ] = \frac{1}{2} [ 1 - 1 ] = 0 \quad \checkmark $$
+
+---
+
+** 4.3 Unitary Representations
 - *Unitary Operator $U$:* Preserves the inner product:
   $$ \langle U\vec{v} \mid U\vec{w} \rangle = \langle \vec{v} \mid \vec{w} \rangle \iff U^\dagger U = \mathbf{1}_V $$
-  Unitary operators form the subgroup $\mathrm{Unit}(V) \cong \mathrm{U}(n) \subset \mathrm{Aut}(V)$.
-- *Unitary Representation:* A homomorphism $D : G \to \mathrm{Unit}(V)$.
-- *Unitary Equivalence:* Two unitary representations $U_1, U_2$ are unitarily equivalent if their intertwining operator $A$ is unitary ($A^\dagger A = \mathbf{1}$):
-  $$ U_2(g) = A U_1(g) A^\dagger, \quad \forall g \in G $$
+- *Unitary Representation:* A representation $D : G \to \mathrm{Unit}(V)$ where every operator is unitary:
+  $$ D(g)^\dagger D(g) = \mathbf{1}_V, \quad \forall g \in G $$
+- *Fundamental Theorem (Unitary Trick):*
+  *Every finite-dimensional linear representation of a finite group (or compact Lie group) is equivalent to a unitary representation.*
 
 ---
 
 * 5. Symmetries in Quantum Mechanics (§3.1.1)
 
-In quantum mechanics, physical states are rays in a Hilbert space $\mathcal{H}$, and time evolution is generated by the Hamiltonian $H$:
+In quantum mechanics, physical states are rays in a Hilbert space $\mathcal{H}$, and time evolution is governed by the Hamiltonian operator $H$:
 $$ i\hbar \frac{d}{dt}|\psi(t)\rangle = H |\psi(t)\rangle $$
-- *Symmetry Condition:* A group $G$ is a symmetry group of a quantum system if its unitary representation $g \mapsto U_g$ preserves transition probabilities and commutes with time evolution:
+- *Quantum Symmetry:* A group $G$ is a symmetry group of the quantum system if each group element is represented by a unitary operator $U_g$ on $\mathcal{H}$ that commutes with the Hamiltonian:
   $$ [H, U_g] = 0 \iff U_g H U_g^{-1} = H, \quad \forall g \in G $$
-- *Spectral Degeneracy:* Let $H |\phi_n\rangle = E_n |\phi_n\rangle$. Because $[H, U_g] = 0$:
-  $$ H (U_g |\phi_n\rangle) = U_g H |\phi_n\rangle = E_n (U_g |\phi_n\rangle) $$
-  $U_g$ maps the energy eigenspace $\mathcal{H}_n$ into itself.
-  Therefore, *each eigenspace forms a carrier space for a representation of the symmetry group $G$*.
-  *The dimensions of the irreducible representations of $G$ dictate the possible degeneracies of the energy levels!*
+
+** 5.1 Why Symmetry Implies Energy Degeneracy
+Let $|\phi\rangle$ be an energy eigenstate with energy eigenvalue $E$:
+$$ H |\phi\rangle = E |\phi\rangle $$
+Act on both sides with the symmetry operator $U_g$:
+$$ H (U_g |\phi\rangle) = U_g H |\phi\rangle = U_g (E |\phi\rangle) = E (U_g |\phi\rangle) $$
+- This proves that $U_g |\phi\rangle$ is *also* an eigenstate of $H$ with the *exact same energy* $E$!
+- *Consequence:* The eigenspace $\mathcal{H}_E = \{|\psi\rangle \in \mathcal{H} \mid H|\psi\rangle = E|\psi\rangle\}$ is an invariant subspace under the action of $G$.
+- *Conclusion:* *The energy eigenspaces form carrier spaces for representations of the symmetry group $G$. The dimensions of the irreducible representations of $G$ dictate the allowed degeneracies of the energy spectrum!*
+
+*** Worked Physical Example 5.1: 2D Particle in a Square Box
+Consider a quantum particle of mass $m$ confined in a 2D square well of side $L$:
+$$ V(x, y) = \begin{cases} 0 & 0 < x < L \text{ and } 0 < y < L \\ \infty & \text{otherwise} \end{cases} $$
+The Hamiltonian is:
+$$ H = -\frac{\hbar^2}{2m}\left(\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}\right) $$
+The energy eigenstates are:
+$$ \psi_{n_x, n_y}(x, y) = \frac{2}{L} \sin\left(\frac{n_x \pi x}{L}\right) \sin\left(\frac{n_y \pi y}{L}\right), \quad n_x, n_y \in \{1, 2, 3, \dots\} $$
+with energy eigenvalues:
+$$ E_{n_x, n_y} = \frac{\pi^2 \hbar^2}{2mL^2} (n_x^2 + n_y^2) $$
+
+1. *Symmetry Group:* The square potential is invariant under the dihedral group $D_4$ (rotations by multiples of $\pi/2$ and reflections across diagonals and axes).
+2. *Non-degenerate Ground State:*
+   For $n_x = 1, n_y = 1$:
+   $$ E_{1, 1} = \frac{\pi^2 \hbar^2}{mL^2} \quad (\text{Single state } \psi_{1, 1}, \, \text{trivial 1D irrep of } D_4) $$
+3. *Degenerate First Excited State:*
+   Consider energy $E = \frac{5 \pi^2 \hbar^2}{2mL^2}$. Two distinct orthogonal states have this energy:
+   $$ |1\rangle \equiv \psi_{1, 2}(x, y) = \frac{2}{L}\sin\left(\frac{\pi x}{L}\right)\sin\left(\frac{2\pi y}{L}\right) $$
+   $$ |2\rangle \equiv \psi_{2, 1}(x, y) = \frac{2}{L}\sin\left(\frac{2\pi x}{L}\right)\sin\left(\frac{\pi y}{L}\right) $$
+   Under the reflection across the diagonal line $y = x$ ($R_{xy} \in D_4$):
+   $$ R_{xy} \psi_{1, 2}(x, y) = \psi_{1, 2}(y, x) = \psi_{2, 1}(x, y) $$
+   In the basis $\{|1\rangle, |2\rangle\}$, the symmetry operations are represented by $2 \times 2$ matrices:
+   $$ D(R_{xy}) = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad D(R_{\pi/2}) = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix} $$
+   These matrices form the *2-dimensional irreducible representation of $D_4$*.
+   *The 2-fold degeneracy $E_{1,2} = E_{2,1}$ is protected by the $D_4$ symmetry of the Hamiltonian!*
 
 ---
 
 * 6. Direct Sums and Tensor Products of Vector Spaces (§3.6.2)
 
 ** 6.1 Direct Sum $V \oplus W$
-Given vector spaces $V$ and $W$ over $\mathbb{C}$ (or $\mathbb{R}$) with dimensions $M$ and $N$:
-- The *external direct sum* is:
+- *Definition:* The external direct sum combines two vector spaces into independent ordered pairs:
   $$ V \oplus W = \{ (v, w) \mid v \in V, \, w \in W \} $$
-  with operations $(v_1, w_1) + (v_2, w_2) = (v_1 + v_2, w_1 + w_2)$ and $\mu(v, w) = (\mu v, \mu w)$.
-- If $\{v_1, \dots, v_M\}$ is a basis of $V$ and $\{w_1, \dots, w_N\}$ is a basis of $W$, then:
+- *Basis:* If $\{v_1, \dots, v_M\}$ is a basis of $V$ and $\{w_1, \dots, w_N\}$ is a basis of $W$, a basis for $V \oplus W$ has $M + N$ elements:
   $$ \mathcal{B}_{\oplus} = \{ (v_i, 0) \}_{i=1}^M \cup \{ (0, w_j) \}_{j=1}^N $$
-  forms a basis of $V \oplus W$.
-- Consequently:
+- *Dimension:*
   $$ \dim(V \oplus W) = \dim V + \dim W = M + N $$
+- *Group Representations on $V \oplus W$:*
+  If $D_V$ and $D_W$ are representations of $G$, their direct sum representation $D_V \oplus D_W$ is block-diagonal:
+  $$ (D_V \oplus D_W)(g) = \begin{pmatrix} D_V(g) & \mathbf{0} \\ \mathbf{0} & D_W(g) \end{pmatrix} $$
 
 ** 6.2 Tensor Product $V \otimes W$
-- The *tensor product* $V \otimes W$ is the vector space spanned by simple product elements $v \otimes w$ subject to bilinearity relations:
+- *Definition:* The tensor product space is spanned by product vectors $v \otimes w$ subject to bilinearity:
   - $(v_1 + v_2) \otimes w = v_1 \otimes w + v_2 \otimes w$
   - $v \otimes (w_1 + w_2) = v \otimes w_1 + v \otimes w_2$
   - $(\mu v) \otimes w = v \otimes (\mu w) = \mu(v \otimes w)$
-- If $\{v_i\}_{i=1}^M$ and $\{w_j\}_{j=1}^N$ are bases of $V$ and $W$, the set of simple tensors:
+- *Basis:* The set of all pairwise simple tensors:
   $$ \mathcal{B}_{\otimes} = \{ v_i \otimes w_j \mid 1 \le i \le M, \, 1 \le j \le N \} $$
-  forms a basis of $V \otimes W$.
-- Consequently:
+- *Dimension:*
   $$ \dim(V \otimes W) = (\dim V)(\dim W) = M \cdot N $$
+- *Kronecker Product of Operators:*
+  If $A \in \mathrm{End}(V)$ and $B \in \mathrm{End}(W)$, the operator $A \otimes B$ acts on basis states as:
+  $$ (A \otimes B)(v \otimes w) = (A v) \otimes (B w) $$
+  In matrix form, this is the *Kronecker product*:
+  $$ A \otimes B = \begin{pmatrix} a_{11} B & \cdots & a_{1M} B \\ \vdots & \ddots & \vdots \\ a_{M1} B & \cdots & a_{MM} B \end{pmatrix} $$
+
+*** Worked Example 6.1: Direct Sum vs. Tensor Product of Spin-1/2 Spaces
+Let $V = \mathbb{C}^2$ be the state space of a spin-$1/2$ particle with basis $\{|\!\uparrow\rangle, |\!\downarrow\rangle\}$.
+
+1. *Direct Sum $V \oplus V$:*
+   - Represents a system that is in *either* subspace 1 *or* subspace 2:
+     $$ \dim(V \oplus V) = 2 + 2 = 4 $$
+   - Basis:
+     $$ \{ (|\!\uparrow\rangle, 0), \; (|\!\downarrow\rangle, 0), \; (0, |\!\uparrow\rangle), \; (0, |\!\downarrow\rangle) \} $$
+   - Block diagonal matrix for Pauli rotation $D(\sigma_z) \oplus D(\sigma_z)$:
+     $$ \sigma_z \oplus \sigma_z = \begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & -1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & -1 \end{pmatrix} $$
+
+2. *Tensor Product $V \otimes V$ (Composite Two-Particle System):*
+   - Represents a composite quantum system consisting of *two* spin-$1/2$ particles simultaneously:
+     $$ \dim(V \otimes V) = 2 \times 2 = 4 $$
+   - Basis (4 product states):
+     $$ \{ |\!\uparrow\uparrow\rangle, \; |\!\uparrow\downarrow\rangle, \; |\!\downarrow\uparrow\rangle, \; |\!\downarrow\downarrow\rangle \} $$
+   - Matrix for operator $\sigma_z \otimes \sigma_x$:
+     $$ \sigma_z \otimes \sigma_x = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} \otimes \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} = \begin{pmatrix} 1 \cdot \sigma_x & 0 \cdot \sigma_x \\ 0 \cdot \sigma_x & -1 \cdot \sigma_x \end{pmatrix} = \begin{pmatrix} 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & -1 \\ 0 & 0 & -1 & 0 \end{pmatrix} $$
+
+3. *Clebsch-Gordan Decomposition (Addition of Angular Momentum):*
+   Under $\mathrm{SU}(2)$ rotations, the tensor product representation $\mathbf{2} \otimes \mathbf{2}$ of two spin-$1/2$ particles is reducible and decomposes into a direct sum of irreducible representations:
+   $$ \mathbf{2} \otimes \mathbf{2} = \mathbf{3} \oplus \mathbf{1} $$
+   - *Spin-1 Triplet ($\mathbf{3}$, 3-dimensional symmetric subspace):*
+     $$ |1, 1\rangle = |\!\uparrow\uparrow\rangle, \quad |1, 0\rangle = \frac{|\!\uparrow\downarrow\rangle + |\!\downarrow\uparrow\rangle}{\sqrt{2}}, \quad |1, -1\rangle = |\!\downarrow\downarrow\rangle $$
+   - *Spin-0 Singlet ($\mathbf{1}$, 1-dimensional antisymmetric subspace):*
+     $$ |0, 0\rangle = \frac{|\!\uparrow\downarrow\rangle - |\!\downarrow\uparrow\rangle}{\sqrt{2}} $$
+   *This highlights the crucial distinction: the state space of a multi-particle system is a tensor product $V_1 \otimes V_2$, while its decomposition into invariant symmetry blocks is a direct sum $\bigoplus_j V_j$!*

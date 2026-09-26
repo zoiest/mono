@@ -4,278 +4,278 @@
 :ROAM_REFS: [cite:@keskivakkuri2022mathematical]
 :END:
 #+title: Week 02: Subgroups, Lie Groups, and Young Diagrams
-#+subtitle: Mathematical Methods for Physics IIIa — Lecture Notes (Keski-Vakkuri, Montonen, Panero)
+#+subtitle: Mathematical Methods for Physics IIIa — Intuitive Self-Study Guide with Worked Examples (Keski-Vakkuri, Montonen, Panero)
 #+author: Antigravity Notes
 #+date: [2026-09-26]
-#+filetags: :physics:math:helsinki:week02:subgroups:lie-groups:young-diagrams:permutations:actions:
+#+filetags: :physics:math:helsinki:week02:subgroups:lie-groups:young-diagrams:permutations:actions:worked-examples:
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][Topic: Subgroups & Cosets]] | [[id:e61da419-8849-4086-bc86-0892d092c8f4][Topic: Permutations & Cayley Theorem]] | [[id:9231c23d-0041-4dcc-9c4b-8684eeae1b76][Topic: Partitions & Young Diagrams]] | [[id:16fe12b7-9348-4965-a3b7-73ec71993c39][Topic: Continuous & Lie Groups]]
 
 * Overview and Syllabus Mapping
 
-This document provides the lecture notes for *Week 02* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week02-topics.txt=.
-Topics are drawn from textbook sections *2.2*, *2.4*, *2.5*, and *2.8* of /Mathematical Methods for Physics/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
+This document provides the self-study lecture notes for *Week 02* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week02-topics.txt=.
+Topics are drawn from textbook sections *2.2*, *2.4*, *2.5*, and *2.8* of /Mathematical Methods for Physics: An Introduction to Group Theory, Topology, and Geometry/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
 
 #+caption: Summary of Lecture Topics
 #+begin_quote
-1. *Subgroups and Proper Subgroups:* Definitions, one-step and finite subgroup criteria (§2.2).
-2. *Permutations and Cycle Decomposition:* Disjoint cycle decomposition, transpositions (2-cycles/swaps), signature homomorphism $\mathrm{sgn}(\pi)$, and the alternating group $A_n$ (§2.5).
-3. *Permutation Matrices:* Defining representations in $\mathrm{GL}(n, \mathbb{R})$, orthogonality, and determinant properties (§2.5).
-4. *Integer Partitions and Young Diagrams:* Partitions $p(N)$, Ferrers shapes, conjugacy classes, and representation theory of $S_N$ (§2.6).
-5. *Cayley's Classification Theorem:* The regular representation and universal embedding $G \hookrightarrow S_{|G|}$ (§2.5).
-6. *Continuous Groups and Lie Groups:* Group manifolds, coordinates, dimension counting, and tangent spaces (§2.8).
-7. *Classical Matrix Lie Groups:* $\mathrm{GL}(n, \mathbb{R})$, $\mathrm{GL}(n, \mathbb{C})$, $\mathrm{SL}(n, \mathbb{R})$, $\mathrm{O}(n)$, $\mathrm{SO}(n)$, $\mathrm{U}(n)$, $\mathrm{SU}(n)$, and $\mathrm{Sp}(2n, \mathbb{R})$ with dimension derivations (§2.8).
-8. *Group Actions on Sets:* Left and right group actions, compatibility, and transformation groups (§2.8, §2.9).
+1. *Subgroups & Subgroup Criteria:* One-step, two-step, and finite subgroup criteria (§2.2).
+2. *Permutations, Cycles, and Parity:* Transpositions, signature $\mathrm{sgn}(\pi)$, alternating group $A_n$, and generating $A_n$ with 3-cycles (§2.5).
+3. *Permutation Matrices:* Matrix representations in $\mathrm{GL}(n, \mathbb{R})$, orthogonality, and determinants (§2.5).
+4. *Integer Partitions & Young Diagrams:* Partitions $p(N)$, Ferrers shapes, conjugacy classes of $S_N$, and multiparticle statistics (§2.6).
+5. *Cayley's Embedding Theorem:* The regular representation and universal embedding $G \hookrightarrow S_{|G|}$ (§2.5).
+6. *Continuous Groups & Lie Groups:* Group manifolds, coordinates, tangent spaces, and Lie algebras (§2.8).
+7. *Classical Matrix Lie Groups:* $\mathrm{GL}, \mathrm{SL}, \mathrm{O}, \mathrm{SO}, \mathrm{U}, \mathrm{SU}, \mathrm{Sp}$ with dimension derivations (§2.8).
+8. *Group Actions on Sets:* Left and right actions, active vs. passive field transformations (§2.8, §2.9).
 #+end_quote
+
+---
+
+* 0. Intuitive "Mental Map" for Week 02
+
+Week 02 bridges two major domains of symmetry in physics:
+1. *Discrete Symmetries (Permutations & Partitions):* Governs identical particles in quantum mechanics (bosons vs. fermions via symmetric/antisymmetric representations of $S_N$, classified by Young diagrams).
+2. *Continuous Symmetries (Lie Groups & Manifolds):* Governs spacetime symmetries (rotations $\mathrm{SO}(3)$, Lorentz transformations $\mathrm{SO}(1, 3)$) and internal gauge symmetries ($\mathrm{U}(1)$, $\mathrm{SU}(2)$, $\mathrm{SU}(3)$).
+
+#+caption: Week 02 Core Landmarks
+| Concept | Physical Role | Mathematical Formulation | Key Test / Formula |
+|---|---|---|---|
+| *Subgroup $H \le G$* | Restricted symmetries | Subset closed under operation & inverses | $a b^{-1} \in H$ (One-step test) |
+| *Signature $\mathrm{sgn}(\pi)$* | Boson (+1) vs Fermion (-1) exchange | Homomorphism $S_n \to \{+1, -1\}$ | $\mathrm{sgn}(\pi) = (-1)^N = \det D(\pi)$ |
+| *Young Diagrams* | Multiparticle spin/flavor states | Integer partitions $\lambda \vdash N$ | # of Irreps of $S_N = p(N)$ |
+| *Cayley's Theorem* | Universal permutation structure | $G \hookrightarrow S_{|G|}$ | $L_g(x) = gx$ |
+| *Lie Group Dimension* | Number of independent gauge fields / angles | Dimension of tangent space $T_e G$ (Lie algebra) | Count independent generators $X \in \mathfrak{g}$ |
+| *Left vs Right Action* | Active coordinate vs. passive field change | $g \cdot x$ vs. $\phi'(x) = \phi(g^{-1}x)$ | Compatibility: $(gh)\cdot x = g\cdot(h\cdot x)$ |
 
 ---
 
 * 1. Subgroups and Subgroup Criteria (§2.2)
 
 ** 1.1 Definition of Subgroup
-Let $(G, \cdot)$ be a group. A subset $H \subseteq G$ is called a *subgroup* of $G$ (denoted $H \le G$) if $H$ forms a group under the operation $\cdot$ restricted to $H \times H$.
-- *Trivial Subgroups:* Every group $G$ has at least two subgroups:
-  1. The trivial subgroup consisting solely of the identity: $\{e\}$.
-  2. The improper subgroup: $G$ itself.
-- *Proper Subgroup:* A subgroup $H \le G$ such that $H \neq G$, denoted $H < G$ or $H \subsetneq G$.
+A non-empty subset $H \subseteq G$ of a group $(G, \cdot)$ is a *subgroup* (denoted $H \le G$) if $H$ forms a group under the restricted operation of $G$.
+- *Proper Subgroup:* $H < G$ where $H \neq G$.
+- *Trivial Subgroups:* The identity $\{e\}$ and $G$ itself.
 
 ** 1.2 Subgroup Criteria
-
-To test whether a non-empty subset $H \subseteq G$ is a subgroup, one does not need to verify all four group axioms separately.
-
-#+caption: Fundamental Subgroup Tests
-#+begin_quote
-1. *Two-Step Subgroup Test:*
-   $H \le G \iff$
-   - Closure: $\forall a, b \in H \implies a \cdot b \in H$.
-   - Inverses: $\forall a \in H \implies a^{-1} \in H$.
-
-2. *One-Step Subgroup Criterion:*
-   $H \le G \iff \forall a, b \in H, \quad a \cdot b^{-1} \in H$.
-
-3. *Finite Subgroup Criterion:*
-   If $H$ is a *finite* non-empty subset of $G$, then:
+Instead of checking all 4 group axioms, one can use compact tests:
+1. *One-Step Subgroup Test:*
+   $$ H \le G \iff \forall a, b \in H, \quad a \cdot b^{-1} \in H $$
+2. *Finite Subgroup Criterion:*
+   If $H$ is a *finite* non-empty subset of $G$:
    $$ H \le G \iff \forall a, b \in H, \quad a \cdot b \in H $$
-   *(Closure alone implies the existence of inverses for finite subsets!)*
-#+end_quote
+   *(For finite sets, closure alone automatically guarantees the existence of inverses!)*
 
-*Proof of Finite Criterion:*
-Let $H$ be finite and closed under multiplication. Let $a \in H$.
-Consider the set of positive powers $\{a, a^2, a^3, \dots\} \subseteq H$.
-Since $H$ is finite, by the Pigeonhole Principle there must exist integers $j > i \ge 1$ such that $a^j = a^i$.
-Multiplying by $(a^{-1})^i$ in $G$ yields $a^{j-i} = e$.
-Since $j - i \ge 1$, the identity $e \in H$.
-Furthermore, $a \cdot a^{j-i-1} = a^{j-i} = e$, so $a^{-1} = a^{j-i-1}$.
-Since $j - i - 1 \ge 0$, either $a^{-1} = e \in H$ (if $j-i=1$) or $a^{-1} \in H$ (by closure of powers). $\blacksquare$
+*** Worked Example 1.1: Applying Subgroup Tests
+1. *Test that $\mathrm{SL}(n, \mathbb{R}) \le \mathrm{GL}(n, \mathbb{R})$ using the One-Step Test:*
+   Let $A, B \in \mathrm{SL}(n, \mathbb{R})$, so $\det A = 1$ and $\det B = 1$.
+   Compute $\det(A B^{-1})$:
+   $$ \det(A B^{-1}) = \det(A) \det(B^{-1}) = \det(A) (\det B)^{-1} = 1 \cdot 1^{-1} = 1 $$
+   Since $\det(A B^{-1}) = 1$, $A B^{-1} \in \mathrm{SL}(n, \mathbb{R})$.
+   By the One-Step Subgroup Test, $\mathrm{SL}(n, \mathbb{R})$ is a subgroup of $\mathrm{GL}(n, \mathbb{R})$. $\checkmark$
+2. *Test the Finite Subgroup Criterion on $H = \{1, -1, i, -i\} \subset \mathbb{C}^\times$:*
+   $H$ is finite ($|H| = 4$). We only need to check closure under multiplication:
+   $i^2 = -1 \in H$, $i^3 = -i \in H$, $i^4 = 1 \in H$, $(-1)^2 = 1 \in H$, etc.
+   Since products of any two elements in $H$ remain in $H$, $H$ is automatically a subgroup of $(\mathbb{C} \setminus \{0\}, \times)$ without explicitly verifying inverses! $\checkmark$
 
 ---
 
 * 2. Permutation Theory, Cycles, and Alternating Groups (§2.5)
 
 ** 2.1 Cycle Decompositions and Transpositions
-Let $S_n$ be the symmetric group on $n$ elements $\{1, 2, \dots, n\}$.
-- *Cycle of Length $k$ ($k$-cycle):* An ordered sequence $(a_1 \, a_2 \, \dots \, a_k)$ that cyclically permutes $a_1 \mapsto a_2 \mapsto \dots \mapsto a_k \mapsto a_1$.
-- *Disjoint Cycles:* Two cycles are disjoint if they share no common elements.
-  - Disjoint cycles *always commute*: $\sigma \tau = \tau \sigma$.
-  - *Theorem:* Every permutation $\pi \in S_n$ can be written uniquely (up to the ordering of the factors) as a product of disjoint cycles.
-- *Transposition (Swap / 2-cycle):* A cycle of length 2: $(a \, b)$. It exchanges $a$ and $b$ and fixes all other elements.
-  - Every $k$-cycle can be written as a product of $k-1$ transpositions:
+Let $S_n$ be the symmetric group on $\{1, 2, \dots, n\}$.
+- *Cycle of Length $k$ ($k$-cycle):* $(a_1 \, a_2 \, \dots \, a_k)$ maps $a_1 \mapsto a_2 \mapsto \dots \mapsto a_k \mapsto a_1$.
+  - Disjoint cycles share no common elements and *always commute*: $\sigma \tau = \tau \sigma$.
+  - Every permutation decomposes uniquely into a product of disjoint cycles.
+- *Transposition (Swap / 2-cycle):* A swap $(a \, b)$.
+  - Any $k$-cycle can be written as a product of $k-1$ transpositions:
     $$ (a_1 \, a_2 \, a_3 \, \dots \, a_k) = (a_1 \, a_k)(a_1 \, a_{k-1}) \cdots (a_1 \, a_3)(a_1 \, a_2) $$
-  - Consequently, *every permutation in $S_n$ can be expressed as a product of transpositions*.
+  - Consequently, *every permutation is a product of transpositions*.
 
-** 2.2 Parity, Signature Homomorphism, and $A_n$
-Although the decomposition of a permutation into transpositions is not unique, the *parity* (even or odd) of the number of transpositions is an invariant of the permutation.
-- *Signature (Sign) Homomorphism:*
-  $$ \mathrm{sgn} : S_n \to (\{+1, -1\}, \cdot), \quad \mathrm{sgn}(\pi) = (-1)^N $$
-  where $N$ is the number of transpositions in any decomposition of $\pi$.
-- *Homomorphism Property:*
-  $$ \mathrm{sgn}(\pi_1 \pi_2) = \mathrm{sgn}(\pi_1) \, \mathrm{sgn}(\pi_2) $$
+** 2.2 Signature Homomorphism and $A_n$
+The *signature* (or parity) of a permutation $\pi$ is:
+$$ \mathrm{sgn}(\pi) = (-1)^N $$
+where $N$ is the number of transpositions in any decomposition of $\pi$.
+- *Homomorphism:* $\mathrm{sgn}(\pi_1 \pi_2) = \mathrm{sgn}(\pi_1) \mathrm{sgn}(\pi_2)$.
 - *Signature of a $k$-cycle:*
-  Since a $k$-cycle decomposes into $k-1$ transpositions:
   $$ \mathrm{sgn}(a_1 \, a_2 \, \dots \, a_k) = (-1)^{k-1} $$
-  - If $k$ is *odd* (e.g. 3-cycles, 5-cycles), $\mathrm{sgn} = (-1)^{\text{even}} = +1$ (Even permutation!).
-  - If $k$ is *even* (e.g. 2-cycles/swaps, 4-cycles), $\mathrm{sgn} = (-1)^{\text{odd}} = -1$ (Odd permutation!).
-- *Alternating Group $A_n$:*
-  The set of all even permutations in $S_n$:
-  $$ A_n = \mathrm{Ker}(\mathrm{sgn}) = \{\pi \in S_n \mid \mathrm{sgn}(\pi) = +1\} $$
-  - $A_n$ is a normal subgroup of $S_n$ of index 2, with order:
-    $$ |A_n| = \frac{n!}{2} $$
+  - *Odd-length cycles are EVEN permutations!* (e.g. $\mathrm{sgn}(123) = (-1)^2 = +1$).
+  - *Even-length cycles are ODD permutations!* (e.g. $\mathrm{sgn}(12) = (-1)^1 = -1$).
+- *Alternating Group $A_n$:* The normal subgroup of all even permutations ($\mathrm{Ker}(\mathrm{sgn})$):
+  $$ |A_n| = \frac{n!}{2} $$
 
-** 2.3 Generation of $A_n$ by 3-Cycles
-#+begin_quote
-*Theorem:*
-For $n \ge 3$, the alternating group $A_n$ is generated by the set of all 3-cycles.
-#+end_quote
-*Proof:*
-Every even permutation is a product of an even number of transpositions. We pair the transpositions adjacent to each other:
-1. If the two transpositions share both elements: $(ab)(ab) = e = (abc)(abc)^2$.
-2. If they share one element:
-   $$ (ab)(bc) = (abc) $$
-3. If they share no elements:
-   $$ (ab)(cd) = (ab)(bc)(bc)(cd) = [(ab)(bc)] \cdot [(bc)(cd)] = (abc)(bcd) $$
-In all cases, the pair of transpositions is a product of at most two 3-cycles. $\blacksquare$
+*** Worked Example 2.1: Cycle Decomposition, Signature, and 3-Cycles
+Consider the permutation in Cauchy two-line notation in $S_6$:
+$$ \pi = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\ 3 & 5 & 4 & 1 & 2 & 6 \end{pmatrix} $$
+1. *Disjoint Cycle Decomposition:*
+   - Start with 1: $1 \mapsto 3 \mapsto 4 \mapsto 1 \implies (1 \, 3 \, 4)$.
+   - Next unused element 2: $2 \mapsto 5 \mapsto 2 \implies (2 \, 5)$.
+   - Remaining element 6: $6 \mapsto 6 \implies (6)$ (fixed point).
+   $$ \pi = (1 \, 3 \, 4)(2 \, 5) $$
+2. *Transposition Decomposition and Signature:*
+   - $(1 \, 3 \, 4) = (1 \, 4)(1 \, 3)$ (2 transpositions).
+   - $(2 \, 5)$ is 1 transposition.
+   $$ \pi = (1 \, 4)(1 \, 3)(2 \, 5) \quad (\text{total } N = 3 \text{ transpositions}) $$
+   $$ \mathrm{sgn}(\pi) = (-1)^3 = -1 \quad (\text{Odd permutation!}) $$
+3. *Writing an Even Permutation as a Product of 3-Cycles:*
+   Now consider the even permutation $\tau = (1 \, 2 \, 3 \, 4 \, 5) \in A_5$.
+   Expand into transpositions:
+   $$ \tau = (1 \, 5)(1 \, 4)(1 \, 3)(1 \, 2) $$
+   Group into pairs and apply the 3-cycle identity $(ab)(bc) = (abc)$:
+   - Pair 1: $(1 \, 5)(1 \, 4) = (1 \, 5 \, 4)$.
+   - Pair 2: $(1 \, 3)(1 \, 2) = (1 \, 3 \, 2)$.
+   $$ \tau = (1 \, 5 \, 4)(1 \, 3 \, 2) \quad (\text{a product of two 3-cycles!}) $$
 
-** 2.4 Permutation Matrices
-Let $\{\vec{e}_1, \dots, \vec{e}_n\}$ be the standard orthonormal basis of $\mathbb{R}^n$.
-To each permutation $\pi \in S_n$, we associate the linear operator $D(\pi) \in \mathrm{GL}(n, \mathbb{R})$ defined by:
-$$ D(\pi) \vec{e}_j = \vec{e}_{\pi(j)} $$
-- In matrix components:
-  $$ [D(\pi)]_{ij} = \delta_{i, \pi(j)} $$
+---
+
+** 2.3 Permutation Matrices
+To each permutation $\pi \in S_n$, we associate an $n \times n$ matrix $D(\pi) \in \mathrm{GL}(n, \mathbb{R})$ defined by:
+$$ [D(\pi)]_{ij} = \delta_{i, \pi(j)} $$
 - *Properties:*
-  1. $D(\pi_1 \pi_2) = D(\pi_1) D(\pi_2)$ (Homomorphism / Representation).
-  2. Each row and column contains exactly one $1$ and $n-1$ zeros.
-  3. $D(\pi)^T D(\pi) = \mathbf{1}_n$, so $D(\pi) \in \mathrm{O}(n)$ (Orthogonal matrix).
-  4. The determinant equals the signature:
-     $$ \det D(\pi) = \mathrm{sgn}(\pi) = \pm 1 $$
+  1. $D(\pi_1 \pi_2) = D(\pi_1) D(\pi_2)$ (Homomorphism).
+  2. $D(\pi)^T D(\pi) = \mathbf{1}_n$ (Orthogonal matrix).
+  3. $\det D(\pi) = \mathrm{sgn}(\pi) = \pm 1$.
+
+*** Worked Example 2.2: Permutation Matrices in $S_3$
+In $S_3$, consider the transposition $\pi_1 = (1 \, 2)$ and the 3-cycle $\pi_2 = (1 \, 2 \, 3)$:
+$$ D((1 \, 2)) = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix}, \qquad D((1 \, 2 \, 3)) = \begin{pmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{pmatrix} $$
+Compute determinants:
+- $\det D((1 \, 2)) = 0 - 1(1) + 0 = -1 = \mathrm{sgn}((1 \, 2))$. $\checkmark$
+- $\det D((1 \, 2 \, 3)) = 1(1 - 0) = +1 = \mathrm{sgn}((1 \, 2 \, 3))$. $\checkmark$
 
 ---
 
 * 3. Integer Partitions and Young Diagrams (§2.6)
 
 ** 3.1 Integer Partitions
-An *integer partition* of a positive integer $N \in \mathbb{N}$ is a representation of $N$ as a sum of positive integers:
+An *integer partition* of $N \in \mathbb{N}$ is a representation of $N$ as a sum of positive integers in non-increasing order:
 $$ N = \lambda_1 + \lambda_2 + \dots + \lambda_k, \quad \lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_k \ge 1 $$
-The tuple $\lambda = (\lambda_1, \lambda_2, \dots, \lambda_k)$ is called a partition of $N$, denoted $\lambda \vdash N$.
-- The number of distinct partitions of $N$ is denoted $p(N)$.
-  - $p(1) = 1$: $(1)$
-  - $p(2) = 2$: $(2), (1, 1)$
-  - $p(3) = 3$: $(3), (2, 1), (1, 1, 1)$
-  - $p(4) = 5$: $(4), (3, 1), (2, 2), (2, 1, 1), (1, 1, 1, 1)$
-  - $p(5) = 7$, $p(6) = 11$, $p(7) = 15$.
+The total number of partitions is denoted $p(N)$.
 
-** 3.2 Young Diagrams (Ferrers Diagrams)
-A *Young diagram* associated with partition $\lambda = (\lambda_1, \dots, \lambda_k)$ is a collection of empty boxes arranged in left-justified rows, where the $i$-th row contains $\lambda_i$ boxes.
-- /Example ($N = 4$):/
-  - $\lambda = (4)$: $\Box \Box \Box \Box$ (Totally symmetric)
-  - $\lambda = (3, 1)$: $\begin{array}{l} \Box \Box \Box \\ \Box \end{array}$
-  - $\lambda = (2, 2)$: $\begin{array}{l} \Box \Box \\ \Box \Box \end{array}$
-  - $\lambda = (2, 1, 1)$: $\begin{array}{l} \Box \Box \\ \Box \\ \Box \end{array}$
-  - $\lambda = (1, 1, 1, 1)$: $\begin{array}{l} \Box \\ \Box \\ \Box \\ \Box \end{array}$ (Totally antisymmetric)
+** 3.2 Young Diagrams and Physical Quantum States
+A *Young diagram* represents a partition by rows of empty square boxes:
+- Row $i$ has $\lambda_i$ boxes.
+- *Total boxes:* $N$.
 
-** 3.3 Physical Significance in $S_N$ and Quantum Mechanics
-1. *Conjugacy Classes of $S_N$:*
-   Two permutations in $S_N$ are conjugate if and only if they have identical cycle structures.
-   Each cycle structure corresponds bijectively to a partition $\lambda \vdash N$.
-   Thus, *the number of conjugacy classes of $S_N$ equals $p(N)$*.
-2. *Irreducible Representations (Irreps):*
-   By Frobenius' character theory, the number of distinct irreps of a finite group equals the number of its conjugacy classes.
-   Hence, *the irreps of $S_N$ are classified by Young diagrams of size $N$*.
-3. *Many-Body Quantum Mechanics:*
-   Multi-particle states of identical particles (bosons, fermions, quarks in hadrons) transform under $S_N$ according to Young diagrams, governing exchange statistics and spin-flavor wavefunctions.
+#+begin_quote
+*The Tri-Fold Correspondence:*
+$$ \text{Partitions } \lambda \vdash N \longleftrightarrow \text{Young Diagrams of size } N \longleftrightarrow \text{Conjugacy Classes of } S_N \longleftrightarrow \text{Irreducible Reps of } S_N $$
+#+end_quote
+
+*** Worked Example 3.1: All Partitions and Young Diagrams for $N = 4$ ($p(4) = 5$)
+There are exactly 5 partitions of $4$:
+
+1. *$\lambda = (4)$:* Four boxes in a single row:
+   $$\begin{array}{|c|c|c|c|} \hline \; & \; & \; & \; \\ \hline \end{array}$$
+   - *Conjugacy Class:* 4-cycles $(1234)$ (order 4, size 6).
+   - *Quantum Physics:* *Totally Symmetric* state (Bosons, e.g. photons, helium-4 atoms).
+2. *$\lambda = (3, 1)$:* Three boxes, then one box:
+   $$\begin{array}{|c|c|c|} \hline \; & \; & \; \\ \hline \multicolumn{1}{|c|}{\;} \\ \cline{1-1} \end{array}$$
+   - *Conjugacy Class:* 3-cycles $(123)(4)$ (order 3, size 8).
+   - *Quantum Physics:* Mixed symmetry (standard 3-dimensional representation).
+3. *$\lambda = (2, 2)$:* Two rows of two boxes:
+   $$\begin{array}{|c|c|} \hline \; & \; \\ \hline \; & \; \\ \hline \end{array}$$
+   - *Conjugacy Class:* Double transpositions $(12)(34)$ (order 2, size 3).
+   - *Quantum Physics:* Mixed symmetry (2-dimensional representation).
+4. *$\lambda = (2, 1, 1)$:* Two boxes, then two single boxes:
+   $$\begin{array}{|c|c|} \hline \; & \; \\ \hline \multicolumn{1}{|c|}{\;} \\ \cline{1-1} \multicolumn{1}{|c|}{\;} \\ \cline{1-1} \end{array}$$
+   - *Conjugacy Class:* Single transpositions $(12)(3)(4)$ (order 2, size 6).
+   - *Quantum Physics:* Mixed symmetry (3-dimensional representation).
+5. *$\lambda = (1, 1, 1, 1)$:* Four boxes in a single column:
+   $$\begin{array}{|c|} \hline \; \\ \hline \; \\ \hline \; \\ \hline \; \\ \hline \end{array}$$
+   - *Conjugacy Class:* Identity $(1)(2)(3)(4) = e$ (order 1, size 1).
+   - *Quantum Physics:* *Totally Antisymmetric* state (Fermions, Pauli Exclusion Principle, Slater determinants).
+
+*Check Class Sizes:* $6 + 8 + 3 + 6 + 1 = 24 = 4! = |S_4|$.
 
 ---
 
 * 4. Cayley's Classification Theorem (§2.5)
 
 #+begin_quote
-*Theorem (Cayley's Embedding Theorem):*
+*Theorem (Cayley):*
 Every finite group $G$ of order $n$ is isomorphic to a subgroup of the symmetric group $S_n$:
 $$ G \hookrightarrow S_n $$
 #+end_quote
+*Intuition:* Every group element $g$ can be viewed as an operator that permutes the $n$ entries of the group's own Cayley table via left multiplication $L_g(x) = g x$.
 
-*Proof:*
-Let $G = \{g_1, g_2, \dots, g_n\}$.
-For each $g \in G$, define the left multiplication mapping:
-$$ L_g : G \to G, \quad L_g(x) = g \cdot x $$
-1. *Bijection:* By the cancellation laws, $g x = g y \implies x = y$ (injective). Since $G$ is finite, $L_g$ is a bijection, i.e., a permutation of the $n$ elements of $G$. Thus $L_g \in \mathrm{Perm}(G) \cong S_n$.
-2. *Homomorphism:*
-   $$ L_{g h}(x) = (g h) x = g (h x) = L_g(L_h(x)) = (L_g \circ L_h)(x) $$
-   Hence the map $\Phi : G \to S_n$ defined by $\Phi(g) = L_g$ is a group homomorphism.
-3. *Injectivity:*
-   $$ \mathrm{Ker}(\Phi) = \{g \in G \mid L_g = \mathrm{id}_G\} $$
-   If $L_g = \mathrm{id}_G$, then $L_g(e) = g \cdot e = g = e$. Thus $\mathrm{Ker}(\Phi) = \{e\}$.
-By the First Isomorphism Theorem, $G \cong \mathrm{Im}(\Phi) \le S_n$. $\blacksquare$
+*** Worked Example 4.1: Embedding the Klein Four-Group $V_4 \hookrightarrow S_4$
+Let $V_4 = \{e, a, b, c\}$ where $a^2 = b^2 = c^2 = e$ and $ab = ba = c$.
+Label the 4 elements as indices: $1 = e$, $2 = a$, $3 = b$, $4 = c$.
+Compute the permutation induced by left multiplication $L_g(x) = g x$:
+- *For element $e$ ($1$):* Leaves all elements unchanged:
+  $$ L_e = (1)(2)(3)(4) = e \in S_4 $$
+- *For element $a$ ($2$):*
+  $a \cdot e = a$ ($1 \mapsto 2$), $a \cdot a = e$ ($2 \mapsto 1$), $a \cdot b = c$ ($3 \mapsto 4$), $a \cdot c = b$ ($4 \mapsto 3$).
+  $$ L_a = (1 \, 2)(3 \, 4) \in S_4 $$
+- *For element $b$ ($3$):*
+  $b \cdot e = b$ ($1 \mapsto 3$), $b \cdot a = c$ ($2 \mapsto 4$), $b \cdot b = e$ ($3 \mapsto 1$), $b \cdot c = a$ ($4 \mapsto 2$).
+  $$ L_b = (1 \, 3)(2 \, 4) \in S_4 $$
+- *For element $c$ ($4$):*
+  $c \cdot e = c$ ($1 \mapsto 4$), $c \cdot a = b$ ($2 \mapsto 3$), $c \cdot b = a$ ($3 \mapsto 2$), $c \cdot c = e$ ($4 \mapsto 1$).
+  $$ L_c = (1 \, 4)(2 \, 3) \in S_4 $$
+*Conclusion:* The subgroup $\{e, \, (12)(34), \, (13)(24), \, (14)(23)\} \le S_4$ is an exact, faithful copy of $V_4$ embedded inside $S_4$!
 
 ---
 
 * 5. Continuous Groups and Lie Groups (§2.8)
 
-** 5.1 Continuous Groups and Group Manifolds
-A *continuous group* is a group whose elements depend continuously on a set of real parameters:
-$$ g(\alpha) = g(\alpha_1, \alpha_2, \dots, \alpha_d), \quad \alpha \in \mathcal{M} \subseteq \mathbb{R}^d $$
-- *Lie Group:* A group $G$ that is also a smooth ($C^\infty$) differentiable manifold, such that the group multiplication and inversion maps:
-  $$ \mu : G \times G \to G, \; (g, h) \mapsto gh \qquad \text{and} \qquad \iota : G \to G, \; g \mapsto g^{-1} $$
-  are smooth maps.
-- *Dimension of a Lie Group:*
-  The dimension $\dim G = d$ is the dimension of the underlying group manifold, which equals the number of independent continuous real parameters required to specify an element in a neighborhood of the identity.
-
-** 5.2 The Lie Algebra: Tangent Space at Identity
-Near the identity element $e = \mathbf{1}$, any group element can be expanded infinitesimally:
-$$ g(\epsilon) = \mathbf{1} + \epsilon X + \mathcal{O}(\epsilon^2) $$
-where $X = \left.\frac{dg}{d\epsilon}\right|_{\epsilon=0}$ is a *generator* belonging to the tangent space $T_e G \equiv \mathfrak{g}$ (the Lie algebra).
-The group dimension satisfies:
-$$ \dim G = \dim_{\mathbb{R}} \mathfrak{g} $$
+** 5.1 Lie Groups and Lie Algebras
+A *Lie group* is a group that is also a smooth manifold.
+- *Group Dimension:* The dimension $\dim G = d$ is the number of independent continuous real parameters needed to specify an element near the identity.
+- *Lie Algebra $\mathfrak{g} = T_e G$:* The tangent space at the identity element $e = \mathbf{1}$.
+  Infinitesimally, any group element near identity can be expanded as:
+  $$ g(\epsilon) = \mathbf{1} + \epsilon X + \mathcal{O}(\epsilon^2), \quad X \in \mathfrak{g} $$
+  $$ \dim G = \dim_{\mathbb{R}} \mathfrak{g} $$
 
 ---
 
-* 6. Classical Matrix Lie Groups and Dimensions (§2.8)
+* 6. Classical Matrix Lie Groups and Real Dimensions (§2.8)
 
-#+caption: Summary of Classical Matrix Groups and Real Dimensions
-| Group | Definition | Invariance / Constraint | Real Dimension |
-|---+---+---+---|
-| $\mathrm{GL}(n, \mathbb{R})$ | Real invertible $n \times n$ matrices | $\det M \neq 0$ | $n^2$ |
-| $\mathrm{GL}(n, \mathbb{C})$ | Complex invertible $n \times n$ matrices | $\det M \neq 0$ | $2n^2$ |
-| $\mathrm{SL}(n, \mathbb{R})$ | Real special linear group | $\det M = 1$ | $n^2 - 1$ |
-| $\mathrm{SL}(n, \mathbb{C})$ | Complex special linear group | $\det M = 1$ | $2(n^2 - 1)$ |
-| $\mathrm{O}(n)$ | Real orthogonal group | $M^T M = \mathbf{1}_n$ | $\frac{n(n-1)}{2}$ |
-| $\mathrm{SO}(n)$ | Real special orthogonal group | $M^T M = \mathbf{1}_n, \, \det M = 1$ | $\frac{n(n-1)}{2}$ |
-| $\mathrm{U}(n)$ | Unitary group | $U^\dagger U = \mathbf{1}_n$ | $n^2$ |
-| $\mathrm{SU}(n)$ | Special unitary group | $U^\dagger U = \mathbf{1}_n, \, \det U = 1$ | $n^2 - 1$ |
-| $\mathrm{Sp}(2n, \mathbb{R})$ | Real symplectic group | $M^T \Omega M = \Omega$ | $n(2n + 1)$ |
+#+caption: Classical Matrix Groups and Their Lie Algebra Dimensions
+| Group | Invariance Condition | Lie Algebra Condition | Real Dimension | Physical Application |
+|---+---+---+:---:|---|
+| $\mathrm{GL}(n, \mathbb{R})$ | $\det M \neq 0$ | Arbitrary real matrix | $n^2$ | General coordinate frames |
+| $\mathrm{GL}(n, \mathbb{C})$ | $\det M \neq 0$ | Arbitrary complex matrix | $2n^2$ | Complex linear systems |
+| $\mathrm{SL}(n, \mathbb{R})$ | $\det M = 1$ | Traceless: $\mathrm{Tr}(X) = 0$ | $n^2 - 1$ | Volume-preserving flows |
+| $\mathrm{O}(n)$ & $\mathrm{SO}(n)$ | $M^T M = \mathbf{1}_n$ | Skew-symmetric: $X^T = -X$ | $\frac{n(n-1)}{2}$ | Spatial rotations |
+| $\mathrm{U}(n)$ | $U^\dagger U = \mathbf{1}_n$ | Skew-Hermitian: $X^\dagger = -X$ | $n^2$ | Quantum state evolution |
+| $\mathrm{SU}(n)$ | $U^\dagger U = \mathbf{1}, \, \det U = 1$ | Skew-Hermitian + Traceless | $n^2 - 1$ | Electroweak & Strong gauge groups ($\mathrm{SU}(2), \mathrm{SU}(3)$) |
+| $\mathrm{Sp}(2n, \mathbb{R})$ | $M^T \Omega M = \Omega$ | $\Omega X$ is symmetric | $n(2n + 1)$ | Classical Hamiltonian mechanics |
 
-** 6.1 Derivation: $\mathrm{O}(n)$ and $\mathrm{SO}(n)$
-- Constraint: $M^T M = \mathbf{1}_n$.
-- Infinitesimal generator: $M = \mathbf{1} + \epsilon X$.
-  $$ (\mathbf{1} + \epsilon X^T)(\mathbf{1} + \epsilon X) = \mathbf{1} + \epsilon(X^T + X) + \mathcal{O}(\epsilon^2) = \mathbf{1} \implies X^T = -X $$
-  The Lie algebra $\mathfrak{so}(n)$ consists of *skew-symmetric* $n \times n$ real matrices.
-- The diagonal entries must be zero ($X_{ii} = 0$). The upper triangle has $\frac{n(n-1)}{2}$ independent entries:
-  $$ \dim \mathrm{SO}(n) = \dim \mathrm{O}(n) = \frac{n(n-1)}{2} $$
-
-** 6.2 Derivation: $\mathrm{U}(n)$ and $\mathrm{SU}(n)$
-- Constraint for $\mathrm{U}(n)$: $U^\dagger U = \mathbf{1}_n$.
-- Infinitesimal generator: $U = \mathbf{1} + \epsilon X$.
-  $$ (\mathbf{1} + \epsilon X^\dagger)(\mathbf{1} + \epsilon X) = \mathbf{1} + \epsilon(X^\dagger + X) + \mathcal{O}(\epsilon^2) = \mathbf{1} \implies X^\dagger = -X $$
-  The Lie algebra $\mathfrak{u}(n)$ consists of *skew-Hermitian* complex $n \times n$ matrices.
-  - Diagonal: $X_{ii}^* = -X_{ii} \implies X_{ii} = i b_i \in i\mathbb{R}$ ($n$ independent real parameters).
-  - Off-diagonal: $X_{ji} = -X_{ij}^*$. Each pair is determined by 1 complex number ($2$ real parameters). Number of pairs is $\frac{n(n-1)}{2}$.
-  - Total: $n + 2 \frac{n(n-1)}{2} = n + n(n-1) = n^2$.
-  $$ \dim \mathrm{U}(n) = n^2 $$
-- Constraint for $\mathrm{SU}(n)$: $\det U = 1 \implies \mathrm{Tr}(X) = 0$.
-  The trace condition $\sum_{i=1}^n b_i = 0$ removes 1 real parameter from the diagonal:
-  $$ \dim \mathrm{SU}(n) = n^2 - 1 $$
-
-** 6.3 Derivation: The Symplectic Group $\mathrm{Sp}(2n, \mathbb{R})$
-- Defined by preserving the canonical non-degenerate skew-symmetric bilinear form $\Omega$ on $\mathbb{R}^{2n}$:
-  $$ \Omega = \begin{pmatrix} 0_n & \mathbf{1}_n \\ -\mathbf{1}_n & 0_n \end{pmatrix}, \quad \Omega^T = -\Omega = \Omega^{-1} $$
-  $$ \mathrm{Sp}(2n, \mathbb{R}) = \{M \in \mathrm{GL}(2n, \mathbb{R}) \mid M^T \Omega M = \Omega\} $$
-- Lie algebra condition: $M = \mathbf{1} + \epsilon X$:
-  $$ (\mathbf{1} + \epsilon X^T)\Omega(\mathbf{1} + \epsilon X) = \Omega \implies X^T \Omega + \Omega X = 0 $$
-- Multiply on the left by $\Omega^{-1} = -\Omega$:
-  $$ (\Omega X)^T = X^T \Omega^T = -X^T \Omega = \Omega X $$
-  Thus, the matrix $K \equiv \Omega X$ must be a *symmetric* $2n \times 2n$ real matrix!
-- Number of independent parameters in a symmetric $2n \times 2n$ matrix:
-  $$ \frac{2n(2n + 1)}{2} = n(2n + 1) $$
-- Since $\Omega$ is invertible, $X = -\Omega K$ has exactly the same number of degrees of freedom:
-  $$ \dim \mathrm{Sp}(2n, \mathbb{R}) = n(2n + 1) $$
+*** Worked Example 6.1: Deriving the Dimensions of $\mathrm{SO}(3)$ and $\mathrm{SU}(2)$
+1. *$\mathrm{SO}(3)$ (3D Spatial Rotations):*
+   - Group condition: $R^T R = \mathbf{1}_3$ and $\det R = 1$.
+   - Lie algebra $\mathfrak{so}(3)$: Expand $R = \mathbf{1} + \epsilon X$:
+     $$ (\mathbf{1} + \epsilon X^T)(\mathbf{1} + \epsilon X) = \mathbf{1} + \epsilon(X^T + X) + \mathcal{O}(\epsilon^2) = \mathbf{1} \implies X^T = -X $$
+     The generators are $3 \times 3$ real *skew-symmetric* matrices.
+   - Diagonal must be zero. Upper triangle has $\frac{3(3-1)}{2} = 3$ independent entries:
+     $$ J_x = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & -1 \\ 0 & 1 & 0 \end{pmatrix}, \quad J_y = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ -1 & 0 & 0 \end{pmatrix}, \quad J_z = \begin{pmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix} $$
+   - Therefore:
+     $$ \dim \mathrm{SO}(3) = 3 $$
+2. *$\mathrm{SU}(2)$ (Spin-1/2 Symmetries):*
+   - Group condition: $U^\dagger U = \mathbf{1}_2$ and $\det U = 1$.
+   - Lie algebra $\mathfrak{su}(2)$: Expand $U = \mathbf{1} + \epsilon X$:
+     $$ X^\dagger = -X \quad (\text{skew-Hermitian}) \quad \text{and} \quad \mathrm{Tr}(X) = 0 \quad (\text{traceless}) $$
+   - Standard physics basis: $X_k = -\frac{i}{2} \sigma_k$ where $\sigma_k$ are the 3 Hermitian Pauli matrices:
+     $$ \sigma_x = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} $$
+   - Since there are 3 Pauli matrices, there are 3 independent real parameters:
+     $$ \dim \mathrm{SU}(2) = 2^2 - 1 = 3 $$
 
 ---
 
 * 7. Group Actions on Sets (§2.8, §2.9)
 
-A group action formalizes how an abstract group acts as transformations on a physical or geometric state space.
+** 7.1 Left Action vs. Right Action
+- *Left Action:* $g_1 \cdot (g_2 \cdot x) = (g_1 g_2) \cdot x$.
+- *Right Action:* $(x \cdot g_1) \cdot g_2 = x \cdot (g_1 g_2)$.
 
-** 7.1 Left Action
-Let $G$ be a group and $X$ a non-empty set. A *left action* of $G$ on $X$ is a map $\phi : G \times X \to X$, denoted $\phi(g, x) \equiv g \cdot x$, satisfying:
-1. *Identity:*
-   $$ e \cdot x = x, \quad \forall x \in X $$
-2. *Compatibility (Associativity):*
-   $$ g_1 \cdot (g_2 \cdot x) = (g_1 g_2) \cdot x, \quad \forall g_1, g_2 \in G, \, \forall x \in X $$
-
-** 7.2 Right Action
-A *right action* is a map $\psi : X \times G \to X$, denoted $\psi(x, g) \equiv x \cdot g$, satisfying:
-1. *Identity:*
-   $$ x \cdot e = x, \quad \forall x \in X $$
-2. *Compatibility:*
-   $$ (x \cdot g_1) \cdot g_2 = x \cdot (g_1 g_2), \quad \forall g_1, g_2 \in G, \, \forall x \in X $$
-
-/(Note: Every right action can be converted into a left action via $g \cdot x \equiv x \cdot g^{-1}$)/.
+*** Worked Example 7.1: Active vs. Passive Transformations in Physics
+In field theory, how does a spatial rotation $R \in \mathrm{SO}(3)$ act on a scalar field $\phi(x)$?
+- *Active Transformation on Coordinates (Left Action):*
+  $$ x \mapsto x' = R x $$
+- *Passive Transformation on the Field $\phi$:*
+  The value of the rotated field $\phi'$ at the new point $x'$ must equal the value of the original field at the old point $x$:
+  $$ \phi'(x') = \phi(x) \implies \phi'(R x) = \phi(x) \implies \phi'(x) = \phi(R^{-1} x) $$
+- *Why is the inverse $R^{-1}$ necessary?*
+  Let us test successive transformations $R_1$ followed by $R_2$:
+  $$ (\phi'_{R_1})'_{R_2}(x) = \phi'_{R_1}(R_2^{-1} x) = \phi(R_1^{-1}(R_2^{-1} x)) = \phi((R_2 R_1)^{-1} x) = \phi'_{R_2 R_1}(x) $$
+  Because $(R_2 R_1)^{-1} = R_1^{-1} R_2^{-1}$, the inverse ensures that the induced action on function space preserves the group multiplication order!

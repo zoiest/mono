@@ -4,32 +4,59 @@
 :ROAM_REFS: [cite:@keskivakkuri2022mathematical]
 :END:
 #+title: Week 03: Group Actions, Orbits, Cosets, and Quotients
-#+subtitle: Mathematical Methods for Physics IIIa — Lecture Notes (Keski-Vakkuri, Montonen, Panero)
+#+subtitle: Mathematical Methods for Physics IIIa — Intuitive Guide with Worked Examples (Keski-Vakkuri, Montonen, Panero)
 #+author: Antigravity Notes
 #+date: [2026-09-26]
-#+filetags: :physics:math:helsinki:week03:actions:orbits:cosets:quotients:lagrange:burnside:isomorphism-theorems:
+#+filetags: :physics:math:helsinki:week03:actions:orbits:cosets:quotients:lagrange:burnside:isomorphism-theorems:worked-examples:
 
 [[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][Topic: Subgroups & Cosets]] | [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Topic: Homomorphisms & Quotients]] | [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][Topic: Groups Acting on a Set]]
 
 * Overview and Syllabus Mapping
 
-This document provides the lecture notes for *Week 03* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week03-topics.txt=.
+This document provides the self-study lecture notes for *Week 03* of /Mathematical Methods for Physics IIIa/ at the University of Helsinki, covering the curriculum outlined in =week03-topics.txt=.
 Topics are drawn from textbook section *2.9* (with foundations in *2.2* and *2.3*) of /Mathematical Methods for Physics/ by Esko Keski-Vakkuri, Claus Montonen, and Marco Panero (Cambridge University Press, 2022).
 
 #+caption: Summary of Lecture Topics
 #+begin_quote
-1. *Equivalence Relations, Partitions, and Quotient Spaces:* Reflexivity, symmetry, transitivity, and quotient sets $X/\sim$ (§2.9).
-2. *Group Actions on Sets:* Left/right translations, conjugation actions, and transformation spaces (§2.9).
-3. *Orbits and the Orbit Space:* $\mathcal{O}_x = G \cdot x$, equivalence classes of orbits, and quotient spaces $X/G$ (§2.9).
-4. *Transitive Actions and Homogeneous Spaces:* Transitivity and identifying $X \cong G/G_x$ (§2.9).
-5. *Conjugacy Classes:* Orbits under the inner conjugation action and the class equation (§2.9).
-6. *Cosets and Lagrange's Theorem:* Left and right cosets $gH, Hg$, quotient spaces $G/H$, and $[G:H] = |G|/|H|$ (§2.2).
-7. *Isotropy Groups (Stabilizers / Little Groups):* $G_x \le G$ and proof of subgroup nature (§2.9).
-8. *The Orbit-Stabilizer Theorem:* Bijection $\mathcal{O}_x \cong G/G_x$ and cardinality relation $|\mathcal{O}_x| = [G:G_x]$ (§2.9).
-9. *Fixed Points and Burnside's Lemma:* Invariant sets $X^g$ and orbit counting $|X/G| = \frac{1}{|G|}\sum |X^g|$ (§2.9).
-10. *Normal Subgroups and Quotient Groups:* $N \triangleleft G$, well-defined group operation on $G/N$ (§2.3).
-11. *The Center of a Group:* $Z(G) \triangleleft G$ as an Abelian normal subgroup (§2.2, §2.9).
-12. *Homomorphisms and the First Isomorphism Theorem:* Kernel $\mathrm{Ker}(\phi) \triangleleft G$, image $\mathrm{Im}(\phi) \le H$, and $G/\mathrm{Ker}(\phi) \cong \mathrm{Im}(\phi)$ (§2.3).
+1. *The Big Picture:* A "Rosetta Stone" and mental map connecting actions, orbits, stabilizers, and cosets.
+2. *Equivalence Relations & Quotient Spaces:* Partitions of sets and identifying equivalent states $X/\sim$ (§2.9).
+3. *Group Actions on Sets:* Translations, conjugation, and physical transformation spaces (§2.9).
+4. *Orbits and the Orbit Space:* $\mathcal{O}_x = G \cdot x$, orbits as equivalence classes, and quotient spaces $X/G$ (§2.9).
+5. *Transitive Actions and Homogeneous Spaces:* Why spheres and spacetimes are coset manifolds $X \cong G/G_x$ (§2.9).
+6. *Conjugacy Classes:* Orbits under conjugation, matrix similarity, and the class equation (§2.9).
+7. *Cosets and Lagrange's Theorem:* Left/right cosets, index $[G:H] = |G|/|H|$, and element order constraints (§2.2).
+8. *Isotropy Groups & Orbit-Stabilizer Theorem:* Why $|\mathcal{O}_x| \cdot |G_x| = |G|$ and the bijection $\mathcal{O}_x \cong G/G_x$ (§2.9).
+9. *Fixed Points and Burnside's Lemma:* Counting distinct physical configurations without overcounting (§2.9).
+10. *Normal Subgroups vs. General Subgroups:* Why only normal subgroups yield quotient *groups* $G/N$ (§2.3).
+11. *The Center of a Group:* $Z(G)$ and the $\mathrm{SU}(2) \to \mathrm{SO}(3)$ double cover (§2.2, §2.9).
+12. *Homomorphisms and the First Isomorphism Theorem:* $G/\mathrm{Ker}(\phi) \cong \mathrm{Im}(\phi)$ and winding the line onto the circle (§2.3).
+#+end_quote
+
+---
+
+* 0. Intuitive "Rosetta Stone": The Mental Map of Week 03
+
+Week 03 introduces several interlocking concepts that often cause confusion. Keep this master conceptual map in mind:
+
+#+caption: The Master Conceptual Map
+| Concept | Mathematical Symbol | Where it Lives | Physical / Geometric Meaning |
+|---+---+---+---|
+| *The Symmetry Group* | $G$ | Group of operators | All transformations leaving physics invariant |
+| *The State / Config Space* | $X$ | Set or manifold | The geometric space of points, fields, or states |
+| *Group Action* | $g \cdot x$ | Map $G \times X \to X$ | Applying symmetry operation $g$ to state $x$ |
+| *Orbit* | $\mathcal{O}_x = G \cdot x$ | *Subset of $X$* | The trajectory of state $x$ under all symmetries |
+| *Stabilizer (Isotropy Group)* | $G_x = \mathrm{Stab}_G(x)$ | *Subgroup of $G$* | The symmetries that leave state $x$ completely unchanged |
+| *Coset* | $g H$ | *Subset of $G$* | A shifted copy of subgroup $H$ inside $G$ |
+| *Coset Space (Homogeneous Space)* | $G/H$ | Set or manifold | Space of orbits $\mathcal{O}_x \cong G/G_x$ (points on a sphere, spacetime) |
+| *Quotient Group* | $G/N$ ($N \triangleleft G$) | *A brand new group* | Symmetries of the coarse-grained system |
+
+#+begin_quote
+*The Golden Rule of Week 03:*
+- An *orbit* $\mathcal{O}_x$ is a subset of the *space $X$* (where a point can travel).
+- A *stabilizer* $G_x$ is a subgroup of the *group $G$* (symmetries that don't move the point).
+- The *Orbit-Stabilizer Theorem* bridges them:
+  $$ (\text{Size of Orbit in } X) \times (\text{Size of Stabilizer in } G) = (\text{Total Symmetries in } G) $$
+  $$ |\mathcal{O}_x| \cdot |G_x| = |G| $$
 #+end_quote
 
 ---
@@ -38,70 +65,97 @@ Topics are drawn from textbook section *2.9* (with foundations in *2.2* and *2.3
 
 ** 1.1 Equivalence Relations
 A binary relation $\sim$ on a set $X$ is an *equivalence relation* if it satisfies three axioms for all $x, y, z \in X$:
-1. *Reflexivity:* $x \sim x$
-2. *Symmetry:* $x \sim y \implies y \sim x$
-3. *Transitivity:* $x \sim y \text{ and } y \sim z \implies x \sim z$
+1. *Reflexivity:* $x \sim x$ (every state is equivalent to itself).
+2. *Symmetry:* $x \sim y \implies y \sim x$ (if $x$ is equivalent to $y$, then $y$ is equivalent to $x$).
+3. *Transitivity:* $x \sim y \text{ and } y \sim z \implies x \sim z$ (equivalence chains together).
 
-** 1.2 Equivalence Classes and Quotient Spaces
-- *Equivalence Class:* The subset of all elements equivalent to $x \in X$:
+** 1.2 Partitions and Quotient Spaces
+- *Equivalence Class:* The collection of all elements equivalent to $x$:
   $$ [x] = \{y \in X \mid y \sim x\} $$
 - *Fundamental Partition Theorem:*
-  Every equivalence relation on $X$ partitions $X$ into disjoint, non-empty equivalence classes:
-  $$ X = \bigcup_{i} [x_i], \quad [x_i] \cap [x_j] = \emptyset \quad (i \neq j) $$
-- *Quotient Space:* The set of all equivalence classes:
+  Every equivalence relation partitions $X$ into disjoint, non-empty equivalence classes that cover $X$:
+  $$ X = \bigsqcup_{i} [x_i] $$
+- *Quotient Space:* The set of equivalence classes:
   $$ X / \sim \; = \{[x] \mid x \in X\} $$
-  The canonical projection map is $\pi : X \to X/\sim, \, x \mapsto [x]$.
+
+*** Worked Example 1.1: Clocks and Modular Arithmetic
+Let $X = \mathbb{Z}$ (the integers). Define $a \sim b \iff a - b$ is a multiple of $12$ ($a \equiv b \pmod{12}$).
+- This is an equivalence relation:
+  - $a - a = 0 = 0 \times 12$ (reflexive).
+  - $a - b = 12k \implies b - a = 12(-k)$ (symmetric).
+  - $a - b = 12k$ and $b - c = 12m \implies a - c = 12(k+m)$ (transitive).
+- Equivalence classes: $[0] = \{\dots, -12, 0, 12, 24, \dots\}$, $[1] = \{\dots, -11, 1, 13, 25, \dots\}$, up to $[11]$.
+- Quotient space: $\mathbb{Z} / 12\mathbb{Z} = \{[0], [1], \dots, [11]\}$ (the 12 hours on a clock face).
 
 ---
 
 * 2. Group Actions: Translations, Conjugation, and Orbits (§2.9)
 
-Let $G$ be a group acting on a set $X$ via a left action $\cdot : G \times X \to X$ satisfying $e \cdot x = x$ and $g_1 \cdot (g_2 \cdot x) = (g_1 g_2) \cdot x$.
+Let $G$ be a group acting on a set $X$ via a left action $\cdot : G \times X \to X$ satisfying:
+1. $e \cdot x = x$ (identity does nothing).
+2. $g_1 \cdot (g_2 \cdot x) = (g_1 g_2) \cdot x$ (successive operations combine according to group multiplication).
 
 ** 2.1 Canonical Actions of $G$ on Itself ($X = G$)
-When the set $X$ is the group $G$ itself, three fundamental actions arise:
-1. *Left Translation:*
-   $$ L_g : G \to G, \quad L_g(x) = g x $$
-2. *Right Translation:*
-   $$ R_g : G \to G, \quad R_g(x) = x g^{-1} $$
-   /(The inverse $g^{-1}$ ensures the left-action compatibility: $R_{g_1 g_2}(x) = x(g_1 g_2)^{-1} = x g_2^{-1} g_1^{-1} = R_{g_1}(R_{g_2}(x))$)/.
+1. *Left Translation:* $L_g(x) = g x$. Shifts elements from the left.
+2. *Right Translation:* $R_g(x) = x g^{-1}$. Shifts elements from the right.
 3. *Conjugation (Inner Automorphism):*
-   $$ C_g : G \to G, \quad C_g(x) = g x g^{-1} $$
+   $$ C_g(x) = g x g^{-1} $$
+   *Physical Meaning:* Conjugation represents a *change of coordinate frame* or basis. If $x$ is a physical operation in frame 1, and $g$ translates from frame 1 to frame 2, then $g x g^{-1}$ is the exact same operation viewed from frame 2.
 
 ** 2.2 Orbits and the Orbit Space $X/G$
-- *Orbit of a point $x \in X$:* The set of all destinations of $x$ under the group action:
+- *Orbit of a point $x \in X$:* The set of all destinations reachable from $x$ by applying group elements:
   $$ \mathcal{O}_x = G \cdot x = \{g \cdot x \mid g \in G\} \subseteq X $$
-- *Orbit Equivalence Relation:*
-  Define $x \sim y \iff \exists g \in G \text{ such that } y = g \cdot x$.
-  - Reflexive: $x = e \cdot x \implies x \sim x$.
-  - Symmetric: $y = g \cdot x \implies x = g^{-1} \cdot y \implies y \sim x$.
-  - Transitive: $y = g \cdot x$ and $z = h \cdot y \implies z = (hg) \cdot x \implies x \sim z$.
-- *Orbit Space:* The quotient space of orbits:
-  $$ X/G = \{\mathcal{O}_x \mid x \in X\} $$
-  The orbits partition $X$ into disjoint subsets: $X = \bigsqcup \mathcal{O}_x$.
+- *Orbit Partition:* Two points are in the same orbit if and only if a group element connects them ($x \sim y \iff \exists g, \, y = g \cdot x$).
+  Because this is an equivalence relation, the orbits partition the state space $X$:
+  $$ X = \bigsqcup \mathcal{O}_x $$
+- *Orbit Space:* $X/G = \{\mathcal{O}_x \mid x \in X\}$.
 
 ** 2.3 Transitive Actions and Homogeneous Spaces
-- An action of $G$ on $X$ is called *transitive* if there is only a single orbit:
-  $$ \forall x, y \in X, \quad \exists g \in G \quad \text{such that} \quad y = g \cdot x $$
-  In this case, $\mathcal{O}_x = X$ for any $x \in X$, and $X/G$ consists of a single point.
-- *Homogeneous Space:* A space $X$ equipped with a transitive $G$-action. Every point in $X$ looks geometrically identical.
-  - /Example:/ The 2-sphere $S^2$ is a homogeneous space under $\mathrm{SO}(3)$: any unit vector can be rotated into any other unit vector.
+- An action is *transitive* if there is only a single orbit: any point can be mapped to any other point.
+- *Homogeneous Space:* A space where a group acts transitively. Every point looks identical.
+
+*** Worked Example 2.1: The Rotation Group $\mathrm{SO}(3)$ Acting on $\mathbb{R}^3$
+Let $G = \mathrm{SO}(3)$ (3D spatial rotations) act on $X = \mathbb{R}^3$:
+1. *Orbit of the Origin $\vec{0} = (0, 0, 0)$:*
+   Every rotation leaves $\vec{0}$ fixed: $R \vec{0} = \vec{0}$.
+   $$ \mathcal{O}_{\vec{0}} = \{\vec{0}\} \quad (\text{a single point, 0-dimensional}) $$
+2. *Orbit of a Point at Radius $R > 0$ (e.g. $\vec{x}_0 = (0, 0, R)$):*
+   Any vector at distance $R$ from the origin can be reached by rotating $\vec{x}_0$.
+   $$ \mathcal{O}_{\vec{x}_0} = \{\vec{x} \in \mathbb{R}^3 \mid \|\vec{x}\| = R\} = S^2(R) \quad (\text{a 2D sphere!}) $$
+3. *Orbit Space $\mathbb{R}^3 / \mathrm{SO}(3)$:*
+   Each orbit is a concentric sphere of radius $r \ge 0$. The orbit space is parameterized by the radius:
+   $$ \mathbb{R}^3 / \mathrm{SO}(3) \cong [0, \infty) \quad (\text{a 1D half-line}) $$
+4. *Homogeneous Space:*
+   Restricted to the sphere $S^2$, $\mathrm{SO}(3)$ acts *transitively*: any point on the sphere can be rotated to any other point on the sphere. Thus $S^2$ is a homogeneous space!
 
 ---
 
 * 3. Conjugacy Classes and the Class Equation (§2.9)
 
 ** 3.1 Conjugacy Classes
-When $G$ acts on itself by conjugation $C_g(x) = g x g^{-1}$, the orbits are called *conjugacy classes*:
+When $G$ acts on itself by conjugation $C_g(x) = g x g^{-1}$, the orbits in $G$ are called *conjugacy classes*:
 $$ \mathrm{Cl}(x) = \{g x g^{-1} \mid g \in G\} $$
-- Two elements $a, b \in G$ are *conjugate* ($a \sim b$) if $\exists g \in G$ such that $b = g a g^{-1}$.
-- In matrix groups, conjugacy corresponds to similarity transformations ($B = P A P^{-1}$), meaning conjugate matrices share the same eigenvalues, trace, and determinant.
-- In symmetric groups $S_n$, conjugate elements have identical cycle structures.
+- In matrix groups: Conjugate matrices $B = P A P^{-1}$ represent the *same linear operator in different bases*. They share the same eigenvalues, determinant, and trace!
+- In symmetric groups $S_n$: Conjugate permutations have the *same cycle structure*.
 
 ** 3.2 The Class Equation
 Since conjugacy classes partition $G$:
 $$ |G| = |Z(G)| + \sum_{i} |\mathrm{Cl}(x_i)| $$
-where $Z(G)$ is the center (elements whose conjugacy class has size 1) and the sum runs over representatives of non-central conjugacy classes.
+where $Z(G)$ is the center (elements that commute with everything, so $\mathrm{Cl}(z) = \{z\}$).
+
+*** Worked Example 3.1: Conjugacy Classes of $S_3 \cong D_3$
+The symmetric group $S_3$ has $|S_3| = 6$ elements. Let us partition them into conjugacy classes by cycle structure:
+1. *Identity (1-cycles, partition $1+1+1$):*
+   $\mathrm{Cl}(e) = \{e\}$ (size 1). Identity is always in the center $Z(S_3) = \{e\}$.
+2. *Transpositions / Reflections (2-cycles, partition $2+1$):*
+   $\mathrm{Cl}((12)) = \{(12), (23), (13)\}$ (size 3).
+   Verify by conjugation: $(123)(12)(123)^{-1} = (123)(12)(132) = (23)$.
+3. *3-Cycles / Rotations (3-cycles, partition $3$):*
+   $\mathrm{Cl}((123)) = \{(123), (132)\}$ (size 2).
+   Verify: $(12)(123)(12)^{-1} = (12)(123)(12) = (132)$.
+- *Class Equation Check:*
+  $$ |S_3| = 6 = 1 + 3 + 2 \quad \checkmark $$
+  Notice that the size of every conjugacy class ($1, 3, 2$) divides the group order $6$ (a consequence of the Orbit-Stabilizer Theorem!).
 
 ---
 
@@ -109,167 +163,241 @@ where $Z(G)$ is the center (elements whose conjugacy class has size 1) and the s
 
 ** 4.1 Left and Right Cosets
 Let $H \le G$ be a subgroup.
-- *Left Coset of $H$ containing $g$:*
-  $$ g H = \{g h \mid h \in H\} $$
-- *Right Coset of $H$ containing $g$:*
-  $$ H g = \{h g \mid h \in H\} $$
-- *Properties:*
+- *Left Coset containing $g$:* $g H = \{g h \mid h \in H\}$.
+- *Right Coset containing $g$:* $H g = \{h g \mid h \in H\}$.
+- *Crucial Properties:*
   1. $e \in H \implies g \in gH$.
-  2. Two left cosets are either identical or disjoint: $g_1 H = g_2 H \iff g_1^{-1} g_2 \in H$.
-  3. Every coset has the same cardinality as $H$: $|gH| = |H|$ (via the bijection $h \mapsto gh$).
-  4. The left cosets partition $G$:
+  2. Every coset has the exact same number of elements as $H$: $|gH| = |H|$.
+  3. Two left cosets are either *completely identical* or *completely disjoint*:
+     $$ g_1 H = g_2 H \iff g_1^{-1} g_2 \in H $$
+  4. The left cosets partition the group $G$:
      $$ G = \bigsqcup_{i=1}^k g_i H $$
 
-** 4.2 The Quotient Space $G/H$ and Index $[G:H]$
-- The set of all left cosets is the *quotient space*:
-  $$ G/H = \{gH \mid g \in G\} $$
-- The *index* of $H$ in $G$, denoted $[G : H]$, is the number of distinct left cosets:
-  $$ [G : H] = |G/H| $$
-
-** 4.3 Lagrange's Theorem
+** 4.2 Lagrange's Theorem
 #+begin_quote
 *Theorem (Lagrange):*
-If $G$ is a finite group and $H$ is a subgroup of $G$, then the order of $H$ divides the order of $G$:
+If $G$ is a finite group and $H$ is a subgroup of $G$, the order of $H$ divides the order of $G$:
 $$ |G| = [G : H] \cdot |H| $$
+where $[G : H] = |G/H|$ is the *index* (number of distinct cosets).
 #+end_quote
-*Immediate Corollaries:*
-1. *Element Order Divisibility:* For any $g \in G$, $\mathrm{ord}(g)$ divides $|G|$ (since $\mathrm{ord}(g) = |\langle g \rangle|$).
-2. *Groups of Prime Order:* If $|G| = p$ (prime), then $G$ has no non-trivial proper subgroups, and $G \cong \mathbb{Z}_p$ is cyclic.
-3. *Euler-Fermat Theorem:* In modular arithmetic, $a^{\phi(n)} \equiv 1 \pmod n$.
+
+*** Immediate Physical and Algebraic Consequences:
+1. *Element Order Divisibility:* The order of any element $\mathrm{ord}(g)$ divides $|G|$ (since $\mathrm{ord}(g) = |\langle g \rangle|$).
+2. *Groups of Prime Order are Cyclic:* If $|G| = p$ (e.g. 2, 3, 5, 7), $G$ has *no* non-trivial subgroups at all, and must be cyclic: $G \cong \mathbb{Z}_p$.
+
+*** Worked Example 4.1: Cosets of a Subgroup in $S_3$
+Let $G = S_3 = \{e, (12), (13), (23), (123), (132)\}$ and choose the subgroup $H = \{e, (12)\}$ (order 2).
+Since $|G| = 6$ and $|H| = 2$, by Lagrange's Theorem there are $[G:H] = 6/2 = 3$ cosets:
+1. *Coset 1 (Identity coset):*
+   $$ e H = \{e, (12)\} = H $$
+2. *Coset 2 (Pick an element not in $H$, e.g. $(123)$):*
+   $$ (123) H = \{(123)e, \, (123)(12)\} = \{(123), \, (13)\} $$
+3. *Coset 3 (Pick an element not in Cosets 1 or 2, e.g. $(132)$):*
+   $$ (132) H = \{(132)e, \, (132)(12)\} = \{(132), \, (23)\} $$
+- *Partition Check:*
+  $$ G = \{e, (12)\} \cup \{(123), (13)\} \cup \{(132), (23)\} $$
+  All 6 elements appear exactly once across the 3 cosets of size 2.
 
 ---
 
 * 5. Isotropy Groups and the Orbit-Stabilizer Theorem (§2.9)
 
-** 5.1 Isotropy Group (Stabilizer / Little Group)
-Let $G$ act on $X$, and let $x \in X$.
-The *isotropy group* (or *stabilizer*, *little group*) of $x$ is:
+** 5.1 The Isotropy Group (Stabilizer / Little Group)
+For any point $x \in X$, the *stabilizer* $G_x$ is the collection of all symmetry operations that leave $x$ where it is:
 $$ G_x \equiv \mathrm{Stab}_G(x) = \{g \in G \mid g \cdot x = x\} $$
-
-#+begin_quote
-*Theorem:* The isotropy group $G_x$ is a subgroup of $G$ ($G_x \le G$).
-#+end_quote
-*Proof:*
-1. *Identity:* By definition of group action, $e \cdot x = x$, so $e \in G_x$.
-2. *Closure:* Let $g, h \in G_x$. Then $(gh) \cdot x = g \cdot (h \cdot x) = g \cdot x = x$, so $gh \in G_x$.
-3. *Inverses:* Let $g \in G_x$, so $g \cdot x = x$. Acting on the left with $g^{-1}$:
-   $$ g^{-1} \cdot (g \cdot x) = g^{-1} \cdot x \implies (g^{-1} g) \cdot x = g^{-1} \cdot x \implies e \cdot x = g^{-1} \cdot x \implies x = g^{-1} \cdot x $$
-   Thus $g^{-1} \in G_x$. $\blacksquare$
+- *Theorem:* $G_x$ is always a subgroup of $G$ ($G_x \le G$).
+  - Identity: $e \cdot x = x \implies e \in G_x$.
+  - Closure: $g, h \in G_x \implies (gh) \cdot x = g \cdot (h \cdot x) = g \cdot x = x \implies gh \in G_x$.
+  - Inverses: $g \in G_x \implies g \cdot x = x \implies g^{-1} \cdot x = x \implies g^{-1} \in G_x$.
 
 ** 5.2 The Orbit-Stabilizer Theorem
 #+begin_quote
 *Theorem (Orbit-Stabilizer Theorem):*
-Let $G$ be a group acting on a set $X$. For any point $x \in X$, there is a natural canonical bijection between the orbit $\mathcal{O}_x$ and the quotient space of left cosets $G / G_x$:
+Let $G$ act on $X$. For any point $x \in X$, there is a natural bijection between the orbit $\mathcal{O}_x$ and the set of left cosets $G / G_x$:
 $$ \mathcal{O}_x \cong G / G_x $$
-Consequently, for a finite group $G$:
-$$ |\mathcal{O}_x| = [G : G_x] = \frac{|G|}{|G_x|} $$
+For a finite group $G$:
+$$ |\mathcal{O}_x| = [G : G_x] = \frac{|G|}{|G_x|} \iff |\mathcal{O}_x| \cdot |G_x| = |G| $$
 #+end_quote
-*Proof:*
-Define the mapping $f : G / G_x \to \mathcal{O}_x$ by $f(g G_x) = g \cdot x$.
-1. *Well-defined:* If $g_1 G_x = g_2 G_x$, then $g_2^{-1} g_1 \in G_x \implies (g_2^{-1} g_1) \cdot x = x$.
-   Applying $g_2$ gives $g_1 \cdot x = g_2 \cdot x$, so $f(g_1 G_x) = f(g_2 G_x)$.
-2. *Injective:* If $g_1 \cdot x = g_2 \cdot x$, then $(g_2^{-1} g_1) \cdot x = x \implies g_2^{-1} g_1 \in G_x \implies g_1 G_x = g_2 G_x$.
-3. *Surjective:* Any element in $\mathcal{O}_x$ is of the form $g \cdot x = f(g G_x)$.
-Hence $f$ is a bijection. $\blacksquare$
 
-** 5.3 Application: Homogeneous Spaces as Coset Manifolds
-When $G$ acts transitively on $X$, $X = \mathcal{O}_x$ for any $x \in X$, yielding the geometric isomorphism:
-$$ X \cong G / G_x $$
-- /Example:/ $\mathrm{SO}(3)$ acts transitively on $S^2$. The stabilizer of the North Pole $\vec{e}_3$ is $\mathrm{SO}(2)$ (rotations around the $z$-axis).
-  Therefore, the 2-sphere is realized as the coset manifold:
-  $$ S^2 \cong \mathrm{SO}(3) / \mathrm{SO}(2) $$
+*** Why is this true intuitively?
+Suppose $g_1$ and $g_2$ map $x$ to the exact same destination: $g_1 \cdot x = g_2 \cdot x$.
+Then $g_2^{-1} g_1 \cdot x = x$, meaning $g_2^{-1} g_1 \in G_x \implies g_1 G_x = g_2 G_x$.
+*All group elements that send $x$ to the same place belong to the exact same coset of $G_x$!*
+Therefore, destinations (points in the orbit) correspond one-to-one with cosets!
+
+*** Worked Example 5.1: Discrete Orbit-Stabilizer on a Square ($D_4$)
+Let $G = D_4$ (the symmetries of a square, $|D_4| = 8$: 4 rotations, 4 reflections).
+Let $X = \{1, 2, 3, 4\}$ be the set of the 4 vertices of the square.
+Pick vertex $1$:
+1. *Where can vertex 1 go? (Orbit $\mathcal{O}_1$):*
+   By rotations and reflections, vertex 1 can be moved to vertex 1, 2, 3, or 4.
+   $$ \mathcal{O}_1 = \{1, 2, 3, 4\} \implies |\mathcal{O}_1| = 4 $$
+2. *Which symmetries leave vertex 1 fixed? (Stabilizer $G_1$):*
+   - Identity $e$: fixes 1.
+   - Rotations by $90^\circ, 180^\circ, 270^\circ$: move 1 to 2, 3, 4 (none fix 1).
+   - Horizontal and vertical edge reflections: move 1 to 4 and 2.
+   - Diagonal reflection passing through vertex 1 and 3 ($\sigma_{\mathrm{diag}}$): fixes 1 (and 3), swapping 2 and 4.
+   - Other diagonal reflection: moves 1 to 3.
+   Thus:
+   $$ G_1 = \{e, \sigma_{\mathrm{diag}}\} \implies |G_1| = 2 $$
+3. *Orbit-Stabilizer Verification:*
+   $$ |\mathcal{O}_1| \times |G_1| = 4 \times 2 = 8 = |D_4| \quad \checkmark $$
+
+*** Worked Example 5.2: Continuous Orbit-Stabilizer on the 2-Sphere ($S^2$)
+Let $G = \mathrm{SO}(3)$ (continuous rotations in 3D, dimension 3) act on $X = S^2$ (the 2-sphere).
+Pick the North Pole $\vec{n} = (0, 0, 1)$:
+1. *Orbit:* Rotations can move the North Pole to any point on the sphere:
+   $$ \mathcal{O}_{\vec{n}} = S^2 \quad (\text{dimension } 2) $$
+2. *Stabilizer:* What rotations fix the North Pole?
+   Any rotation about the $z$-axis by angle $\theta \in [0, 2\pi)$ fixes $(0, 0, 1)$:
+   $$ G_{\vec{n}} = \left\{ \begin{pmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{pmatrix} \right\} \cong \mathrm{SO}(2) \quad (\text{dimension } 1) $$
+3. *Coset Manifold Identification:*
+   $$ S^2 \cong \mathrm{SO}(3) / \mathrm{SO}(2) $$
+   Dimension check: $\dim S^2 = \dim \mathrm{SO}(3) - \dim \mathrm{SO}(2) = 3 - 1 = 2$.
+   *The 2-sphere is literally the quotient space of 3D rotations by 2D axial rotations!*
 
 ---
 
 * 6. Fixed Points and Burnside's Lemma (§2.9)
 
 ** 6.1 Fixed-Point Sets (Invariant Sets)
-For a group element $g \in G$, the *invariant set* (or *fixed-point set*) is the subset of $X$ left fixed by $g$:
+For a group element $g \in G$, the *fixed-point set* is the collection of states in $X$ left completely unchanged by $g$:
 $$ X^g = \{x \in X \mid g \cdot x = x\} $$
 
-** 6.2 Burnside's Lemma (Cauchy-Frobenius Lemma)
+** 6.2 Burnside's Lemma (Cauchy-Frobenius Theorem)
 #+begin_quote
 *Theorem (Burnside's Lemma):*
-Let a finite group $G$ act on a finite set $X$. The number of distinct orbits $|X/G|$ is equal to the average number of points fixed by elements of $G$:
+The number of distinct physical orbits $|X/G|$ (configurations inequivalent under symmetry) is the average number of points fixed by the group elements:
 $$ |X/G| = \frac{1}{|G|} \sum_{g \in G} |X^g| $$
 #+end_quote
-*Proof:*
-Count the set of pairs $S = \{(g, x) \in G \times X \mid g \cdot x = x\}$ in two ways:
-$$ \sum_{g \in G} |X^g| = |S| = \sum_{x \in X} |G_x| $$
-By the Orbit-Stabilizer Theorem, $|G_x| = \frac{|G|}{|\mathcal{O}_x|}$. Therefore:
-$$ \sum_{g \in G} |X^g| = \sum_{x \in X} \frac{|G|}{|\mathcal{O}_x|} = |G| \sum_{x \in X} \frac{1}{|\mathcal{O}_x|} $$
-In the sum $\sum_{x \in \mathcal{O}} \frac{1}{|\mathcal{O}|}$, there are $|\mathcal{O}|$ terms each equal to $\frac{1}{|\mathcal{O}|}$, so each orbit contributes exactly $1$.
-Thus $\sum_{x \in X} \frac{1}{|\mathcal{O}_x|} = |X/G|$, which completes the proof. $\blacksquare$
+
+*** Worked Example 6.1: Counting Physically Distinct 3-Bead Necklaces
+Suppose we have a necklace of 3 beads arranged in a circle. Each bead can be colored either *Red* or *Blue* ($2$ colors).
+How many physically distinct necklaces can be made under rotational symmetry?
+1. *State Space $X$:*
+   Before considering symmetry, each of the 3 beads has 2 color choices:
+   $$ |X| = 2^3 = 8 \text{ possible colorings} $$
+   Represented by tuples: $(R, R, R), (R, R, B), (R, B, R), (B, R, R), (R, B, B), (B, R, B), (B, B, R), (B, B, B)$.
+2. *Symmetry Group $G$:*
+   The rotational symmetry of the 3-bead circle is the cyclic group $C_3 = \{R_0, R_{120}, R_{240}\}$ ($|G| = 3$).
+3. *Count Fixed Points for Each Group Element:*
+   - *Identity $R_0$ (0° rotation):* Leaves all 8 colorings unchanged:
+     $$ |X^{R_0}| = 8 $$
+   - *Rotation $R_{120}$ (120° rotation):* For a coloring to remain unchanged when rotated by $120^\circ$, bead 1 must match bead 2, bead 2 must match bead 3, and bead 3 must match bead 1. All 3 beads must have the exact same color!
+     Only two states qualify: $(R, R, R)$ and $(B, B, B)$.
+     $$ |X^{R_{120}}| = 2 $$
+   - *Rotation $R_{240}$ (240° rotation):* Similarly, all 3 beads must be the same color:
+     $$ |X^{R_{240}}| = 2 $$
+4. *Apply Burnside's Lemma:*
+   $$ |X/G| = \frac{1}{3} \left( |X^{R_0}| + |X^{R_{120}}| + |X^{R_{240}}| \right) = \frac{1}{3} (8 + 2 + 2) = \frac{12}{3} = 4 $$
+*Conclusion:* There are exactly *4 physically distinct necklaces*:
+1. All Red: $(R, R, R)$
+2. All Blue: $(B, B, B)$
+3. Two Red, One Blue: $(R, R, B) \sim (R, B, R) \sim (B, R, R)$ (orbit of size 3)
+4. One Red, Two Blue: $(R, B, B) \sim (B, R, B) \sim (B, B, R)$ (orbit of size 3)
+Total configurations: $1 + 1 + 3 + 3 = 8$. Orbits: $4$. Burnside gives 4 immediately!
 
 ---
 
-* 7. Normal Subgroups and Quotient Groups (§2.3)
+* 7. Normal Subgroups vs. General Subgroups: Why Normality Matters (§2.3)
 
-** 7.1 Normal Subgroup Definition
-A subgroup $N \le G$ is called a *normal subgroup* (denoted $N \triangleleft G$) if it is invariant under conjugation by all elements of $G$:
-$$ g N g^{-1} = N, \quad \forall g \in G $$
-Equivalently:
-- $g N = N g$ for all $g \in G$ (left cosets equal right cosets).
-- $g n g^{-1} \in N$ for all $g \in G$ and all $n \in N$.
+One of the most common points of confusion is: *Why can't we always turn $G/H$ into a group?*
 
-** 7.2 Quotient Group $G/N$
-If and only if $N$ is normal, the quotient space $G/N$ can be endowed with a natural, well-defined group multiplication:
-$$ (g_1 N) \cdot (g_2 N) \equiv (g_1 g_2) N $$
-- *Well-definedness:* If $g_1' = g_1 n_1$ and $g_2' = g_2 n_2$, then:
-  $$ g_1' g_2' = g_1 n_1 g_2 n_2 = g_1 g_2 (g_2^{-1} n_1 g_2) n_2 = (g_1 g_2) n_3 \in (g_1 g_2) N $$
-  because normality guarantees $g_2^{-1} n_1 g_2 \in N$.
-- *Group Properties of $G/N$:*
-  - Identity: $e N = N$.
-  - Inverses: $(g N)^{-1} = g^{-1} N$.
-  - Associativity: Inherited from $G$.
+** 7.1 The Problem with General Subgroups
+Let $H \le G$. We want to multiply cosets by multiplying their representatives:
+$$ (g_1 H) \cdot (g_2 H) \stackrel{?}{=} (g_1 g_2) H $$
+Is this well-defined?
+Choose different representatives $g_1 h_1 \in g_1 H$ and $g_2 h_2 \in g_2 H$.
+Their product is:
+$$ (g_1 h_1)(g_2 h_2) = g_1 (h_1 g_2) h_2 = g_1 g_2 (g_2^{-1} h_1 g_2) h_2 $$
+For this to belong to $(g_1 g_2) H$, the term $g_2^{-1} h_1 g_2$ *must belong to $H$*!
 
----
-
-* 8. The Center of a Group (§2.2, §2.9)
-
-The *center* of a group $G$, denoted $Z(G)$, is the set of elements that commute with every element of $G$:
-$$ Z(G) = \{z \in G \mid z g = g z, \, \forall g \in G\} $$
-
+** 7.2 Normal Subgroups ($N \triangleleft G$)
+This requirement is precisely the definition of a *normal subgroup*:
+$$ g N g^{-1} = N, \quad \forall g \in G \iff g N = N g, \quad \forall g \in G $$
 #+begin_quote
-*Theorem:* The center $Z(G)$ is an Abelian normal subgroup of $G$ ($Z(G) \triangleleft G$).
+*Summary Rule:*
+- If $H$ is *not normal*, left cosets $gH \neq Hg$ right cosets. The coset space $G/H$ is a *geometric set / manifold*, but *not a group*.
+- If $N$ is *normal* ($N \triangleleft G$), left cosets equal right cosets. The quotient space $G/N$ is a *brand new group* (the Quotient Group)!
 #+end_quote
-*Proof:*
-1. $e \in Z(G)$ trivially.
-2. If $z_1, z_2 \in Z(G)$, $(z_1 z_2) g = z_1 (z_2 g) = z_1 (g z_2) = (z_1 g) z_2 = g (z_1 z_2) \implies z_1 z_2 \in Z(G)$.
-3. If $z \in Z(G)$, $z g = g z \implies g z^{-1} = z^{-1} g \implies z^{-1} \in Z(G)$.
-4. *Normality:* For any $g \in G$ and $z \in Z(G)$, $g z g^{-1} = z g g^{-1} = z \in Z(G)$.
-5. *Abelian:* By definition, all elements in $Z(G)$ commute with all elements of $G$, and hence with each other. $\blacksquare$
+
+*** Worked Example 7.1: A Non-Normal Subgroup vs. A Normal Subgroup in $S_3$
+Let $G = S_3$.
+1. *Non-Normal Subgroup $H = \{e, (12)\}$:*
+   Take $g = (123)$.
+   - Left coset: $(123)H = \{(123), (13)\}$.
+   - Right coset: $H(123) = \{(123), (23)\}$.
+   Since $(123)H \neq H(123)$, $H$ is *not normal*.
+   Coset multiplication fails:
+   $[(123)H] \cdot [(123)H]$:
+   Using representatives $(123)$ and $(123)$: $(123)(123) = (132) \in (132)H$.
+   Using representatives $(13)$ and $(13)$: $(13)(13) = e \in eH$.
+   Different representatives yield different cosets! Thus $S_3 / H$ is *not a group*.
+2. *Normal Subgroup $N = A_3 = \{e, (123), (132)\}$ (Alternating Group):*
+   $A_3$ has index $[S_3 : A_3] = 6/3 = 2$.
+   Any subgroup of index 2 is *always normal*!
+   There are only two cosets:
+   - $N$ (the even permutations).
+   - $\tau N = \{(12), (13), (23)\}$ (the odd permutations).
+   Left cosets equal right cosets: $\tau N = N \tau$.
+   Multiplication table of cosets:
+   - $N \cdot N = N$ (Even $\times$ Even = Even).
+   - $N \cdot (\tau N) = \tau N$ (Even $\times$ Odd = Odd).
+   - $(\tau N) \cdot (\tau N) = N$ (Odd $\times$ Odd = Even).
+   The quotient $S_3 / A_3$ is a valid 2-element group isomorphic to $\mathbb{Z}_2$:
+   $$ S_3 / A_3 \cong \mathbb{Z}_2 \quad \checkmark $$
+
+---
+
+* 8. The Center of a Group ($Z(G)$) and Physical Spin (§2.2, §2.9)
+
+The *center* $Z(G)$ is the set of elements commuting with everything:
+$$ Z(G) = \{z \in G \mid z g = g z, \, \forall g \in G\} $$
+- The center is *always an Abelian normal subgroup*: $Z(G) \triangleleft G$.
+- Therefore, the quotient group $G / Z(G)$ is *always a valid group* (called the *inner automorphism group* $\mathrm{Inn}(G)$).
+
+*** Worked Example 8.1: The Double Cover $\mathrm{SU}(2) \to \mathrm{SO}(3)$
+In quantum physics, spin-$1/2$ states live in the group $\mathrm{SU}(2)$ ($2 \times 2$ unitary matrices with determinant 1):
+$$ \mathrm{SU}(2) = \left\{ \begin{pmatrix} \alpha & \beta \\ -\beta^* & \alpha^* \end{pmatrix} \;\middle|\; |\alpha|^2 + |\beta|^2 = 1 \right\} $$
+1. *Center of $\mathrm{SU}(2)$:*
+   What matrices commute with all Pauli matrices? Only scalar multiples of the identity:
+   $z = c \mathbf{1}_2$. Det condition $\det(c\mathbf{1}_2) = c^2 = 1 \implies c = \pm 1$.
+   $$ Z(\mathrm{SU}(2)) = \{\mathbf{1}_2, -\mathbf{1}_2\} \cong \mathbb{Z}_2 $$
+2. *Physical Meaning of $-\mathbf{1}_2$:*
+   A $360^\circ$ ($2\pi$) rotation of a fermion produces $-\mathbf{1}_2$, negating the wavefunction ($|\psi\rangle \to -|\psi\rangle$). It takes a $720^\circ$ ($4\pi$) rotation to return to $+\mathbf{1}_2$.
+3. *Quotient Group:*
+   In classical 3D space, a $360^\circ$ rotation is identical to no rotation at all. Thus classical spatial rotations $\mathrm{SO}(3)$ correspond to $\mathrm{SU}(2)$ with the signs identified:
+   $$ \mathrm{SU}(2) / \{\mathbf{1}_2, -\mathbf{1}_2\} \cong \mathrm{SO}(3) $$
+   *$\mathrm{SU}(2)$ is the universal double cover of the 3D rotation group $\mathrm{SO}(3)$!*
 
 ---
 
 * 9. Homomorphisms and the First Isomorphism Theorem (§2.3)
 
-** 9.1 Kernel and Image
-Let $\phi : G \to H$ be a group homomorphism ($\phi(a b) = \phi(a) \phi(b)$).
-- *Image:*
-  $$ \mathrm{Im}(\phi) = \{\phi(g) \mid g \in G\} \le H $$
-- *Kernel:*
-  $$ \mathrm{Ker}(\phi) = \{g \in G \mid \phi(g) = e_H\} $$
-
-#+begin_quote
-*Theorem:* The kernel $\mathrm{Ker}(\phi)$ is always a *normal subgroup* of $G$ ($\mathrm{Ker}(\phi) \triangleleft G$).
-#+end_quote
-*Proof:*
-Let $k \in \mathrm{Ker}(\phi)$ and $g \in G$. Then:
-$$ \phi(g k g^{-1}) = \phi(g) \phi(k) \phi(g^{-1}) = \phi(g) e_H \phi(g)^{-1} = \phi(g) \phi(g)^{-1} = e_H $$
-Hence $g k g^{-1} \in \mathrm{Ker}(\phi)$, proving normality. $\blacksquare$
+** 9.1 Kernel, Image, and Normality
+Let $\phi : G \to H$ be a homomorphism ($\phi(a b) = \phi(a) \phi(b)$).
+- *Kernel:* $\mathrm{Ker}(\phi) = \{g \in G \mid \phi(g) = e_H\}$.
+  *Crucial Fact:* $\mathrm{Ker}(\phi)$ is *always a normal subgroup* of $G$ ($\mathrm{Ker}(\phi) \triangleleft G$).
+- *Image:* $\mathrm{Im}(\phi) = \{\phi(g) \mid g \in G\} \le H$ is a subgroup of $H$.
 
 ** 9.2 The First Isomorphism Theorem
 #+begin_quote
 *Theorem (First Isomorphism Theorem):*
-Let $\phi : G \to H$ be a group homomorphism. Then the quotient group $G / \mathrm{Ker}(\phi)$ is isomorphic to the image $\mathrm{Im}(\phi)$:
 $$ G / \mathrm{Ker}(\phi) \cong \mathrm{Im}(\phi) $$
 #+end_quote
-*Proof:*
-Define $\Phi : G / \mathrm{Ker}(\phi) \to \mathrm{Im}(\phi)$ by $\Phi(g \mathrm{Ker}(\phi)) = \phi(g)$.
-1. *Well-defined and Injective:*
-   $g_1 \mathrm{Ker}(\phi) = g_2 \mathrm{Ker}(\phi) \iff g_2^{-1} g_1 \in \mathrm{Ker}(\phi) \iff \phi(g_2^{-1} g_1) = e_H \iff \phi(g_1) = \phi(g_2)$.
-2. *Homomorphism:*
-   $\Phi(g_1 N \cdot g_2 N) = \Phi(g_1 g_2 N) = \phi(g_1 g_2) = \phi(g_1)\phi(g_2) = \Phi(g_1 N)\Phi(g_2 N)$.
-3. *Surjective:* Every element in $\mathrm{Im}(\phi)$ is of the form $\phi(g) = \Phi(g N)$.
-Thus $\Phi$ is an isomorphism. $\blacksquare$
+*Intuition:* Taking the quotient $G / \mathrm{Ker}(\phi)$ "collapses" everything that mapped to the identity into a single point. What remains corresponds one-to-one with the image!
+
+*** Worked Example 9.1: Wrapping the Real Line onto the Circle
+Consider the map from real addition $(\mathbb{R}, +)$ to the complex unit circle $(S^1, \cdot)$:
+$$ \phi : \mathbb{R} \to S^1, \quad \phi(x) = e^{i x} $$
+1. *Check Homomorphism:*
+   $$ \phi(x + y) = e^{i(x+y)} = e^{ix} e^{iy} = \phi(x) \cdot \phi(y) \quad \checkmark $$
+2. *Find the Kernel:*
+   What real numbers map to the identity $1 \in S^1$?
+   $$ e^{ix} = 1 \iff x = 2\pi k \quad (k \in \mathbb{Z}) $$
+   $$ \mathrm{Ker}(\phi) = 2\pi\mathbb{Z} = \{\dots, -4\pi, -2\pi, 0, 2\pi, 4\pi, \dots\} $$
+3. *Find the Image:*
+   As $x$ ranges over $\mathbb{R}$, $e^{ix}$ covers the entire circle $S^1$: $\mathrm{Im}(\phi) = S^1$.
+4. *Apply First Isomorphism Theorem:*
+   $$ \mathbb{R} / 2\pi\mathbb{Z} \cong S^1 $$
+   *The quotient of the continuous real line by a discrete $2\pi$ translation grid is the circle!*
