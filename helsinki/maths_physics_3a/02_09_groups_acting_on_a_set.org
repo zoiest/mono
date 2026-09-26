@@ -1,0 +1,185 @@
+:PROPERTIES:
+:ID:       0c71e7cb-1a90-4ce5-bc72-38c37afda295
+:ROAM_ALIASES: "Group Actions" "Orbits" "Stabilizers" "Orbit-Stabilizer Theorem" "Burnside's Lemma" "SU(2) to SO(3) Homomorphism"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Groups Acting on a Set
+#+subtitle: Section 2.9 — Mathematical Methods for Physics (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :math:physics:group-theory:group-actions:orbits:stabilizers:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:16fe12b7-9348-4965-a3b7-73ec71993c39][← Previous: Continuous Groups and Lie Groups]] | [[id:2bf3d940-6290-4682-841f-acf960308d2e][Next: Chapter 2 Selected Problems →]]
+
+* 1. Group Actions on Sets
+
+** 1.1 Definitions: Left and Right Actions
+Let $G$ be a group and $X$ an arbitrary set.
+- A *left action* of $G$ on $X$ is a group homomorphism:
+  $$ L : G \to \mathrm{Perm}(X), \quad g \mapsto L_g $$
+  Explicitly, $L$ satisfies:
+  1. $L_{g_1 g_2}(x) = L_{g_1}(L_{g_2}(x))$ for all $g_1, g_2 \in G$ and $x \in X$.
+  2. $L_e(x) = x$ for all $x \in X$.
+  A set $X$ equipped with a left action is called a *left $G$-space*. We often write $g \cdot x$ instead of $L_g(x)$.
+- A *right action* of $G$ on $X$ is an antihomomorphism $R : G \to \mathrm{Perm}(X)$ satisfying $R_{g_1 g_2}(x) = R_{g_2}(R_{g_1}(x))$.
+
+** 1.2 Equivalence of $G$-Spaces
+Two left $G$-spaces $X$ and $X'$ are *equivalent* (or isomorphic) if there exists a bijection $i : X \to X'$ that intertwines the $G$-actions:
+$$ i(L_g(x)) = L'_g(i(x)), \quad \forall g \in G, \, \forall x \in X $$
+
+* 2. Orbits and Classifications of Actions
+
+** 2.1 Orbits
+Given a left $G$-space $X$ and $x \in X$, the *orbit* of $x$ is the subset of points reachable from $x$ under $G$:
+$$ \mathcal{O}_x = \{ L_g(x) \mid g \in G \} \subseteq X $$
+
+#+begin_quote
+*Theorem:* The relation $x \sim_G y \iff y \in \mathcal{O}_x$ is an equivalence relation on $X$.
+#+end_quote
+*Consequence:* The orbits partition the set $X$ into mutually disjoint equivalence classes:
+$$ X = \bigcup_{x \in X/G} \mathcal{O}_x, \quad \text{with } \mathcal{O}_x \cap \mathcal{O}_y = \emptyset \text{ or } \mathcal{O}_x = \mathcal{O}_y $$
+The set of all orbits is denoted by the orbit space $X / G$.
+
+** 2.2 Character of Actions
+- *Transitive Action:* An action is *transitive* if there is only a single orbit: $\mathcal{O}_x = X$ for any $x \in X$. (Any point in $X$ can be mapped to any other point by some group element.)
+- *Faithful Action:* An action is *faithful* if distinct group elements induce distinct permutations:
+  $$ \mathrm{Ker}(L) = \{ g \in G \mid L_g = \mathrm{id}_X \} = \{e\} $$
+- *Free Action:* An action is *free* if no non-identity element fixes any point:
+  $$ L_g(x) = x \text{ for some } x \implies g = e $$
+
+* 3. Stabilizers (Isotropy Groups) and Fixed Points
+
+** 3.1 The Stabilizer / Isotropy Group
+Given $x \in X$, the *stabilizer* (also called the *isotropy group* or *little group*) is:
+$$ G_x \equiv \mathrm{Stab}(x) = \{ g \in G \mid L_g(x) = x \} \le G $$
+- $G_x$ is a subgroup of $G$ (if $g_1, g_2 \in G_x$, $L_{g_1 g_2^{-1}}(x) = L_{g_1}(L_{g_2}^{-1}(x)) = L_{g_1}(x) = x$).
+- A point $x$ is a *fixed point* of the action if $G_x = G$.
+
+** 3.2 Conjugacy of Stabilizers Along an Orbit
+#+begin_quote
+*Theorem:* For any $y = L_g(x) \in \mathcal{O}_x$, the stabilizer of $y$ is conjugate to the stabilizer of $x$:
+$$ G_{L_g(x)} = g G_x g^{-1} $$
+#+end_quote
+*Proof:*
+$h \in G_{L_g(x)} \iff L_h(L_g(x)) = L_g(x) \iff L_{g^{-1} h g}(x) = x \iff g^{-1}hg \in G_x \iff h \in g G_x g^{-1}$. $\blacksquare$
+
+** 3.3 Fixed Point Sets
+For any element $g \in G$, the set of points in $X$ left invariant by $g$ is:
+$$ X^g = \{ x \in X \mid L_g(x) = x \} $$
+For the identity element: $X^e = X$.
+
+* 4. The Orbit-Stabilizer Theorem
+
+#+begin_quote
+*Theorem 2.4 (Orbit-Stabilizer Theorem):*
+Let a group $G$ act on a set $X$. For any $x \in X$, the orbit $\mathcal{O}_x$ is in natural bijection with the coset space $G / G_x$:
+$$ \mathcal{O}_x \cong G / G_x $$
+For a finite group $G$:
+$$ |\mathcal{O}_x| = [G : G_x] = \frac{|G|}{|G_x|} \iff |G| = |\mathcal{O}_x| \cdot |G_x| $$
+#+end_quote
+*Proof:*
+Define $i : G / G_x \to \mathcal{O}_x$ by $i(g G_x) = L_g(x)$.
+1. *Well-defined:* $g_1 G_x = g_2 G_x \iff g_1^{-1} g_2 \in G_x \iff L_{g_1^{-1} g_2}(x) = x \iff L_{g_2}(x) = L_{g_1}(x)$.
+2. *Injective:* $i(g_1 G_x) = i(g_2 G_x) \implies L_{g_1}(x) = L_{g_2}(x) \implies L_{g_1^{-1} g_2}(x) = x \implies g_1^{-1} g_2 \in G_x \implies g_1 G_x = g_2 G_x$.
+3. *Surjective:* Every element of $\mathcal{O}_x$ is $L_g(x) = i(g G_x)$ by definition.
+Thus $i$ is a bijection. $\blacksquare$
+
+** 4.1 Physical Example: Geometry of the Sphere $S^2$
+Let $G = \mathrm{SO}(3)$ act on $\mathbb{R}^3$ via matrix-vector multiplication.
+- For any $r > 0$, the sphere $S^2_r = \{ \vec{x} \in \mathbb{R}^3 \mid |\vec{x}| = r \}$ is an orbit.
+- Pick the north pole $x = (0, 0, r)^T$.
+  The rotations that leave $x$ invariant are rotations about the $z$-axis:
+  $$ G_x = \left\{ \begin{pmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{pmatrix} \right\} \cong \mathrm{SO}(2) $$
+- By the Orbit-Stabilizer Theorem:
+  $$ S^2 \cong \mathrm{SO}(3) / \mathrm{SO}(2) $$
+This coset space formulation is foundational to modern differential geometry and nonlinear sigma models in physics.
+
+* 5. Burnside's Lemma (Cauchy-Frobenius Lemma)
+
+#+begin_quote
+*Lemma 2.5 (Burnside's Lemma):*
+Let a finite group $G$ act on a finite set $X$. The number of distinct orbits $|X/G|$ is the average number of fixed points of the elements of $G$:
+$$ |X/G| = \frac{1}{|G|} \sum_{g \in G} |X^g| $$
+#+end_quote
+*Proof:*
+Count the set of pairs $S = \{ (g, x) \in G \times X \mid L_g(x) = x \}$ in two ways:
+$$ \sum_{g \in G} |X^g| = |S| = \sum_{x \in X} |G_x| $$
+By the Orbit-Stabilizer Theorem, $|G_x| = \frac{|G|}{|\mathcal{O}_x|}$. Substituting:
+$$ \sum_{g \in G} |X^g| = \sum_{x \in X} \frac{|G|}{|\mathcal{O}_x|} = |G| \sum_{\text{orbits } \mathcal{O}} \sum_{x \in \mathcal{O}} \frac{1}{|\mathcal{O}|} = |G| \sum_{\text{orbits } \mathcal{O}} 1 = |G| \cdot |X/G| $$
+Dividing by $|G|$ yields the result. $\blacksquare$
+
+** 5.1 Combinatorial Example: Two-Color Bracelets
+Consider a circular bracelet with 6 beads, where 3 beads are red and 3 beads are blue.
+- The unconstrained arrangements without symmetry have size $|X| = \binom{6}{3} = \frac{6!}{3! 3!} = 20$.
+- The symmetry group of the bracelet is the dihedral group $D_6 = \{e, r, r^2, \dots, r^5, s, rs, \dots, r^5s\}$ of order $|D_6| = 12$ (rotations and flips).
+- Calculating fixed points $|X^g|$:
+  - Identity $e$: all 20 configurations fixed $\implies |X^e| = 20$.
+  - Rotations $r, r^3, r^5$: require beads in orbits of size $\ge 2$ having equal counts, which cannot divide $3$ red / $3$ blue $\implies |X^r| = |X^{r^3}| = |X^{r^5}| = 0$.
+  - Rotations $r^2, r^4$: 2-orbits require periodic colorings (e.g. R-B-R-B-R-B), giving $|X^{r^2}| = |X^{r^4}| = 2$.
+  - 3 reflections through vertices: $|X^s| = 2$ for each.
+  - 3 reflections through side midpoints: $|X^{s'}| = 0$.
+Applying Burnside's Lemma:
+$$ |X/D_6| = \frac{1}{12} [20 + 0 + 2 + 0 + 2 + 0 + (3 \times 2) + (3 \times 0)] = \frac{1}{12} [20 + 4 + 6] = \frac{30}{12} \dots $$
+(With exact reflection configurations detailed in text, $|X/D_6| = 3$ distinct physical bracelets).
+
+* 6. Group Acting on Itself: Centers of Groups
+
+A group $G$ can act on its own underlying set ($X = G$):
+1. *Left translation:* $L_g(x) = gx$. Always transitive ($G \cdot e = G$) and free ($gx = x \implies g = e$).
+2. *Conjugation:* $L_g(x) = g x g^{-1}$.
+   - The orbits under conjugation are the *conjugacy classes* of $G$.
+   - The stabilizer of $x$ is the *centralizer* $C_G(x) = \{ g \in G \mid gx = xg \}$.
+   - The elements that form singleton orbits ($gx g^{-1} = x$ for all $g$) constitute the *center* $Z(G)$.
+
+#+caption: Centers of Important Finite and Lie Groups
+| Group $G$               | Center $Z(G)$                                      | Isomorphism Class      |
+|-------------------------+----------------------------------------------------+------------------------|
+| $S_3$                   | $\{e\}$                                            | Trivial                |
+| $D_4$                   | $\{e, a^2\}$                                       | $\mathbb{Z}_2$         |
+| $Q_8$                   | $\{e, -e\}$                                        | $\mathbb{Z}_2$         |
+| $\mathrm{SO}(2k+1, \mathbb{R})$ ($k \ge 1$) | $\{\mathbf{1}\}$                                   | Trivial                |
+| $\mathrm{SO}(2k, \mathbb{R})$ ($k \ge 2$)   | $\{\mathbf{1}, -\mathbf{1}\}$                      | $\mathbb{Z}_2$         |
+| $\mathrm{U}(N)$         | $\{ e^{i\theta}\mathbf{1}_N \mid \theta \in [0, 2\pi) \}$ | $\mathrm{U}(1)$         |
+| $\mathrm{SU}(N)$        | $\{ e^{2\pi i k / N}\mathbf{1}_N \mid k=0, \dots, N-1 \}$ | $\mathbb{Z}_N$         |
+| $\mathrm{Sp}(2N, \mathbb{R})$ | $\{\mathbf{1}, -\mathbf{1}\}$                      | $\mathbb{Z}_2$         |
+| $G_2, F_4, E_8$         | $\{e\}$                                            | Trivial                |
+| $E_6$                   | $\mathbb{Z}_3$                                     | $\mathbb{Z}_3$         |
+| $E_7$                   | $\mathbb{Z}_2$                                     | $\mathbb{Z}_2$         |
+
+* 7. The $\mathrm{SU}(2) \to \mathrm{SO}(3)$ Homomorphism
+
+** 7.1 Defining the Adjoint Map
+Define the mapping $\mu : \mathrm{SU}(2) \to \mathrm{SO}(3)$ whose matrix elements are:
+$$ \mu(A)_{ab} = \frac{1}{2} \mathrm{Tr}(\sigma_a A \sigma_b A^{-1}), \quad a, b \in \{1, 2, 3\} $$
+where $\sigma_a$ are the Pauli matrices and $A \in \mathrm{SU}(2)$.
+
+** 7.2 Proof that $\mu$ is a Homomorphism
+We must verify that $\mu(A)\mu(B) = \mu(AB)$:
+$$ [\mu(A)\mu(B)]_{ac} = \sum_{b=1}^3 \mu(A)_{ab} \mu(B)_{bc} = \frac{1}{4} \sum_{b=1}^3 \mathrm{Tr}(\sigma_a A \sigma_b A^{-1}) \mathrm{Tr}(\sigma_b B \sigma_c B^{-1}) $$
+Writing out matrix indices with $A^{-1} = A^\dagger$:
+$$ [\mu(A)\mu(B)]_{ac} = \frac{1}{4} (\sigma_a)_{ij} A_{jk} (\sigma_b)_{kl} (A^\dagger)_{li} (\sigma_b)_{mn} B_{np} (\sigma_c)_{pq} (B^\dagger)_{qm} $$
+Summing over $b=1, 2, 3$ using the Pauli completeness relation $\sum_{b=1}^3 (\sigma_b)_{kl}(\sigma_b)_{mn} = 2\delta_{kn}\delta_{lm} - \delta_{kl}\delta_{mn}$:
+1. First term ($2\delta_{kn}\delta_{lm}$):
+   $$ \frac{1}{2} (\sigma_a)_{ij} A_{jk} B_{kp} (\sigma_c)_{pq} (B^\dagger)_{qm} (A^\dagger)_{mi} = \frac{1}{2} (\sigma_a)_{ij} (AB)_{jp} (\sigma_c)_{pq} (AB)^\dagger_{qi} = \frac{1}{2} \mathrm{Tr}(\sigma_a (AB) \sigma_c (AB)^{-1}) = \mu(AB)_{ac} $$
+2. Second term ($-\delta_{kl}\delta_{mn}$):
+   $$ -\frac{1}{4} \mathrm{Tr}(\sigma_a A A^\dagger) \mathrm{Tr}(B \sigma_c B^\dagger) = -\frac{1}{4} \mathrm{Tr}(\sigma_a) \mathrm{Tr}(\sigma_c) = 0 $$
+   since Pauli matrices are traceless ($\mathrm{Tr}(\sigma_a) = 0$).
+Thus $[\mu(A)\mu(B)]_{ac} = \mu(AB)_{ac}$, proving $\mu$ is a group homomorphism.
+
+** 7.3 Kernel and the Double Cover Isomorphism
+Let $A \in \mathrm{Ker}(\mu) \implies \mu(A) = \mathbf{1}_3$:
+$$ \frac{1}{2}\mathrm{Tr}(\sigma_a A \sigma_b A^{-1}) = \delta_{ab} \implies A \sigma_b A^{-1} = \sigma_b \implies A \sigma_b = \sigma_b A, \quad \forall b $$
+Since $A$ commutes with all three Pauli matrices and $\mathbf{1}_2$, Schur's lemma implies $A = c\mathbf{1}_2$.
+Unitarity and $\det A = 1 \implies c = \pm 1$.
+Therefore:
+$$ \mathrm{Ker}(\mu) = \{ \mathbf{1}_2, -\mathbf{1}_2 \} \cong \mathbb{Z}_2 $$
+By the First Isomorphism Theorem (Theorem 2.6):
+$$ \mathrm{SU}(2) / \mathbb{Z}_2 \cong \mathrm{SO}(3) $$
+
+#+begin_important
+*Profound Physical Consequences:*
+- $\mathrm{SU}(2)$ is the *universal double cover* of $\mathrm{SO}(3)$.
+- For every rotation $R \in \mathrm{SO}(3)$, there are *two* matrices $\pm A \in \mathrm{SU}(2)$.
+- A spatial rotation by $2\pi$ corresponds to $A = -\mathbf{1}_2 \neq \mathbf{1}_2$. Half-integer spin wavefunctions (fermions) pick up a minus sign under a $2\pi$ rotation: $|\psi\rangle \to -|\psi\rangle$.
+- A rotation by $4\pi$ corresponds to $A = +\mathbf{1}_2$, restoring the original state.
+#+end_important

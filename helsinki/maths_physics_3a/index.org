@@ -1,0 +1,151 @@
+:PROPERTIES:
+:ID:       048103c7-3b41-4898-a634-3086ff263182
+:ROAM_ALIASES: "Mathematical Methods for Physics" "Maths Physics 3a" "Course Index"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Mathematical Methods for Physics IIIa — Org-Roam Knowledge Base
+#+subtitle: Comprehensive Notes on Chapter 2 (Group Theory) and Section 3.1 (Representations & QM Symmetries)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :physics:math:helsinki:index:group-theory:representation-theory:
+
+* Course and Textbook Information
+
+- *Course:* Mathematical Methods for Physics IIIa (Matemaattiset menetelmät fysiikassa IIIa)
+- *Institution:* University of Helsinki (Helsingin yliopisto)
+- *Primary Textbook:*
+  #+begin_quote
+  Keski-Vakkuri, E., Montonen, C. K., & Panero, M. (2022).
+  /Mathematical Methods for Physics: An Introduction to Group Theory, Topology, and Geometry/.
+  Cambridge University Press. DOI: [[https://doi.org/10.1017/9781108120531][10.1017/9781108120531]].
+  #+end_quote
+
+* Map of Content (MOC)
+
+** Course Worksheets & Weekly Guides
+
+- [[id:dfd66ae0-7e03-4e2b-b527-55a902f24962][Week 04: Group Representations, Presentations, and Vector Spaces]]
+  - Comprehensive lecture notes for Week 04 covering Sections 2.7, 3.1, 3.1.1, and 3.6.2.
+
+** Chapter 2: Group Theory
+
+1. [[id:5b295c08-7bb4-4d5d-b6be-6fa096201e4d][Groups and Elementary Properties]]
+   - Group axioms (G0–G3), Abelian groups (AG4), and the algebraic hierarchy (Magma $\to$ Semigroup $\to$ Monoid $\to$ Group).
+   - Uniqueness of identity and inverses, cancellation laws, order of groups and elements.
+   - Cayley tables, the Rearrangement Theorem (Latin square property).
+   - Abstract groups vs. concrete realizations, external direct products, examples of groups and non-groups.
+
+2. [[id:2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0][Subgroups, Cosets, and Lagrange's Theorem]]
+   - One-step and finite subgroup criteria, trivial vs. proper subgroups.
+   - The center of a group $Z(G)$, its abelian and normal nature.
+   - Left and right cosets as equivalence classes partitioning $G$.
+   - Lagrange's Theorem ($|G| = [G:H] \cdot |H|$) and fundamental corollaries (element order, prime order groups).
+
+3. [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Homomorphisms, Isomorphisms, and Quotient Groups]]
+   - Group homomorphisms, preservation of identity and inverses, isomorphisms, and automorphisms.
+   - Kernels and images, injectivity criterion ($\mathrm{Ker}(\phi) = \{e\}$).
+   - Normal subgroups ($N \triangleleft G$), simple and semisimple groups.
+   - Quotient groups ($G/N$), well-defined coset multiplication.
+   - The First Isomorphism Theorem ($G/\mathrm{Ker}(\phi) \cong \mathrm{Im}(\phi)$).
+
+4. [[id:206fb1b4-ba32-4675-921a-1b0864eae8e8][The Smallest Finite Groups]]
+   - Exhaustive classification of all groups of order $1 \le N \le 8$.
+   - Cyclic groups $\mathbb{Z}_N$ and root-of-unity realizations.
+   - The Klein four-group $V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2$.
+   - The smallest non-Abelian group $S_3 \cong D_3$.
+   - Order 8 groups: $\mathbb{Z}_8$, $\mathbb{Z}_4 \times \mathbb{Z}_2$, $\mathbb{Z}_2^3$, the Dihedral group $D_4$, and the Quaternion group $Q_8$ (Hamiltonian group).
+   - Complete Cayley tables for all non-trivial small groups.
+
+5. [[id:e61da419-8849-4086-bc86-0892d092c8f4][Permutations, the Symmetric Group, and Cayley's Theorem]]
+   - Permutation groups $\mathrm{Perm}(X)$ and symmetric groups $S_n$.
+   - Two-line Cauchy notation and disjoint cycle decomposition.
+   - Transpositions, parity, signature homomorphism, and the Alternating group $A_n \triangleleft S_n$.
+   - Conjugacy classes in $S_n$ classified by cycle structures.
+   - Cayley's Theorem: every finite group embeds into a symmetric group.
+
+6. [[id:9231c23d-0041-4dcc-9c4b-8684eeae1b76][Partitions, Young Diagrams, and Multisets]]
+   - Integer partitions $N = \sum n_i$, Euler's generating function, and Hardy-Ramanujan asymptotics.
+   - Graphical construction of Young diagrams, correspondence with $S_N$ conjugacy classes and irreps.
+   - Multisets, multinomial coefficients, the Multinomial Theorem, and anagram combinatorics.
+
+7. [[id:311c6a8f-4c6b-49aa-8d55-ce17aae8415f][Free Groups, Presentations of Groups, and Braid Groups]]
+   - Free groups $F(X)$, alphabet, reduced words, and reduction algorithm.
+   - Group presentations $G = \langle X \mid R \rangle$ (cyclic, dihedral $D_n$, Pauli group $G_1$).
+   - Artin Braid Groups $B_n$: geometric strands, Artin relations, Reidemeister move III / Yang-Baxter equation.
+   - Physical applications: Anyons in $(2+1)$D spacetime and topological quantum computing.
+
+8. [[id:16fe12b7-9348-4965-a3b7-73ec71993c39][Continuous Groups and Lie Groups]]
+   - Continuous groups, coordinates, group manifolds, and Lie groups ($C^\infty$ operations).
+   - Classical Matrix Lie Groups: $\mathrm{GL}(n, \mathbb{R})$, $\mathrm{GL}(n, \mathbb{C})$, $\mathrm{SL}(n, \mathbb{R})$, $\mathrm{O}(n)$, $\mathrm{SO}(n)$, $\mathrm{U}(n)$, $\mathrm{SU}(n)$, and $\mathrm{Sp}(2n, \mathbb{R})$.
+   - Dimension derivations, compactness, and topological connectedness.
+   - Deep dive into $\mathrm{SU}(2)$: topology as $S^3$, Pauli algebra, completeness relation, and exponential map.
+   - Octonions ($\mathbb{O}$) and the five Exceptional Lie Groups: $G_2, F_4, E_6, E_7, E_8$.
+
+9. [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][Groups Acting on a Set]]
+   - Left and right $G$-actions, $G$-spaces, and intertwining equivalences.
+   - Orbits, transitive, faithful, and free actions.
+   - Stabilizers (isotropy groups / little groups), fixed-point sets, and conjugacy along orbits.
+   - The Orbit-Stabilizer Theorem ($\mathcal{O}_x \cong G/G_x$) and homogeneous spaces (e.g. $S^2 \cong \mathrm{SO}(3)/\mathrm{SO}(2)$).
+   - Burnside's Lemma (Cauchy-Frobenius) and combinatorial symmetry counting.
+   - Group translations, conjugation, centralizers, and complete catalog of group centers.
+   - The double cover homomorphism $\mathrm{SU}(2) \to \mathrm{SO}(3)$ and $\mathrm{SU}(2)/\mathbb{Z}_2 \cong \mathrm{SO}(3)$.
+
+10. [[id:2bf3d940-6290-4682-841f-acf960308d2e][Chapter 2 Selected Problems and Worked Solutions]]
+    - Problem 2.1: Permutation matrix representation of $S_3$.
+    - Problem 2.2: Rectangle symmetries and the Klein four-group $V_4$.
+    - Problem 2.3: Invariance groups of $S^2$ and $S^2$ with a marked point ($O(3)$ and $O(2)$).
+    - Problem 2.5: Non-Abelian nature of $O(2)$.
+    - Problem 2.14: Cycle multiplication in $S_6$.
+    - Problem 2.15: Presentation $\langle a, b \mid aba^{-1}b^{-1} \rangle \cong \mathbb{Z} \times \mathbb{Z}$.
+
+** Chapter 3: Representation Theory of Groups (Section 3.1)
+
+11. [[id:ef2abac8-273c-404c-8140-d048794366d9][Complex Vector Spaces and Representations]]
+    - Complex vector spaces (axioms VS1–VS5), linear independence, dimension, and bases.
+    - Linear operators, Rank-Nullity Theorem, $\mathrm{Aut}(V) \cong \mathrm{GL}(n, \mathbb{C})$.
+    - Linear group representations $D : G \to \mathrm{Aut}(V)$, dimension, and faithfulness.
+    - Intertwining operators and equivalence of representations (similarity transformations).
+    - Hermitian scalar products, Gram-Schmidt orthonormalization procedure.
+    - Adjoint operators $A^\dagger$, unitary operators $\mathrm{Unit}(V) \cong \mathrm{U}(n)$, and unitary representations.
+
+12. [[id:9548a93b-2f08-4eaa-8c7d-d4a757aed1df][Symmetry Transformations in Quantum Mechanics]]
+    - Hilbert space $\mathcal{H}$ and ray representation of physical states.
+    - Schrödinger equation and time evolution generator $H$.
+    - Unitary representations of symmetries, invariance of dynamics $\implies [H, U_g] = 0$.
+    - Energy eigenspaces $\mathcal{H}_n$ as carrier spaces of symmetry representations.
+    - Symmetry-enforced degeneracy vs. accidental degeneracy and hidden dynamical symmetries.
+
+* Conceptual Dependency Graph
+
+#+begin_src text
+                [Magma / Semigroup / Monoid]
+                            │
+                            ▼
+              [Groups & Elementary Properties]
+                            │
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+    [Subgroups & Cosets]         [Permutations & S_n]
+              │                           │
+              ├───────────┐               ▼
+              ▼           ▼      [Partitions & Young Diagrams]
+    [Homomorphisms]   [Lagrange's         │
+      & Quotients       Theorem]          ▼
+              │           │      [Free Groups & Braids]
+              ▼           ▼               │
+      [Small Finite Groups]               ▼
+              │                [Continuous & Lie Groups]
+              │                           │
+              └─────────────┬─────────────┘
+                            ▼
+                [Groups Acting on a Set]
+                 (Orbits & Stabilizers)
+                            │
+                            ▼
+            [Complex Vector Spaces & Reps]
+              (Homomorphism G → Aut(V))
+                            │
+                            ▼
+           [Quantum Mechanical Symmetries]
+             ([H, Ug] = 0 & Degeneracies)
+#+end_src

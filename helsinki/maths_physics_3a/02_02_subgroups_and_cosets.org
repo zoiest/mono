@@ -1,0 +1,155 @@
+:PROPERTIES:
+:ID:       2b2d79fe-9b2c-4c80-896f-8d79a55ac3c0
+:ROAM_ALIASES: "Subgroups" "Cosets" "Lagrange's Theorem" "Subgroup Criterion"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Subgroups, Cosets, and Lagrange's Theorem
+#+subtitle: Section 2.2 — Mathematical Methods for Physics (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :math:physics:group-theory:subgroups:cosets:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:5b295c08-7bb4-4d5d-b6be-6fa096201e4d][← Previous: Groups and Elementary Properties]] | [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Next: Homomorphisms, Isomorphisms, and Quotients →]]
+
+* 1. Subgroups
+
+** 1.1 Formal Definition
+Let $(G, \cdot)$ be a group. A subset $H \subseteq G$ is called a *subgroup* of $G$ (denoted $H \le G$, or $H < G$ if proper) if $H$ forms a group under the restricted group operation of $G$.
+Specifically:
+1. $e \in H$ (the identity of $G$ belongs to $H$).
+2. For all $h_1, h_2 \in H$, $h_1 \cdot h_2 \in H$ (closure under multiplication).
+3. For all $h \in H$, $h^{-1} \in H$ (closure under inversion).
+
+** 1.2 Subgroup Criteria
+Instead of checking all group axioms, subgroups are verified by compact criteria:
+
+#+begin_quote
+*Theorem (One-Step Subgroup Criterion):*
+A non-empty subset $H \subseteq G$ is a subgroup of $G$ if and only if:
+$$ \forall h_1, h_2 \in H, \quad h_1 h_2^{-1} \in H $$
+#+end_quote
+*Proof:*
+- $(\implies)$ If $H \le G$, then $h_2 \in H \implies h_2^{-1} \in H$, and by closure $h_1 h_2^{-1} \in H$.
+- $(\impliedby)$ Assume $h_1 h_2^{-1} \in H$ for all $h_1, h_2 \in H$:
+  1. Since $H \neq \emptyset$, pick $h \in H$. Setting $h_1 = h$ and $h_2 = h$ gives $h h^{-1} = e \in H$.
+  2. Setting $h_1 = e$ and $h_2 = h$ gives $e h^{-1} = h^{-1} \in H$ (closure under inverses).
+  3. For any $a, b \in H$, since $b^{-1} \in H$, setting $h_1 = a$ and $h_2 = b^{-1}$ gives $a (b^{-1})^{-1} = ab \in H$ (closure under product).
+  Associativity is inherited directly from $G$. Thus $H \le G$. $\blacksquare$
+
+#+begin_quote
+*Theorem (Finite Subgroup Criterion):*
+Let $H$ be a non-empty *finite* subset of a group $G$. Then $H \le G$ if and only if $H$ is closed under multiplication:
+$$ \forall h_1, h_2 \in H, \quad h_1 h_2 \in H $$
+#+end_quote
+*Proof:*
+Let $h \in H$. Consider the set of powers $\{h, h^2, h^3, \dots\}$. By closure, all powers lie in $H$. Since $H$ is finite, there must exist integers $j > k \ge 1$ such that $h^j = h^k$. By cancellation, $h^{j-k} = e \in H$. Since $j - k \ge 1$, if $j - k = 1$ then $h = e \implies h^{-1} = e \in H$. If $j - k > 1$, then $h \cdot h^{j-k-1} = e$, so $h^{-1} = h^{j-k-1} \in H$. Hence $H$ contains inverses and is a subgroup. $\blacksquare$
+
+** 1.3 Trivial and Proper Subgroups
+- *Trivial Subgroups:* Every group $G$ has at least two subgroups:
+  1. The identity subgroup $\{e\}$.
+  2. The group itself $G$.
+  (For the trivial group $Z_1 = \{e\}$, these two coincide.)
+- *Proper Subgroups:* Any subgroup $H \le G$ such that $H \neq \{e\}$ and $H \neq G$. For a finite group $G$, $1 < |H| < |G|$.
+
+* 2. The Center of a Group
+
+** 2.1 Definition
+The *center* of a group $G$, denoted $Z(G)$, is the set of all elements that commute with every element of $G$:
+$$ Z(G) = \{ z \in G \mid z g = g z, \quad \forall g \in G \} $$
+
+** 2.2 Key Properties
+1. $Z(G)$ is always an *Abelian subgroup* of $G$:
+   - Identity $e \in Z(G)$ since $eg = ge = g$.
+   - Inverses: If $z \in Z(G)$, $zg = gz \implies g z^{-1} = z^{-1} g$, so $z^{-1} \in Z(G)$.
+   - Closure: If $z_1, z_2 \in Z(G)$, $(z_1 z_2) g = z_1 (g z_2) = g (z_1 z_2)$.
+2. $Z(G)$ is always a *normal subgroup* of $G$: for all $g \in G$ and $z \in Z(G)$, $g z g^{-1} = z g g^{-1} = z \in Z(G)$.
+3. If $G$ is Abelian, then $Z(G) = G$.
+4. If $Z(G) = \{e\}$, the group $G$ is said to have a *trivial center* (or to be *centerless*).
+   - Examples of centerless groups: $S_3$, $\mathrm{SO}(3)$, $G_2$, $F_4$, $E_8$.
+   - Examples with non-trivial center: $D_4$ ($Z \cong \mathbb{Z}_2$), $Q_8$ ($Z \cong \mathbb{Z}_2$), $\mathrm{SU}(N)$ ($Z \cong \mathbb{Z}_N$), $\mathrm{U}(N)$ ($Z \cong \mathrm{U}(1)$).
+
+* 3. Cosets and Equivalence Relations
+
+** 3.1 Left and Right Cosets
+Let $H \le G$ be a subgroup, and let $g \in G$.
+- The *left coset* of $H$ containing $g$ is:
+  $$ gH = \{ gh \mid h \in H \} $$
+- The *right coset* of $H$ containing $g$ is:
+  $$ Hg = \{ hg \mid h \in H \} $$
+
+** 3.2 Partition of the Group into Disjoint Cosets
+Define a relation on $G$ with respect to $H$:
+$$ x \sim_L y \iff x^{-1}y \in H \iff y \in xH $$
+#+begin_quote
+*Theorem:* The relation $\sim_L$ is an equivalence relation on $G$:
+1. *Reflexive:* $x^{-1}x = e \in H \implies x \sim_L x$.
+2. *Symmetric:* $x \sim_L y \implies x^{-1}y \in H \implies (x^{-1}y)^{-1} = y^{-1}x \in H \implies y \sim_L x$.
+3. *Transitive:* $x \sim_L y$ and $y \sim_L z \implies x^{-1}y \in H$ and $y^{-1}z \in H$. By closure, $(x^{-1}y)(y^{-1}z) = x^{-1}z \in H \implies x \sim_L z$.
+#+end_quote
+
+*Consequence (Theorem 2.1 in text):*
+The left cosets $\{gH \mid g \in G\}$ form a partition of $G$ into mutually disjoint subsets:
+$$ \text{Either } g_1 H = g_2 H \quad \text{or} \quad g_1 H \cap g_2 H = \emptyset $$
+Every element $g \in G$ belongs to exactly one left coset (namely $gH$, since $e \in H \implies g = ge \in gH$).
+
+** 3.3 Bijection Between $H$ and Any Coset
+#+begin_quote
+*Theorem:* For any $g \in G$, there is a bijection between $H$ and the left coset $gH$.
+#+end_quote
+*Proof:*
+Define $f_g : H \to gH$ by $f_g(h) = gh$.
+1. *Surjective:* By definition, every element in $gH$ is of the form $gh$ for some $h \in H$.
+2. *Injective:* Suppose $f_g(h_1) = f_g(h_2) \implies gh_1 = gh_2$. Multiplying on the left by $g^{-1}$ yields $h_1 = h_2$.
+Therefore, $f_g$ is a bijection. $\blacksquare$
+
+*Consequence:* All left cosets (and right cosets) have the exact same cardinality:
+$$ |gH| = |Hg| = |H| $$
+
+* 4. Lagrange's Theorem
+
+#+begin_quote
+*Theorem 2.3 (Lagrange's Theorem):*
+If $G$ is a finite group and $H$ is a subgroup of $G$, then the order $|H|$ of the subgroup is a divisor of the order $|G|$ of the group:
+$$ |G| = [G : H] \cdot |H| $$
+where $[G : H]$ is the *index* of $H$ in $G$ (the number of distinct left cosets).
+#+end_quote
+*Proof:*
+Since the left cosets partition $G$ into $k = [G:H]$ pairwise disjoint subsets, and each coset has cardinality $|H|$:
+$$ |G| = \sum_{i=1}^k |g_i H| = \sum_{i=1}^k |H| = k \cdot |H| = [G:H] \cdot |H| $$
+Since $|G|$ and $|H|$ are positive integers, $|H|$ divides $|G|$. $\blacksquare$
+
+** 4.1 Fundamental Corollaries of Lagrange's Theorem
+
+*** Corollary 1: Order of Elements Divides Group Order
+For any element $g \in G$, the cyclic subgroup generated by $g$,
+$$ \langle g \rangle = \{e, g, g^2, \dots, g^{m-1}\}, \quad m = \mathrm{ord}(g) $$
+is a subgroup of $G$ with $|\langle g \rangle| = \mathrm{ord}(g)$.
+By Lagrange's theorem, $|\langle g \rangle|$ divides $|G|$.
+Therefore:
+$$ \mathrm{ord}(g) \text{ divides } |G| $$
+
+*** Corollary 2: Euler-Fermat Type Identity
+For any finite group $G$ and any $g \in G$:
+$$ g^{|G|} = e $$
+*Proof:* Since $\mathrm{ord}(g)$ divides $|G|$, $|G| = k \cdot \mathrm{ord}(g)$ for some $k \in \mathbb{Z}^+$. Thus $g^{|G|} = (g^{\mathrm{ord}(g)})^k = e^k = e$. $\blacksquare$
+
+*** Corollary 3: Groups of Prime Order are Uniquely Cyclic
+#+begin_quote
+*Corollary:* If $p$ is a prime number, then any group $G$ of order $p$ is isomorphic to the cyclic group $\mathbb{Z}_p$.
+#+end_quote
+*Proof:*
+Pick any element $g \in G$ with $g \neq e$.
+Let $m = \mathrm{ord}(g)$. Since $g \neq e$, $m > 1$.
+By Corollary 1, $m$ must divide $|G| = p$.
+Because $p$ is prime and $m > 1$, we must have $m = p$.
+Thus $\langle g \rangle = \{e, g, g^2, \dots, g^{p-1}\}$ contains $p$ distinct elements, so $\langle g \rangle = G$.
+Hence $G$ is cyclic and isomorphic to $\mathbb{Z}_p$. $\blacksquare$
+
+* 5. Coset Spaces and Group Actions
+
+The set of left cosets is denoted by the *quotient space* (or coset space):
+$$ G/H = \{ gH \mid g \in G \} $$
+Similarly, the right coset space is $H \backslash G = \{ Hg \mid g \in G \}$.
+- The coset space $G/H$ is a fundamental example of a $G$-space on which $G$ acts transitively via $L_g(g'H) = (gg')H$ (see [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][Groups Acting on a Set]]).
+- Under what conditions does $G/H$ form a *group*?
+  Only when $H$ is a *normal subgroup* ($gH = Hg$ for all $g \in G$). In that case, $G/H$ is the *quotient group* (see [[id:a9605612-c8a4-42ff-8115-a96f70083b3e][Homomorphisms, Isomorphisms, and Quotients]]).

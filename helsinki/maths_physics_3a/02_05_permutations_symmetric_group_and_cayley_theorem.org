@@ -1,0 +1,129 @@
+:PROPERTIES:
+:ID:       e61da419-8849-4086-bc86-0892d092c8f4
+:ROAM_ALIASES: "Symmetric Group" "Permutations" "Cayley's Theorem" "Cycle Notation" "Alternating Group"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Permutations, the Symmetric Group, and Cayley's Theorem
+#+subtitle: Section 2.5 — Mathematical Methods for Physics (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :math:physics:group-theory:permutations:symmetric-group:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:206fb1b4-ba32-4675-921a-1b0864eae8e8][← Previous: Smallest Finite Groups]] | [[id:9231c23d-0041-4dcc-9c4b-8684eeae1b76][Next: Partitions, Young Diagrams, and Multisets →]]
+
+* 1. Permutations and the Symmetric Group
+
+** 1.1 Permutations of a Set
+Let $X$ be a non-empty set. A bijection $f : X \to X$ is called a *permutation* of $X$.
+The set of all permutations of $X$ is denoted $\mathrm{Perm}(X)$.
+- Under function composition $(f \circ g)(x) = f(g(x))$, $\mathrm{Perm}(X)$ forms a group:
+  1. *Associativity:* Composition of functions is always associative.
+  2. *Identity:* The identity map $E(x) = x$ is the unit element.
+  3. *Inverses:* Since each $f$ is bijective, an inverse bijection $f^{-1}$ exists.
+- *Composition Convention:* We adopt the standard *right-to-left* convention:
+  $$ (f g)(x) \equiv (f \circ g)(x) = f(g(x)) $$
+  First apply $g$, then apply $f$.
+
+** 1.2 The Symmetric Group $S_n$
+When $X$ is a finite set of $n$ elements (typically $\{1, 2, \dots, n\}$), $\mathrm{Perm}(X)$ is called the *symmetric group of degree $n$*, denoted $S_n$.
+- *Order:* The order of $S_n$ is:
+  $$ |S_n| = n! $$
+- *Non-Abelian:* $S_n$ is non-Abelian for all $n \ge 3$.
+
+* 2. Notations for Permutations
+
+** 2.1 Two-Line (Cauchy) Notation
+A permutation $\pi \in S_n$ is written by specifying the preimage in the top row and the image in the bottom row:
+$$ \pi = \begin{pmatrix} 1 & 2 & 3 & \cdots & n \\ \pi(1) & \pi(2) & \pi(3) & \cdots & \pi(n) \end{pmatrix} $$
+For example, in $S_4$:
+$$ \pi = \begin{pmatrix} 1 & 2 & 3 & 4 \\ 2 & 4 & 1 & 3 \end{pmatrix} $$
+maps $1 \mapsto 2$, $2 \mapsto 4$, $3 \mapsto 1$, $4 \mapsto 3$.
+
+** 2.2 Cycle Notation
+A *cycle* $(a_1 \, a_2 \, \dots \, a_k)$ represents the permutation sending:
+$$ a_1 \mapsto a_2, \quad a_2 \mapsto a_3, \quad \dots, \quad a_{k-1} \mapsto a_k, \quad a_k \mapsto a_1 $$
+and leaving all elements not listed unchanged. The integer $k$ is called the *length* of the cycle ($k$-cycle).
+
+*** Fundamental Properties of Cycles
+1. *Commutativity of Disjoint Cycles:* If two cycles act on disjoint sets of elements, they commute:
+   $$ (1 \, 2)(3 \, 4) = (3 \, 4)(1 \, 2) $$
+2. *Unique Cycle Decomposition:* Every permutation in $S_n$ can be uniquely written (up to the order of factors) as a product of mutually disjoint cycles.
+3. *Convention for 1-Cycles:* 1-cycles represent fixed points $(a) \iff \pi(a) = a$. They are usually omitted unless necessary for clarity. The identity permutation is written $E = (1)(2)\cdots(n)$.
+4. *Cycle Multiplication (Right to Left):*
+   In $S_3$, consider $\sigma = (1 \, 2)$ and $\tau = (2 \, 3)$:
+   - To compute $\sigma \tau = (1 \, 2)(2 \, 3)$:
+     - $1 \xrightarrow{\tau} 1 \xrightarrow{\sigma} 2$
+     - $2 \xrightarrow{\tau} 3 \xrightarrow{\sigma} 3$
+     - $3 \xrightarrow{\tau} 2 \xrightarrow{\sigma} 1$
+     Thus $(1 \, 2)(2 \, 3) = (1 \, 2 \, 3)$.
+   - In reverse order: $(2 \, 3)(1 \, 2) = (1 \, 3 \, 2) \neq (1 \, 2 \, 3)$.
+
+* 3. Transpositions and Signature (Parity)
+
+** 3.1 Transpositions
+A cycle of length 2, $(i \, j)$, is called a *transposition*. It simply interchanges $i$ and $j$ while leaving all other elements fixed.
+- Every cycle of length $k$ can be decomposed into a product of $k-1$ transpositions:
+  $$ (a_1 \, a_2 \, \dots \, a_k) = (a_1 \, a_k)(a_1 \, a_{k-1}) \cdots (a_1 \, a_3)(a_1 \, a_2) $$
+- Consequently, *every permutation in $S_n$ can be expressed as a product of transpositions.*
+- While the transposition decomposition is not unique, the *parity* (even or odd number of transpositions) is an invariant of the permutation!
+
+** 3.2 The Signature (Sign) Homomorphism
+The *signature* (or *sign*) of a permutation $\pi$, denoted $\mathrm{sgn}(\pi)$, is defined by:
+$$ \mathrm{sgn}(\pi) = (-1)^k $$
+where $k$ is the number of transpositions in any decomposition of $\pi$.
+- For a single $L$-cycle: $\mathrm{sgn}((a_1 \, \dots \, a_L)) = (-1)^{L-1}$.
+- Homomorphism property:
+  $$ \mathrm{sgn}(\pi_1 \pi_2) = \mathrm{sgn}(\pi_1) \mathrm{sgn}(\pi_2) $$
+  Thus $\mathrm{sgn} : S_n \to (\{+1, -1\}, \times) \cong \mathbb{Z}_2$ is a group homomorphism.
+
+** 3.3 The Alternating Group $A_n$
+The *Alternating group of degree $n$*, denoted $A_n$, is the set of all even permutations:
+$$ A_n = \{ \pi \in S_n \mid \mathrm{sgn}(\pi) = +1 \} = \mathrm{Ker}(\mathrm{sgn}) $$
+- Since it is the kernel of a homomorphism, $A_n$ is a *normal subgroup* of $S_n$ ($A_n \triangleleft S_n$).
+- *Order:* By the First Isomorphism Theorem:
+  $$ S_n / A_n \cong \mathbb{Z}_2 \implies |A_n| = \frac{|S_n|}{2} = \frac{n!}{2} $$
+- Example: $|A_3| = 3!/2 = 3$, $A_3 = \{E, (123), (132)\} \cong \mathbb{Z}_3$.
+
+* 4. Conjugacy Classes in $S_n$
+
+Two permutations $\sigma, \tau \in S_n$ are conjugate if there exists $\rho \in S_n$ such that:
+$$ \tau = \rho \sigma \rho^{-1} $$
+Applying $\rho$ to a cycle $(a_1 \, a_2 \, \dots \, a_k)$ relabels the elements:
+$$ \rho (a_1 \, a_2 \, \dots \, a_k) \rho^{-1} = (\rho(a_1) \, \rho(a_2) \, \dots \, \rho(a_k)) $$
+
+#+begin_quote
+*Fundamental Theorem on Conjugacy in $S_n$:*
+Two permutations in $S_n$ are conjugate if and only if they have the *exact same cycle structure* (i.e., the same number of cycles of each length).
+#+end_quote
+
+*Consequence:*
+The conjugacy classes of $S_n$ are in one-to-one correspondence with the *integer partitions of $n$* (see [[id:9231c23d-0041-4dcc-9c4b-8684eeae1b76][Partitions, Young Diagrams, and Multisets]]).
+
+* 5. Cayley's Theorem
+
+#+begin_quote
+*Theorem 2.2 (Cayley's Theorem):*
+Every finite group $G$ of order $n$ is isomorphic to a subgroup of the symmetric group $S_n$.
+#+end_quote
+
+*Proof:*
+Let $G = \{g_1, g_2, \dots, g_n\}$.
+For every $g \in G$, define the left translation map $f_g : G \to G$ by:
+$$ f_g(x) = g \cdot x, \quad \forall x \in G $$
+1. *Bijectivity of $f_g$:*
+   - Injective: $f_g(x) = f_g(y) \implies gx = gy \implies x = y$ (left cancellation).
+   - Surjective: For any $y \in G$, $x = g^{-1}y \in G$ satisfies $f_g(x) = g(g^{-1}y) = y$.
+   Thus $f_g \in \mathrm{Perm}(G) \cong S_n$.
+2. *Homomorphism:*
+   Consider the mapping $\Phi : G \to \mathrm{Perm}(G)$ defined by $\Phi(g) = f_g$.
+   For any $x \in G$:
+   $$ (f_{g_1} \circ f_{g_2})(x) = f_{g_1}(f_{g_2}(x)) = f_{g_1}(g_2 x) = g_1(g_2 x) = (g_1 g_2)x = f_{g_1 g_2}(x) $$
+   Therefore $\Phi(g_1 g_2) = \Phi(g_1) \circ \Phi(g_2)$, so $\Phi$ is a homomorphism.
+3. *Injectivity of $\Phi$:*
+   Suppose $\Phi(g_1) = \Phi(g_2) \implies f_{g_1} = f_{g_2}$.
+   Then $f_{g_1}(e) = f_{g_2}(e) \implies g_1 e = g_2 e \implies g_1 = g_2$.
+   Hence $\mathrm{Ker}(\Phi) = \{e\}$, meaning $\Phi$ is an injection.
+4. *Conclusion:*
+   By the First Isomorphism Theorem, $G \cong \mathrm{Im}(\Phi) \le \mathrm{Perm}(G) \cong S_n$. $\blacksquare$
+
+*Significance:* Cayley's theorem establishes that the study of abstract finite groups is subsumed within the study of subgroups of permutation groups.

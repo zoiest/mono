@@ -1,0 +1,136 @@
+:PROPERTIES:
+:ID:       16fe12b7-9348-4965-a3b7-73ec71993c39
+:ROAM_ALIASES: "Lie Groups" "Matrix Lie Groups" "Continuous Groups" "SU(2)" "Pauli Matrices" "Exceptional Lie Groups"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Continuous Groups and Lie Groups
+#+subtitle: Section 2.8 — Mathematical Methods for Physics (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :math:physics:group-theory:lie-groups:matrix-groups:su2:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:311c6a8f-4c6b-49aa-8d55-ce17aae8415f][← Previous: Free Groups, Presentations, and Braids]] | [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][Next: Groups Acting on a Set →]]
+
+* 1. Continuous Groups and Lie Groups
+
+** 1.1 Continuous Groups
+A *continuous group* is a group containing an uncountably infinite number of elements parameterized by real variables (coordinates).
+- *Dimension of a Continuous Group ($\dim G$):*
+  The minimal number of independent real parameters required to uniquely label its elements in a neighborhood of the identity.
+  Examples:
+  - $\dim(\mathbb{R}, +) = 1$.
+  - $\dim(\mathbb{R}^n, +) = n$.
+  - $\dim(\mathbb{C}, +) = 2$.
+  - $\dim\mathrm{U}(1) = 1$ (parameterized by phase $e^{i\theta}$, $\theta \in [0, 2\pi)$).
+
+** 1.2 Lie Groups
+A *Lie group* (named after Sophus Lie) is a continuous group $G$ whose underlying set is a smooth ($C^\infty$) differentiable manifold (the *group manifold*), such that:
+1. *Group multiplication:* $(g_1, g_2) \mapsto g_1 g_2$ is a smooth map $G \times G \to G$.
+2. *Inversion:* $g \mapsto g^{-1}$ is a smooth map $G \to G$.
+
+** 1.3 Topology of Lie Groups
+- *Compactness:* A Lie group is *compact* if its group manifold is closed and bounded as a subset of Euclidean matrix space.
+  - Compact: $\mathrm{U}(1) \cong S^1$, $\mathrm{SO}(n)$, $\mathrm{SU}(n)$, $\mathrm{Sp}(n)$.
+  - Non-compact: $(\mathbb{R}, +)$, $\mathrm{GL}(n, \mathbb{R})$, $\mathrm{SL}(n, \mathbb{R})$, $\mathrm{SO}(1, 3)$ (Lorentz group).
+- *Connectedness:*
+  - $\mathrm{GL}(n, \mathbb{R})$ has two disconnected components ($\det > 0$ and $\det < 0$).
+  - $\mathrm{O}(n)$ has two disconnected components ($\det = +1$ and $\det = -1$).
+  - $\mathrm{SO}(n)$, $\mathrm{U}(n)$, $\mathrm{SU}(n)$ are connected.
+
+* 2. Classical Matrix Lie Groups
+
+Matrix Lie groups are closed subgroups of $\mathrm{GL}(n, \mathbb{C})$ under matrix multiplication.
+
+#+caption: Classification of Classical Matrix Lie Groups
+| Group $G$               | Defining Condition                             | Field | Real Dim $\dim G$ | Compact? | Connected? |
+|-------------------------+-------------------------------------------------+-------+-------------------+----------+------------|
+| $\mathrm{GL}(n, \mathbb{R})$ | $\det A \neq 0$                                 | $\mathbb{R}$ | $n^2$             | No       | 2 components |
+| $\mathrm{GL}(n, \mathbb{C})$ | $\det A \neq 0$                                 | $\mathbb{C}$ | $2n^2$            | No       | Yes        |
+| $\mathrm{SL}(n, \mathbb{R})$ | $\det A = 1$                                    | $\mathbb{R}$ | $n^2 - 1$         | No       | Yes        |
+| $\mathrm{SL}(n, \mathbb{C})$ | $\det A = 1$                                    | $\mathbb{C}$ | $2(n^2 - 1)$      | No       | Yes        |
+| $\mathrm{O}(n)$         | $A^T A = \mathbf{1}_n$                          | $\mathbb{R}$ | $\frac{n(n-1)}{2}$ | *Yes*    | 2 components |
+| $\mathrm{SO}(n)$        | $A^T A = \mathbf{1}_n, \, \det A = 1$           | $\mathbb{R}$ | $\frac{n(n-1)}{2}$ | *Yes*    | *Yes*      |
+| $\mathrm{U}(n)$         | $U^\dagger U = \mathbf{1}_n$                    | $\mathbb{C}$ | $n^2$             | *Yes*    | *Yes*      |
+| $\mathrm{SU}(n)$        | $U^\dagger U = \mathbf{1}_n, \, \det U = 1$     | $\mathbb{C}$ | $n^2 - 1$         | *Yes*    | *Yes*      |
+| $\mathrm{Sp}(2n, \mathbb{R})$ | $M^T \Omega M = \Omega$                         | $\mathbb{R}$ | $n(2n+1)$         | No       | *Yes*      |
+
+** 2.1 Derivation of Dimensions
+
+*** Dimension of $\mathrm{O}(n)$ and $\mathrm{SO}(n)$
+An $n \times n$ real matrix has $n^2$ entries. The constraint $A^T A = \mathbf{1}_n$ is symmetric ($A^T A = (A^T A)^T$):
+- $n$ diagonal constraints: $(A^T A)_{ii} = 1$.
+- $\frac{n(n-1)}{2}$ off-diagonal constraints: $(A^T A)_{ij} = 0$ for $i < j$.
+Total constraints: $n + \frac{n(n-1)}{2} = \frac{n(n+1)}{2}$.
+$$ \dim \mathrm{O}(n) = n^2 - \frac{n(n+1)}{2} = \frac{n(n-1)}{2} $$
+Since $\det A = \pm 1$ is discrete, the condition $\det A = +1$ for $\mathrm{SO}(n)$ isolates one connected component without reducing continuous dimension: $\dim \mathrm{SO}(n) = \frac{n(n-1)}{2}$.
+
+*** Dimension of $\mathrm{U}(n)$ and $\mathrm{SU}(n)$
+An $n \times n$ complex matrix has $n^2$ complex entries ($2n^2$ real parameters).
+The constraint $U^\dagger U = \mathbf{1}_n$ requires $U^\dagger U$ to be Hermitian:
+- $n$ real diagonal constraints: $(U^\dagger U)_{ii} = 1$ ($n$ real parameters).
+- $\frac{n(n-1)}{2}$ complex off-diagonal constraints: $(U^\dagger U)_{ij} = 0$ ($n(n-1)$ real parameters).
+Total constraints: $n + n(n-1) = n^2$.
+$$ \dim \mathrm{U}(n) = 2n^2 - n^2 = n^2 $$
+For $\mathrm{SU}(n)$, the condition $\det U = 1$ imposes 1 real constraint on the phase (since $|\det U| = 1$ already holds):
+$$ \dim \mathrm{SU}(n) = n^2 - 1 $$
+
+*** The Symplectic Group $\mathrm{Sp}(2n, \mathbb{R})$
+Defined by matrices preserving the standard skew-symmetric form $\Omega = \begin{pmatrix} 0 & \mathbf{1}_n \\ -\mathbf{1}_n & 0 \end{pmatrix}$:
+$$ M^T \Omega M = \Omega $$
+Since $M^T \Omega M$ is skew-symmetric, its diagonal vanishes identically, yielding $\frac{2n(2n-1)}{2}$ independent equations on $(2n)^2 = 4n^2$ variables:
+$$ \dim \mathrm{Sp}(2n, \mathbb{R}) = 4n^2 - \frac{2n(2n-1)}{2} = 4n^2 - n(2n-1) = 2n^2 + n = n(2n+1) $$
+Using the Pfaffian identity $\mathrm{Pf}(M^T \Omega M) = \det M \cdot \mathrm{Pf}(\Omega)$, every symplectic matrix automatically satisfies $\det M = +1$.
+For $n=1$: $\mathrm{Sp}(2, \mathbb{R}) = \mathrm{SL}(2, \mathbb{R})$.
+
+* 3. Deep Dive: $\mathrm{SU}(2)$ and Pauli Matrices
+
+** 3.1 Defining Form and Geometry
+A generic $2 \times 2$ matrix in $\mathrm{SU}(2)$ satisfies $A^\dagger = A^{-1}$ and $\det A = 1$:
+$$ A = \begin{pmatrix} \alpha & \beta \\ -\beta^* & \alpha^* \end{pmatrix}, \quad \text{with } |\alpha|^2 + |\beta|^2 = 1 $$
+Decomposing into real and imaginary parts: $\alpha = x_4 + i x_3$, $\beta = x_2 + i x_1$:
+$$ x_1^2 + x_2^2 + x_3^2 + x_4^2 = 1 $$
+#+begin_important
+*Topological Manifold of $\mathrm{SU}(2)$:*
+The group manifold of $\mathrm{SU}(2)$ is the *3-dimensional sphere $S^3$* embedded in $\mathbb{R}^4$.
+Consequently, $\mathrm{SU}(2)$ is compact, connected, and simply connected ($\pi_1(\mathrm{SU}(2)) = 0$).
+#+end_important
+
+** 3.2 The Pauli Matrices
+Named after Wolfgang Pauli, the three hermitian, traceless matrices are:
+$$ \sigma_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_2 = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad \sigma_3 = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} $$
+
+*** Fundamental Algebraic Relations
+1. *Product Identity:*
+   $$ \sigma_a \sigma_b = \delta_{ab}\mathbf{1}_2 + i \epsilon_{abc}\sigma_c $$
+2. *Commutator and Anticommutator:*
+   $$ [\sigma_a, \sigma_b] = 2i \epsilon_{abc}\sigma_c, \quad \{\sigma_a, \sigma_b\} = 2\delta_{ab}\mathbf{1}_2 $$
+3. *Pauli Completeness Relation (Fierz Identity):*
+   $$ \sum_{i=1}^3 (\sigma_i)_{ab}(\sigma_i)_{cd} = 2\delta_{ad}\delta_{bc} - \delta_{ab}\delta_{cd} $$
+4. *Expansion of Hermitian Matrices:*
+   The set $\{\mathbf{1}_2, \sigma_1, \sigma_2, \sigma_3\}$ forms a complete orthogonal basis for the vector space of $2 \times 2$ Hermitian matrices over $\mathbb{R}$:
+   $$ H = a\mathbf{1}_2 + b_1 \sigma_1 + b_2 \sigma_2 + b_3 \sigma_3, \quad a, b_i \in \mathbb{R} $$
+
+** 3.3 Exponential Parameterization
+Every element of $\mathrm{SU}(2)$ can be expressed as a matrix exponential:
+$$ A = \exp\left( i \frac{\phi}{2} \hat{v} \cdot \vec{\sigma} \right) = \cos\left(\frac{\phi}{2}\right)\mathbf{1}_2 + i \sin\left(\frac{\phi}{2}\right) \hat{v} \cdot \vec{\sigma} $$
+where $\hat{v} \in \mathbb{R}^3$ with $|\hat{v}|=1$, and $\phi \in [0, 4\pi]$.
+This provides the direct physical connection between $\mathrm{SU}(2)$ and spatial rotations by angle $\phi$ around axis $\hat{v}$.
+
+* 4. Octonions and the Exceptional Lie Groups
+
+Beyond classical matrix Lie algebras ($A_n, B_n, C_n, D_n$), the Killing-Cartan classification uncovered five *exceptional Lie groups*:
+
+1. *The Octonions ($\mathbb{O}$):*
+   An 8-dimensional non-associative normed division algebra generated by $\{e_0 = 1, e_1, \dots, e_7\}$ (Cayley algebra) with structure constants $f_{ijk}$ totally antisymmetric ($f_{123} = f_{145} = f_{176} = f_{246} = f_{257} = f_{347} = f_{365} = 1$).
+2. *$G_2$ ($\dim = 14$):*
+   The automorphism group of the octonions, $\mathrm{Aut}(\mathbb{O}) \subset \mathrm{SO}(7)$. It is compact, simple, and centerless ($Z(G_2) = \{e\}$).
+3. *$F_4$ ($\dim = 52$):*
+   The automorphism group of the 27-dimensional exceptional Jordan algebra $\mathcal{J}$ of $3 \times 3$ Hermitian octonionic matrices with product $X \circ Y = \frac{1}{2}(XY + YX)$.
+4. *$E_6$ ($\dim = 78$):*
+   The collineation group leaving the cubic determinant form on the exceptional Jordan algebra $\mathcal{J}$ invariant. Compact form has center $Z(E_6) \cong \mathbb{Z}_3$.
+5. *$E_7$ ($\dim = 133$):*
+   The isometry group of the quater-octonionic projective plane. Compact form has center $Z(E_7) \cong \mathbb{Z}_2$.
+6. *$E_8$ ($\dim = 248$):*
+   The isometry group of the octo-octonionic projective plane. The largest exceptional group; its adjoint representation coincides with its fundamental representation (dimension 248).
+   Center is trivial: $Z(E_8) = \{e\}$.
+   Fundamental to heterotic string theory ($E_8 \times E_8$ gauge group).

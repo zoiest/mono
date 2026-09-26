@@ -1,0 +1,144 @@
+:PROPERTIES:
+:ID:       2bf3d940-6290-4682-841f-acf960308d2e
+:ROAM_ALIASES: "Chapter 2 Problems" "Group Theory Exercises"
+:ROAM_REFS: [cite:@keskivakkuri2022mathematical]
+:END:
+#+title: Chapter 2 Selected Problems and Worked Solutions
+#+subtitle: Chapter 2 Problems — Mathematical Methods for Physics (Keski-Vakkuri, Montonen, Panero)
+#+author: Antigravity Notes
+#+date: [2026-09-26]
+#+filetags: :math:physics:group-theory:exercises:problems:
+
+[[id:048103c7-3b41-4898-a634-3086ff263182][← Course Map / Index]] | [[id:0c71e7cb-1a90-4ce5-bc72-38c37afda295][← Previous: Groups Acting on a Set]] | [[id:ef2abac8-273c-404c-8140-d048794366d9][Next: Complex Vector Spaces and Representations →]]
+
+* Problem 2.1: Permutation Matrix Realization of $S_3$
+
+** Problem Statement
+Consider the set of six $3 \times 3$ matrices $G = \{e, x_1, x_2, x_3, x_4, x_5\}$:
+$$ e = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}, \quad x_1 = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix}, \quad x_2 = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{pmatrix} $$
+$$ x_3 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 1 & 0 \end{pmatrix}, \quad x_4 = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{pmatrix}, \quad x_5 = \begin{pmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{pmatrix} $$
+under matrix multiplication. Show that $G$ is isomorphic to a known group and construct the isomorphism.
+
+** Solution
+Notice that each matrix has exactly one entry equal to $1$ in each row and column, and zeros elsewhere (they are *permutation matrices*).
+Let standard basis vectors of $\mathbb{R}^3$ be $v_1 = (1, 0, 0)^T$, $v_2 = (0, 1, 0)^T$, $v_3 = (0, 0, 1)^T$.
+Applying the matrices to the basis vectors:
+- $x_1 v_1 = v_2$, $x_1 v_2 = v_1$, $x_1 v_3 = v_3 \implies x_1 \leftrightarrow (12)$.
+- $x_2 v_1 = v_3$, $x_2 v_2 = v_2$, $x_2 v_3 = v_1 \implies x_2 \leftrightarrow (13)$.
+- $x_3 v_1 = v_1$, $x_3 v_2 = v_3$, $x_3 v_3 = v_2 \implies x_3 \leftrightarrow (23)$.
+- $x_4 v_1 = v_3$, $x_4 v_2 = v_1$, $x_4 v_3 = v_2 \implies x_4 \leftrightarrow (132)$.
+- $x_5 v_1 = v_2$, $x_5 v_2 = v_3$, $x_5 v_3 = v_1 \implies x_5 \leftrightarrow (123)$.
+- $e \leftrightarrow E$ (the identity).
+Matrix multiplication directly reflects cycle composition. For example:
+$$ x_1 x_2 = \begin{pmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{pmatrix}\begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{pmatrix} = x_4 \longleftrightarrow (12)(13) = (132) $$
+The mapping $\phi : G \to S_3$ is a bijective group homomorphism. Thus:
+$$ G \cong S_3 $$
+
+* Problem 2.2: Symmetries of a Rectangle
+
+** Problem Statement
+Let $G$ be the group of discrete geometric transformations preserving a non-square rectangle:
+- $e$: identity transformation.
+- $a$: rotation by $\pi$ in the rectangle's plane.
+- $b$: reflection across the vertical symmetry axis.
+- $c$: reflection across the horizontal symmetry axis.
+Construct the Cayley table of $G$ and identify the group.
+
+** Solution
+Analyzing products:
+- Rotating by $\pi$ twice: $a^2 = e$.
+- Reflecting across vertical axis twice: $b^2 = e$.
+- Reflecting across horizontal axis twice: $c^2 = e$.
+- A horizontal reflection followed by vertical reflection is equivalent to a rotation by $\pi$: $bc = cb = a$.
+- Similarly, $ab = ba = c$, and $ac = ca = b$.
+
+#+caption: Cayley table for the symmetry group of a rectangle
+| $\cdot$ | $e$ | $a$ | $b$ | $c$ |
+|---------+-----+-----+-----+-----|
+| $e$     | $e$ | $a$ | $b$ | $c$ |
+| $a$     | $a$ | $e$ | $c$ | $b$ |
+| $b$     | $b$ | $c$ | $e$ | $a$ |
+| $c$     | $c$ | $b$ | $a$ | $e$ |
+
+Comparing with Section 2.4, this Cayley table matches the *Klein four-group*:
+$$ G \cong V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2 $$
+
+* Problem 2.3: Invariance Groups of Spheres with Marked Points
+
+** Problem Statement
+Let $S^2 \subset \mathbb{R}^3$ be the unit sphere centered at the origin.
+1. What is the full symmetry group of $S^2$?
+2. Let $S^2_{(1)}$ be $S^2$ with a single marked point on its surface. What is the subgroup leaving $S^2_{(1)}$ invariant?
+
+** Solution
+1. The sphere $S^2 = \{ \vec{x} \in \mathbb{R}^3 \mid |\vec{x}|^2 = 1 \}$ is defined by the condition that distances from the origin are preserved. The group of distance-preserving linear transformations in $\mathbb{R}^3$ fixing the origin is the orthogonal group:
+   $$ G = \mathrm{O}(3) $$
+2. Let the marked point be placed without loss of generality at the north pole $p = (0, 0, 1)^T$.
+   Any transformation leaving $S^2_{(1)}$ invariant must leave the point $p$ fixed: it is the *isotropy group* (stabilizer) $\mathrm{O}(3)_p$:
+   - Rotations must be about the $z$-axis through $p$ ($\mathrm{SO}(2)$).
+   - Reflections can only be reflections across vertical planes containing the $z$-axis (which fix $p$).
+   Combining rotations about the $z$-axis with vertical plane reflections gives:
+   $$ \mathrm{Stab}(p) \cong \mathrm{O}(2) $$
+
+* Problem 2.5: Non-Abelian Nature of $\mathrm{O}(2)$
+
+** Problem Statement
+Is the orthogonal group $\mathrm{O}(2)$ Abelian or non-Abelian?
+
+** Solution
+$\mathrm{O}(2)$ consists of two types of transformations in $\mathbb{R}^2$:
+1. Proper rotations $R(\theta) = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$.
+2. Reflections $S(\phi) = \begin{pmatrix} \cos\phi & \sin\phi \\ \sin\phi & -\cos\phi \end{pmatrix}$.
+Consider a reflection $S = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$ across the $x$-axis, and a rotation $R(\theta)$:
+$$ R(\theta) S = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix} = \begin{pmatrix} \cos\theta & \sin\theta \\ \sin\theta & -\cos\theta \end{pmatrix} $$
+$$ S R(\theta) = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}\begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} = \begin{pmatrix} \cos\theta & -\sin\theta \\ -\sin\theta & -\cos\theta \end{pmatrix} $$
+Clearly $R(\theta)S \neq S R(\theta)$ whenever $\sin\theta \neq 0$ (in fact, $S R(\theta) S^{-1} = R(-\theta)$).
+Therefore:
+$$ \mathrm{O}(2) \text{ is non-Abelian} $$
+(Note that the subgroup of pure rotations $\mathrm{SO}(2) \cong \mathrm{U}(1)$ is Abelian, but the full group $\mathrm{O}(2)$ is non-Abelian.)
+
+* Problem 2.14: Cycle Calculations in $S_6$
+
+** Problem Statement
+Compute the following cycle products in $S_6$ (acting right to left):
+1. $(235)(46) \cdot (14)(265)$
+2. $(1635)(24) \cdot (1536)(24)$
+
+** Solution
+1. Compute $\pi = (235)(46) \cdot (14)(265)$:
+   - $1 \to 4 \to 6$
+   - $6 \to 5 \to 2$
+   - $2 \to 6 \to 4 \to 1$ (completing $(162)$)
+   - $3 \to 3 \to 5$
+   - $5 \to 2 \to 3$ (completing $(35)$)
+   - $4 \to 1 \to 1$ (already closed)
+   Result:
+   $$ (235)(46) \cdot (14)(265) = (162)(35) $$
+
+2. Compute $\sigma = (1635)(24) \cdot (1536)(24)$:
+   - Notice $(24)^2 = E$, so the $(24)$ factor cancels.
+   - For $(1635) \cdot (1536)$:
+     - Notice $(1536) = (1635)^{-1}$.
+     Thus $(1635)(1536) = E$.
+   Result:
+   $$ (1635)(24) \cdot (1536)(24) = E $$
+
+* Problem 2.15: Presentation of $\mathbb{Z} \times \mathbb{Z}$
+
+** Problem Statement
+Prove that the group presentation $\langle a, b \mid a b a^{-1} b^{-1} = e \rangle$ is isomorphic to $(\mathbb{Z} \times \mathbb{Z}, +)$.
+
+** Solution
+The relation $a b a^{-1} b^{-1} = e$ is equivalent to:
+$$ ab = ba $$
+This means the generators $a$ and $b$ commute.
+In the free group on two generators, imposing $ab = ba$ allows any reduced word to be rearranged by grouping all factors of $a$ and all factors of $b$:
+$$ w = a^m b^n, \quad m, n \in \mathbb{Z} $$
+Multiplying two words:
+$$ (a^{m_1} b^{n_1}) \cdot (a^{m_2} b^{n_2}) = a^{m_1 + m_2} b^{n_1 + n_2} $$
+Define the mapping $\phi : \langle a, b \mid aba^{-1}b^{-1} \rangle \to \mathbb{Z} \times \mathbb{Z}$ by:
+$$ \phi(a^m b^n) = (m, n) $$
+- $\phi((a^{m_1}b^{n_1})(a^{m_2}b^{n_2})) = (m_1+m_2, n_1+n_2) = \phi(a^{m_1}b^{n_1}) + \phi(a^{m_2}b^{n_2})$ (homomorphism).
+- $\phi$ is bijective, with inverse $\phi^{-1}(m, n) = a^m b^n$.
+Thus:
+$$ \langle a, b \mid a b a^{-1} b^{-1} \rangle \cong (\mathbb{Z} \times \mathbb{Z}, +) $$
