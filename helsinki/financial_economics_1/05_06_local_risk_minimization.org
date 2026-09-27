@@ -1,0 +1,114 @@
+:PROPERTIES:
+:ID:       9dd04db2-dde4-4cec-a799-1e68538fd858
+:ROAM_ALIASES: "Local Risk Minimization" "Theorem 5.17" "Mean Self-Financing" "Follmer-Schweizer Decomposition" "Quadratic Hedging"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic]
+:END:
+#+title: Local Risk Minimization in Multi-Period Incomplete Markets
+#+subtitle: Section 5.2.4 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:incomplete-markets:hedging:local-risk-minimization:martingales:follmer-schweizer:
+
+[[id:1dc8f1b2-1399-494c-8ef1-679099444863][← Multi-Period Market Model]] | [[id:d97bc23f-4456-4337-825a-6e7708bcb131][Course Map / Index →]]
+
+* Problem Formulation: Hedging without Completeness
+
+In a multi-period incomplete market, a contingent claim $X \in L^2(\Omega, \mathcal{F}_T, \mathbb{P})$ cannot in general be replicated by a self-financing strategy.
+If we enforce strict self-financing, the terminal portfolio value $V(T)$ will deviate from $X$, leaving a tracking error $X - V(T)$.
+Alternatively, we can require the terminal payoff to match the liability exactly:
+$$ V(T) = X $$
+by relaxing the self-financing constraint and allowing inflows and outflows of capital over time.
+The challenge is then to choose the portfolio strategy $\theta$ such that intermediate capital adjustments are minimized in a local variance sense.
+
+---
+
+* Cost Process and Local Risk
+
+** The Cumulative Cost Process
+Let $\theta = \{\theta(t)\}_{t=1}^T$ be a predictable trading strategy.
+The portfolio value at time $t$ is:
+$$ V(t) = S(t) \theta(t) $$
+The *cumulative cost process* $C(t)$ associated with strategy $\theta$ tracks the net cumulative capital injected into the portfolio up to time $t$:
+$$ C(t) = V(t) - \sum_{k=1}^t \theta(k) \cdot \Delta S(k), \quad t = 0, 1, \dots, T \tag{5.27} $$
+where $C(0) = V(0)$.
+The incremental cost incurred between time $k$ and $k+1$ is:
+$$ \Delta C(k+1) = C(k+1) - C(k) = V(k+1) - V(k) - \theta(k+1) \cdot \Delta S(k+1) \tag{5.35} $$
+- If $\Delta C(k+1) = 0$ for all $k$, the strategy is strictly self-financing.
+
+** Definition 5.15 & 5.16 (Local Risk Process)
+#+begin_quote
+*Definition 5.16 (Local Risk Process):*
+The *local risk process* $R_\theta = \{R_\theta(k) \mid k = 0, 1, \dots, T-1\}$ corresponding to strategy $\theta$ is defined as the conditional mean-square cost increment:
+$$ R_\theta(k) = \mathbb{E}\left[ (\Delta C(k+1))^2 \;\middle|\; \mathcal{F}_k \right] = \mathbb{E}\left[ (V(k+1) - V(k) - \theta(k+1) \cdot \Delta S(k+1))^2 \;\middle|\; \mathcal{F}_k \right] \tag{5.37} $$
+#+end_quote
+
+An admissible strategy $\bar{\theta}$ is defined to be *locally risk-minimizing* if for every time step $k$, perturbing the portfolio $\theta(k+1)$ and value $V(k)$ does not reduce the local risk $R_\theta(k)$, while maintaining the terminal replication condition $V(T) = X$.
+
+---
+
+* Theorem 5.17 (Characterization of Locally Risk-Minimizing Strategies)
+
+#+begin_quote
+*Theorem 5.17 (Föllmer-Schweizer Characterization):*
+An admissible strategy $\bar{\theta}$ is *locally risk-minimizing* if and only if for all $k = 0, 1, \dots, T-1$:
+1. *Mean Self-Financing Condition:*
+   $$ \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] = 0 \tag{5.38} $$
+   That is, the cost process $C(t)$ is a $(\mathbb{P}, \mathbb{F})$-martingale: on average, no external capital is injected or withdrawn.
+2. *Orthogonality Condition:*
+   $$ \operatorname{Cov}(\Delta C(k+1), \Delta S(k+1) \mid \mathcal{F}_k) = 0 \tag{5.39} $$
+   That is, the cost increment $\Delta C(k+1)$ is conditionally uncorrelated with all asset price increments $\Delta S(k+1)$.
+#+end_quote
+
+*** Complete Mathematical Proof of Theorem 5.17
+Let $\theta$ be any strategy with terminal condition $V(T) = X$.
+At time step $k$, decompose the local risk $R_\theta(k)$ into conditional variance and squared conditional expectation:
+$$ R_\theta(k) = \mathbb{E}[(\Delta C(k+1))^2 \mid \mathcal{F}_k] = \operatorname{Var}(\Delta C(k+1) \mid \mathcal{F}_k) + \left( \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] \right)^2 \tag{5.40} $$
+
+Using $\Delta C(k+1) = V(k+1) - V(k) - \theta(k+1) \cdot \Delta S(k+1)$:
+- *First term (Conditional Variance):*
+  Since $V(k)$ is $\mathcal{F}_k$-measurable, it drops out of the variance:
+  $$ \operatorname{Var}(\Delta C(k+1) \mid \mathcal{F}_k) = \operatorname{Var}\left( V(k+1) - \theta(k+1) \cdot \Delta S(k+1) \;\middle|\; \mathcal{F}_k \right) \tag{5.41} $$
+  *Notice that this term depends only on $\theta(k+1)$, and is completely independent of $V(k)$!*
+
+- *Second term (Squared Conditional Expectation):*
+  $$ \left( \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] \right)^2 = \left( \mathbb{E}[V(k+1) - \theta(k+1) \cdot \Delta S(k+1) \mid \mathcal{F}_k] - V(k) \right)^2 \tag{5.42} $$
+
+*Step 1: Minimizing with respect to $V(k)$.*
+Because the first term (5.41) does not depend on $V(k)$, and the second term (5.42) is a non-negative squared quantity, the optimal choice for $V(k)$ is uniquely determined by setting the second term to zero:
+$$ V(k) = \mathbb{E}\left[ V(k+1) - \theta(k+1) \cdot \Delta S(k+1) \;\middle|\; \mathcal{F}_k \right] \tag{5.45} $$
+This condition is identical to:
+$$ \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] = 0 $$
+proving Condition (5.38). The cost process must be a martingale under $\mathbb{P}$.
+
+*Step 2: Minimizing with respect to $\theta(k+1)$.*
+It remains to minimize the conditional variance in (5.41) over the predictable portfolio vector $\theta(k+1)$.
+Expanding the conditional variance:
+$$ \operatorname{Var}(V(k+1) - \theta(k+1) \cdot \Delta S(k+1) \mid \mathcal{F}_k) = \operatorname{Var}(V(k+1) \mid \mathcal{F}_k) - 2 \theta(k+1)^T \operatorname{Cov}(V(k+1), \Delta S(k+1) \mid \mathcal{F}_k) + \theta(k+1)^T \operatorname{Var}(\Delta S(k+1) \mid \mathcal{F}_k) \theta(k+1) $$
+This is a strictly convex quadratic form in $\theta(k+1)$.
+Setting the gradient with respect to $\theta(k+1)$ to zero:
+$$ -2 \operatorname{Cov}(V(k+1), \Delta S(k+1) \mid \mathcal{F}_k) + 2 \operatorname{Var}(\Delta S(k+1) \mid \mathcal{F}_k) \theta(k+1) = 0 \tag{5.48} $$
+which rearranges to:
+$$ \operatorname{Cov}\left( V(k+1) - \theta(k+1) \cdot \Delta S(k+1), \, \Delta S(k+1) \;\middle|\; \mathcal{F}_k \right) = 0 $$
+Since $V(k)$ is $\mathcal{F}_k$-measurable, $\operatorname{Cov}(V(k), \Delta S(k+1) \mid \mathcal{F}_k) = 0$.
+Thus:
+$$ \operatorname{Cov}(\Delta C(k+1), \Delta S(k+1) \mid \mathcal{F}_k) = 0 $$
+proving Condition (5.39).
+Conversely, if Conditions (5.38) and (5.39) hold, both terms in (5.40) are simultaneously minimized, so $\bar{\theta}$ is locally risk-minimizing. $\blacksquare$
+
+---
+
+* Example 5.8 (Explicit Solution for One Risky Asset)
+
+Consider a market with $N = 2$ securities:
+- Security 1: A zero-coupon bond / money market account with constant interest rate $r$, $S_1(t) = (1+r)^t$.
+- Security 2: A single risky asset $S_2(t)$.
+
+By Theorem 5.17, the locally risk-minimizing strategy is computed backwards from $V(T) = X$ as follows:
+At each stage $k = T-1, T-2, \dots, 0$:
+1. *Optimal Risky Holding:*
+   $$ \bar{\theta}_2(k+1) = \frac{\operatorname{Cov}(V(k+1), \Delta S_2(k+1) \mid \mathcal{F}_k)}{\operatorname{Var}(\Delta S_2(k+1) \mid \mathcal{F}_k)} $$
+2. *Optimal Portfolio Value:*
+   $$ V(k) = \frac{1}{1 + r} \left( \mathbb{E}[V(k+1) \mid \mathcal{F}_k] - \bar{\theta}_2(k+1) \mathbb{E}[\Delta S_2(k+1) \mid \mathcal{F}_k] \right) $$
+3. *Optimal Risk-Free Holding:*
+   $$ \bar{\theta}_1(k+1) = \frac{V(k) - \bar{\theta}_2(k+1) S_2(k)}{S_1(k)} $$
+This provides a closed-form dynamic hedging algorithm for any European derivative in discrete time.

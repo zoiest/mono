@@ -1,0 +1,138 @@
+:PROPERTIES:
+:ID:       d97bc23f-4456-4337-825a-6e7708bcb131
+:ROAM_ALIASES: "Financial Economics I" "Financial Economics Index" "MAST31807" "Course Index"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic; @luenberger2013investment]
+:END:
+#+title: Financial Economics I — Org-Roam Knowledge Base
+#+subtitle: Comprehensive Mathematical Notes for MAST31807 (University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :economics:finance:helsinki:index:arbitrage:interest-rates:martingales:stochastic-finance:
+
+* Course Information and Overview
+
+- *Course Title:* Financial Economics I (MAST31807)
+- *Institution:* Department of Mathematics and Statistics, University of Helsinki (Helsingin yliopisto)
+- *Lecturer:* Jaakko Lehtomaa (based on earlier lecture notes by Harri Nyrhinen)
+- *Academic Period:* Fall 2026
+- *Course Literature & Primary References:*
+  1. *Primary Lecture Notes:*
+     #+begin_quote
+     Lehtomaa, J. (2026). /Financial Economics: Lecture notes for MAST31807 & MAST31808/. University of Helsinki.
+     #+end_quote
+  2. *Key Stochastic Finance Reference:*
+     #+begin_quote
+     Föllmer, H., & Schied, A. (2016). /Stochastic Finance: An Introduction in Discrete Time/ (4th ed.). De Gruyter.
+     #+end_quote
+  3. *Key Financial Engineering Reference:*
+     #+begin_quote
+     Luenberger, D. G. (2013). /Investment Science/ (2nd ed.). Oxford University Press.
+     #+end_quote
+  4. *Convex & Functional Analysis Foundations:*
+     #+begin_quote
+     Rockafellar, R. T. (1970). /Convex Analysis/. Princeton University Press.
+     Rudin, W. (1991). /Functional Analysis/ (2nd ed.). McGraw-Hill.
+     #+end_quote
+
+- *Grading & Exercise Bonus Structure:*
+  The course is completed via a final written examination. Active participation in solving weekly exercises grants bonus exam points according to the following thresholds:
+  | Solved Exercise Points / Total Points | Additional Exam Points |
+  |---------------------------------------+------------------------|
+  | $\ge 80\%$                            | +3 points              |
+  | $\ge 60\%$                            | +2 points              |
+  | $\ge 35\%$                            | +1 point               |
+
+---
+
+* Map of Content (MOC)
+
+** Part I: Weekly Study Guides & Problem Set Worksheets
+
+- [[id:b97f7c0f-17ae-47d0-94ae-568417930254][Week 01: Deterministic Interest Rates, Cash Flows, and Arbitrage Replication]]
+  - Foundations of discrete interest compounding, periodic compounding factor $(1+i_j)^\Delta$, cash flow vectors, present value theorem, replication of cash flows, forward transactions, and detailed solutions to Problem Set 1.
+- [[id:a81c17b4-0921-4772-a9b7-f0783d1e4577][Week 02: Term Structure, Forward Interest Rates, and Immunization Theory]]
+  - Spot rate curve, yield to maturity, forward rates $f_j$, absence of arbitrage in the term structure, coupon bond pricing, Macaulay duration, modified duration, convexity, Redington immunization, and detailed solutions to Problem Set 2.
+- [[id:327aa86a-ef13-4421-9ed3-aef1ee41bfe0][Week 03: One-Period Arbitrage Pricing and Fundamental Theorems]]
+  - One-period market model, state space $\Omega$, portfolio returns, definition of arbitrage, state price deflators, Hahn-Banach separation / Farkas' Lemma, First Fundamental Theorem of Asset Pricing (FTAP 1), equivalent martingale measures, and detailed solutions to Problem Set 3.
+
+** Part II: Core Theoretical Modules (Financial Economics I)
+
+1. [[id:2957cc4b-1bfb-45d8-9b10-0a99d51ed808][Deterministic Interest Rates and Valuation]]
+   - The discrete interest model, compounding mechanisms, cash flows $B(\Delta), \dots, B(T\Delta)$.
+   - Theorem 2.1: Arbitrage-free valuation of deterministic cash flows.
+   - Proof of uniqueness of present value through arbitrage strategies.
+   - Forward agreements, forward prices, and the Law of One Price.
+
+2. [[id:3d4b788f-0237-4357-9cef-ba77a62e7a03][Stochastic Interest Rates and the Term Structure]]
+   - The spot rate matrix and zero-coupon bond pricing $P(0, j\Delta) = (1+s_j)^{-j\Delta}$.
+   - Forward interest rates $(1+f_j)^\Delta = (1+s_j)^{j\Delta}/(1+s_{j-1})^{(j-1)\Delta}$.
+   - Non-negativity of forward rates and absence of arbitrage: $(1+s_k)^k \ge (1+s_j)^j$ for $k \ge j$.
+   - Coupon bonds, yield to maturity (YTM), and interest rate dynamics.
+
+3. [[id:a19aab30-16de-404d-a677-f98770bb0d8d][Duration, Convexity, and Immunization Theory]]
+   - Cash flow sensitivity to interest rate perturbations.
+   - Macaulay duration and modified duration as first-order measures.
+   - Convexity as second-order curvature measure.
+   - Redington Immunization ($V_A = V_L$, $D_A = D_L$, $C_A > C_L$).
+   - Fisher-Weil immunization and asset-liability management (ALM).
+
+4. [[id:d7075976-269a-4fc0-86b2-27bfcad327f0][Pricing of Financial Securities and Contingent Claims]]
+   - State-contingent securities, payoff matrices, and market setups.
+   - Derivative instruments: forward contracts, European calls and puts, currency options.
+   - Profit requirements, subjective discounting, and market price formation.
+
+5. [[id:32a6be50-9383-466a-89d7-baf20a6ebcb5][One-Period Arbitrage Pricing and FTAP 1]]
+   - Formal mathematical framework: assets $S(0) \in \mathbb{R}^N$, payoffs $S(1) \in \mathbb{R}^{M \times N}$.
+   - Arbitrage opportunity (Definition 5.1): $S(0)\theta \le 0$, $S(1)\theta \ge 0$, with strict inequality.
+   - Pricing kernels / State space deflators $\varphi > 0$ a.s. such that $S(0) = \mathbb{E}[\varphi S(1)]$.
+   - The First Fundamental Theorem of Asset Pricing (Theorem 5.3).
+   - Complete proof using the Hahn-Banach Separation Theorem and Corollary 5.5 (Farkas' Lemma).
+   - Relationship to Risk-Neutral / Equivalent Martingale Measures $\mathbb{Q}$.
+
+6. [[id:7f47326f-52b0-44c2-8aa8-34845ff9fa7a][Market Completeness and the Second Fundamental Theorem (FTAP 2)]]
+   - Attainable contingent claims and replicating portfolios.
+   - Complete markets (Definition 5.7): every random variable $X \in \mathbb{R}^M$ is attainable.
+   - The Second Fundamental Theorem of Asset Pricing (Theorem 5.8): Completeness $\iff$ Uniqueness of the deflator $\varphi$ (or martingale measure $\mathbb{Q}$).
+   - Dimension criteria: $\operatorname{rank}(S(1)) = M \le N$.
+   - Pricing in incomplete markets: intervals of arbitrage-free prices.
+
+7. [[id:365f62e6-88d7-40c6-94f6-6cf0779e7ebf][Portfolio Selection and Expected Utility Theory]]
+   - Investor preferences, von Neumann-Morgenstern utility functions $u(z)$, risk aversion ($u'' < 0$).
+   - The portfolio optimization problem: $\max_\theta \mathbb{E}[u(S(1)\theta)]$ subject to $S(0)\theta = V(0)$.
+   - First-order conditions, Lagrange multipliers, and the endogenous pricing deflator $\varphi \propto u'(V(1))$.
+   - Dynamic portfolio selection in multi-period models via Bellman dynamic programming.
+
+8. [[id:9c2d3a35-5605-4e21-901d-6d3e9c82756b][Mean-Square Error Hedging in Incomplete Markets]]
+   - Hedging unreplicable claims $X \notin \operatorname{Im}(S(1))$.
+   - Quadratic loss formulation: $\min_\theta \mathbb{E}[(X - S(1)\theta)^2]$ subject to budget constraints.
+   - Orthogonal projection in $L^2(\Omega, \mathcal{F}, \mathbb{P})$, optimal hedging portfolios, and residual risk.
+
+9. [[id:1dc8f1b2-1399-494c-8ef1-679099444863][The Multi-Period Market Model and Martingale Pricing]]
+   - Filtration $(\mathcal{F}_t)_{t=0}^T$, adapted price processes, predictable trading strategies $\theta(t)$.
+   - Self-financing condition: $S(t)\theta(t+1) = S(t)\theta(t)$.
+   - Discounted asset prices $S^*(t) = S(t)/S_1(t)$ and wealth dynamics $\Delta V^*(t) = \theta(t) \cdot \Delta S^*(t)$.
+   - Multi-period FTAP 1 (Theorem 5.10): Absence of arbitrage $\iff$ Existence of an equivalent martingale measure $\mathbb{Q} \sim \mathbb{P}$.
+   - Multi-period FTAP 2 (Theorem 5.14): Completeness $\iff$ Uniqueness of $\mathbb{Q}$.
+   - The Cox-Ross-Rubinstein (CRR) binomial tree model.
+
+10. [[id:9dd04db2-dde4-4cec-a799-1e68538fd858][Local Risk Minimization in Incomplete Multi-Period Markets]]
+    - Non-self-financing strategies and the cumulative cost process $C(t)$.
+    - Mean self-financing condition: $C(t)$ is a $(\mathbb{P}, \mathbb{F})$-martingale.
+    - Local risk process $R_\theta(k) = \mathbb{E}[(\Delta C(k+1))^2 \mid \mathcal{F}_k]$.
+    - Theorem 5.17: Characterization of locally risk-minimizing strategies via orthogonality:
+      $$ \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] = 0 \quad \text{and} \quad \operatorname{Cov}(\Delta C(k+1), \Delta S(k+1) \mid \mathcal{F}_k) = 0 $$
+    - The Föllmer-Schweizer decomposition and minimal martingale measure.
+
+---
+
+* Fundamental Theorems at a Glance
+
+#+begin_quote
+*The First Fundamental Theorem of Asset Pricing (FTAP 1):*
+A discrete-time market model is arbitrage-free if and only if there exists at least one equivalent martingale measure (risk-neutral probability measure) $\mathbb{Q} \sim \mathbb{P}$ under which all discounted asset price processes are martingales.
+#+end_quote
+
+#+begin_quote
+*The Second Fundamental Theorem of Asset Pricing (FTAP 2):*
+An arbitrage-free discrete-time market model is complete (every contingent claim can be replicated by an admissible self-financing strategy) if and only if the equivalent martingale measure $\mathbb{Q}$ is unique.
+#+end_quote

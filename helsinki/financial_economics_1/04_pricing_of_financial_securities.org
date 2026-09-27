@@ -1,0 +1,64 @@
+:PROPERTIES:
+:ID:       d7075976-269a-4fc0-86b2-27bfcad327f0
+:ROAM_ALIASES: "Pricing of Financial Securities" "Derivatives Overview" "Contingent Claims"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic]
+:END:
+#+title: Pricing of Financial Securities and Contingent Claims
+#+subtitle: Section 4 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:securities:derivatives:options:pricing:
+
+[[id:a19aab30-16de-404d-a677-f98770bb0d8d][← Duration, Convexity, and Immunization]] | [[id:32a6be50-9383-466a-89d7-baf20a6ebcb5][Next: One-Period Arbitrage Pricing and FTAP 1 →]]
+
+* Financial Securities and State-Dependent Payoffs
+
+** Limitations of Deterministic Valuation
+In Chapters 2 and 3, cash flows were assumed to be deterministic constants.
+However, most financial contracts yield payoffs that are uncertain (stochastic) and depend on the state of the broader economy.
+Examples include:
+- Shares of equity in corporations (dividends and terminal share prices are uncertain).
+- Defaultable corporate loans and bonds (repayment depends on the solvency of the borrower).
+- Derivative contracts (options, swaps, forwards) whose payoff is explicitly conditioned on underlying asset prices.
+
+** Subjective Expectation vs. Market Equilibrium
+A naive attempt to value a risky payoff $D$ payable at time $1$ is to compute its discounted mathematical expectation under the physical probability measure $\mathbb{P}$:
+$$ V(0) = \frac{\mathbb{E}[D]}{1 + i'} \tag{4.2} $$
+where $i'$ denotes the subjective "hurdle rate" or "required return on equity" of a specific investor.
+However, Formula (4.2) suffers from major conceptual deficiencies:
+1. Different market participants possess different risk preferences and subjective beliefs, yielding divergent values for $i'$.
+2. It fails to account for whether the risk in $D$ can be hedged or replicated using other existing assets.
+3. It does not prevent market arbitrage.
+
+To overcome these limitations, modern financial economics establishes pricing rules based on *market consistency* and the *absence of arbitrage*.
+
+---
+
+* Financial Derivatives as Contingent Claims
+
+A *contingent claim* (or derivative) is a financial contract whose payoff at future date $T$ is determined as a function of the price path or terminal price of underlying primary assets.
+
+** Standard Derivative Contracts
+
+1. *Forward Contract:*
+   An agreement at time $0$ to buy an underlying asset with price $S(T)$ at maturity $T$ for a pre-determined delivery price $K$.
+   - Payoff at maturity:
+     $$ X = S(T) - K $$
+
+2. *European Call Option:*
+   Gives the holder the right (but not the obligation) to buy the underlying asset at expiration date $T$ for strike price $K$.
+   - Payoff at maturity:
+     $$ X = \max(S(T) - K, 0) = (S(T) - K)^+ $$
+
+3. *European Put Option:*
+   Gives the holder the right (but not the obligation) to sell the underlying asset at expiration date $T$ for strike price $K$.
+   - Payoff at maturity:
+     $$ X = \max(K - S(T), 0) = (K - S(T))^+ $$
+
+4. *Put-Call Parity:*
+   By considering the combined portfolio of holding one call and writing one put with the same strike $K$ and maturity $T$:
+   $$ (S(T) - K)^+ - (K - S(T))^+ = S(T) - K $$
+   This portfolio exactly replicates a forward contract. Absence of arbitrage requires that their present values match today.
+
+5. *Currency and Commodity Options:*
+   Contracts giving the right to exchange foreign currencies or physical commodities at guaranteed future exchange rates.
