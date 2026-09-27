@@ -1,2 +1,14 @@
 # Ignore the generated html files from org code
 **/*.html
+
+# Bazel symlinks and outputs
+bazel-*
+.bazelrc.user
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Google Drive credentials
+.google_drive_token*
+**/.google_drive_token*

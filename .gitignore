@@ -7,3 +7,7 @@ bazel-*
 
 # org compiled database
 **/org-roam.db
+
+# Google Drive credentials
+.google_drive_token*
+**/.google_drive_token*

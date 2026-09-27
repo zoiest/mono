@@ -1,0 +1,7 @@
+load("//:sync.bzl", "sync")
+
+package(default_visibility = ["//visibility:public"])
+
+sync(
+    name = "sync",
+)

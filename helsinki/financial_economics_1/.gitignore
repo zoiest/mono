@@ -1,0 +1,11 @@
+# Bazel symlinks and build outputs
+bazel-*
+.bazelrc.user
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Google Drive credentials token
+.google_drive_token*
+**/.google_drive_token*

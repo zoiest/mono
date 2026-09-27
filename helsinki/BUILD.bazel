@@ -1,0 +1,21 @@
+load("//:sync.bzl", "sync", "sync_test")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "sync_drive.py",
+    "sync.bzl",
+])
+
+# Root sync rule: syncs all courses under helsinki
+sync(
+    name = "sync",
+)
+
+sync_test(
+    name = "sync_unit_test",
+    test_file = "test_sync_drive.py",
+    data = [
+        "sync_drive.py",
+    ],
+)
