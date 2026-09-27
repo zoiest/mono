@@ -1,15 +1,23 @@
 load("//:sync.bzl", "sync", "sync_test")
+load("//:org2html.bzl", "org2html")
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "sync_drive.py",
     "sync.bzl",
+    "org2html.py",
+    "org2html.bzl",
 ])
 
 # Root sync rule: syncs all courses under helsinki
 sync(
     name = "sync",
+)
+
+# Compiles Org files to HTML
+org2html(
+    name = "org2html",
 )
 
 sync_test(
