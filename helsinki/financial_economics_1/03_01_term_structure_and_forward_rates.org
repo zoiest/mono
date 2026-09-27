@@ -1,0 +1,126 @@
+:PROPERTIES:
+:ID:       3d4b788f-0237-4357-9cef-ba77a62e7a03
+:ROAM_ALIASES: "Term Structure of Interest Rates" "Spot Rates" "Forward Interest Rates" "Zero-Coupon Bonds"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @luenberger2013investment]
+:END:
+#+title: Stochastic Interest Rates, Term Structure, and Forward Rates
+#+subtitle: Sections 3.1–3.3 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:interest-rates:term-structure:forward-rates:bonds:arbitrage:
+
+[[id:2957cc4b-1bfb-45d8-9b10-0a99d51ed808][← Deterministic Interest Rates]] | [[id:a19aab30-16de-404d-a677-f98770bb0d8d][Next: Duration, Convexity, and Immunization →]]
+
+* Term Structure of Interest Rates
+
+** The Spot Rate Model
+In reality, interest rates depend strongly on the *maturity* of the investment (the investment horizon).
+Let $\Delta > 0$ be the base period length.
+At time $0$, the market offers spot interest rates $s_1, s_2, \dots, s_T$ for investments of durations $\Delta, 2\Delta, \dots, T\Delta$:
+
+#+caption: Table 3.1: The Term Structure (Spot Rates) at Time 0
+| Maturity | $\Delta$ | $2\Delta$ | $3\Delta$ | $\dots$ | $T\Delta$ |
+|----------+----------+-----------+-----------+---------+-----------|
+| Spot Rate| $s_1$    | $s_2$     | $s_3$     | $\dots$ | $s_T$     |
+
+A capital deposit of amount $C$ deposited at time $0$ with maturity $j\Delta$ matures at time $j\Delta$ to:
+$$ C (1 + s_j)^{j\Delta} \tag{3.1} $$
+Here, $s_j$ is the annualized *spot interest rate* for maturity $j\Delta$. By convention, $s_0 = 0$.
+
+** Zero-Coupon Bonds
+A *zero-coupon bond (ZCB)* of maturity $j\Delta$ and face value (nominal value) $1$ pays exactly $1$ unit of currency at time $j\Delta$ and zero at all other times.
+By Formula (3.1), the unique arbitrage-free price of a $j$-period zero-coupon bond at time $0$ is:
+$$ P(0, j\Delta) = (1 + s_j)^{-j\Delta} \tag{3.8} $$
+Zero-coupon bonds serve as the fundamental building blocks of fixed-income financial markets.
+
+---
+
+* Forward Interest Rates
+
+** Definition and Derivation
+#+begin_quote
+*Definition 3.1 (Forward Interest Rate):*
+The *forward interest rate* $f_j$ is the annualized interest rate contracted at time $0$ for a loan or deposit taking place over the future time period $[(j-1)\Delta, j\Delta)$.
+#+end_quote
+
+Consider two alternative ways to invest capital $C$ from time $0$ to time $j\Delta$:
+1. *Strategy A (Long-term spot deposit):*
+   Invest $C$ directly for $j$ periods at spot rate $s_j$. Wealth at time $j\Delta$ is:
+   $$ C (1 + s_j)^{j\Delta} $$
+2. *Strategy B (Roll-over via forward contract):*
+   Invest $C$ for $j-1$ periods at spot rate $s_{j-1}$, and simultaneously lock in a forward contract to reinvest the proceeds from time $(j-1)\Delta$ to time $j\Delta$ at forward rate $f_j$. Wealth at time $j\Delta$ is:
+   $$ C (1 + s_{j-1})^{(j-1)\Delta} (1 + f_j)^\Delta $$
+
+Under the assumption of *no arbitrage*, both strategies must produce identical wealth at time $j\Delta$:
+$$ (1 + s_j)^{j\Delta} = (1 + s_{j-1})^{(j-1)\Delta} (1 + f_j)^\Delta \tag{3.2} $$
+
+Solving for the forward rate $(1 + f_j)^\Delta$ gives:
+$$ (1 + f_j)^\Delta = \frac{(1 + s_j)^{j\Delta}}{(1 + s_{j-1})^{(j-1)\Delta}} \tag{3.3} $$
+or equivalently:
+$$ f_j = \left( \frac{(1 + s_j)^{j\Delta}}{(1 + s_{j-1})^{(j-1)\Delta}} \right)^{1/\Delta} - 1 \tag{3.4} $$
+
+By chaining Equation (3.2) iteratively, we obtain the fundamental decomposition of the spot compounding factor as the product of forward compounding factors:
+$$ (1 + s_k)^{k\Delta} = \prod_{j=1}^k (1 + f_j)^\Delta \tag{3.5} $$
+
+---
+
+* Valuation of Cash Flows under the Term Structure
+
+** Theorem 3.1 (Arbitrage-Free Price of a Cash Flow under Spot Rates)
+#+begin_quote
+*Theorem 3.1:*
+In the term structure market described by Table 3.1, the unique arbitrage-free price at time $0$ of a deterministic cash flow $B(\Delta), B(2\Delta), \dots, B(T\Delta)$ is:
+$$ V(0) = \sum_{j=1}^T (1 + s_j)^{-j\Delta} B(j\Delta) = \sum_{j=1}^T \left[ \prod_{k=1}^j (1 + f_k) \right]^{-\Delta} B(j\Delta) \tag{3.7} $$
+#+end_quote
+
+*** Proof
+Each individual payment $B(j\Delta)$ can be replicated at time $0$ by purchasing $B(j\Delta)$ units of a zero-coupon bond maturing at $j\Delta$, costing $B(j\Delta)(1+s_j)^{-j\Delta}$.
+By the linearity of pricing (no arbitrage), the total cost to replicate the entire cash stream is the sum of the individual discounted payments. Substituting $(1+s_j)^{-j\Delta} = \prod_{k=1}^j (1+f_k)^{-\Delta}$ from Equation (3.5) yields Equation (3.7). $\blacksquare$
+
+---
+
+* Absence of Arbitrage in the Term Structure
+
+** Non-Negativity of Forward Rates
+#+begin_quote
+*Proposition 3.1 (Arbitrage-Free Term Structure Condition):*
+In an economy where holding cash is costless (cash has a zero nominal return), the market is free of arbitrage if and only if all forward rates are non-negative:
+$$ f_j \ge 0 \quad \text{for all } j = 1, 2, \dots, T $$
+Equivalently, the accumulated return factors must be non-decreasing:
+$$ (1 + s_k)^{k\Delta} \ge (1 + s_j)^{j\Delta} \quad \text{for all } k \ge j \ge 1 $$
+#+end_quote
+
+*** Arbitrage Strategy when $f_j < 0$
+Suppose for some $j \ge 2$, the forward rate is strictly negative: $f_j < 0$.
+Then $(1 + f_j)^\Delta < 1$, which implies:
+$$ (1 + s_j)^{j\Delta} < (1 + s_{j-1})^{(j-1)\Delta} $$
+An arbitrageur exploits this mispricing at time $0$ as follows:
+1. *Borrow for $j$ periods:* Borrow $C$ at spot rate $s_j$.
+   At time $j\Delta$, the repayment obligation will be:
+   $$ C (1 + s_j)^{j\Delta} $$
+2. *Lend for $j-1$ periods:* Deposit the borrowed $C$ at spot rate $s_{j-1}$.
+   At time $(j-1)\Delta$, the deposit yields:
+   $$ C (1 + s_{j-1})^{(j-1)\Delta} $$
+3. *Hold as physical cash:* From time $(j-1)\Delta$ to time $j\Delta$, hold this money in cash (earning $0\%$ nominal interest).
+4. *Payoff at time $j\Delta$:*
+   The investor has cash $C (1 + s_{j-1})^{(j-1)\Delta}$ and owes $C (1 + s_j)^{j\Delta}$.
+   The net profit at time $j\Delta$ is:
+   $$ C \left[ (1 + s_{j-1})^{(j-1)\Delta} - (1 + s_j)^{j\Delta} \right] > 0 $$
+Zero cash was needed at time $0$, no liabilities remain after time $j\Delta$, and a guaranteed positive profit was made.
+Thus, $f_j < 0$ violates absence of arbitrage. $\blacksquare$
+
+---
+
+* Pricing Coupon Bonds and Yield to Maturity
+
+** Coupon Bond Pricing
+A coupon-bearing bond with face value $F$, coupon rate $c$, maturity $T\Delta$, and periodic coupon payment $C = c F \Delta$ generates the cash flow:
+$$ B(j\Delta) = C \quad (j = 1, \dots, T-1), \quad B(T\Delta) = C + F $$
+By Theorem 3.1, its arbitrage-free price $P$ is:
+$$ P = \sum_{j=1}^T C (1 + s_j)^{-j\Delta} + F (1 + s_T)^{-T\Delta} \tag{3.13} $$
+
+** Yield to Maturity (YTM)
+The *yield to maturity* $y$ is the single internal rate of return that equates the bond's market price $P$ to the present value of its future cash flows:
+$$ P = \sum_{j=1}^T C (1 + y)^{-j\Delta} + F (1 + y)^{-T\Delta} \tag{3.14} $$
+- If $y = s_j$ for all $j$ (flat yield curve), the bond price under YTM matches Theorem 3.1.
+- In general, YTM is a complex weighted average of spot rates along the term structure.

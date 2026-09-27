@@ -1,0 +1,169 @@
+:PROPERTIES:
+:ID:       32a6be50-9383-466a-89d7-baf20a6ebcb5
+:ROAM_ALIASES: "FTAP 1" "First Fundamental Theorem of Asset Pricing" "Arbitrage Pricing" "State Price Deflator" "Pricing Kernel"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic; @rockafellar1970convex; @rudin1991functional]
+:END:
+#+title: The One-Period Market Model and the First Fundamental Theorem of Asset Pricing
+#+subtitle: Section 5.1 & 5.1.1 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:arbitrage:ftap:pricing-kernel:risk-neutral:hahn-banach:convex-analysis:
+
+[[id:d7075976-269a-4fc0-86b2-27bfcad327f0][← Pricing of Financial Securities]] | [[id:7f47326f-52b0-44c2-8aa8-34845ff9fa7a][Next: Completeness and Attainability (FTAP 2) →]]
+
+* Mathematical Setup of the One-Period Market
+
+** Probability Space and Assets
+Consider a single investment horizon from time $t = 0$ to time $t = 1$.
+- *Sample Space:* Let $\Omega = \{\omega_1, \omega_2, \dots, \omega_M\}$ be a finite set of $M$ states of nature.
+- *Probability Measure:* Let $\mathbb{P}$ be a probability measure on $(\Omega, 2^\Omega)$ such that $\mathbb{P}(\{\omega_m\}) > 0$ for all $m = 1, \dots, M$.
+- *Securities:* There are $N$ financial securities traded in the market:
+  - *Time 0 prices:* $S(0) = (S_1(0), S_2(0), \dots, S_N(0))^T \in \mathbb{R}^N$.
+  - *Time 1 prices (payoffs):* For each state $\omega_m \in \Omega$, the price vector is $S(1, \omega_m) = (S_1(1, \omega_m), \dots, S_N(1, \omega_m))^T \in \mathbb{R}^N$.
+  - We represent the terminal prices as an $M \times N$ payoff matrix:
+    $$ S(1) = \begin{pmatrix} S_1(1, \omega_1) & S_2(1, \omega_1) & \cdots & S_N(1, \omega_1) \\ S_1(1, \omega_2) & S_2(1, \omega_2) & \cdots & S_N(1, \omega_2) \\ \vdots & \vdots & \ddots & \vdots \\ S_1(1, \omega_M) & S_2(1, \omega_M) & \cdots & S_N(1, \omega_M) \end{pmatrix} $$
+
+** Portfolios and Payoffs
+An investor chooses a *portfolio* $\theta = (\theta_1, \theta_2, \dots, \theta_N)^T \in \mathbb{R}^N$, where $\theta_n$ denotes the number of units held in security $n$.
+- Short-selling ($\theta_n < 0$) and fractional holdings are permitted without friction.
+- *Initial capital required at time $0$:*
+  $$ S(0) \theta = \sum_{n=1}^N \theta_n S_n(0) $$
+- *Terminal payoff at time $1$ in state $\omega_m$:*
+  $$ (S(1) \theta)_m = \sum_{n=1}^N \theta_n S_n(1, \omega_m) $$
+
+---
+
+* Arbitrage and Pricing Kernels
+
+** Definition 5.1 (Arbitrage Opportunity)
+#+begin_quote
+*Definition 5.1 (Arbitrage Opportunity):*
+A portfolio $\theta \in \mathbb{R}^N$ is called an *arbitrage opportunity* if:
+1. $S(0) \theta \le 0$ (the portfolio costs non-positive capital to establish at time $0$),
+2. $(S(1) \theta)_m \ge 0$ for all $m = 1, \dots, M$ (no loss in any future state), and
+3. At least one of the following strict inequalities holds:
+   - $S(0) \theta < 0$ (immediate positive cash inflow at time $0$), or
+   - $\mathbb{P}(S(1) \theta > 0) > 0$ (strictly positive probability of making positive wealth at time $1$).
+
+The market model is defined to be *arbitrage-free* if no arbitrage opportunities exist.
+#+end_quote
+
+#+begin_quote
+*Remark 5.2:*
+If the condition $S(0)\theta \le 0$ holds with strict inequality $S(0)\theta < 0$ while $S(1)\theta \ge 0$, and if a risk-free bank deposit exists, one can invest the initial profit $-S(0)\theta > 0$ into the bank account to generate an arbitrage with $S(0)\tilde{\theta} = 0$ and $S(1)\tilde{\theta} > 0$. Thus, both forms of arbitrage are equivalent.
+#+end_quote
+
+** Definition 5.2 (Pricing Kernel / State Space Deflator)
+#+begin_quote
+*Definition 5.2 (Pricing Kernel / State Space Deflator):*
+A strictly positive random variable $\varphi$ defined on $\Omega$ (so $\varphi(\omega_m) > 0$ for all $m$) is called a *pricing kernel* (or *state space deflator*) if:
+$$ S_n(0) = \mathbb{E}[\varphi S_n(1)] \quad \text{for all } n = 1, \dots, N \tag{5.3} $$
+In matrix notation, defining the *state price vector* $\psi = (\psi_1, \dots, \psi_M)^T \in \mathbb{R}^M$ by $\psi_m = \varphi(\omega_m) \mathbb{P}(\{\omega_m\})$, Equation (5.3) is equivalent to:
+$$ S(0) = S(1)^T \psi \quad \text{with } \psi \gg 0 \text{ (i.e. } \psi_m > 0 \text{ for all } m) $$
+#+end_quote
+
+---
+
+* The First Fundamental Theorem of Asset Pricing (FTAP 1)
+
+#+begin_quote
+*Theorem 5.3 (First Fundamental Theorem of Asset Pricing):*
+The one-period market model is *arbitrage-free* if and only if there exists a strictly positive state space deflator $\varphi$ (or equivalently, a strictly positive state price vector $\psi \gg 0$).
+#+end_quote
+
+** Separation Theorems and Farkas' Lemma
+
+To prove Theorem 5.3, we use a fundamental result from functional and convex analysis:
+
+#+begin_quote
+*Lemma 5.4 (Hahn-Banach Separation Theorem for Euclidean Space):*
+Let $A, B \subset \mathbb{R}^n$ be non-empty, disjoint convex sets. If $A$ is compact and $B$ is closed, then $A$ and $B$ can be strictly separated by a hyperplane.
+That is, there exists a non-zero linear functional $f \in (\mathbb{R}^n)^*$ (represented by vector $z \in \mathbb{R}^n$, $f(x) = z^T x$) and constants $\gamma_1 < \gamma_2$ such that:
+$$ f(x) \le \gamma_1 < \gamma_2 \le f(y) \quad \text{for all } x \in A, \, y \in B $$
+#+end_quote
+
+#+begin_quote
+*Corollary 5.5 (Variant of Farkas' Lemma):*
+Let $V \subseteq \mathbb{R}^K$ be a linear subspace. Denote:
+$$ \mathbb{R}_+^K = \{x \in \mathbb{R}^K \mid x_j \ge 0 \text{ for all } j = 1, \dots, K\} $$
+Then exactly one of the following two statements holds:
+1. $V$ contains a non-zero non-negative vector:
+   $$ V \cap \left( \mathbb{R}_+^K \setminus \{0\} \right) \ne \emptyset $$
+2. There exists a strictly positive vector $z \in \mathbb{R}^K$ ($z_j > 0$ for all $j = 1, \dots, K$) orthogonal to $V$:
+   $$ z^T y = 0 \quad \text{for all } y \in V \tag{5.7} $$
+#+end_quote
+
+*** Proof of Corollary 5.5
+Consider the simplex:
+$$ A = \left\{ x \in \mathbb{R}_+^K \;\middle|\; \sum_{j=1}^K x_j = 1 \right\} $$
+$A$ is compact and convex. Set $B = V$, which is a closed linear subspace.
+Suppose statement (1) does not hold, meaning $V \cap A = \emptyset$.
+By Lemma 5.4, there exists a linear functional $f(x) = z'^T x$ and a real constant $\gamma$ such that:
+$$ f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \, y \in V $$
+Since $V$ is a linear subspace, for any $y \in V$ and scalar $\alpha \in \mathbb{R}$, $\alpha y \in V$.
+If $f(y) \ne 0$ for some $y \in V$, taking $\alpha \to \pm \infty$ would make $f(\alpha y)$ arbitrarily negative, contradicting $f(y) \ge \gamma$.
+Therefore, we must have $f(y) = 0$ for all $y \in V$, which implies $\gamma \le 0$.
+Consequently:
+$$ f(x) < 0 \quad \text{for all } x \in A $$
+Choosing $x = e_j$ (the $j$-th standard basis vector, which lies in $A$), we have:
+$$ f(e_j) = z'_j < 0 \quad \text{for all } j = 1, \dots, K $$
+Defining $z_j = -z'_j > 0$ yields a strictly positive vector $z \gg 0$ satisfying $z^T y = 0$ for all $y \in V$. $\blacksquare$
+
+---
+
+** Complete Mathematical Proof of Theorem 5.3
+
+We set $K = M + 1$.
+Define the augmented net payoff map for any portfolio $\theta \in \mathbb{R}^N$:
+$$ Y(\theta) = \begin{pmatrix} -S(0)\theta \\ S(1, \omega_1)\theta \\ \vdots \\ S(1, \omega_M)\theta \end{pmatrix} \in \mathbb{R}^{M+1} $$
+Let $V \subset \mathbb{R}^{M+1}$ be the image subspace:
+$$ V = \left\{ Y(\theta) \mid \theta \in \mathbb{R}^N \right\} $$
+
+*Step 1: Reformulating Arbitrage in terms of $V$.*
+By Definition 5.1, $\theta$ is an arbitrage opportunity if and only if:
+$$ -S(0)\theta \ge 0, \quad S(1, \omega_m)\theta \ge 0 \quad \text{for all } m = 1, \dots, M $$
+with at least one strict inequality.
+This means $Y(\theta) \in \mathbb{R}_+^{M+1} \setminus \{0\}$.
+Therefore:
+*The market is arbitrage-free if and only if $V \cap (\mathbb{R}_+^{M+1} \setminus \{0\}) = \emptyset$.*
+
+*Step 2: Applying Corollary 5.5.*
+By Corollary 5.5, the condition $V \cap (\mathbb{R}_+^{M+1} \setminus \{0\}) = \emptyset$ is equivalent to the existence of a strictly positive vector:
+$$ z = (z_0, z_1, \dots, z_M)^T \in \mathbb{R}^{M+1} \quad \text{with } z_0 > 0 \text{ and } z_m > 0 \; (m = 1, \dots, M) $$
+orthogonal to $V$:
+$$ z^T Y(\theta) = 0 \quad \text{for all } \theta \in \mathbb{R}^N $$
+
+*Step 3: Deriving the Pricing Kernel.*
+Evaluating the orthogonality condition:
+$$ -z_0 (S(0)\theta) + \sum_{m=1}^M z_m (S(1, \omega_m)\theta) = 0 \quad \text{for all } \theta \in \mathbb{R}^N $$
+Since this holds for all $\theta$, the coefficient vector must be identically zero:
+$$ z_0 S(0) = \sum_{m=1}^M z_m S(1, \omega_m) = S(1)^T \begin{pmatrix} z_1 \\ \vdots \\ z_M \end{pmatrix} $$
+Since $z_0 > 0$, we divide by $z_0$:
+$$ S(0) = \sum_{m=1}^M \frac{z_m}{z_0} S(1, \omega_m) $$
+Setting $\psi_m = \frac{z_m}{z_0} > 0$ defines a strictly positive state price vector $\psi \gg 0$ such that $S(0) = S(1)^T \psi$.
+Defining the random variable $\varphi(\omega_m) = \frac{\psi_m}{\mathbb{P}(\{\omega_m\})} > 0$, we have:
+$$ S_n(0) = \sum_{m=1}^M \mathbb{P}(\{\omega_m\}) \varphi(\omega_m) S_n(1, \omega_m) = \mathbb{E}[\varphi S_n(1)] $$
+This completes the proof in both directions. $\blacksquare$
+
+---
+
+* Equivalent Martingale Measure (Risk-Neutral Measure)
+
+Suppose Security 1 is a risk-free asset (zero-coupon bond) with interest rate $r > -1$:
+$$ S_1(0) = 1, \quad S_1(1, \omega_m) = 1 + r \quad \text{for all } m $$
+Applying Theorem 5.3 to Security 1:
+$$ 1 = \mathbb{E}[\varphi (1 + r)] = (1 + r) \mathbb{E}[\varphi] \implies \mathbb{E}[\varphi] = \frac{1}{1 + r} $$
+Define a new probability measure $\mathbb{Q}$ on $\Omega$ by:
+$$ \mathbb{Q}(\{\omega_m\}) = q_m = (1 + r) \psi_m = \frac{\varphi(\omega_m)}{\mathbb{E}[\varphi]} \mathbb{P}(\{\omega_m\}) $$
+Notice that:
+1. $q_m > 0$ for all $m$ (since $\varphi > 0$ and $\mathbb{P} > 0$), so $\mathbb{Q} \sim \mathbb{P}$ is an *equivalent probability measure*.
+2. $\sum_{m=1}^M q_m = (1 + r) \sum_{m=1}^M \psi_m = (1 + r) \mathbb{E}[\varphi] = 1$, so $\mathbb{Q}$ is a valid probability measure.
+3. For every security $n$:
+   $$ S_n(0) = \sum_{m=1}^M \psi_m S_n(1, \omega_m) = \frac{1}{1 + r} \sum_{m=1}^M q_m S_n(1, \omega_m) = \frac{1}{1 + r} \mathbb{E}_{\mathbb{Q}}[S_n(1)] $$
+
+#+begin_quote
+*Fundamental Identity of Risk-Neutral Pricing:*
+Under the equivalent martingale measure $\mathbb{Q}$, the current price of every asset equals its expected discounted payoff:
+$$ S_n(0) = \mathbb{E}_{\mathbb{Q}}\left[ \frac{S_n(1)}{1 + r} \right] $$
+The discounted price process $\frac{S_n(t)}{S_1(t)}$ is a $\mathbb{Q}$-martingale.
+#+end_quote

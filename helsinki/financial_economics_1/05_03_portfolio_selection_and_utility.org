@@ -1,0 +1,83 @@
+:PROPERTIES:
+:ID:       365f62e6-88d7-40c6-94f6-6cf0779e7ebf
+:ROAM_ALIASES: "Portfolio Selection" "Utility Theory" "Expected Utility Maximization" "Risk Aversion"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic; @luenberger2013investment]
+:END:
+#+title: Portfolio Selection, Utility Theory, and Endogenous Pricing Kernels
+#+subtitle: Sections 5.1.3 & 5.2.3 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:portfolio-optimization:utility-theory:risk-aversion:bellman:
+
+[[id:7f47326f-52b0-44c2-8aa8-34845ff9fa7a][← Completeness and Attainability (FTAP 2)]] | [[id:9c2d3a35-5605-4e21-901d-6d3e9c82756b][Next: Mean-Square Error Hedging →]]
+
+* Investor Preferences and Expected Utility
+
+** The Von Neumann-Morgenstern Utility Framework
+Consider an investor who starts at time $0$ with initial wealth $V(0) > 0$.
+The investor's preferences over terminal wealth distributions $V(1)$ are modeled by an increasing, concave *utility function* $u: \mathbb{R} \to \mathbb{R} \cup \{-\infty\}$.
+
+Key mathematical properties:
+1. *Non-satiation (Greed):* $u'(w) > 0$ for all wealth levels $w$. More wealth is strictly preferred to less.
+2. *Risk Aversion:* $u''(w) < 0$ (strict concavity). By Jensen's inequality:
+   $$ \mathbb{E}[u(W)] < u(\mathbb{E}[W]) \quad \text{for any non-degenerate random wealth } W $$
+   A risk-averse investor strictly prefers receiving the expected wealth with certainty over taking the lottery.
+
+** Measures of Risk Aversion
+- *Arrow-Pratt Measure of Absolute Risk Aversion (ARA):*
+  $$ R_A(w) = -\frac{u''(w)}{u'(w)} $$
+- *Arrow-Pratt Measure of Relative Risk Aversion (RRA):*
+  $$ R_R(w) = -w \frac{u''(w)}{u'(w)} $$
+
+Common utility families:
+| Utility Family | Functional Form $u(w)$ | ARA $R_A(w)$ | RRA $R_R(w)$ |
+|----------------+------------------------+--------------+--------------|
+| *Logarithmic*  | $\log(w)$              | $1/w$        | $1$ (CRRA)   |
+| *Power (CRRA)* | $\frac{w^{1-\gamma}-1}{1-\gamma}$ ($\gamma > 0, \gamma \ne 1$) | $\gamma/w$ | $\gamma$ (CRRA) |
+| *Exponential (CARA)* | $-\frac{1}{\alpha} e^{-\alpha w}$ ($\alpha > 0$) | $\alpha$ (CARA) | $\alpha w$ |
+
+---
+
+* The One-Period Portfolio Selection Problem
+
+** Mathematical Formulation
+The investor seeks to find an optimal portfolio $\theta \in \mathbb{R}^N$ that maximizes expected terminal utility subject to the initial budget constraint:
+$$ \max_{\theta \in \mathbb{R}^N} \mathbb{E}[u(S(1)\theta)] \quad \text{subject to} \quad S(0)\theta = V(0) \tag{5.10} $$
+Here, $V(1) = S(1)\theta$ is the terminal wealth.
+
+** Optimality Conditions via Lagrange Multipliers
+Formulate the Lagrangian:
+$$ \mathcal{L}(\theta, \lambda) = \mathbb{E}[u(S(1)\theta)] - \lambda (S(0)\theta - V(0)) $$
+Differentiating with respect to the portfolio weights $\theta_n$ ($n = 1, \dots, N$):
+$$ \frac{\partial \mathcal{L}}{\partial \theta_n} = \mathbb{E}[u'(S(1)\theta) S_n(1)] - \lambda S_n(0) = 0 $$
+Hence, the first-order condition (Euler equation) is:
+$$ S_n(0) = \mathbb{E}\left[ \frac{u'(V(1))}{\lambda} S_n(1) \right] \quad \text{for all } n = 1, \dots, N $$
+
+** Endogenous Generation of Pricing Kernels
+Notice the striking connection to Theorem 5.3:
+Define the random variable:
+$$ \varphi = \frac{u'(V(1))}{\lambda} $$
+Since $u' > 0$ and $\lambda > 0$, $\varphi > 0$ strictly almost surely.
+*The marginal utility of the optimal portfolio generates an endogenous state price deflator!*
+
+If Security 1 is a risk-free bond with return $1+r$, taking $n = 1$:
+$$ 1 = \mathbb{E}\left[ \frac{u'(V(1))}{\lambda} (1 + r) \right] \implies \lambda = (1 + r) \mathbb{E}[u'(V(1))] $$
+Thus, the pricing kernel is explicitly given by the *marginal rate of substitution*:
+$$ \varphi = \frac{1}{1 + r} \frac{u'(V(1))}{\mathbb{E}[u'(V(1))]} $$
+
+---
+
+* Multi-Period Portfolio Optimization and Dynamic Programming
+
+In a multi-period market ($t = 0, 1, \dots, T$), the investor solves:
+$$ \max_{\{\theta(t)\}_{t=1}^T} \mathbb{E}[u(V(T))] \quad \text{subject to self-financing budget} $$
+This problem is solved by *backward induction* using the *Bellman equation of Dynamic Programming*.
+
+Define the value function (indirect utility) at time $t$ given current wealth $V(t) = v$:
+$$ J_t(v) = \max_{\theta(t+1)} \mathbb{E}[J_{t+1}(V(t+1)) \mid \mathcal{F}_t, V(t) = v] $$
+with boundary condition at maturity $T$:
+$$ J_T(v) = u(v) $$
+
+** Example 5.7 (Log-Utility Investor)
+For $u(w) = \log(w)$, the multi-period optimization decouples period by period:
+At each stage $t$, the investor chooses the exact same portfolio proportion regardless of future horizons or past wealth path (myopic investment property).

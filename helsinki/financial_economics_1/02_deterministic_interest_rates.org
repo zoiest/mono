@@ -1,0 +1,134 @@
+:PROPERTIES:
+:ID:       2957cc4b-1bfb-45d8-9b10-0a99d51ed808
+:ROAM_ALIASES: "Deterministic Interest Rates" "Cash Flow Valuation" "Theorem 2.1" "Present Value"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @luenberger2013investment]
+:END:
+#+title: Deterministic Interest Rates and Cash Flow Valuation
+#+subtitle: Section 2 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:interest-rates:arbitrage:valuation:cash-flows:
+
+[[id:d97bc23f-4456-4337-825a-6e7708bcb131][← Course Map / Index]] | [[id:3d4b788f-0237-4357-9cef-ba77a62e7a03][Next: Term Structure and Forward Rates →]]
+
+* The Deterministic Interest Rate Model
+
+** Time Discretization and Compounding Mechanism
+Let $\Delta > 0$ denote the length of a single discrete time period (e.g., $\Delta = 1$ year, $\Delta = 1/2$ half-year, or $\Delta = 1/12$ month). The timeline is discretized into points:
+$$ 0, \Delta, 2\Delta, \dots, T\Delta $$
+
+The fundamental assumptions of the deterministic interest rate model are:
+1. *Constant periodic rate:* During each time period $[(j-1)\Delta, j\Delta)$, $j = 1, 2, \dots$, the annualized interest rate is a constant $i_j > -1$, which is fixed and known at time $0$.
+2. *Periodic return formula:* A capital deposit $C$ made at time $(j-1)\Delta$ grows by time $j\Delta$ to:
+   $$ C(1 + i_j)^\Delta $$
+   Equation (2.1) represents the discrete compounding factor over period length $\Delta$.
+3. *Multi-period compounding:* If the deposit is maintained over $n$ consecutive periods $[0, n\Delta)$, the capital accumulates according to the compounding principle:
+   $$ C \prod_{k=1}^n (1 + i_k)^\Delta $$
+
+#+begin_quote
+*Remark 2.1 (Alternative Compounding Conventions):*
+In financial practice, a nominal yearly rate $i$ compounded $m = 1/\Delta$ times per year often uses the linear periodic rate factor $1 + i\Delta = 1 + i/m$.
+Under continuous compounding at instantaneous rate $r$, the accumulation factor over time $t$ is $e^{rt}$.
+Throughout this course, the standard compounding mechanism is strictly defined by Equation (2.1):
+$$ (1 + i_j)^\Delta $$
+#+end_quote
+
+---
+
+* Cash Flows and Arbitrage-Free Valuation
+
+** Definition of Cash Flow
+A *cash flow* is a sequence of deterministic cash payments occurring at discrete times $j\Delta$:
+$$ B(\Delta), B(2\Delta), \dots, B(T\Delta) $$
+where $B(j\Delta) > 0$ denotes a cash inflow (payment received by the holder) and $B(j\Delta) < 0$ denotes a cash outflow (payment made by the holder).
+
+** Theorem 2.1 (Present Value of Cash Flows)
+#+begin_quote
+*Theorem 2.1 (Arbitrage-Free Price of a Cash Flow):*
+Suppose the interest rate market satisfies the assumptions of Section 2.1. Assume further that the market is *arbitrage-free* (no riskless profit can be generated from zero initial wealth).
+Then the unique price (present value) of the cash flow $B(\Delta), \dots, B(T\Delta)$ at time $0$, denoted $V(0)$, must be given by:
+$$ V(0) = \sum_{j=1}^T \left[ \prod_{k=1}^j (1 + i_k) \right]^{-\Delta} B(j\Delta) \tag{2.4} $$
+#+end_quote
+
+*** Complete Mathematical Proof
+We prove Theorem 2.1 by contradiction, showing that if the market price $V$ of the cash flow at time $0$ differs from $V(0)$, an investor can construct a self-financing arbitrage strategy that generates guaranteed strictly positive profit with zero net risk.
+
+*Case 1: Suppose $V > V(0)$ (Cash flow is overpriced on the market).*
+The investor executes the following strategy at time $0$:
+1. *Sell the cash flow* in the market for price $V$, receiving cash $+V$.
+2. *Open $T$ synthetic bank deposit accounts:* For each $j = 1, \dots, T$, deposit an amount:
+   $$ D_j = \left[ \prod_{k=1}^j (1 + i_k) \right]^{-\Delta} B(j\Delta) $$
+   The total capital required to fund these $T$ deposits at time $0$ is:
+   $$ \sum_{j=1}^T D_j = V(0) $$
+3. *Immediate net cash flow at time $0$:*
+   $$ V - V(0) > 0 $$
+   The investor securely pockets this positive surplus at time $0$.
+4. *Payoffs at times $j\Delta$ ($j = 1, \dots, T$):*
+   From account $j$, the capital accumulated at time $j\Delta$ is:
+   $$ D_j \prod_{k=1}^j (1 + i_k)^\Delta = B(j\Delta) $$
+   The investor withdraws this exact amount $B(j\Delta)$ from account $j$ to fulfill the contractual obligation to the buyer of the cash flow.
+5. *Net cash flow at all future times:*
+   $$ B(j\Delta) - B(j\Delta) = 0 \quad \text{for all } j = 1, \dots, T $$
+Thus, the investor earned a riskless positive profit $V - V(0) > 0$ at time $0$ with zero future liabilities, which is an arbitrage opportunity. This contradicts market arbitrage freedom.
+
+*Case 2: Suppose $V < V(0)$ (Cash flow is underpriced on the market).*
+The investor executes the reverse strategy:
+1. *Borrow funds to buy the cash flow:* Borrow capital $V$ at time $0$ by issuing $T$ fractional loans:
+   $$ L_j = \left[ \prod_{k=1}^j (1 + i_k) \right]^{-\Delta} B(j\Delta) \cdot \frac{V}{V(0)} $$
+   so that $\sum_{j=1}^T L_j = V$.
+2. *Buy the cash flow* at market price $V$, so net initial investment is $V - V = 0$.
+3. *At times $j\Delta$ ($j = 1, \dots, T$):*
+   The cash flow delivers payment $B(j\Delta)$. The loan repayment owed on loan $j$ is:
+   $$ L_j \prod_{k=1}^j (1 + i_k)^\Delta = B(j\Delta) \frac{V}{V(0)} < B(j\Delta) \quad (\text{since } V < V(0)) $$
+4. *Surplus profit at times $j\Delta$:*
+   $$ B(j\Delta) - L_j \prod_{k=1}^j (1 + i_k)^\Delta = B(j\Delta) \left(1 - \frac{V}{V(0)}\right) > 0 $$
+All future cash flows are non-negative, and at least one is strictly positive, with zero initial outlay. This is an arbitrage opportunity, again contradicting arbitrage freedom.
+
+Therefore, we must have $V = V(0)$, completing the proof. $\blacksquare$
+
+---
+
+* Intermediate Valuation and Forward Contracts
+
+** Value of Remaining Cash Flow at Time $j\Delta$
+At an intermediate time $j\Delta$ ($1 \le j < T$), the remaining cash payments occur at $(j+1)\Delta, \dots, T\Delta$.
+The arbitrage-free value of the remaining cash flow at time $j\Delta$, denoted $V(j)$, is obtained by discounting all future payments back to time $j\Delta$:
+$$ V(j) = \sum_{k=j+1}^T \left[ \prod_{m=j+1}^k (1 + i_m) \right]^{-\Delta} B(k\Delta) \tag{2.7} $$
+
+** Forward Agreements (Forward Deals)
+#+begin_quote
+*Definition 2.1 (Forward Contract):*
+A forward contract agreed at time $0$ for delivery at time $j\Delta$ is an agreement to purchase the remaining cash flow $B((j+1)\Delta), \dots, B(T\Delta)$ at delivery date $j\Delta$ for a pre-agreed delivery price $W(j)$, with no money changing hands at time $0$ (price of the agreement at time $0$ is $0$).
+#+end_quote
+
+By Theorem 2.1 and the Law of One Price:
+The value of the forward commitment discounted to time $0$ must equal the present value of the underlying payments:
+$$ W(j) \left[ \prod_{k=1}^j (1 + i_k) \right]^{-\Delta} = \sum_{k=j+1}^T \left[ \prod_{m=1}^k (1 + i_m) \right]^{-\Delta} B(k\Delta) $$
+Multiplying both sides by $\prod_{k=1}^j (1 + i_k)^\Delta$ yields:
+$$ W(j) = \sum_{k=j+1}^T \left[ \prod_{m=j+1}^k (1 + i_m) \right]^{-\Delta} B(k\Delta) = V(j) $$
+Thus, the forward price $W(j)$ agreed at time $0$ equals the forward-projected present value $V(j)$.
+
+---
+
+* Worked Examples from Lecture Notes
+
+** Example 2.1 (Loan Amortization)
+An agent borrows principal $L$ at time $0$ and amortizes the debt in two installments: payment $L_1$ at time $\Delta$ and payment $L_2$ at time $2\Delta$.
+The borrower's cash flow is:
+$$ B(0) = +L, \quad B(\Delta) = -L_1, \quad B(2\Delta) = -L_2 $$
+By Theorem 2.1, the present value of repayments must equal the borrowed amount $L$:
+$$ L = L_1 (1 + i_1)^{-\Delta} + L_2 [(1 + i_1)(1 + i_2)]^{-\Delta} $$
+
+** Example 2.2 (Replication of Cash Flows)
+Consider two basic cash flows available on the market:
+- Cash flow I: $B_1(\Delta) = 6, B_1(2\Delta) = 6$, market price $p$.
+- Cash flow II: $B_2(\Delta) = 5, B_2(2\Delta) = 8$, market price $q$.
+
+We wish to replicate Cash flow III: $B_3(\Delta) = 0, B_3(2\Delta) = 14$.
+We seek portfolio weights $\theta_1, \theta_2$ such that:
+$$ \begin{pmatrix} 6 & 5 \\ 6 & 8 \end{pmatrix} \begin{pmatrix} \theta_1 \\ \theta_2 \end{pmatrix} = \begin{pmatrix} 0 \\ 14 \end{pmatrix} $$
+From $6\theta_1 + 5\theta_2 = 0 \implies \theta_1 = -\frac{5}{6}\theta_2$.
+Substituting into the second equation:
+$$ 6\left(-\frac{5}{6}\theta_2\right) + 8\theta_2 = 14 \implies 3\theta_2 = 14 \implies \theta_2 = \frac{14}{3}, \quad \theta_1 = -\frac{35}{9} $$
+By the Law of One Price (absence of arbitrage), the price of Cash flow III must be:
+$$ \text{Price}(\text{III}) = \theta_1 p + \theta_2 q = -\frac{35}{9} p + \frac{14}{3} q $$

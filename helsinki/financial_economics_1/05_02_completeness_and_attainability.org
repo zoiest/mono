@@ -1,0 +1,117 @@
+:PROPERTIES:
+:ID:       7f47326f-52b0-44c2-8aa8-34845ff9fa7a
+:ROAM_ALIASES: "FTAP 2" "Second Fundamental Theorem of Asset Pricing" "Market Completeness" "Attainable Claims" "Replication"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic]
+:END:
+#+title: Market Completeness, Attainability, and the Second Fundamental Theorem of Asset Pricing
+#+subtitle: Section 5.1.2 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:arbitrage:completeness:replication:ftap:pricing-kernel:
+
+[[id:32a6be50-9383-466a-89d7-baf20a6ebcb5][← One-Period Market and FTAP 1]] | [[id:365f62e6-88d7-40c6-94f6-6cf0779e7ebf][Next: Portfolio Selection and Utility Theory →]]
+
+* Attainability and Replicating Portfolios
+
+** Attainable Contingent Claims
+Let the market model be as in Section 5.1 with $N$ securities and finite state space $\Omega = \{\omega_1, \dots, \omega_M\}$.
+A *contingent claim* is any random variable $X$ on $\Omega$, represented as a vector in $\mathbb{R}^M$:
+$$ X = (X(\omega_1), X(\omega_2), \dots, X(\omega_M))^T \in \mathbb{R}^M $$
+
+#+begin_quote
+*Definition 5.6 (Attainable Claim):*
+A contingent claim $X$ is said to be *attainable* (or *replicable*) if there exists a portfolio $\theta \in \mathbb{R}^N$ such that:
+$$ S(1) \theta = X \tag{5.8} $$
+That is, $\sum_{n=1}^N \theta_n S_n(1, \omega_m) = X(\omega_m)$ in every state of nature $\omega_m$.
+The portfolio $\theta$ is called a *replicating portfolio* (or *hedging portfolio*) for $X$.
+#+end_quote
+
+** Theorem 5.6 (Arbitrage-Free Pricing of Attainable Claims)
+#+begin_quote
+*Theorem 5.6:*
+If a random variable $X$ is attainable using portfolio $\theta$, then in an arbitrage-free market, the unique price of $X$ at time $0$, denoted $V_X(0)$, must equal the cost of the replicating portfolio:
+$$ V_X(0) = S(0) \theta \tag{5.9} $$
+Furthermore, for any strictly positive pricing kernel $\varphi$ satisfying Theorem 5.3:
+$$ V_X(0) = \mathbb{E}[\varphi X] $$
+#+end_quote
+
+*** Proof
+If $V_X(0) \ne S(0)\theta$, an arbitrageur can either:
+- Buy the claim $X$ and short the portfolio $\theta$ if $V_X(0) < S(0)\theta$, or
+- Sell the claim $X$ and buy the portfolio $\theta$ if $V_X(0) > S(0)\theta$.
+In both cases, terminal payoffs cancel identically ($X - S(1)\theta = 0$), yielding risk-free positive initial profit.
+Moreover, using Theorem 5.3:
+$$ \mathbb{E}[\varphi X] = \mathbb{E}[\varphi (S(1)\theta)] = \sum_{n=1}^N \theta_n \mathbb{E}[\varphi S_n(1)] = \sum_{n=1}^N \theta_n S_n(0) = S(0)\theta $$
+Thus, all state price deflators evaluate attainable claims to the exact same price $S(0)\theta$. $\blacksquare$
+
+---
+
+* Market Completeness and FTAP 2
+
+** Definition 5.7 (Complete Market)
+#+begin_quote
+*Definition 5.7 (Market Completeness):*
+The market model is said to be *complete* if every random variable $X$ defined on $\Omega$ is attainable.
+In linear algebraic terms, the market is complete if:
+$$ \operatorname{Im}(S(1)) = \mathbb{R}^M $$
+where $\operatorname{Im}(S(1)) = \{S(1)\theta \mid \theta \in \mathbb{R}^N\} \subseteq \mathbb{R}^M$ is the subspace of attainable payoffs.
+#+end_quote
+
+** Theorem 5.8 (The Second Fundamental Theorem of Asset Pricing)
+#+begin_quote
+*Theorem 5.8 (Second Fundamental Theorem of Asset Pricing - FTAP 2):*
+Suppose the one-period market model is *arbitrage-free*.
+Then the market is *complete* if and only if there exists a *unique* pricing kernel $\varphi$ (or equivalently, a unique strictly positive state price vector $\psi \gg 0$, or unique equivalent martingale measure $\mathbb{Q}$).
+#+end_quote
+
+*** Complete Mathematical Proof of Theorem 5.8
+Recall from Theorem 5.3 that absence of arbitrage is equivalent to the existence of at least one state price vector $\psi \in \mathbb{R}^M$ such that:
+$$ S(1)^T \psi = S(0) \quad \text{with } \psi \gg 0 $$
+
+*Step 1: Linear Algebraic Characterization of Completeness.*
+The linear map $S(1): \mathbb{R}^N \to \mathbb{R}^M$ maps portfolios to payoffs.
+The market is complete if and only if $S(1)$ is surjective ($\operatorname{Im}(S(1)) = \mathbb{R}^M$).
+From linear algebra, surjectivity of $S(1)$ is equivalent to:
+$$ \operatorname{rank}(S(1)) = M $$
+Since $\operatorname{rank}(S(1)) \le \min(M, N)$, completeness immediately requires:
+$$ N \ge M $$
+(There must be at least as many linearly independent assets as there are states of nature).
+
+*Step 2: Uniqueness of Solutions to $S(1)^T \psi = S(0)$.*
+The adjoint map $S(1)^T: \mathbb{R}^M \to \mathbb{R}^N$ has rank $\operatorname{rank}(S(1)^T) = \operatorname{rank}(S(1)) = M$.
+By the Rank-Nullity Theorem applied to $S(1)^T$:
+$$ \operatorname{dim}(\operatorname{Ker}(S(1)^T)) = M - \operatorname{rank}(S(1)^T) = M - \operatorname{rank}(S(1)) $$
+
+- *Forward Direction ($\implies$):*
+  Assume the market is complete ($\operatorname{rank}(S(1)) = M$).
+  Then $\operatorname{dim}(\operatorname{Ker}(S(1)^T)) = M - M = 0$, meaning $\operatorname{Ker}(S(1)^T) = \{0\}$.
+  Since the kernel is trivial, the linear system $S(1)^T \psi = S(0)$ has at most one solution.
+  Since absence of arbitrage guarantees the existence of at least one solution $\psi \gg 0$, that solution must be unique.
+
+- *Reverse Direction ($\impliedby$):*
+  Assume the strictly positive solution $\psi \gg 0$ to $S(1)^T \psi = S(0)$ is unique.
+  Suppose for contradiction that the market is incomplete, so $\operatorname{rank}(S(1)) < M$.
+  Then $\operatorname{dim}(\operatorname{Ker}(S(1)^T)) = M - \operatorname{rank}(S(1)) \ge 1$.
+  Thus, there exists a non-zero vector $v \in \mathbb{R}^M$, $v \ne 0$, such that $S(1)^T v = 0$.
+  Since $\psi \gg 0$ (all components $\psi_m > 0$), we can choose a sufficiently small $\epsilon > 0$ such that:
+  $$ \tilde{\psi} = \psi + \epsilon v \gg 0 $$
+  Then:
+  $$ S(1)^T \tilde{\psi} = S(1)^T (\psi + \epsilon v) = S(1)^T \psi + \epsilon S(1)^T v = S(0) + 0 = S(0) $$
+  This yields a second distinct strictly positive state price vector $\tilde{\psi} \ne \psi$, contradicting the uniqueness of $\psi$.
+  Therefore, we must have $\operatorname{rank}(S(1)) = M$, establishing market completeness. $\blacksquare$
+
+---
+
+* Incomplete Markets and Price Intervals
+
+When $N < M$ (or when assets have collinear payoffs such that $\operatorname{rank}(S(1)) < M$), the market is *incomplete*.
+In an incomplete market:
+1. Not all claims can be hedged; an unreplicable claim $X \notin \operatorname{Im}(S(1))$ involves unhedgeable intrinsic risk.
+2. The state price vector $\psi$ is not unique. The set of all valid state price vectors forms a convex set:
+   $$ \mathcal{M} = \{\psi \in \mathbb{R}^M \mid S(1)^T \psi = S(0), \, \psi \gg 0\} $$
+3. The arbitrage-free price of an unreplicable claim $X$ is not uniquely determined, but bounded within an open interval:
+   $$ V_X(0) \in \left( \underline{\pi}(X), \, \overline{\pi}(X) \right) $$
+   where:
+   - $\underline{\pi}(X) = \inf_{\psi \in \mathcal{M}} \psi^T X$ (sub-hedging price)
+   - $\overline{\pi}(X) = \sup_{\psi \in \mathcal{M}} \psi^T X$ (super-hedging price)
+Any market transaction price outside $[\underline{\pi}(X), \overline{\pi}(X)]$ admits an arbitrage opportunity.

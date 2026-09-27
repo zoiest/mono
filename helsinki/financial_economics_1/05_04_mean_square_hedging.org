@@ -1,0 +1,80 @@
+:PROPERTIES:
+:ID:       9c2d3a35-5605-4e21-901d-6d3e9c82756b
+:ROAM_ALIASES: "Mean Square Error Hedging" "Quadratic Hedging" "Incomplete Market Hedging"
+:ROAM_REFS: [cite:@lehtomaa2026financial; @follmer2016stochastic]
+:END:
+#+title: Mean-Square Error Hedging in Incomplete Markets
+#+subtitle: Section 5.1.4 — Financial Economics I (MAST31807, University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-09-27]
+#+filetags: :finance:economics:hedging:incomplete-markets:quadratic-loss:orthogonal-projection:
+
+[[id:365f62e6-88d7-40c6-94f6-6cf0779e7ebf][← Portfolio Selection and Utility Theory]] | [[id:1dc8f1b2-1399-494c-8ef1-679099444863][Next: Multi-Period Market Model and Martingales →]]
+
+* Motivation: Hedging in Incomplete Markets
+
+In an incomplete market ($M > N$), a general contingent claim $X$ cannot be perfectly replicated:
+$$ X \notin \operatorname{Im}(S(1)) = \{S(1)\theta \mid \theta \in \mathbb{R}^N\} $$
+An agent who has written or purchased claim $X$ faces *unavoidable intrinsic risk*.
+Under such conditions, the standard approach is to choose a hedging portfolio $\theta$ that minimizes a penalty function of the tracking error.
+The most tractable and widely studied objective is *Mean-Square Error (MSE) minimization* (quadratic loss).
+
+---
+
+* The One-Period Quadratic Hedging Problem
+
+** Formulation
+Let $X \in L^2(\Omega, \mathcal{F}, \mathbb{P})$ be a target claim payable at time $1$.
+The investor solves:
+$$ \min_{V(0) \in \mathbb{R}, \, \theta \in \mathbb{R}^N} \mathbb{E}\left[ (X - S(1)\theta)^2 \right] \quad \text{subject to} \quad S(0)\theta = V(0) \tag{5.11} $$
+
+** Decomposition into Risk-Free and Risky Assets
+Suppose Security 1 is a risk-free bank deposit with interest rate $r$:
+$$ S_1(0) = 1, \quad S_1(1) = 1 + r $$
+Let $\theta = (\theta_1, \theta')^T$, where $\theta' = (\theta_2, \dots, \theta_N)^T \in \mathbb{R}^{N-1}$ denotes the holdings in the $N-1$ risky assets.
+The budget constraint gives:
+$$ V(0) = \theta_1 + \sum_{n=2}^N \theta_n S_n(0) \implies \theta_1 = V(0) - \sum_{n=2}^N \theta_n S_n(0) $$
+
+Substituting $\theta_1$ into the terminal wealth:
+$$ S(1)\theta = \theta_1 (1 + r) + \sum_{n=2}^N \theta_n S_n(1) = (1 + r)V(0) + \sum_{n=2}^N \theta_n \left[ S_n(1) - (1 + r)S_n(0) \right] $$
+Define the *excess return vector* of the risky assets:
+$$ \Delta S' = \begin{pmatrix} S_2(1) - (1 + r)S_2(0) \\ \vdots \\ S_N(1) - (1 + r)S_N(0) \end{pmatrix} \in \mathbb{R}^{N-1} $$
+
+The optimization problem (5.11) reduces to:
+$$ \min_{V(0) \in \mathbb{R}, \, \theta' \in \mathbb{R}^{N-1}} \mathbb{E}\left[ \left( X - (1 + r)V(0) - \theta'^T \Delta S' \right)^2 \right] \tag{5.14} $$
+
+---
+
+* Optimal Hedging Solution and Orthogonal Projection
+
+Let:
+- $\Sigma = \operatorname{Cov}(\Delta S') \in \mathbb{R}^{(N-1) \times (N-1)}$ be the covariance matrix of excess returns (assumed positive definite).
+- $\Gamma = \operatorname{Cov}(X, \Delta S') \in \mathbb{R}^{N-1}$ be the covariance vector between the claim $X$ and the risky asset excess returns.
+- $\mu = \mathbb{E}[\Delta S'] \in \mathbb{R}^{N-1}$ be the expected excess return vector.
+
+Decomposing the mean square error into variance and squared bias:
+$$ \mathbb{E}[(Y - c)^2] = \operatorname{Var}(Y) + (\mathbb{E}[Y] - c)^2 $$
+Setting $Y = X - \theta'^T \Delta S'$ and $c = (1 + r)V(0)$:
+$$ \mathbb{E}\left[ (X - (1 + r)V(0) - \theta'^T \Delta S')^2 \right] = \operatorname{Var}(X - \theta'^T \Delta S') + \left( \mathbb{E}[X] - \theta'^T \mu - (1 + r)V(0) \right)^2 $$
+
+To minimize this quantity:
+1. *Optimal Initial Capital $V(0)$:*
+   Choose $V(0)$ to eliminate the squared bias term completely:
+   $$ (1 + r)V(0) = \mathbb{E}[X] - \theta'^T \mu \implies V(0) = \frac{\mathbb{E}[X] - \theta'^T \mathbb{E}[\Delta S']}{1 + r} \tag{5.15} $$
+2. *Optimal Risky Portfolio $\theta'$:*
+   Minimize the variance:
+   $$ \min_{\theta'} \operatorname{Var}(X - \theta'^T \Delta S') = \operatorname{Var}(X) - 2 \theta'^T \Gamma + \theta'^T \Sigma \theta' $$
+   Setting the gradient to zero:
+   $$ -2\Gamma + 2\Sigma \theta' = 0 \implies \theta' = \Sigma^{-1} \Gamma $$
+
+#+begin_quote
+*Theorem 5.5 (Optimal Mean-Square Hedging Strategy):*
+The unique optimal mean-square error hedging portfolio is:
+$$ \theta' = \Sigma^{-1} \operatorname{Cov}(X, \Delta S') $$
+with optimal initial capital:
+$$ V(0) = \frac{1}{1 + r} \left( \mathbb{E}[X] - \theta'^T \mathbb{E}[\Delta S'] \right) $$
+The minimal residual unhedgeable risk is:
+$$ \operatorname{Var}(X - S(1)\theta) = \operatorname{Var}(X) - \Gamma^T \Sigma^{-1} \Gamma $$
+#+end_quote
+
+This is the classic projection of $X$ onto the subspace spanned by the constant and the asset returns in the Hilbert space $L^2(\Omega, \mathcal{F}, \mathbb{P})$.
