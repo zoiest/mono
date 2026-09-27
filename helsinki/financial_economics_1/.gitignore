@@ -9,3 +9,6 @@ __pycache__/
 # Google Drive credentials token
 .google_drive_token*
 **/.google_drive_token*
+
+# Org2html cache
+.org2html_cache.json

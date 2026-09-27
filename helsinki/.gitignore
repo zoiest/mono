@@ -1,6 +1,10 @@
 # Ignore the generated html files from org code
 **/*.html
 
+# Org2html cache file
+.org2html_cache.json
+**/.org2html_cache.json
+
 # Bazel symlinks and outputs
 bazel-*
 .bazelrc.user
