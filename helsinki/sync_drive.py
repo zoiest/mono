@@ -38,6 +38,26 @@ from pathlib import Path
 CHUNK_SIZE = 8 * 1024 * 1024  # 8 MB chunks
 
 
+def format_api_error(err: Exception) -> str:
+    """Extracts informative error details from Google Drive API HTTP errors."""
+    if isinstance(err, urllib.error.HTTPError):
+        try:
+            body = err.read().decode("utf-8", errors="replace")
+            data = json.loads(body)
+            error_info = data.get("error", {})
+            msg = error_info.get("message")
+            errors = error_info.get("errors", [])
+            reason = errors[0].get("reason") if errors else None
+            detail = f": {msg}" if msg else ""
+            if reason:
+                detail += f" [reason: {reason}]"
+            return f"HTTP {err.code} {err.reason}{detail}"
+        except Exception:
+            pass
+    return str(err)
+
+
+
 class GoogleDriveAuth:
     """Handles authentication and token management for Google Drive API."""
 
@@ -81,6 +101,15 @@ class GoogleDriveAuth:
                 if data.get("type") == "service_account":
                     self.service_account_info = data
                     self.access_token = self._get_service_account_token()
+                elif "installed" in data or "web" in data:
+                    print(f"\n{'='*70}", file=sys.stderr)
+                    print(f"Error: '{self.token_file_path.name}' contains OAuth client credentials, not an authorized token.", file=sys.stderr)
+                    print(f"{'='*70}", file=sys.stderr)
+                    print("This file contains application client_id / client_secret from Google Cloud Console.", file=sys.stderr)
+                    print("To authorize your account and obtain an active access token, run:\n", file=sys.stderr)
+                    print(f"  python3 get_token.py --credentials-json {self.token_file_path.name}\n", file=sys.stderr)
+                    print(f"{'='*70}\n", file=sys.stderr)
+                    sys.exit(1)
                 else:
                     self.access_token = data.get("access_token") or data.get("token")
                     self.refresh_token = data.get("refresh_token")
@@ -89,11 +118,19 @@ class GoogleDriveAuth:
                     self.token_uri = data.get("token_uri", "https://oauth2.googleapis.com/token")
                     self.folder_id_from_token = data.get("folder_id")
                     self.folder_name_from_token = data.get("folder_name")
+                    if not self.access_token and self.refresh_token:
+                        self.refresh_access_token()
             except json.JSONDecodeError as exc:
                 print(f"Warning: Failed to parse token JSON: {exc}. Treating as raw token.", file=sys.stderr)
                 self.access_token = content
         else:
             self.access_token = content
+
+        if not self.access_token:
+            print(f"\nError: No valid access token found in {self.token_file_path}.", file=sys.stderr)
+            print("Please run 'python3 get_token.py' to generate a valid token.", file=sys.stderr)
+            sys.exit(1)
+
 
     def _get_service_account_token(self) -> str:
         """Exchanges service account private key for an access token via JWT assertion."""
@@ -479,7 +516,7 @@ def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_
                             client.download_file(item["id"], item.get("mimeType", ""), target_file)
                             dl_count += 1
                         except Exception as err:
-                            print(f"    Error downloading {item_rel}: {err}", file=sys.stderr)
+                            print(f"    Error downloading {item_rel}: {format_api_error(err)}", file=sys.stderr)
 
         print(f"Downloads: {dl_count} downloaded, {dl_skip} up-to-date.")
 
@@ -537,7 +574,7 @@ def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_
                         client.upload_file(full_path, dest_id, existing_file_id=existing_file["id"])
                         up_count += 1
                     except Exception as err:
-                        print(f"    Error updating bin/{rel_path}: {err}", file=sys.stderr)
+                        print(f"    Error updating bin/{rel_path}: {format_api_error(err)}", file=sys.stderr)
             else:
                 if client.dry_run:
                     print(f"  [DRY-RUN UPLOAD] bin/{rel_path} ({file_size:,} bytes)")
@@ -548,7 +585,7 @@ def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_
                         client.upload_file(full_path, dest_id)
                         up_count += 1
                     except Exception as err:
-                        print(f"    Error uploading bin/{rel_path}: {err}", file=sys.stderr)
+                        print(f"    Error uploading bin/{rel_path}: {format_api_error(err)}", file=sys.stderr)
 
         print(f"Bin: {up_count} uploaded, {up_skip} up-to-date.")
 

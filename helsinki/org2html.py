@@ -2,8 +2,8 @@
 """
 org2html - Incremental Org-to-HTML Compiler for Bazel.
 
-Compiles all .org files in a directory to .html using Emacs Org-mode,
-with SHA-256 hash tracking for build avoidance.
+Compiles all .org files in a directory and its subdirectories (e.g. bin/) to .html
+using Emacs Org-mode, with SHA-256 content tracking for build avoidance.
 """
 
 import argparse
@@ -17,6 +17,7 @@ import time
 from pathlib import Path
 
 CACHE_FILE_NAME = ".org2html_cache.json"
+IGNORED_DIR_NAMES = {"downloads", "__pycache__", ".git"}
 
 
 def compute_file_sha256(path: Path) -> str:
@@ -46,6 +47,21 @@ def save_cache(cache_path: Path, data: dict):
         print(f"Warning: Failed to save cache: {exc}", file=sys.stderr)
 
 
+def collect_org_files(target_dir: Path) -> list[Path]:
+    """Recursively collects all .org files, skipping ignored directories."""
+    org_files = []
+    for root, dirs, files in os.walk(target_dir):
+        # Prune hidden directories, bazel symlinks, downloads, etc.
+        dirs[:] = [
+            d for d in dirs
+            if not d.startswith((".", "bazel-")) and d not in IGNORED_DIR_NAMES
+        ]
+        for f in files:
+            if f.endswith(".org") and not f.startswith("."):
+                org_files.append(Path(root) / f)
+    return sorted(org_files)
+
+
 def compile_org_files(target_dir: Path, files_to_compile: list[Path], all_org_files: list[Path], verbose: bool = False) -> bool:
     """Compiles a list of .org files to .html using Emacs batch mode in one process."""
     if not files_to_compile:
@@ -56,9 +72,9 @@ def compile_org_files(target_dir: Path, files_to_compile: list[Path], all_org_fi
         print("Error: 'emacs' executable not found in PATH.", file=sys.stderr)
         return False
 
-    # Elisp script to scan all org files for ID locations and export target files
-    rel_all_files = [str(f.name) for f in all_org_files]
-    rel_compile_files = [str(f.name) for f in files_to_compile]
+    # Relative paths from target_dir
+    rel_all_files = [str(f.relative_to(target_dir)) for f in all_org_files]
+    rel_compile_files = [str(f.relative_to(target_dir)) for f in files_to_compile]
 
     all_files_elisp = " ".join([f'"{f}"' for f in rel_all_files])
     compile_files_elisp = " ".join([f'"{f}"' for f in rel_compile_files])
@@ -81,7 +97,7 @@ def compile_org_files(target_dir: Path, files_to_compile: list[Path], all_org_fi
     cmd = [emacs_bin, "-Q", "--batch", "--eval", elisp_code]
 
     if verbose:
-        print(f"[org2html] Running Emacs command in: {target_dir}")
+        print(f"[org2html] Running Emacs in: {target_dir}")
 
     proc = subprocess.run(cmd, cwd=str(target_dir), capture_output=True, text=True)
 
@@ -99,16 +115,12 @@ def compile_org_files(target_dir: Path, files_to_compile: list[Path], all_org_fi
 
 
 def process_directory(target_dir: Path, force: bool = False, verbose: bool = False) -> int:
-    """Processes all .org files in target_dir with build avoidance."""
+    """Processes all .org files in target_dir and subdirectories with build avoidance."""
     target_dir = target_dir.resolve()
     cache_path = target_dir / CACHE_FILE_NAME
     cache = {} if force else load_cache(cache_path)
 
-    # Collect all .org files in directory
-    org_files = sorted([
-        f for f in target_dir.iterdir()
-        if f.is_file() and f.suffix == ".org" and not f.name.startswith(".")
-    ])
+    org_files = collect_org_files(target_dir)
 
     if not org_files:
         print(f"[org2html] No .org files found in: {target_dir}")
@@ -116,11 +128,14 @@ def process_directory(target_dir: Path, force: bool = False, verbose: bool = Fal
 
     to_compile = []
     skipped = []
+    active_keys = set()
 
     for org_file in org_files:
+        rel_key = str(org_file.relative_to(target_dir))
+        active_keys.add(rel_key)
         html_file = org_file.with_suffix(".html")
         current_hash = compute_file_sha256(org_file)
-        cached_info = cache.get(org_file.name)
+        cached_info = cache.get(rel_key)
 
         if not force and html_file.is_file() and cached_info:
             cached_hash = cached_info.get("hash")
@@ -131,11 +146,11 @@ def process_directory(target_dir: Path, force: bool = False, verbose: bool = Fal
                 skipped.append(org_file)
                 continue
 
-        to_compile.append((org_file, current_hash))
+        to_compile.append((org_file, rel_key, current_hash))
 
     total = len(org_files)
     print(f"{'='*70}")
-    print(f"Org-to-HTML Compiler")
+    print(f"Org-to-HTML Compiler (Recursive)")
     print(f"Directory:    {target_dir}")
     print(f"Total Files:  {total}")
     print(f"To Compile:   {len(to_compile)}")
@@ -143,11 +158,18 @@ def process_directory(target_dir: Path, force: bool = False, verbose: bool = Fal
     print(f"{'='*70}")
 
     if not to_compile:
+        # Prune dead keys from cache
+        stale_keys = [k for k in cache if k not in active_keys]
+        if stale_keys:
+            for k in stale_keys:
+                del cache[k]
+            save_cache(cache_path, cache)
+
         print(f"All {total} files are up-to-date. (0 recompiled, {len(skipped)} skipped)")
         return 0
 
     print(f"\nCompiling {len(to_compile)} file(s)...")
-    compile_list = [f for f, _ in to_compile]
+    compile_list = [f for f, _, _ in to_compile]
 
     t0 = time.time()
     success = compile_org_files(target_dir, compile_list, org_files, verbose=verbose)
@@ -157,16 +179,21 @@ def process_directory(target_dir: Path, force: bool = False, verbose: bool = Fal
         return 1
 
     # Update cache for successfully compiled files
-    for org_file, file_hash in to_compile:
+    for org_file, rel_key, file_hash in to_compile:
         html_file = org_file.with_suffix(".html")
         if html_file.is_file():
-            cache[org_file.name] = {
+            cache[rel_key] = {
                 "hash": file_hash,
                 "org_mtime": org_file.stat().st_mtime,
                 "html_mtime": html_file.stat().st_mtime,
-                "html_file": html_file.name,
+                "html_file": str(html_file.relative_to(target_dir)),
             }
-            print(f"  ✓ {org_file.name} -> {html_file.name}")
+            print(f"  ✓ {rel_key} -> {html_file.relative_to(target_dir)}")
+
+    # Prune dead keys
+    for k in list(cache.keys()):
+        if k not in active_keys:
+            del cache[k]
 
     save_cache(cache_path, cache)
 
@@ -175,14 +202,13 @@ def process_directory(target_dir: Path, force: bool = False, verbose: bool = Fal
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compile Org files to HTML with build avoidance.")
+    parser = argparse.ArgumentParser(description="Compile Org files to HTML with recursive build avoidance.")
     parser.add_argument("--target-dir", default="", help="Directory to process (default: current working directory)")
     parser.add_argument("--force", "-f", action="store_true", help="Force recompilation of all files ignoring cache")
     parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
 
-    # Determine target directory
     if args.target_dir:
         target_dir = Path(args.target_dir)
     elif "BUILD_WORKING_DIRECTORY" in os.environ:

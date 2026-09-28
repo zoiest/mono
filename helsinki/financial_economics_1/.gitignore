@@ -12,3 +12,9 @@ __pycache__/
 
 # Org2html cache
 .org2html_cache.json
+**/.org2html_cache.json
+
+# Generated HTML
+*.html
+**/*.html
+
