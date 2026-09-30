@@ -5,6 +5,9 @@ Google Drive Sync Tool for Bazel rule `sync`.
 Synchronizes files between Google Drive and local courses:
 Remote structure:
   helsinki/
+    8.01/
+      downloads/
+      bin/
     financial_economics_1/
       downloads/
       bin/
@@ -14,6 +17,9 @@ Remote structure:
 
 Local structure:
   helsinki/
+    8.01/
+      downloads/
+      bin/
     financial_economics_1/
       downloads/
       bin/
@@ -310,7 +316,8 @@ class GoogleDriveClient:
         if len(folders) == 1:
             return folders[0]["id"], folders[0]["name"]
         elif len(folders) > 1:
-            # Score folders by whether they have financial_economics_1 or maths_physics_3a inside
+            # Score folders by whether they have known course folders inside
+            known_courses = {"financial_economics_1", "maths_physics_3a", "8.01"}
             scored = []
             for f in folders:
                 children = self.list_files(
@@ -318,7 +325,7 @@ class GoogleDriveClient:
                     fields="files(id, name)",
                 )
                 child_names = {c["name"] for c in children}
-                score = (1 if "financial_economics_1" in child_names else 0) + (1 if "maths_physics_3a" in child_names else 0)
+                score = len(child_names & known_courses)
                 scored.append((score, f))
             scored.sort(key=lambda x: x[0], reverse=True)
             return scored[0][1]["id"], scored[0][1]["name"]
@@ -531,6 +538,8 @@ def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_
     local_files = []
     for root, _, files in os.walk(local_bin):
         for f in files:
+            if f.startswith("."):
+                continue
             full_path = Path(root) / f
             rel_path = full_path.relative_to(local_bin)
             local_files.append((full_path, rel_path))
@@ -602,7 +611,7 @@ def main():
     parser = argparse.ArgumentParser(description="Sync Helsinki courses with Google Drive.")
     parser.add_argument("--workspace-dir", default=".", help="Workspace root directory (helsinki)")
     parser.add_argument("--target-dir", default=".", help="Directory where bazel run was invoked")
-    parser.add_argument("--course-name", default="", help="Subfolder/course name (e.g. financial_economics_1, maths_physics_3a)")
+    parser.add_argument("--course-name", default="", help="Subfolder/course name (e.g. 8.01, financial_economics_1, maths_physics_3a)")
     parser.add_argument("--root-folder-id", default="", help="Google Drive root folder ID (helsinki)")
     parser.add_argument("--root-folder-name", default="helsinki", help="Google Drive root folder name")
     parser.add_argument("--token-file", default="", help="Path to token file")
@@ -668,13 +677,26 @@ def main():
     if course_name:
         courses_to_sync = [course_name]
     else:
-        # At root helsinki: find all course folders that have bin or downloads
-        courses_to_sync = []
+        # At root helsinki: find all course folders that have bin or downloads or BUILD.bazel locally,
+        # or exist remotely in Google Drive under root
+        courses_set = set()
         for child in workspace_dir.iterdir():
             if child.is_dir() and not child.name.startswith((".", "bazel-")):
                 if (child / "downloads").exists() or (child / "bin").exists() or (child / "BUILD.bazel").exists():
-                    courses_to_sync.append(child.name)
-        courses_to_sync.sort()
+                    courses_set.add(child.name)
+
+        try:
+            remote_children = client.list_files(
+                f"'{remote_root_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+                fields="files(id, name)",
+            )
+            for rc in remote_children:
+                if not rc["name"].startswith((".", "bazel-")):
+                    courses_set.add(rc["name"])
+        except Exception:
+            pass
+
+        courses_to_sync = sorted(courses_set)
 
     print(f"Courses to sync: {', '.join(courses_to_sync)}")
 

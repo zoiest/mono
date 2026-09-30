@@ -93,6 +93,7 @@ class TestSyncDrive(unittest.TestCase):
             local_bin.mkdir()
 
             (local_bin / "exercise.org").write_bytes(b"org content")
+            (local_bin / ".gitkeep").write_bytes(b"")
 
             mock_auth = MagicMock()
             mock_auth.access_token = "dummy_token"
@@ -110,6 +111,7 @@ class TestSyncDrive(unittest.TestCase):
             sync_single_course(client, "course_remote_id", "maths_physics_3a", course_dir)
 
             self.assertEqual(len(uploaded), 1)
+            self.assertEqual(uploaded[0][0].name, "exercise.org")
 
 
 if __name__ == "__main__":
