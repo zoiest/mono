@@ -41,8 +41,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/tofunth/gostock/internal/config"
-	"github.com/tofunth/gostock/internal/server"
+	"github.com/zoiest/mono/gym/gostock/internal/config"
+	"github.com/zoiest/mono/gym/gostock/internal/server"
 )
 
 func main() {

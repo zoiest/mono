@@ -32,7 +32,7 @@ package provider
 
 import (
 	"context"
-	"github.com/tofunth/gostock/internal/domain"
+	"github.com/zoiest/mono/gym/gostock/internal/domain"
 )
 
 type StockProvider interface {
@@ -54,7 +54,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/tofunth/gostock/internal/domain"
+	"github.com/zoiest/mono/gym/gostock/internal/domain"
 )
 
 type Client struct {

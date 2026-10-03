@@ -8,6 +8,8 @@ Welcome to the **`gostock`** project! This project is designed as an end-to-end 
 
 `gostock` is a modular, high-performance financial data aggregator and web dashboard. It fetches, standardizes, and caches real-time and historical stock data from multiple providers (**Yahoo Finance**, **Finviz**, and local test mocks).
 
+- **Go Module**: `github.com/zoiest/mono/gym/gostock`
+
 ### Key Features
 - **Multi-Source Ingestion**: Pluggable provider architecture with automatic failover between data sources.
 - **High-Performance Concurrency**: Goroutines, channels, and worker pools for bounded, concurrent stock queries.
