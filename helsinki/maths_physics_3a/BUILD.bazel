@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 
 sync(
     name = "sync",
+    remote_path = "helsinki/maths_physics_3a",
 )
 
 org2html(

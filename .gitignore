@@ -11,3 +11,7 @@ bazel-*
 # Google Drive credentials
 .google_drive_token*
 **/.google_drive_token*
+
+# Python & compiler caches
+__pycache__/
+**/.org2html_cache.json

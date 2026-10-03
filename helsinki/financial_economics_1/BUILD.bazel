@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 
 sync(
     name = "sync",
+    remote_path = "helsinki/financial_economics_1",
 )
 
 org2html(

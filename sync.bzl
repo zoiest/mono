@@ -1,13 +1,23 @@
-"""Bazel rule for syncing Helsinki courses with Google Drive."""
+"""Bazel rule for syncing workspace courses and projects with Google Drive."""
 
 def _sync_impl(ctx):
     runner = ctx.actions.declare_file(ctx.label.name + ".sh")
     py_tool = ctx.file._sync_tool
 
-    # Auto-detect course name from target's package if not explicitly overridden
+    # Resolve remote path (e.g. 'helsinki/financial_economics_1', 'gostock')
+    remote_path = ctx.attr.remote_path
+    if not remote_path:
+        if ctx.attr.root_folder_name and ctx.attr.course_name:
+            remote_path = ctx.attr.root_folder_name + "/" + ctx.attr.course_name
+        elif ctx.attr.root_folder_name:
+            remote_path = ctx.attr.root_folder_name
+        elif ctx.label.package:
+            remote_path = ctx.label.package
+        else:
+            remote_path = "helsinki"
+
     course_name = ctx.attr.course_name
-    if not course_name:
-        course_name = ctx.label.package
+    root_folder_name = ctx.attr.root_folder_name
 
     script_content = """#!/usr/bin/env bash
 set -euo pipefail
@@ -33,6 +43,8 @@ elif [ -f "${{BASH_SOURCE[0]}}.runfiles/{workspace_name}/{tool_short_path}" ]; t
     SCRIPT_PATH="${{BASH_SOURCE[0]}}.runfiles/{workspace_name}/{tool_short_path}"
 elif [ -n "${{RUNFILES_DIR:-}}" ] && [ -f "${{RUNFILES_DIR}}/_main/{tool_short_path}" ]; then
     SCRIPT_PATH="${{RUNFILES_DIR}}/_main/{tool_short_path}"
+elif [ -n "${{RUNFILES_DIR:-}}" ] && [ -f "${{RUNFILES_DIR}}/{workspace_name}/{tool_short_path}" ]; then
+    SCRIPT_PATH="${{RUNFILES_DIR}}/{workspace_name}/{tool_short_path}"
 else
     SCRIPT_PATH="$(find "$(dirname "${{BASH_SOURCE[0]}}")" -name "sync_drive.py" 2>/dev/null | head -n 1 || true)"
 fi
@@ -51,6 +63,7 @@ fi
 exec "$PYTHON_BIN" "$SCRIPT_PATH" \\
     --workspace-dir "$WORKSPACE_DIR" \\
     --target-dir "$TARGET_DIR" \\
+    --remote-path "{remote_path}" \\
     --course-name "{course_name}" \\
     --root-folder-name "{root_folder_name}" \\
     --root-folder-id "{root_folder_id}" \\
@@ -59,8 +72,9 @@ exec "$PYTHON_BIN" "$SCRIPT_PATH" \\
 """.format(
         tool_short_path = py_tool.short_path,
         workspace_name = ctx.workspace_name,
+        remote_path = remote_path,
         course_name = course_name,
-        root_folder_name = ctx.attr.root_folder_name,
+        root_folder_name = root_folder_name,
         root_folder_id = ctx.attr.root_folder_id,
         token_file = ctx.attr.token_file,
     )
@@ -82,13 +96,17 @@ sync = rule(
     implementation = _sync_impl,
     executable = True,
     attrs = {
+        "remote_path": attr.string(
+            default = "",
+            doc = "Remote path in Google Drive (e.g. 'helsinki/financial_economics_1', 'gostock').",
+        ),
         "course_name": attr.string(
             default = "",
-            doc = "Name of the course directory (defaults to current package name).",
+            doc = "Optional subfolder/course name.",
         ),
         "root_folder_name": attr.string(
-            default = "helsinki",
-            doc = "Name of the root Google Drive directory.",
+            default = "",
+            doc = "Optional root Google Drive folder name.",
         ),
         "root_folder_id": attr.string(
             default = "",
@@ -103,7 +121,7 @@ sync = rule(
             allow_single_file = True,
         ),
     },
-    doc = "Syncs files between Google Drive and local course directories.",
+    doc = "Syncs files between configured Google Drive remote path and local directories.",
 )
 
 def _sync_test_impl(ctx):
