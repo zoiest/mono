@@ -30,6 +30,9 @@ The project follows standard Go package layout conventions:
 .
 ├── README.md                 # Overall architecture, book mapping, and guide
 ├── stories/                  # Step-by-step User Stories (001 - 022)
+├── bin/                      # Org-mode notes & HTML summaries (synced with Drive, gitignored)
+│   ├── index.org             # Master Org-Roam index and MOC
+│   └── ch*.org               # Chapter summaries, recipes, and idioms
 ├── cmd/
 │   ├── gostock-cli/          # Command-line interface entrypoint
 │   └── gostock-server/       # HTTP web application entrypoint
@@ -51,6 +54,27 @@ The project follows standard Go package layout conventions:
 ├── go.mod
 └── go.sum
 ```
+
+---
+
+## 📑 Org-Mode Book Summaries & Quick References
+
+Comprehensive, high-yield summaries for each chapter of *Go in Practice (Second Edition)* are formatted as Org-mode notes compatible with **Org-Roam** (including stable `:ID:` properties, tags, and cross-links):
+
+- **Master Index & Cheat Sheet**: [bin/index.org](bin/index.org)
+- [Ch 01: Getting Started with Go](bin/ch01_getting_started.org) — Toolchain, environment variables, modules
+- [Ch 02: Building CLI Applications](bin/ch02_cli_applications.org) — Flags, enums (`iota`), config hierarchy, OS signals
+- [Ch 03: Structs, Interfaces & Generics](bin/ch03_structs_interfaces_generics.org) — Struct tags, JSON, composition, generics
+- [Ch 04: Handling Errors & Panics](bin/ch04_error_handling_and_panics.org) — Sentinel errors, `%w` wrapping, `errors.Is`/`As`, `defer`/`recover`
+- [Ch 05: Concurrency in Go](bin/ch05_concurrency_in_go.org) — Goroutines, `sync.WaitGroup`, `sync.RWMutex`, channels, worker pools
+- [Ch 06: Testing, Logging & Benchmarking](bin/ch06_testing_logging_benchmarking.org) — `log/slog`, table-driven tests, `httptest`, fuzzing, benchmarks
+- [Ch 07: File Access & Networking](bin/ch07_file_access_and_networking.org) — `bufio`, TCP/UDP, Server-Sent Events (SSE)
+- [Ch 08: Building an HTTP Server](bin/ch08_building_http_server.org) — Go 1.22+ `ServeMux`, path values, composable middleware
+- [Ch 09: HTML & Email Template Patterns](bin/ch09_html_and_email_templates.org) — `html/template`, `FuncMap`, layouts, XSS safety
+- [Ch 10: Sending and Receiving Data](bin/ch10_sending_receiving_data.org) — `embed.FS`, static assets, streaming CSV exports
+- [Ch 11: Working with External Services](bin/ch11_external_services_rest_grpc.org) — `http.Client` pooling, timeouts, backoff retries, gRPC
+- [Ch 12: Cloud-Ready Applications](bin/ch12_cloud_and_microservices.org) — Health probes, runtime metrics, distroless Docker
+- [Ch 13: Reflection and Advanced Go](bin/ch13_reflection_and_advanced_go.org) — Struct tags, Laws of Reflection, `go:generate`
 
 ---
 
