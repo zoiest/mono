@@ -38,7 +38,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tofunth/gostock/internal/domain"
+	"github.com/zoiest/mono/gym/gostock/internal/domain"
 )
 
 func TestClient_FetchQuote(t *testing.T) {

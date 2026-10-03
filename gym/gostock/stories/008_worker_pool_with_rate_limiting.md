@@ -35,8 +35,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/tofunth/gostock/internal/domain"
-	"github.com/tofunth/gostock/internal/provider"
+	"github.com/zoiest/mono/gym/gostock/internal/domain"
+	"github.com/zoiest/mono/gym/gostock/internal/provider"
 )
 
 type WorkerPool struct {

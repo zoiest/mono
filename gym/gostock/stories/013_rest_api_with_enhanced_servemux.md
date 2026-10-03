@@ -36,8 +36,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/tofunth/gostock/internal/domain"
-	"github.com/tofunth/gostock/internal/service"
+	"github.com/zoiest/mono/gym/gostock/internal/domain"
+	"github.com/zoiest/mono/gym/gostock/internal/service"
 )
 
 type Server struct {

@@ -30,7 +30,7 @@
 ### 1. Initialize the Module
 Create the module with a clear namespace path:
 ```bash
-go mod init github.com/tofunth/gostock
+go mod init github.com/zoiest/mono/gym/gostock
 ```
 
 ### 2. Scaffold the Project Directory Layout
