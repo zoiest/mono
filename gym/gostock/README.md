@@ -56,7 +56,34 @@ The project follows standard Go package layout conventions:
 
 ## 🗺️ Roadmap & User Stories
 
-The learning journey is divided into 7 sequential phases containing 22 focused user stories. Each story details the book techniques, Go language features, architecture decisions, and acceptance criteria.
+The learning journey is divided into 7 sequential phases containing 22 focused user stories. Track your implementation progress in the table below:
+
+### 📊 User Stories Status Table
+
+| Story | Title | Phase | Book Technique (*Go in Practice 2nd Ed*) | Status |
+| :---: | :--- | :---: | :--- | :---: |
+| [001](stories/001_project_setup_and_module_initialization.md) | Project Setup & Module Initialization | Phase 1 | Ch 1 (Toolchain, Workspace, Modules) | ⏳ Todo |
+| [002](stories/002_domain_models_struct_tags_and_enums.md) | Domain Models, Struct Tags & Enums | Phase 1 | Ch 2.1 & 3.1 (Structs, Enums with iota, JSON) | ⏳ Todo |
+| [003](stories/003_multi_source_configuration_loader.md) | Multi-Source Configuration Loader | Phase 1 | Ch 2.1 & 2.2 (Flags, Env Vars, Config Files) | ⏳ Todo |
+| [004](stories/004_provider_interface_and_yahoo_client.md) | Provider Interface & Yahoo Finance Client | Phase 2 | Ch 3.3 & 11.1 (Interfaces, http.Client, JSON) | ⏳ Todo |
+| [005](stories/005_idiomatic_error_handling_and_wrapping.md) | Idiomatic Error Handling & Error Wrapping | Phase 2 | Ch 4.1 & 4.2 (Sentinel Errors, %w, errors.Is/As) | ⏳ Todo |
+| [006](stories/006_finviz_provider_and_composite_fallback.md) | Finviz Provider & Composite Fallback Engine | Phase 2 | Ch 3.3 & 11.2 (Composition, Fault Tolerance) | ⏳ Todo |
+| [007](stories/007_concurrent_multi_symbol_fetcher.md) | Concurrent Multi-Symbol Fetcher | Phase 3 | Ch 5.1 & 5.2 (Goroutines, sync.WaitGroup) | ⏳ Todo |
+| [008](stories/008_worker_pool_with_rate_limiting.md) | Worker Pool with Rate Limiting | Phase 3 | Ch 5.3 (Channels, Worker Pools, Timeouts) | ⏳ Todo |
+| [009](stories/009_thread_safe_in_memory_cache.md) | Thread-Safe In-Memory Cache with TTL | Phase 3 | Ch 3.4 & 5.2 (sync.RWMutex, Generics) | ⏳ Todo |
+| [010](stories/010_structured_logging_with_slog.md) | Structured Logging with slog | Phase 4 | Ch 6.1 & 6.2 (log/slog, Handlers, Attributes) | ⏳ Todo |
+| [011](stories/011_table_driven_testing_and_http_mocks.md) | Table-Driven Testing & HTTP Mocks | Phase 4 | Ch 6.3 (Table Tests, httptest.Server, Coverage) | ⏳ Todo |
+| [012](stories/012_fuzz_testing_and_benchmarking.md) | Fuzz Testing & Allocation Benchmarking | Phase 4 | Ch 6.3 & 6.4 (testing.F, testing.B, Allocs) | ⏳ Todo |
+| [013](stories/013_rest_api_with_enhanced_servemux.md) | REST API with Go 1.22+ Enhanced ServeMux | Phase 5 | Ch 8.1 & 11.4 (Routing Verbs, Path Values) | ⏳ Todo |
+| [014](stories/014_composable_middleware_pipeline.md) | Composable Middleware Pipeline | Phase 5 | Ch 4.3 & 8.2 (Middlewares, Panic Recovery, CORS) | ⏳ Todo |
+| [015](stories/015_server_configuration_and_graceful_shutdown.md) | Server Configuration & Graceful Shutdown | Phase 5 | Ch 2.3 & 8.2 (OS Signals, Server Timeouts) | ⏳ Todo |
+| [016](stories/016_server_rendered_ui_with_html_template.md) | Server-Rendered UI with html/template | Phase 6 | Ch 9.1 (html/template, Layouts, FuncMap) | ⏳ Todo |
+| [017](stories/017_single_binary_static_file_embedding.md) | Single-Binary Static File Embedding | Phase 6 | Ch 10.1 (embed.FS, Embedded Static Assets) | ⏳ Todo |
+| [018](stories/018_real_time_streaming_with_sse.md) | Real-Time Price Streaming with SSE | Phase 6 | Ch 5.3 & 7.4 (Server-Sent Events, http.Flusher) | ⏳ Todo |
+| [019](stories/019_historical_data_export_to_csv.md) | Historical Data Export to CSV | Phase 6 | Ch 7.1 & 10.2 (CSV Streams, io.Writer) | ⏳ Todo |
+| [020](stories/020_cloud_health_probes_and_metrics.md) | Cloud Health Probes & Runtime Metrics | Phase 7 | Ch 12.4 (/healthz, /readyz, runtime.MemStats) | ⏳ Todo |
+| [021](stories/021_minimal_distroless_dockerization.md) | Minimal Distroless Dockerization | Phase 7 | Ch 12.1 & 12.5 (Multi-stage Docker, Static binary) | ⏳ Todo |
+| [022](stories/022_struct_tag_validation_and_codegen.md) | Dynamic Struct Tag Validation & Codegen | Phase 7 | Ch 13.1, 13.2 & 13.3 (Reflection, go:generate) | ⏳ Todo |
 
 ### Phase 1: Environment, CLI Foundation & Domain Modeling
 * [001: Project Setup & Module Initialization](stories/001_project_setup_and_module_initialization.md) *(Ch 1: Toolchain, Modules, Workspace)*
