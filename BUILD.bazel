@@ -3,21 +3,26 @@ load("//:org2html.bzl", "org2html")
 
 package(default_visibility = ["//visibility:public"])
 
-# Sync all courses under helsinki
+exports_files([
+    "sync_drive.py",
+    "sync.bzl",
+    "org2html.py",
+    "org2html.bzl",
+    "test_sync_drive.py",
+])
+
 sync(
     name = "sync",
-    remote_path = "helsinki",
 )
 
-# Compiles Org files to HTML
 org2html(
     name = "org2html",
 )
 
 sync_test(
     name = "sync_unit_test",
-    test_file = "//:test_sync_drive.py",
+    test_file = "test_sync_drive.py",
     data = [
-        "//:sync_drive.py",
+        "sync_drive.py",
     ],
 )

@@ -9,6 +9,7 @@ from sync_drive import (
     GoogleDriveAuth,
     GoogleDriveClient,
     compute_md5,
+    resolve_remote_path,
     sync_single_course,
 )
 
@@ -113,6 +114,31 @@ class TestSyncDrive(unittest.TestCase):
             self.assertEqual(len(uploaded), 1)
             self.assertEqual(uploaded[0][0].name, "exercise.org")
 
+    def test_resolve_remote_path_single_level(self):
+        mock_auth = MagicMock()
+        mock_auth.access_token = "dummy_token"
+        client = GoogleDriveClient(mock_auth)
+        client.find_root_folder = MagicMock(return_value=("gostock_root_id", "gostock"))
+
+        folder_id, resolved_path = resolve_remote_path(client, "gostock")
+        self.assertEqual(folder_id, "gostock_root_id")
+        self.assertEqual(resolved_path, "gostock")
+        client.find_root_folder.assert_called_once_with(folder_name="gostock")
+
+    def test_resolve_remote_path_multi_level(self):
+        mock_auth = MagicMock()
+        mock_auth.access_token = "dummy_token"
+        client = GoogleDriveClient(mock_auth)
+        client.find_root_folder = MagicMock(return_value=("helsinki_root_id", "helsinki"))
+        client.get_child_folder = MagicMock(return_value={"id": "mp3a_id", "name": "maths_physics_3a"})
+
+        folder_id, resolved_path = resolve_remote_path(client, "helsinki/maths_physics_3a")
+        self.assertEqual(folder_id, "mp3a_id")
+        self.assertEqual(resolved_path, "helsinki/maths_physics_3a")
+        client.find_root_folder.assert_called_once_with(folder_name="helsinki")
+        client.get_child_folder.assert_called_once_with("helsinki_root_id", ["maths_physics_3a"])
+
 
 if __name__ == "__main__":
     unittest.main()
+

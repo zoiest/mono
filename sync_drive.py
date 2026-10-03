@@ -607,13 +607,46 @@ def find_token_file(candidates: list[Path]) -> Path | None:
     return None
 
 
+def resolve_remote_path(client: GoogleDriveClient, remote_path: str) -> tuple[str, str]:
+    """
+    Resolves a slash-delimited remote path (e.g. 'helsinki/maths_physics_3a' or 'gostock')
+    to (folder_id, resolved_path_str).
+    """
+    parts = [p for p in remote_path.strip("/\\").split("/") if p and p != "."]
+    if not parts:
+        raise ValueError("Remote path cannot be empty.")
+
+    # Top-level folder
+    root_id, root_name = client.find_root_folder(folder_name=parts[0])
+    curr_id = root_id
+    curr_path = [root_name]
+
+    for part in parts[1:]:
+        child = client.get_child_folder(curr_id, [part])
+        if not child:
+            if client.dry_run:
+                print(f"[DRY-RUN] Would create remote directory '{part}' under '{'/'.join(curr_path)}'")
+                child_id = "dry_run_folder_id"
+            else:
+                print(f"Creating remote directory '{part}' under '{'/'.join(curr_path)}'...")
+                child_id = client.create_folder(curr_id, part)
+            curr_id = child_id
+            curr_path.append(part)
+        else:
+            curr_id = child["id"]
+            curr_path.append(child["name"])
+
+    return curr_id, "/".join(curr_path)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Sync Helsinki courses with Google Drive.")
-    parser.add_argument("--workspace-dir", default=".", help="Workspace root directory (helsinki)")
+    parser = argparse.ArgumentParser(description="Sync workspace courses and projects with Google Drive.")
+    parser.add_argument("--workspace-dir", default=".", help="Workspace root directory")
     parser.add_argument("--target-dir", default=".", help="Directory where bazel run was invoked")
+    parser.add_argument("--remote-path", default="", help="Configured remote path in Google Drive (e.g. helsinki/maths_physics_3a, gostock)")
     parser.add_argument("--course-name", default="", help="Subfolder/course name (e.g. 8.01, financial_economics_1, maths_physics_3a)")
-    parser.add_argument("--root-folder-id", default="", help="Google Drive root folder ID (helsinki)")
-    parser.add_argument("--root-folder-name", default="helsinki", help="Google Drive root folder name")
+    parser.add_argument("--root-folder-id", default="", help="Google Drive root folder ID")
+    parser.add_argument("--root-folder-name", default="", help="Google Drive root folder name")
     parser.add_argument("--token-file", default="", help="Path to token file")
     parser.add_argument("--dry-run", action="store_true", help="Simulate actions without modifying files")
     parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
@@ -627,93 +660,110 @@ def main():
     token_candidates = []
     if args.token_file:
         token_candidates.append(Path(args.token_file).resolve())
+
+    curr = target_dir
+    while curr != curr.parent:
+        token_candidates.append(curr / ".google_drive_token.json")
+        token_candidates.append(curr / ".google_drive_token")
+        curr = curr.parent
+
     token_candidates.extend([
-        target_dir / ".google_drive_token.json",
-        target_dir / ".google_drive_token",
         workspace_dir / ".google_drive_token.json",
         workspace_dir / ".google_drive_token",
-        target_dir.parent / ".google_drive_token.json",
-        target_dir.parent / ".google_drive_token",
+        workspace_dir / "helsinki" / ".google_drive_token.json",
+        workspace_dir / "helsinki" / ".google_drive_token",
+        Path.home() / ".config" / "google_drive_sync" / "token.json",
     ])
     token_path = find_token_file(token_candidates)
     if not token_path:
         token_path = workspace_dir / ".google_drive_token.json"
 
+    auth = GoogleDriveAuth(token_path)
+    client = GoogleDriveClient(auth, dry_run=args.dry_run, verbose=args.verbose)
+
+    # Resolve configured remote path
+    remote_path = args.remote_path
+    if not remote_path:
+        if args.root_folder_name and args.course_name:
+            remote_path = f"{args.root_folder_name}/{args.course_name}"
+        elif args.root_folder_name:
+            remote_path = args.root_folder_name
+        else:
+            try:
+                rel = target_dir.relative_to(workspace_dir)
+                remote_path = str(rel) if str(rel) != "." else "helsinki"
+            except Exception:
+                remote_path = "helsinki"
+
     print(f"{'='*70}")
-    print(f"Helsinki Google Drive Sync")
+    print(f"Google Drive Sync")
     print(f"Workspace Dir:   {workspace_dir}")
     print(f"Target Dir:      {target_dir}")
+    print(f"Remote Path:     {remote_path}")
     print(f"Token File:      {token_path}")
     if args.dry_run:
         print(f"Mode:            DRY RUN")
     print(f"{'='*70}")
 
-    auth = GoogleDriveAuth(token_path)
-    client = GoogleDriveClient(auth, dry_run=args.dry_run, verbose=args.verbose)
-
-    # Resolve remote root folder (helsinki)
-    root_id = args.root_folder_id or auth.folder_id_from_token or os.environ.get("GOOGLE_DRIVE_FOLDER_ID")
-    root_name = args.root_folder_name or auth.folder_name_from_token or "helsinki"
-
     try:
-        remote_root_id, remote_root_name = client.find_root_folder(folder_id=root_id, folder_name=root_name)
+        remote_dest_id, resolved_remote_path = resolve_remote_path(client, remote_path)
     except Exception as exc:
-        print(f"\nError finding root folder: {exc}", file=sys.stderr)
+        print(f"\nError resolving remote path '{remote_path}': {exc}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Connected to remote Google Drive folder: '{remote_root_name}' (ID: {remote_root_id})")
+    print(f"Connected to remote Google Drive path: '{resolved_remote_path}' (ID: {remote_dest_id})")
 
-    # Determine which course(s) to sync
-    course_name = args.course_name
-    if not course_name:
-        # Check if target_dir is a subfolder inside workspace
-        try:
-            rel = target_dir.relative_to(workspace_dir)
-            if str(rel) != ".":
-                course_name = str(rel).split("/")[0]
-        except ValueError:
-            pass
+    # Determine what to sync
+    is_leaf_target = (target_dir / "downloads").exists() or (target_dir / "bin").exists()
 
-    if course_name:
-        courses_to_sync = [course_name]
+    if is_leaf_target:
+        cname = args.course_name or target_dir.name
+        sync_single_course(client, remote_dest_id, cname, target_dir)
     else:
-        # At root helsinki: find all course folders that have bin or downloads or BUILD.bazel locally,
-        # or exist remotely in Google Drive under root
-        courses_set = set()
-        for child in workspace_dir.iterdir():
-            if child.is_dir() and not child.name.startswith((".", "bazel-")):
-                if (child / "downloads").exists() or (child / "bin").exists() or (child / "BUILD.bazel").exists():
-                    courses_set.add(child.name)
-
-        try:
-            remote_children = client.list_files(
-                f"'{remote_root_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
-                fields="files(id, name)",
-            )
-            for rc in remote_children:
-                if not rc["name"].startswith((".", "bazel-")):
-                    courses_set.add(rc["name"])
-        except Exception:
-            pass
-
-        courses_to_sync = sorted(courses_set)
-
-    print(f"Courses to sync: {', '.join(courses_to_sync)}")
-
-    for cname in courses_to_sync:
-        local_c_dir = workspace_dir / cname
-        if not local_c_dir.is_dir():
-            local_c_dir.mkdir(parents=True, exist_ok=True)
-
-        # Get or create remote course folder under helsinki
-        remote_c_folder = client.get_child_folder(remote_root_id, [cname])
-        if not remote_c_folder:
-            print(f"\nCreating remote course folder '{cname}' in '{remote_root_name}'...")
-            remote_c_id = client.create_folder(remote_root_id, cname)
+        # Multi-course container directory (e.g. helsinki/)
+        course_name = args.course_name
+        if course_name:
+            courses_to_sync = [course_name]
         else:
-            remote_c_id = remote_c_folder["id"]
+            courses_set = set()
+            for child in target_dir.iterdir():
+                if child.is_dir() and not child.name.startswith((".", "bazel-")):
+                    if (child / "downloads").exists() or (child / "bin").exists() or (child / "BUILD.bazel").exists():
+                        courses_set.add(child.name)
 
-        sync_single_course(client, remote_c_id, cname, local_c_dir)
+            try:
+                remote_children = client.list_files(
+                    f"'{remote_dest_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+                    fields="files(id, name)",
+                )
+                for rc in remote_children:
+                    if not rc["name"].startswith((".", "bazel-")):
+                        courses_set.add(rc["name"])
+            except Exception:
+                pass
+
+            courses_to_sync = sorted(courses_set)
+
+        print(f"Courses/projects to sync under '{resolved_remote_path}': {', '.join(courses_to_sync)}")
+
+        for cname in courses_to_sync:
+            local_c_dir = target_dir / cname
+            if not local_c_dir.is_dir():
+                local_c_dir.mkdir(parents=True, exist_ok=True)
+
+            remote_c_folder = client.get_child_folder(remote_dest_id, [cname])
+            if not remote_c_folder:
+                if client.dry_run:
+                    print(f"\n[DRY-RUN] Would create remote course folder '{cname}' in '{resolved_remote_path}'...")
+                    remote_c_id = None
+                else:
+                    print(f"\nCreating remote course folder '{cname}' in '{resolved_remote_path}'...")
+                    remote_c_id = client.create_folder(remote_dest_id, cname)
+            else:
+                remote_c_id = remote_c_folder["id"]
+
+            if remote_c_id:
+                sync_single_course(client, remote_c_id, cname, local_c_dir)
 
     print(f"\n{'='*70}")
     print("Sync process completed!")

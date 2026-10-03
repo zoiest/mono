@@ -1,4 +1,4 @@
 module(
-    name = "helsinki",
+    name = "mono",
     version = "1.0.0",
 )
