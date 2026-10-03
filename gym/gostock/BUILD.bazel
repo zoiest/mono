@@ -1,0 +1,13 @@
+load("//:sync.bzl", "sync")
+load("//:org2html.bzl", "org2html")
+
+package(default_visibility = ["//visibility:public"])
+
+sync(
+    name = "sync",
+    remote_path = "gostock",
+)
+
+org2html(
+    name = "org2html",
+)
