@@ -1,8 +1,8 @@
 # Story 001: Project Setup & Module Initialization
 
 ## User Story
-**As a** Go developer,  
-**I want to** initialize a Go module and configure the project workspace,  
+**As a** Go developer,
+**I want to** initialize a Go module and configure the project workspace,
 **So that** I have a reproducible dependency workspace adhering to standard Go directory conventions.
 
 ---
@@ -64,7 +64,7 @@ go run ./cmd/gostock-cli
 ---
 
 ## ✅ Acceptance Criteria
-- [ ] `go.mod` is generated at the project root targeting Go 1.22+.
-- [ ] The `cmd/gostock-cli` directory contains a functioning `main.go`.
-- [ ] Running `go run ./cmd/gostock-cli` prints the version message cleanly.
-- [ ] `go vet ./...` reports zero issues.
+- [X] `go.mod` is generated at the project root targeting Go 1.22+.
+- [X] The `cmd/gostock-cli` directory contains a functioning `main.go`.
+- [X] Running `go run ./cmd/gostock-cli` prints the version message cleanly.
+- [X] `go vet ./...` reports zero issues.

@@ -62,7 +62,7 @@ The learning journey is divided into 7 sequential phases containing 22 focused u
 
 | Story | Title | Phase | Book Technique (*Go in Practice 2nd Ed*) | Status |
 | :---: | :--- | :---: | :--- | :---: |
-| [001](stories/001_project_setup_and_module_initialization.md) | Project Setup & Module Initialization | Phase 1 | Ch 1 (Toolchain, Workspace, Modules) | ⏳ Todo |
+| [001](stories/001_project_setup_and_module_initialization.md) | Project Setup & Module Initialization | Phase 1 | Ch 1 (Toolchain, Workspace, Modules) | Done |
 | [002](stories/002_domain_models_struct_tags_and_enums.md) | Domain Models, Struct Tags & Enums | Phase 1 | Ch 2.1 & 3.1 (Structs, Enums with iota, JSON) | ⏳ Todo |
 | [003](stories/003_multi_source_configuration_loader.md) | Multi-Source Configuration Loader | Phase 1 | Ch 2.1 & 2.2 (Flags, Env Vars, Config Files) | ⏳ Todo |
 | [004](stories/004_provider_interface_and_yahoo_client.md) | Provider Interface & Yahoo Finance Client | Phase 2 | Ch 3.3 & 11.1 (Interfaces, http.Client, JSON) | ⏳ Todo |
