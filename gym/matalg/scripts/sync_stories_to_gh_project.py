@@ -46,15 +46,8 @@ def sync_story(story_file: Path, existing_items: dict[str, str]):
     print(f"Syncing: {title} ...")
 
     if title in existing_items:
-        item_id = existing_items[title]
-        print(f"  Item already exists ({item_id}), updating body...")
-        # Update body
-        run_cmd([
-            "gh", "project", "item-edit",
-            "--id", item_id,
-            "--project-id", PROJECT_ID,
-            "--body", body
-        ])
+        print(f"  Item already exists ({existing_items[title]}), skipping.")
+        return
     else:
         # Create item
         res_raw = run_cmd([

@@ -69,13 +69,15 @@ The book's entire mathematical theory, proofs, and numerical examples are conver
 | **08** | Further Topics | [`bin/ch08_further_topics.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch08_further_topics.org) | QR, Cholesky, Moore-Penrose $A^+$, Kronecker product, $\text{vec}(ABC)$ |
 | **09** | Applications to Statistics | [`bin/ch09_key_applications_to_statistics.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch09_key_applications_to_statistics.org) | MVN MLE, Hotelling $T^2$, MANOVA, PCA, Fisher LDA, MDS, OLS |
 | **10** | Outline Solutions | [`bin/ch10_outline_solutions.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch10_outline_solutions.org) | Complete Python numerical code solutions for all 9 chapters |
+| **11** | Capstone Project | [`bin/ch11_capstone_project.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch11_capstone_project.org) | End-to-end Multivariate Financial Risk & Factor Analysis Engine |
 
 ---
 
-## 🏃 Practical Exercise Stories (001 - 024)
+## 🏃 Practical Exercise Stories (001 - 030)
 
-The practical exercises are organized into 24 progressive stories in [`stories/`](file:///home/tofunth/stuffs/mono/gym/matalg/stories/) and synchronized directly to [GitHub Project 2](https://github.com/users/zoiest/projects/2):
+The practical exercises are organized into 30 progressive stories in [`stories/`](file:///home/tofunth/stuffs/mono/gym/matalg/stories/) and synchronized directly to [GitHub Project 2](https://github.com/users/zoiest/projects/2):
 
+### Foundational Curriculum (Stories 001 - 024)
 - **Story 001:** Matrix Creation & R-to-Python Translation
 - **Story 002:** Vector Geometry, Inner/Outer Products, and Orthogonality
 - **Story 003:** Matrix Multiplication, Cross Products, and the Trace Operator
@@ -100,6 +102,15 @@ The practical exercises are organized into 24 progressive stories in [`stories/`
 - **Story 022:** Generalized Inverses & The Moore-Penrose Pseudoinverse
 - **Story 023:** Kronecker Products, Vec Operator, and Matrix Equations
 - **Story 024:** Multivariate Hypothesis Testing, PCA, LDA, and OLS
+
+### Capstone Mini-Project: Multivariate Asset Analytics Engine (Stories 025 - 030)
+Dataset: [`data/asset_returns.csv`](file:///home/tofunth/stuffs/mono/gym/matalg/data/asset_returns.csv) ($N=250$ business days $\times$ $p=6$ asset classes: SPY, QQQ, GLD, XLE, TLT, VNQ).
+- **Story 025:** Capstone Project Phase 1 — Dataset Ingestion, Matrix Centering, and Covariance Estimation
+- **Story 026:** Capstone Project Phase 2 — Precision Matrix, Partial Correlation, and Online Sherman-Morrison Updates
+- **Story 027:** Capstone Project Phase 3 — PCA Factor Modeling, Scree Analysis, and SVD Covariance Denoising
+- **Story 028:** Capstone Project Phase 4 — Mahalanobis Anomaly Detection, Cholesky Whitening, and Hotelling's $T^2$
+- **Story 029:** Capstone Project Phase 5 — Markowitz Minimum-Variance Portfolio via Constrained Optimization
+- **Story 030:** Capstone Project Phase 6 — Factor Pricing Regression, Hat Matrix Projection, and Gauss-Markov Diagnostics
 
 ---
 
