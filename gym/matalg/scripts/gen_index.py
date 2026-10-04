@@ -39,6 +39,7 @@ INDEX_CONTENT = r""":PROPERTIES:
 | *08* | Further Topics | [[id:0192e4b3-0008-7000-8000-000000000008][Chapter 08: Further Topics]] | QR, LU, Cholesky, Schur, Moore-Penrose $A^+$, Kronecker Product $A \otimes B$, $\text{vec}$ | Story 018, 019, 020 |
 | *09* | Key Applications to Statistics | [[id:0192e4b3-0009-7000-8000-000000000009][Chapter 09: Applications to Statistics]] | MVN MLE, Hotelling's $T^2$, MANOVA, PCA, LDA, CCA, Metric MDS, Gauss-Markov OLS | Story 021, 022, 023, 024 |
 | *10* | Outline Solutions | [[id:0192e4b3-0010-7000-8000-000000000010][Chapter 10: Solutions]] | Complete Python Numerical Solutions for Chapters 1 through 9 | All Exercises |
+| *11* | Capstone Project | [[id:0192e4b3-0011-7000-8000-000000000011][Chapter 11: Capstone Project]] | End-to-End Asset Analytics Engine, Real Dataset, Risk & Pricing | Story 025, 026, 027, 028, 029, 030 |
 
 * Rosetta Stone: R to Python (NumPy / SciPy) Matrix Translation
 
