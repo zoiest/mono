@@ -1,9 +1,9 @@
-# Story 011: Agent-to-Agent (A2A) Protocol & Distributed Network Agent Mesh
+# Story 011: Agent-to-Agent (A2A) Financial Protocol & Signals Mesh
 
 ## User Story
-**As an** AI Agent developer,  
-**I want to** implement the Agent-to-Agent (A2A) protocol with standardized Agent Cards and HTTP/SSE endpoints,  
-**So that** agents distributed across different machines, processes, and network boundaries can advertise capabilities and collaborate remotely.
+**As a** quantitative research developer,  
+**I want to** implement the Agent-to-Agent (A2A) protocol with standardized Agent Cards and task endpoints over HTTP,  
+**So that** distributed financial agents (e.g. Remote News Agent in Cloud A, Execution Agent on premises) can discover each other and collaborate over the network.
 
 ---
 
@@ -11,7 +11,7 @@
 * **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems))
   - Chapter 9: *Orchestrating multi-agent systems* (9.6 A2A: Collaborating across networks, Agent Card, Server, Client)
 * **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-14-collaboration))
-  - **Item 81 & 82**: Manage Asynchronous Network I/O with Proper Timeouts and Graceful Task Cancellation
+  - **Item 81 & 82**: Manage Asynchronous Network I/O with Proper Timeouts
   - **Item 118**: Write Docstrings for Every Function, Class, and Module
   - **Item 119**: Use Packages to Organize Modules and Expose Stable APIs
   - **Item 121**: Define Distinct Root Exceptions (`A2AConnectionError`, `RemoteAgentTimeout`)
@@ -20,112 +20,76 @@
 ---
 
 ## 🎯 What You Will Learn
-1. Defining standardized `AgentCard` metadata models for network capability discovery.
-2. Building an A2A Server exposing `/.well-known/agent.json` and task dispatch endpoints.
-3. Implementing an async `RemoteAgentClient` connecting remote agents to local agent registries.
-4. Handling network failures, timeouts, and disconnects gracefully with typed exceptions.
+1. Defining standardized financial `AgentCard` metadata for remote signal providers.
+2. Building an A2A Server exposing `/.well-known/agent.json` and ticker task endpoints.
+3. Implementing an async `RemoteTickerAgentClient` connecting remote market models to local workflows.
+4. Handling network timeouts and disconnects gracefully with typed exceptions.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
 
-### 1. Define Agent Card Specification
+### 1. Financial Agent Card Specification
 In `src/agent/a2a/models.py`:
 ```python
 from pydantic import BaseModel, Field
 from typing import Any
 
-class SkillDeclaration(BaseModel):
+class MarketSkillDeclaration(BaseModel):
     name: str
     description: str
-    input_schema: dict[str, Any]
+    supported_asset_classes: list[str] = Field(default_factory=lambda: ["EQUITY"])
 
-class AgentCard(BaseModel):
-    """Standard descriptor for network-discoverable agents (Ch 9.6 & Item 124)."""
+class FinancialAgentCard(BaseModel):
     agent_id: str
     name: str
     description: str
-    version: str = "1.0.0"
     endpoint_url: str
-    skills: list[SkillDeclaration] = Field(default_factory=list)
+    skills: list[MarketSkillDeclaration] = Field(default_factory=list)
 
-class TaskRequest(BaseModel):
+class TickerTaskRequest(BaseModel):
     task_id: str
-    instruction: str
-    context: dict[str, Any] = Field(default_factory=dict)
+    ticker: str
+    lookback_days: int = 7
 
-class TaskResponse(BaseModel):
+class TickerTaskResponse(BaseModel):
     task_id: str
-    status: str
-    result: str
+    ticker: str
+    sentiment_signal: str
+    confidence: float
 ```
 
-### 2. Implement A2A Server
+### 2. Implement Financial A2A Server
 In `src/agent/a2a/server.py`:
 ```python
 from fastapi import FastAPI
-from agent.a2a.models import AgentCard, TaskRequest, TaskResponse
-from agent.core.agent import Agent
+from agent.a2a.models import FinancialAgentCard, TickerTaskRequest, TickerTaskResponse
+from agent.core.agent import FinancialReActAgent
 
-def create_a2a_app(agent_card: AgentCard, local_agent: Agent) -> FastAPI:
-    """Creates an ASGI application exposing the agent to the network mesh (Ch 9.6)."""
-    app = FastAPI(title=agent_card.name, description=agent_card.description)
+def create_financial_a2a_server(card: FinancialAgentCard, agent: FinancialReActAgent) -> FastAPI:
+    app = FastAPI(title=card.name)
 
-    @app.get("/.well-known/agent.json", response_model=AgentCard)
-    async def get_agent_card() -> AgentCard:
-        return agent_card
+    @app.get("/.well-known/agent.json", response_model=FinancialAgentCard)
+    async def get_card():
+        return card
 
-    @app.post("/tasks", response_model=TaskResponse)
-    async def dispatch_task(req: TaskRequest) -> TaskResponse:
-        answer = await local_agent.run(req.instruction)
-        return TaskResponse(
+    @app.post("/tasks/analyze_ticker", response_model=TickerTaskResponse)
+    async def analyze(req: TickerTaskRequest):
+        summary = await agent.analyze_ticker(req.ticker)
+        return TickerTaskResponse(
             task_id=req.task_id,
-            status="completed",
-            result=answer,
+            ticker=req.ticker,
+            sentiment_signal="BULLISH" if "BULLISH" in summary else "NEUTRAL",
+            confidence=0.88,
         )
 
     return app
 ```
 
-### 3. Implement Remote Agent Client
-In `src/agent/a2a/client.py`:
-```python
-import httpx
-from agent.core.exceptions import AgentBaseException
-from agent.a2a.models import AgentCard, TaskRequest, TaskResponse
-
-class A2AConnectionError(AgentBaseException):
-    """Raised when communication with a remote agent fails (Item 121)."""
-    pass
-
-class RemoteAgentClient:
-    """Client adapter for calling remote agents over HTTP (Ch 9.6)."""
-
-    def __init__(self, base_url: str, *, timeout: float = 30.0):
-        self.base_url = base_url.rstrip("/")
-        self.timeout = timeout
-
-    async def fetch_card(self) -> AgentCard:
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
-            resp = await client.get(f"{self.base_url}/.well-known/agent.json")
-            if resp.status_code != 200:
-                raise A2AConnectionError(f"Failed to fetch Agent Card from {self.base_url}")
-            return AgentCard(**resp.json())
-
-    async def execute_task(self, instruction: str) -> str:
-        req = TaskRequest(task_id="remote-1", instruction=instruction)
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
-            resp = await client.post(f"{self.base_url}/tasks", json=req.model_dump())
-            if resp.status_code != 200:
-                raise A2AConnectionError(f"Remote task execution failed: {resp.text}")
-            res = TaskResponse(**resp.json())
-            return res.result
-```
-
 ---
 
 ## ✅ Acceptance Criteria
-- [ ] `AgentCard` conforms to standard JSON specification.
-- [ ] A2A server serves `/.well-known/agent.json` and `/tasks` cleanly.
-- [ ] `RemoteAgentClient` communicates with remote agents over HTTP with timeouts.
-- [ ] Network errors cleanly mapped to `A2AConnectionError`.
+- [ ] `FinancialAgentCard` conforms to standard specification and is discoverable over HTTP.
+- [ ] A2A Server dispatches ticker analysis tasks and returns structured signals.
+- [ ] Remote client connects to distributed signal agents with timeout management.
+- [ ] Network errors map cleanly to domain exceptions.

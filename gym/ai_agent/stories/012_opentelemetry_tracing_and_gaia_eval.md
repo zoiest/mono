@@ -1,119 +1,101 @@
-# Story 012: OpenTelemetry Tracing, GAIA Evaluation & LLM-as-a-Judge
+# Story 012: Financial Signal Evaluation, Backtesting & LLM-as-a-Judge
 
 ## User Story
-**As an** AI Agent developer,  
-**I want to** instrument the agent with OpenTelemetry tracing and build an automated evaluation pipeline using GAIA benchmark datasets and LLM-as-a-Judge rubrics in CI/CD,  
-**So that** I can observe internal agent steps, measure accuracy and latency quantitatively, and continuously prevent regressions with an agent quality flywheel.
+**As a** quantitative research developer,  
+**I want to** instrument the agent with OpenTelemetry tracing and build an automated evaluation pipeline using historical earnings surprises and LLM-as-a-Judge rubrics in CI/CD,  
+**So that** we can quantitatively measure ticker signal precision, monitor token costs per ticker, and prevent performance regressions.
 
 ---
 
 ## 📖 Book Alignment
 * **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-10-evaluating-agents))
   - Chapter 10: *Evaluating agents* (10.1 Observing an agent, OpenTelemetry, 10.2 Datasets & rubrics, 10.3 LLM-as-a-judge, 10.4 Operations & CI/CD)
-  - Chapter 1.4, 2.4, 4.8: GAIA benchmark tasks
 * **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-13-testing-and-debugging))
-  - **Item 94–96**: Profile Before Optimizing with `cProfile`
+  - **Item 94–96**: Profile Performance Bottlenecks with `cProfile`
   - **Item 108–110**: Verify Behaviors in `TestCase` Subclasses; Prefer Integration Tests; Isolate Tests
-  - **Item 111 & 112**: Use Mocks to Test Code with Complex Dependencies; Encapsulate Dependencies
-  - **Item 113**: Use `assertAlmostEqual` to Control Precision in Floating Point Tests
-  - **Item 118**: Document Rubrics and Evaluation Reports
+  - **Item 111 & 112**: Use Mocks to Test Complex Dependencies in CI
+  - **Item 113**: Use `assertAlmostEqual` / `pytest.approx` to Control Precision in Floating Point Evaluation Metrics
 
 ---
 
 ## 🎯 What You Will Learn
-1. Instrumenting agent loops and tool calls with distributed OpenTelemetry spans.
-2. Creating synthetic and benchmark evaluation datasets (GAIA Level 1 & 2).
-3. Implementing a rubric-based LLM-as-a-Judge evaluator with score assertions.
-4. Setting up a deterministic mock-based regression test suite for GitHub Actions CI.
+1. Instrumenting ticker analysis runs and tool dispatches with OpenTelemetry tracing.
+2. Creating a financial benchmark dataset of historical earnings headlines and subsequent price moves.
+3. Implementing an LLM-as-a-Judge to evaluate reasoning rigor and penalize hallucinated numbers.
+4. Setting up a mock-based regression test suite for GitHub Actions CI.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
 
-### 1. Instrument Agent Loop with OpenTelemetry
+### 1. Instrument Financial Agent with OpenTelemetry
 In `src/agent/telemetry/tracer.py`:
 ```python
 from contextlib import contextmanager
 from typing import Iterator
 
-# OpenTelemetry abstraction stub
-class AgentTracer:
-    """Generates distributed traces across agent runs, steps, and tool calls (Ch 10.1)."""
+class FinancialAgentTracer:
+    """Generates distributed traces across ticker analysis runs and news queries (Ch 10.1)."""
 
     @contextmanager
-    def span(self, name: str, attributes: dict[str, str] | None = None) -> Iterator[None]:
-        attrs = attributes or {}
-        # OpenTelemetry span start
-        print(f"[TRACE START] {name} | {attrs}")
+    def span(self, name: str, ticker: str) -> Iterator[None]:
+        print(f"[TRACE START] {name} for {ticker}")
         try:
             yield
         finally:
-            print(f"[TRACE END] {name}")
+            print(f"[TRACE END] {name} for {ticker}")
 ```
 
-### 2. Implement Rubric-Based LLM-as-a-Judge
-In `src/agent/eval/judge.py`:
+### 2. Implement Financial Signal Judge
+In `src/agent/eval/financial_judge.py`:
 ```python
 from dataclasses import dataclass
 from agent.llm.client import LlmClient
 
 @dataclass
-class EvalScore:
+class FinancialSignalVerdict:
     passed: bool
     score: float  # 0.0 to 1.0
-    reasoning: str
+    critique: str
 
-class LLMJudge:
-    """Evaluates agent response quality against ground-truth rubric criteria (Ch 10.3)."""
+class FinancialSignalJudge:
+    def __init__(self, llm: LlmClient):
+        self.llm = llm
 
-    def __init__(self, llm_client: LlmClient):
-        self.llm = llm_client
-
-    async def evaluate_task(self, query: str, response: str, ground_truth: str) -> EvalScore:
+    async def evaluate_signal(self, ticker: str, agent_output: str, ground_truth_catalyst: str) -> FinancialSignalVerdict:
         prompt = (
-            f"You are an impartial AI judge. Evaluate the agent's answer against ground truth.
+            f"You are a Senior Quantitative Portfolio Manager judging an AI equity analyst.
+"
+            f"Ticker: {ticker}
+"
+            f"Ground Truth Reality: {ground_truth_catalyst}
+"
+            f"Agent Thesis: {agent_output}
 
 "
-            f"User Query: {query}
-"
-            f"Ground Truth: {ground_truth}
-"
-            f"Agent Answer: {response}
-
-"
-            f"Output 'VERDICT: PASS' or 'VERDICT: FAIL' followed by a score (0.0 to 1.0) and reasoning."
+            f"Evaluate if the agent captured the true catalyst. Output 'VERDICT: PASS' or 'VERDICT: FAIL'."
         )
         res = await self.llm.complete([{"role": "user", "content": prompt}])
         content = res.content or ""
         passed = "VERDICT: PASS" in content
-        score = 1.0 if passed else 0.0
-        return EvalScore(passed=passed, score=score, reasoning=content)
+        return FinancialSignalVerdict(passed=passed, score=1.0 if passed else 0.0, critique=content)
 ```
 
-### 3. GAIA Evaluation Harness & CI Integration
-In `tests/test_gaia_regression.py`:
+### 3. CI Regression Test Harness
+In `tests/test_signal_eval_regression.py`:
 ```python
 import pytest
-from agent.eval.judge import EvalScore
 
-def test_evaluation_metric_precision():
-    """Using pytest / math.isclose to assert floating-point score tolerances (Item 113)."""
-    scores = [1.0, 0.95, 0.98]
-    average = sum(scores) / len(scores)
-    assert average == pytest.approx(0.9766, rel=1e-3)
-
-@pytest.mark.asyncio
-async def test_gaia_level1_synthetic_question():
-    # Deterministic CI test with mock tools and mock judge
-    eval_score = EvalScore(passed=True, score=1.0, reasoning="Matches ground truth exactly.")
-    assert eval_score.passed is True
-    assert eval_score.score >= 0.8
+def test_signal_accuracy_score_tolerance():
+    accuracy = 0.8499999
+    # Control floating point tolerances (Item 113)
+    assert accuracy == pytest.approx(0.85, abs=1e-3)
 ```
 
 ---
 
 ## ✅ Acceptance Criteria
-- [ ] OpenTelemetry tracer generates spans for `agent.run`, `think`, and `act`.
-- [ ] LLM-as-a-Judge evaluates responses against ground truth rubrics.
-- [ ] Floating-point score assertions use `pytest.approx` / `assertAlmostEqual`.
-- [ ] CI evaluation suite passes without requiring live external API tokens.
+- [ ] OpenTelemetry tracer generates spans for `ticker.analyze`, news fetching, and tool calls.
+- [ ] `FinancialSignalJudge` evaluates reasoning validity against ground-truth earnings surprises.
+- [ ] Score metrics verified with `pytest.approx` and floating-point tolerances.
+- [ ] CI suite runs deterministically without consuming live API tokens.
