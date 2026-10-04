@@ -8,3 +8,4 @@ To maintain the coding physique, let's practice with books from the old days.
   (adapt to different programming languages)
 - [**matalg**](./matalg): *Basics of Matrix Algebra for Statistics with R*
   by Fieller (adapt to NumPy)
+- [**ai_agent**](./ai_agent): *Build an AI Agent* by Jungjun Hur and Younghee Song
