@@ -1,8 +1,8 @@
 # Story 002: Domain Models, Struct Tags & Enums
 
 ## User Story
-**As a** financial application developer,  
-**I want to** define core domain models (`Quote`, `HistoricalPrice`, `CompanyProfile`, `ProviderType`),  
+**As a** financial application developer,
+**I want to** define core domain models (`Quote`, `HistoricalPrice`, `CompanyProfile`, `ProviderType`),
 **So that** stock data can be serialized to and from JSON with strict type safety, validation, and business methods.
 
 ---
@@ -128,6 +128,6 @@ type HistoricalPrice struct {
 ---
 
 ## ✅ Acceptance Criteria
-- [ ] `ProviderType` implements `fmt.Stringer` and a parsing function.
-- [ ] `Quote` struct includes JSON tags and methods for `Change()` and `ChangePercent()`.
-- [ ] Unit tests in `internal/domain/quote_test.go` verify math calculations and JSON marshaling.
+- [X] `ProviderType` implements `fmt.Stringer` and a parsing function.
+- [X] `Quote` struct includes JSON tags and methods for `Change()` and `ChangePercent()`.
+- [X] Unit tests in `internal/domain/quote_test.go` verify math calculations and JSON marshaling.
