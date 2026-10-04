@@ -19,10 +19,13 @@
 2. Cross-products $X^TX$ (Gram matrix) and $XX^T$.
 3. Trace linearity and cyclic invariance: tr(ABC) = tr(BCA) = tr(CAB).
 4. The Frobenius inner product tr(A^T B) and matrix Frobenius norm.
+5. Evaluating portfolio returns $r_p = X w$ via matrix-vector multiplication.
+6. Verifying the cyclic trace property and Frobenius norm on empirical asset cross-products.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
+
 
 ### 1. Trace and Cross Products
 ```python
@@ -47,6 +50,42 @@ assert np.allclose(AtA, AtA.T)
 assert np.isclose(np.trace(A @ A.T), np.trace(A.T @ A))
 ```
 
+### 2. 📊 Practical Dataset Application: Real Market Portfolio Returns & Cross Products
+```python
+import csv
+import numpy as np
+
+with open("data/asset_returns.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    next(reader)
+    X = np.array([[float(v) for v in row[1:]] for row in reader])
+
+n, p = X.shape
+
+# 1. Equal-weighted portfolio return vector via matrix-vector product
+w = np.ones(p) / p
+r_port = X @ w
+assert r_port.shape == (n,)
+print(f"Equal-weight portfolio annualized return: {np.mean(r_port) * 252 * 100:.2f}%")
+
+# 2. Scatter / Cross-product matrix G = X^T X
+G = X.T @ X
+assert G.shape == (p, p)
+assert np.allclose(G, G.T)
+
+# 3. Cyclic trace invariance: tr(X X^T) == tr(X^T X)
+tr_XXt = np.trace(X @ X.T)
+tr_XtX = np.trace(G)
+print(f"tr(X X^T) = {tr_XXt:.4f}, tr(X^T X) = {tr_XtX:.4f}")
+assert np.isclose(tr_XXt, tr_XtX)
+
+# 4. Frobenius norm equality: ||X||_F == sqrt(tr(X^T X))
+norm_fro = np.linalg.norm(X, "fro")
+norm_trace = np.sqrt(tr_XtX)
+assert np.isclose(norm_fro, norm_trace)
+print(f"Total Market Frobenius Norm ||X||_F: {norm_fro:.4f}")
+```
+
 ---
 
 ## ✅ Acceptance Criteria
@@ -54,3 +93,7 @@ assert np.isclose(np.trace(A @ A.T), np.trace(A.T @ A))
 - [X] Trace cyclic equality `tr(AB) == tr(BA)` is verified.
 - [X] `A.T @ A` is verified to be symmetric positive semi-definite.
 - [X] `tr(A A.T) == tr(A.T A)` is confirmed.
+- [X] Equal-weight portfolio return series is computed using matrix-vector multiplication.
+- [X] Cross-product matrix $X^TX$ is verified symmetric $(6 \times 6)$.
+- [X] Cyclic trace identity $\text{tr}(X X^T) = \text{tr}(X^T X)$ is confirmed on empirical returns.
+- [X] Matrix Frobenius norm $\|X\|_F = \sqrt{\text{tr}(X^TX)}$ is numerically verified.

@@ -19,10 +19,13 @@
 2. Matrix derivatives: d tr(XA)/dX = A^T.
 3. Log-determinant derivative: d log|X| / dX = X^{-1}.
 4. Deriving the OLS normal equations X^T X beta = X^T y.
+5. Deriving and evaluating the matrix gradient of the multivariate normal log-likelihood $\nabla_\Sigma \ell$.
+6. Numerically proving that the gradient vanishes at the sample MLE covariance $S_{\text{MLE}}$.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
+
 
 ### 1. Numerical Gradient Verification
 ```python
@@ -47,8 +50,52 @@ assert np.allclose(grad_analytical, grad_num, atol=1e-5)
 print("Analytical gradient 2Sx verified numerically.")
 ```
 
+### 2. 📊 Practical Dataset Application: Real Market Matrix Calculus for Gaussian MLE Covariance
+```python
+import csv
+import numpy as np
+
+with open("data/asset_returns.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    next(reader)
+    X = np.array([[float(v) for v in row[1:]] for row in reader])
+
+n, p = X.shape
+H = np.eye(n) - np.ones((n, n)) / n
+X_tilde = H @ X
+S = (X_tilde.T @ X_tilde) / (n - 1)
+
+# MLE covariance estimate
+S_mle = (n - 1) / n * S
+inv_mle = np.linalg.inv(S_mle)
+A_sum = (n - 1) * S  # Sum of squared deviations
+
+# Log-likelihood gradient with respect to Sigma:
+# grad = -0.5 * n * Sigma^{-1} + 0.5 * Sigma^{-1} A Sigma^{-1}
+grad_mle = -0.5 * n * inv_mle + 0.5 * inv_mle @ A_sum @ inv_mle
+
+print("Maximum absolute gradient at MLE:\n", np.max(np.abs(grad_mle)))
+assert np.allclose(grad_mle, np.zeros((p, p)), atol=1e-6)
+
+# Verify log-likelihood decreases under perturbation: Sigma_pert = S_mle + eps * I
+eps = 1e-4
+S_pert = S_mle + eps * np.eye(p)
+inv_pert = np.linalg.inv(S_pert)
+
+def log_likelihood(Sigma_inv, Sigma):
+    return -0.5 * n * np.linalg.slogdet(Sigma)[1] - 0.5 * np.trace(Sigma_inv @ A_sum)
+
+ll_mle = log_likelihood(inv_mle, S_mle)
+ll_pert = log_likelihood(inv_pert, S_pert)
+print(f"Log-Likelihood at MLE: {ll_mle:.4f}")
+print(f"Log-Likelihood at Perturbed: {ll_pert:.4f}")
+assert ll_mle > ll_pert
+```
+
 ---
 
 ## ✅ Acceptance Criteria
 - [X] Analytical gradient `2 * S @ x` matches finite differences.
 - [X] Log-determinant derivative $\nabla \log|\Sigma| = \Sigma^{-1}$ is verified.
+- [X] Matrix gradient $\nabla_\Sigma \ell$ evaluates to zero at the MLE covariance $S_{\text{MLE}}$.
+- [X] Gaussian log-likelihood strictly decreases when moving away from $S_{\text{MLE}}$ in parameter space.
