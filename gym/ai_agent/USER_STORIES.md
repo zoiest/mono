@@ -3,15 +3,15 @@
 A practical curriculum and engineering backlog for building an autonomous AI Agent from scratch while mastering modern Pythonic design patterns, idioms, and engineering best practices.
 
 **Study Notes & References**:
-- 📘 [Build an AI Agent Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)
-- 🐍 [Effective Python (3rd Edition) Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)
+- 📘 [Build an AI Agent Study Notes](bin/build_an_ai_agent_notes.md)
+- 🐍 [Effective Python (3rd Edition) Study Notes](bin/effective_python_v3_notes.md)
 
 **Source Literature**:
 - 📖 *Build an AI Agent (From Scratch)* — Jungjun Hur & Younghee Song (Manning, 2026)
 - 🐍 *Effective Python (3rd Edition)* — Brett Slatkin (Addison-Wesley, 2024 / Python 3.13)
 
 **Individual Story Guides** (Step-by-Step Code Examples):
-- 📁 [stories/ Directory](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/)
+- 📁 [stories/ Directory](stories/)
 
 **GitHub Project Board**: [https://github.com/users/zoiest/projects/3/](https://github.com/users/zoiest/projects/3/)
 
@@ -21,31 +21,31 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 | Story ID | Title | Priority | Size | Status | Key Agent Concepts | Effective Python Items |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| [**Story 1**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/001_project_architecture_and_llm_client.md) | Project Architecture & Provider-Agnostic LLM Client | **P0** | **M** | `Ready` | Architecture, LiteLLM Adapter, Streaming | Items 1, 2, 31, 36, 37, 117-121, 124 |
-| [**Story 2**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/002_extensible_tool_calling_and_mcp.md) | Extensible Tool Calling Engine & MCP Protocol | **P0** | **L** | `Backlog` | Function Calling, Schemas, Calc/Search, MCP | Items 26-29, 32, 38, 50, 111, 112 |
-| [**Story 3**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/003_react_reasoning_loop_and_execution_context.md) | ReAct Reasoning Loop & ExecutionContext Engine | **P0** | **L** | `Backlog` | ReAct Cycle, State Machine, Stop Guards | Items 8, 9, 12, 19, 20, 21, 87 |
-| [**Story 4**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/004_rag_knowledge_base_and_vector_search.md) | RAG Knowledge Base, Vector Search & Chunking | **P1** | **M** | `Backlog` | Embeddings, Chunking, Top-K Vector Search | Items 24, 40, 43, 99, 100, 101, 104 |
-| [**Story 5**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/005_filesystem_tools_and_execution_callbacks.md) | Filesystem Navigation Tools & Execution Callbacks | **P1** | **M** | `Backlog` | File/Zip Tools, GAIA Gym, Callbacks, HITL | Items 26, 28, 33, 39, 86, 110 |
-| [**Story 6**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/006_context_engineering_sliding_windows_and_compaction.md) | Context Engineering, Sliding Windows & Compaction | **P0** | **L** | `Backlog` | Token Accounting, Deque, Compaction, Summary | Items 4, 22, 23, 103, 115 |
-| [**Story 7**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/007_multiturn_sessions_hitl_and_chromadb.md) | Multiturn Sessions, HITL Pause/Resume & ChromaDB | **P1** | **L** | `Backlog` | SessionManager, Pause/Resume, TaskMemory | Items 27, 28, 31, 87, 105, 107 |
-| [**Story 8**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/008_metacognitive_planning_and_reflection.md) | Metacognitive Task Planning & Reflection Engine | **P1** | **M** | `Backlog` | Plan-and-Solve, Self-Critique, Replanning | Items 4, 9, 11, 31, 54 |
-| [**Story 9**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/009_sandboxed_codeact_and_progressive_skills.md) | Sandboxed CodeAct Engine & Progressive Skills | **P0** | **XL** | `Backlog` | CodeAct, Docker/E2B Sandbox, Dynamic Skills | Items 72, 73, 84, 85, 98, 111, 116 |
-| [**Story 10**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/010_multi_agent_collaboration_and_workflows.md) | Multi-Agent Collaboration: Workflows & Handoffs | **P1** | **XL** | `Backlog` | Workflows, Agent-as-Tool, Agent Transfer | Items 18, 50, 77-83, 103 |
-| [**Story 11**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/011_agent_to_agent_a2a_protocol_and_mesh.md) | Agent-to-Agent (A2A) Network Protocol & Mesh | **P2** | **L** | `Backlog` | Agent Cards, HTTP/SSE, Distributed Mesh | Items 81, 82, 118, 119, 121, 124 |
-| [**Story 12**](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/012_opentelemetry_tracing_and_gaia_eval.md) | OpenTelemetry Tracing, GAIA Eval & LLM-as-Judge | **P0** | **L** | `Backlog` | Observability, Traces, GAIA Benchmark, CI/CD | Items 94-96, 108-113, 118 |
+| [**Story 1**](stories/001_project_architecture_and_llm_client.md) | Project Architecture & Provider-Agnostic LLM Client | **P0** | **M** | `Ready` | Architecture, LiteLLM Adapter, Streaming | Items 1, 2, 31, 36, 37, 117-121, 124 |
+| [**Story 2**](stories/002_extensible_tool_calling_and_mcp.md) | Extensible Tool Calling Engine & MCP Protocol | **P0** | **L** | `Backlog` | Function Calling, Schemas, Calc/Search, MCP | Items 26-29, 32, 38, 50, 111, 112 |
+| [**Story 3**](stories/003_react_reasoning_loop_and_execution_context.md) | ReAct Reasoning Loop & ExecutionContext Engine | **P0** | **L** | `Backlog` | ReAct Cycle, State Machine, Stop Guards | Items 8, 9, 12, 19, 20, 21, 87 |
+| [**Story 4**](stories/004_rag_knowledge_base_and_vector_search.md) | RAG Knowledge Base, Vector Search & Chunking | **P1** | **M** | `Backlog` | Embeddings, Chunking, Top-K Vector Search | Items 24, 40, 43, 99, 100, 101, 104 |
+| [**Story 5**](stories/005_filesystem_tools_and_execution_callbacks.md) | Filesystem Navigation Tools & Execution Callbacks | **P1** | **M** | `Backlog` | File/Zip Tools, GAIA Gym, Callbacks, HITL | Items 26, 28, 33, 39, 86, 110 |
+| [**Story 6**](stories/006_context_engineering_sliding_windows_and_compaction.md) | Context Engineering, Sliding Windows & Compaction | **P0** | **L** | `Backlog` | Token Accounting, Deque, Compaction, Summary | Items 4, 22, 23, 103, 115 |
+| [**Story 7**](stories/007_multiturn_sessions_hitl_and_chromadb.md) | Multiturn Sessions, HITL Pause/Resume & ChromaDB | **P1** | **L** | `Backlog` | SessionManager, Pause/Resume, TaskMemory | Items 27, 28, 31, 87, 105, 107 |
+| [**Story 8**](stories/008_metacognitive_planning_and_reflection.md) | Metacognitive Task Planning & Reflection Engine | **P1** | **M** | `Backlog` | Plan-and-Solve, Self-Critique, Replanning | Items 4, 9, 11, 31, 54 |
+| [**Story 9**](stories/009_sandboxed_codeact_and_progressive_skills.md) | Sandboxed CodeAct Engine & Progressive Skills | **P0** | **XL** | `Backlog` | CodeAct, Docker/E2B Sandbox, Dynamic Skills | Items 72, 73, 84, 85, 98, 111, 116 |
+| [**Story 10**](stories/010_multi_agent_collaboration_and_workflows.md) | Multi-Agent Collaboration: Workflows & Handoffs | **P1** | **XL** | `Backlog` | Workflows, Agent-as-Tool, Agent Transfer | Items 18, 50, 77-83, 103 |
+| [**Story 11**](stories/011_agent_to_agent_a2a_protocol_and_mesh.md) | Agent-to-Agent (A2A) Network Protocol & Mesh | **P2** | **L** | `Backlog` | Agent Cards, HTTP/SSE, Distributed Mesh | Items 81, 82, 118, 119, 121, 124 |
+| [**Story 12**](stories/012_opentelemetry_tracing_and_gaia_eval.md) | OpenTelemetry Tracing, GAIA Eval & LLM-as-Judge | **P0** | **L** | `Backlog` | Observability, Traces, GAIA Benchmark, CI/CD | Items 94-96, 108-113, 118 |
 
 ---
 
 ## Detailed User Stories
 
-### [Story 1: Project Architecture & Provider-Agnostic LLM Client](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/001_project_architecture_and_llm_client.md) Project Architecture & Provider-Agnostic LLM Client
+### [Story 1: Project Architecture & Provider-Agnostic LLM Client](stories/001_project_architecture_and_llm_client.md) Project Architecture & Provider-Agnostic LLM Client
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** establish a clean Python project package structure and implement an abstract, provider-agnostic LLM client (supporting OpenAI, Anthropic, Gemini via LiteLLM) with streaming and structured output,
   - **So that** the agent codebase has clean separation of concerns, strict type safety, predictable error handling, and vendor portability.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapters 1 & 2 (LLM fundamentals, LiteLLM provider adapter, structured outputs, async calls).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 1, 2, 31, 36, 37, 117-121, 124.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapters 1 & 2 (LLM fundamentals, LiteLLM provider adapter, structured outputs, async calls).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 1, 2, 31, 36, 37, 117-121, 124.
 - **Technical Scope**:
   - Layout: `src/agent/core/`, `src/agent/llm/`, `src/agent/tools/`, `tests/`.
   - Packaging with `pyproject.toml` (Ruff, Mypy, Pytest).
@@ -59,14 +59,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 2: Extensible Tool Calling Engine & MCP Protocol Integration](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/002_extensible_tool_calling_and_mcp.md) Extensible Tool Calling Engine & MCP Protocol Integration
+### [Story 2: Extensible Tool Calling Engine & MCP Protocol Integration](stories/002_extensible_tool_calling_and_mcp.md) Extensible Tool Calling Engine & MCP Protocol Integration
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** build a declarative tool definition framework with automated JSON schema extraction, runtime validation, and support for Model Context Protocol (MCP),
   - **So that** the LLM can safely discover, validate, and execute local tools (calculator, web search) as well as remote MCP server capabilities.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 3 (Tool calling mechanics, schemas, calculator, web search, MCP).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 26-29, 32, 38, 50, 111, 112.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 3 (Tool calling mechanics, schemas, calculator, web search, MCP).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 26-29, 32, 38, 50, 111, 112.
 - **Technical Scope**:
   - `@tool` decorator leveraging `functools.wraps` and inspect module.
   - `ToolRegistry` with schema generation.
@@ -80,14 +80,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 3: The ReAct Reasoning Loop & ExecutionContext Engine](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/003_react_reasoning_loop_and_execution_context.md) The ReAct Reasoning Loop & ExecutionContext Engine
+### [Story 3: The ReAct Reasoning Loop & ExecutionContext Engine](stories/003_react_reasoning_loop_and_execution_context.md) The ReAct Reasoning Loop & ExecutionContext Engine
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** implement the core ReAct (Thought-Action-Observation) reasoning engine powered by an `ExecutionContext` state container,
   - **So that** the agent can autonomously reason about tasks, select and execute tools, process observations, and converge on final solutions while preventing runaway loops.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 4 (ExecutionContext, `run()`, `step()`, `think()`, `act()`, stop conditions).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 8, 9, 12, 19, 20, 21, 87.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 4 (ExecutionContext, `run()`, `step()`, `think()`, `act()`, stop conditions).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 8, 9, 12, 19, 20, 21, 87.
 - **Technical Scope**:
   - Stateful `ExecutionContext` with immutable step logs.
   - ReAct agent methods: `run()`, `step()`, `think()`, `act()`.
@@ -100,14 +100,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 4: RAG Knowledge Base, Vector Search & Text Chunking Pipeline](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/004_rag_knowledge_base_and_vector_search.md) RAG Knowledge Base, Vector Search & Text Chunking Pipeline
+### [Story 4: RAG Knowledge Base, Vector Search & Text Chunking Pipeline](stories/004_rag_knowledge_base_and_vector_search.md) RAG Knowledge Base, Vector Search & Text Chunking Pipeline
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** build a Retrieval-Augmented Generation (RAG) subsystem with text chunking, embedding generation, and vector similarity search,
   - **So that** the agent can ground its reasoning and tool answers on external documents, knowledge bases, and fetched web content without hallucinating.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 5.1 - 5.3 (Vector search, embeddings, chunking, vector indexing).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 24, 40, 43, 99, 100, 101, 104.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 5.1 - 5.3 (Vector search, embeddings, chunking, vector indexing).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 24, 40, 43, 99, 100, 101, 104.
 - **Technical Scope**:
   - Chunking generator functions yielding overlapping text chunks.
   - In-memory vector store using cosine similarity and `heapq.nlargest` for top-K retrieval.
@@ -119,14 +119,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 5: Filesystem Navigation Tools & Agent Execution Callbacks](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/005_filesystem_tools_and_execution_callbacks.md) Filesystem Navigation Tools & Agent Execution Callbacks
+### [Story 5: Filesystem Navigation Tools & Agent Execution Callbacks](stories/005_filesystem_tools_and_execution_callbacks.md) Filesystem Navigation Tools & Agent Execution Callbacks
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** provide the agent with safe filesystem exploration tools (directory listing, file reading, zip archive extraction) and an extensible callback system,
   - **So that** the agent can inspect complex local directory structures to solve GAIA benchmark tasks while allowing humans to approve sensitive actions and compress outputs.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 5.4 - 5.5 (GAIA filesystem tools, callbacks, human approval, result compression).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 26, 28, 33, 39, 86, 110.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 5.4 - 5.5 (GAIA filesystem tools, callbacks, human approval, result compression).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 26, 28, 33, 39, 86, 110.
 - **Technical Scope**:
   - Secure filesystem tools (`list_directory`, `read_file_head`, `extract_zip_archive`).
   - Sandbox path validation preventing directory traversal.
@@ -139,14 +139,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 6: Context Engineering, Sliding-Window Memory & Token Budget Compactor](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/006_context_engineering_sliding_windows_and_compaction.md) Context Engineering, Sliding-Window Memory & Token Budget Compactor
+### [Story 6: Context Engineering, Sliding-Window Memory & Token Budget Compactor](stories/006_context_engineering_sliding_windows_and_compaction.md) Context Engineering, Sliding-Window Memory & Token Budget Compactor
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** implement intelligent context engineering with exact token counting, bounded sliding-window buffers, compaction, and recursive summarization,
   - **So that** the agent avoids context window exhaustion, maintains low token costs, and prevents needle-in-a-haystack memory degradation during long executions.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 6.1 - 6.2 (Anatomy of memory, sliding window, token counting, compaction, summarization).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 4, 22, 23, 103, 115.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 6.1 - 6.2 (Anatomy of memory, sliding window, token counting, compaction, summarization).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 4, 22, 23, 103, 115.
 - **Technical Scope**:
   - Token counting module using `tiktoken`.
   - `collections.deque(maxlen=K)` sliding-window buffer preserving system prompt.
@@ -159,14 +159,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 7: Multiturn Sessions, HITL Pause/Resume & Long-Term Memory (ChromaDB)](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/007_multiturn_sessions_hitl_and_chromadb.md) Multiturn Sessions, HITL Pause/Resume & Long-Term Memory (ChromaDB)
+### [Story 7: Multiturn Sessions, HITL Pause/Resume & Long-Term Memory (ChromaDB)](stories/007_multiturn_sessions_hitl_and_chromadb.md) Multiturn Sessions, HITL Pause/Resume & Long-Term Memory (ChromaDB)
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** implement stateful `SessionManager` with pause-and-resume workflows for human approvals, and an episodic long-term memory store using ChromaDB,
   - **So that** agent conversations persist across sessions, human-in-the-loop workflows run asynchronously, and agents learn facts and user preferences across distinct interactions.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 6.3 - 6.4 (SessionManager, pause/resume, ChromaDB TaskMemoryManager).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 27, 28, 31, 87, 105, 107.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 6.3 - 6.4 (SessionManager, pause/resume, ChromaDB TaskMemoryManager).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 27, 28, 31, 87, 105, 107.
 - **Technical Scope**:
   - `Session` and `SessionManager` with JSON-safe serialization.
   - Execution state suspension and resumption upon human response.
@@ -178,14 +178,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 8: Metacognitive Task Planning, Decomposition & Reflection Engine](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/008_metacognitive_planning_and_reflection.md) Metacognitive Task Planning, Decomposition & Reflection Engine
+### [Story 8: Metacognitive Task Planning, Decomposition & Reflection Engine](stories/008_metacognitive_planning_and_reflection.md) Metacognitive Task Planning, Decomposition & Reflection Engine
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** empower the agent with explicit task decomposition, milestone planning, and self-reflection tools,
   - **So that** the agent can systematically solve complex multi-hop problems, monitor its own progress, detect errors, and recover from failures without user intervention.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 7 (Planning and reflection, plan-and-solve, self-critique, error recovery).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 4, 9, 11, 31, 54.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 7 (Planning and reflection, plan-and-solve, self-critique, error recovery).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 4, 9, 11, 31, 54.
 - **Technical Scope**:
   - Structured plan data model (`Plan`, `PlanStep`) and `planning_tool`.
   - `reflection_tool` for evaluating intermediate outputs against plan goals.
@@ -197,14 +197,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 9: Sandboxed CodeAct Engine & Progressive Agent Skills](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/009_sandboxed_codeact_and_progressive_skills.md) Sandboxed CodeAct Engine & Progressive Agent Skills
+### [Story 9: Sandboxed CodeAct Engine & Progressive Agent Skills](stories/009_sandboxed_codeact_and_progressive_skills.md) Sandboxed CodeAct Engine & Progressive Agent Skills
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** implement the CodeAct paradigm where the agent writes and executes Python/Bash code inside a sandboxed environment (Docker / E2B) and can load Agent Skills progressively,
   - **So that** the agent can manipulate arbitrary files, perform complex calculations, and scale its capabilities dynamically without exhausting prompt token limits.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 8 (CodeAct, sandboxes, E2B/Docker, workspace CLI, progressive tool disclosure / Agent Skills).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 72, 73, 84, 85, 98, 111, 116.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 8 (CodeAct, sandboxes, E2B/Docker, workspace CLI, progressive tool disclosure / Agent Skills).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 72, 73, 84, 85, 98, 111, 116.
 - **Technical Scope**:
   - `SandboxRunner` interface supporting Docker/E2B environments.
   - CodeAct execution loop with stdout/stderr capture and timeouts.
@@ -216,14 +216,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 10: Multi-Agent Collaboration: Workflows, Agent-as-Tool & Handoffs](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/010_multi_agent_collaboration_and_workflows.md) Multi-Agent Collaboration: Workflows, Agent-as-Tool & Handoffs
+### [Story 10: Multi-Agent Collaboration: Workflows, Agent-as-Tool & Handoffs](stories/010_multi_agent_collaboration_and_workflows.md) Multi-Agent Collaboration: Workflows, Agent-as-Tool & Handoffs
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** build multi-agent orchestration architectures supporting Workflows (Sequential/Parallel/Loop), Agent-as-Tool, and Agent Transfer (Handoff trees),
   - **So that** specialized agents (e.g. Researcher, Coder, Reviewer) can collaborate on complex projects with isolated contexts and clear separation of responsibility.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 9.1 - 9.5 (Multi-agent patterns, sequential/parallel/loop workflows, AgentTool, context isolation, Agent Transfer).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 18, 50, 77-83, 103.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 9.1 - 9.5 (Multi-agent patterns, sequential/parallel/loop workflows, AgentTool, context isolation, Agent Transfer).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 18, 50, 77-83, 103.
 - **Technical Scope**:
   - Workflows: Sequential, Parallel (`asyncio.TaskGroup`), Iterative loops.
   - `AgentTool` pattern for isolated sub-agent execution.
@@ -235,14 +235,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 11: Agent-to-Agent (A2A) Protocol & Distributed Network Agent Mesh](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/011_agent_to_agent_a2a_protocol_and_mesh.md) Agent-to-Agent (A2A) Protocol & Distributed Network Agent Mesh
+### [Story 11: Agent-to-Agent (A2A) Protocol & Distributed Network Agent Mesh](stories/011_agent_to_agent_a2a_protocol_and_mesh.md) Agent-to-Agent (A2A) Protocol & Distributed Network Agent Mesh
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** implement the Agent-to-Agent (A2A) protocol with standardized Agent Cards and HTTP/SSE endpoints,
   - **So that** agents distributed across different machines, processes, and network boundaries can advertise capabilities and collaborate remotely.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapter 9.6 (A2A protocol, Agent Card specification, task request/response contracts, A2A Server/Client).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 81, 82, 118, 119, 121, 124.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapter 9.6 (A2A protocol, Agent Card specification, task request/response contracts, A2A Server/Client).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 81, 82, 118, 119, 121, 124.
 - **Technical Scope**:
   - Pydantic `AgentCard` schema and endpoint `/.well-known/agent.json`.
   - FastAPI / ASGI server for handling tasks and SSE streaming.
@@ -254,14 +254,14 @@ A practical curriculum and engineering backlog for building an autonomous AI Age
 
 ---
 
-### [Story 12: OpenTelemetry Tracing, GAIA Evaluation & LLM-as-a-Judge](file:///home/tofunth/stuffs/mono/gym/ai_agent/stories/012_opentelemetry_tracing_and_gaia_eval.md) OpenTelemetry Tracing, GAIA Evaluation & LLM-as-a-Judge
+### [Story 12: OpenTelemetry Tracing, GAIA Evaluation & LLM-as-a-Judge](stories/012_opentelemetry_tracing_and_gaia_eval.md) OpenTelemetry Tracing, GAIA Evaluation & LLM-as-a-Judge
 - **User Story**:
   - **As an** AI Agent developer,
   - **I want to** instrument the agent with OpenTelemetry tracing and build an automated evaluation pipeline using GAIA benchmark datasets and LLM-as-a-Judge rubrics in CI/CD,
   - **So that** I can observe internal agent steps, measure accuracy and latency quantitatively, and continuously prevent regressions with an agent quality flywheel.
 - **Book References**:
-  - *Build an AI Agent* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md)): Chapters 1.4, 2.4, 4.8, 10 (OpenTelemetry, GAIA benchmark runner, LLM-as-a-judge rubrics, CI/CD flywheel).
-  - *Effective Python* ([Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md)): Items 94-96, 108-113, 118.
+  - *Build an AI Agent* ([Notes](bin/build_an_ai_agent_notes.md)): Chapters 1.4, 2.4, 4.8, 10 (OpenTelemetry, GAIA benchmark runner, LLM-as-a-judge rubrics, CI/CD flywheel).
+  - *Effective Python* ([Notes](bin/effective_python_v3_notes.md)): Items 94-96, 108-113, 118.
 - **Technical Scope**:
   - OpenTelemetry tracer instrumenting runs, steps, LLM calls, and tool executions.
   - Rubric-based LLM-as-a-judge evaluation harness.

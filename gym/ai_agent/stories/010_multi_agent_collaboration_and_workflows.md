@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems))
   - Chapter 9: *Orchestrating multi-agent systems* (9.1 Why multi-agent?, 9.2 Three collaboration patterns, 9.3 Workflows, 9.4 Agent as Tool, 9.5 Agent Transfer)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism))
   - **Item 18**: Use `zip` to Process Iterators in Parallel
   - **Item 50**: Use Composition over Inheritance (`AgentTool` wraps `Agent`)
   - **Item 77–82**: Use Coroutines to Run Concurrent I/O; Use `asyncio.TaskGroup`
