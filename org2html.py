@@ -2,7 +2,7 @@
 """
 org2html - Incremental Org-to-HTML Compiler for Bazel.
 
-Compiles all .org files in a directory and its subdirectories (e.g. bin/) to .html
+Compiles all .org files in a directory and its subdirectories (e.g. writings/) to .html
 using Emacs Org-mode, with SHA-256 content tracking for build avoidance.
 """
 

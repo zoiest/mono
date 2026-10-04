@@ -9,16 +9,16 @@ Remote (Google Drive)                  Local (mono/helsinki)
 helsinki/                              helsinki/
 ├── financial_economics_1/            ├── financial_economics_1/
 │   ├── downloads/                    │   ├── downloads/
-│   └── bin/                          │   └── bin/
+│   └── writings/                     │   └── writings/
 └── maths_physics_3a/                 └── maths_physics_3a/
     ├── downloads/                        ├── downloads/
-    └── bin/                              └── bin/
+    └── writings/                         └── writings/
 ```
 
 ## How It Works
 
 - **`downloads/` sync**: Remote `downloads/` (or `download/`) files are recursively downloaded to local `downloads/`.
-- **`bin/` sync**: Local `bin/` files are uploaded to remote `bin/`.
+- **`writings/` sync**: Local `writings/` files are uploaded to remote `writings/`.
 - **Incremental updates**: Existing files are compared using MD5 checksums to prevent redundant transfers.
 - **Unified Credentials**: Credentials are automatically loaded from `.google_drive_token.json` in `helsinki/` or course subfolders.
 

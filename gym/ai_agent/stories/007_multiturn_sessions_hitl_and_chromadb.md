@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent))
   - Chapter 6: *Adding memory to your agent* (6.3 Continuous execution: Sessions & state management, 6.4 Long-term memory with ChromaDB)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms))
   - **Item 27 & 28**: Prefer `defaultdict`; Construct Key-Dependent Defaults with `__missing__`
   - **Item 31**: Return Dedicated Result Objects Instead of Requiring Unpacking
   - **Item 87**: Use `try/finally` for Reliable State Persistence

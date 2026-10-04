@@ -64,7 +64,7 @@ class TestSyncDrive(unittest.TestCase):
             mock_auth.access_token = "dummy_token"
             client = GoogleDriveClient(mock_auth)
 
-            client.get_child_folder = MagicMock(side_effect=lambda pid, names: {"id": "dl_id", "name": "downloads"} if "downloads" in names else {"id": "bin_id", "name": "bin"})
+            client.get_child_folder = MagicMock(side_effect=lambda pid, names: {"id": "dl_id", "name": "downloads"} if "downloads" in names else {"id": "writings_id", "name": "writings"})
             client.list_files = MagicMock(return_value=[{
                 "id": "file_1_id",
                 "name": "sample.pdf",
@@ -86,21 +86,21 @@ class TestSyncDrive(unittest.TestCase):
             self.assertEqual(len(downloaded), 1)
             self.assertTrue((local_dl / "sample.pdf").is_file())
 
-    def test_sync_single_course_bin_upload(self):
+    def test_sync_single_course_writings_upload(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             course_dir = Path(tmpdir) / "maths_physics_3a"
             course_dir.mkdir()
-            local_bin = course_dir / "bin"
-            local_bin.mkdir()
+            local_writings = course_dir / "writings"
+            local_writings.mkdir()
 
-            (local_bin / "exercise.org").write_bytes(b"org content")
-            (local_bin / ".gitkeep").write_bytes(b"")
+            (local_writings / "exercise.org").write_bytes(b"org content")
+            (local_writings / ".gitkeep").write_bytes(b"")
 
             mock_auth = MagicMock()
             mock_auth.access_token = "dummy_token"
             client = GoogleDriveClient(mock_auth)
 
-            client.get_child_folder = MagicMock(side_effect=lambda pid, names: None if "downloads" in names else {"id": "bin_id", "name": "bin"})
+            client.get_child_folder = MagicMock(side_effect=lambda pid, names: None if "downloads" in names else {"id": "writings_id", "name": "writings"})
             client.list_files = MagicMock(return_value=[])
 
             uploaded = []

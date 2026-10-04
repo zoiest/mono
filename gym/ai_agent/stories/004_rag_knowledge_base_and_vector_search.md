@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag-filesystem-tools))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag-filesystem-tools))
   - Chapter 5: *Building knowledge bases with RAG* (5.1 Problem of internal data, 5.2 Search methods, 5.3 Practicing vector search)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-6-comprehensions-and-generators))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-6-comprehensions-and-generators))
   - **Item 40 & 43**: Use Comprehensions; Consider Generators Instead of Returning Lists
   - **Item 99**: Consider `memoryview` for Zero-Copy Interactions with Large Filing Buffers
   - **Item 100 & 101**: Sort by Complex Criteria Using `key` (e.g. relevance score + filing recency)

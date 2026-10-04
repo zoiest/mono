@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates bin/ch10_outline_solutions.org - Complete Python Numerical Solutions."""
+"""Generates writings/ch10_outline_solutions.org - Complete Python Numerical Solutions."""
 
 from pathlib import Path
 
@@ -303,8 +303,9 @@ print("Recovered 1D Coordinates from MDS:\n", coords_1d - coords_1d[0])
 """
 
 def main():
-    Path("bin/ch10_outline_solutions.org").write_text(CH10, encoding="utf-8")
-    print("Wrote bin/ch10_outline_solutions.org")
+    Path("writings").mkdir(parents=True, exist_ok=True)
+    Path("writings/ch10_outline_solutions.org").write_text(CH10, encoding="utf-8")
+    print("Wrote writings/ch10_outline_solutions.org")
 
 if __name__ == "__main__":
     main()

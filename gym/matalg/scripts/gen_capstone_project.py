@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generates bin/ch11_capstone_project.org and progressive stories (025 to 030).
+Generates writings/ch11_capstone_project.org and progressive stories (025 to 030).
 """
 
 from pathlib import Path
@@ -314,8 +314,9 @@ By executing this project, you have implemented:
 """
 
 def main():
-    Path("bin/ch11_capstone_project.org").write_text(CH11, encoding="utf-8")
-    print("Wrote bin/ch11_capstone_project.org")
+    Path("writings").mkdir(parents=True, exist_ok=True)
+    Path("writings/ch11_capstone_project.org").write_text(CH11, encoding="utf-8")
+    print("Wrote writings/ch11_capstone_project.org")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates bin/ch04_determinants.org, bin/ch05_inverses.org, and bin/ch06_eigenanalysis.org."""
+"""Generates writings/ch04_determinants.org, writings/ch05_inverses.org, and writings/ch06_eigenanalysis.org."""
 
 from pathlib import Path
 
@@ -457,12 +457,13 @@ assert np.allclose(s, np.sqrt(np.sort(evals_AAt)[::-1]))
 """
 
 def main():
-    Path("bin/ch04_determinants.org").write_text(CH04, encoding="utf-8")
-    print("Wrote bin/ch04_determinants.org")
-    Path("bin/ch05_inverses.org").write_text(CH05, encoding="utf-8")
-    print("Wrote bin/ch05_inverses.org")
-    Path("bin/ch06_eigenanalysis.org").write_text(CH06, encoding="utf-8")
-    print("Wrote bin/ch06_eigenanalysis.org")
+    Path("writings").mkdir(parents=True, exist_ok=True)
+    Path("writings/ch04_determinants.org").write_text(CH04, encoding="utf-8")
+    print("Wrote writings/ch04_determinants.org")
+    Path("writings/ch05_inverses.org").write_text(CH05, encoding="utf-8")
+    print("Wrote writings/ch05_inverses.org")
+    Path("writings/ch06_eigenanalysis.org").write_text(CH06, encoding="utf-8")
+    print("Wrote writings/ch06_eigenanalysis.org")
 
 if __name__ == "__main__":
     main()

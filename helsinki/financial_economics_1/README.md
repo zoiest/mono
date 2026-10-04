@@ -5,7 +5,7 @@ This package contains Bazel rules and tools to synchronize files between local d
 ## Features
 
 - **Downloads Sync**: Recursively downloads all files from the remote Google Drive `downloads/` (or `download/`) folder into local `downloads/`.
-- **Bin Sync**: Uploads local files from `bin/` (including nested folders) to the remote Google Drive `bin/` folder.
+- **Writings Sync**: Uploads local files from `writings/` (including nested folders) to the remote Google Drive `writings/` folder.
 - **Smart Incremental Sync**: Compares MD5 checksums and sizes to skip files that are already up-to-date.
 - **Token Flexibility**: Supports plain OAuth2 access tokens (`ya29...`), full OAuth2 credentials JSON (with automatic token refresh), and Google Service Account JSON keys.
 

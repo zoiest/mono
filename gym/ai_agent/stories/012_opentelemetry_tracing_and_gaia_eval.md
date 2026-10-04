@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-10-evaluating-agents))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-10-evaluating-agents))
   - Chapter 10: *Evaluating agents* (10.1 Observing an agent, OpenTelemetry, 10.2 Datasets & rubrics, 10.3 LLM-as-a-judge, 10.4 Operations & CI/CD)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-13-testing-and-debugging))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-13-testing-and-debugging))
   - **Item 94–96**: Profile Performance Bottlenecks with `cProfile`
   - **Item 108–110**: Verify Behaviors in `TestCase` Subclasses; Prefer Integration Tests; Isolate Tests
   - **Item 111 & 112**: Use Mocks to Test Complex Dependencies in CI

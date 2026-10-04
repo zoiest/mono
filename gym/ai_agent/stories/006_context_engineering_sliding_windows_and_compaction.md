@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent))
   - Chapter 6: *Adding memory to your agent* (6.1 Anatomy of memory, 6.2 Managing context: sliding windows, compaction, summarization)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms))
   - **Item 4**: Write Helper Functions Instead of Complex Expressions
   - **Item 22**: Never Modify Containers While Iterating over Them (safe news compaction)
   - **Item 23**: Pass Iterators to `any` and `all` for Short-Circuiting
