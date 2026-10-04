@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems))
   - Chapter 9: *Orchestrating multi-agent systems* (9.6 A2A: Collaborating across networks, Agent Card, Server, Client)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-14-collaboration))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-14-collaboration))
   - **Item 81 & 82**: Manage Asynchronous Network I/O with Proper Timeouts
   - **Item 118**: Write Docstrings for Every Function, Class, and Module
   - **Item 119**: Use Packages to Organize Modules and Expose Stable APIs

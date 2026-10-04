@@ -7,8 +7,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
 - 🐍 *Effective Python (3rd Edition)* — Brett Slatkin (Addison-Wesley, 2024 / Python 3.13)
 
 **Study Notes & References**:
-- 📘 [Build an AI Agent Study Notes](bin/build_an_ai_agent_notes.md)
-- 🐍 [Effective Python (3rd Edition) Study Notes](bin/effective_python_v3_notes.md)
+- 📘 [Build an AI Agent Study Notes](writings/build_an_ai_agent_notes.md)
+- 🐍 [Effective Python (3rd Edition) Study Notes](writings/effective_python_v3_notes.md)
 
 **Individual Story Guides** (Step-by-Step Code Examples):
 - 📁 [stories/ Directory](stories/)
@@ -44,8 +44,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** establish a clean Python project structure and build a provider-agnostic LLM client with structured signal schemas,
   - **So that** our financial agent can reliably analyze market headlines, extract sentiment signals, and support multiple model providers (OpenAI, Anthropic, Gemini) with strict type safety.
 - **Book References**:
-  - *Build an AI Agent*: Chapters 1 & 2 ([Notes](bin/build_an_ai_agent_notes.md#chapter-1-what-is-an-ai-agent)).
-  - *Effective Python*: Items 1, 2, 31, 36, 37, 117-121, 124 ([Notes](bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking)).
+  - *Build an AI Agent*: Chapters 1 & 2 ([Notes](writings/build_an_ai_agent_notes.md#chapter-1-what-is-an-ai-agent)).
+  - *Effective Python*: Items 1, 2, 31, 36, 37, 117-121, 124 ([Notes](writings/effective_python_v3_notes.md#chapter-1-pythonic-thinking)).
 - **Deliverables**: Package layout, `FinancialAgentException` hierarchy, `SentimentSignal` dataclass, `LiteLlmClient` protocol.
 
 ---
@@ -56,8 +56,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** build a declarative tool calling engine and implement live financial news and market quote fetching tools,
   - **So that** the LLM can query real-time market data, company news feeds, and calculate financial valuation metrics without hallucinations.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 3 ([Notes](bin/build_an_ai_agent_notes.md#chapter-3-enabling-actions-tool-use)).
-  - *Effective Python*: Items 26-29, 32, 38, 50, 91, 111 ([Notes](bin/effective_python_v3_notes.md#chapter-5-functions)).
+  - *Build an AI Agent*: Chapter 3 ([Notes](writings/build_an_ai_agent_notes.md#chapter-3-enabling-actions-tool-use)).
+  - *Effective Python*: Items 26-29, 32, 38, 50, 91, 111 ([Notes](writings/effective_python_v3_notes.md#chapter-5-functions)).
 - **Deliverables**: `@tool` decorator (`functools.wraps`), AST-safe `calculate_metric`, `fetch_ticker_news`, `ToolRegistry`.
 
 ---
@@ -68,8 +68,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** build a ReAct (Thought-Action-Observation) reasoning engine powered by an `ExecutionContext`,
   - **So that** the agent can take a stock ticker, decide which news feeds and valuation metrics to query, synthesize observations, and output a validated trading signal.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 4 ([Notes](bin/build_an_ai_agent_notes.md#chapter-4-the-react-loop-executioncontext)).
-  - *Effective Python*: Items 8, 9, 12, 19, 20, 21, 80, 87 ([Notes](bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking)).
+  - *Build an AI Agent*: Chapter 4 ([Notes](writings/build_an_ai_agent_notes.md#chapter-4-the-react-loop-executioncontext)).
+  - *Effective Python*: Items 8, 9, 12, 19, 20, 21, 80, 87 ([Notes](writings/effective_python_v3_notes.md#chapter-1-pythonic-thinking)).
 - **Deliverables**: `ExecutionContext` state machine, `FinancialReActAgent.analyze_ticker()`, `match...case` pattern matching on tool calls vs signal.
 
 ---
@@ -80,8 +80,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** build a Retrieval-Augmented Generation (RAG) vector index to chunk and search SEC 10-K/10-Q filings and long financial news articles,
   - **So that** the agent can ground its ticker signal on verified financial statements, risk factors, and earnings guidance without hallucinations.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 5.1-5.3 ([Notes](bin/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag-filesystem-tools)).
-  - *Effective Python*: Items 24, 40, 43, 99, 100, 101, 104 ([Notes](bin/effective_python_v3_notes.md#chapter-6-comprehensions-and-generators)).
+  - *Build an AI Agent*: Chapter 5.1-5.3 ([Notes](writings/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag-filesystem-tools)).
+  - *Effective Python*: Items 24, 40, 43, 99, 100, 101, 104 ([Notes](writings/effective_python_v3_notes.md#chapter-6-comprehensions-and-generators)).
 - **Deliverables**: Generator-based SEC chunker, `FinancialVectorStore` with cosine similarity and `heapq.nlargest` top-K search.
 
 ---
@@ -92,8 +92,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** give the agent safe filesystem tools to inspect market data CSVs/reports and implement human approval callbacks before emitting high-risk trade signals,
   - **So that** local research files are parsed safely while preventing rogue or unverified automated orders from executing.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 5.4-5.5 ([Notes](bin/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag-filesystem-tools)).
-  - *Effective Python*: Items 26, 33, 39, 86, 110 ([Notes](bin/effective_python_v3_notes.md#chapter-5-functions)).
+  - *Build an AI Agent*: Chapter 5.4-5.5 ([Notes](writings/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag-filesystem-tools)).
+  - *Effective Python*: Items 26, 33, 39, 86, 110 ([Notes](writings/effective_python_v3_notes.md#chapter-5-functions)).
 - **Deliverables**: `SafeMarketDataWorkspace` path validator, `read_price_csv`, `TradeAlertGate` human-in-the-loop callback.
 
 ---
@@ -104,8 +104,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** implement context engineering with sliding windows and headline compaction,
   - **So that** the agent can digest hundreds of real-time financial news alerts for a ticker without exceeding LLM context windows or incurring runaway token costs.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 6.1-6.2 ([Notes](bin/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent)).
-  - *Effective Python*: Items 4, 22, 23, 103, 115 ([Notes](bin/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms)).
+  - *Build an AI Agent*: Chapter 6.1-6.2 ([Notes](writings/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent)).
+  - *Effective Python*: Items 4, 22, 23, 103, 115 ([Notes](writings/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms)).
 - **Deliverables**: `TickerNewsBuffer` using `collections.deque(maxlen=K)`, `FinancialNewsCompactor`, memory leak verification.
 
 ---
@@ -116,8 +116,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** implement stateful session persistence and an episodic memory store backed by ChromaDB,
   - **So that** analyst queries about a ticker persist across multiturn interactions and past market theses and signals are remembered across separate days.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 6.3-6.4 ([Notes](bin/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent)).
-  - *Effective Python*: Items 27, 28, 31, 87, 105, 107 ([Notes](bin/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms)).
+  - *Build an AI Agent*: Chapter 6.3-6.4 ([Notes](writings/build_an_ai_agent_notes.md#chapter-6-adding-memory-to-your-agent)).
+  - *Effective Python*: Items 27, 28, 31, 87, 105, 107 ([Notes](writings/effective_python_v3_notes.md#chapter-12-data-structures-and-algorithms)).
 - **Deliverables**: `MarketResearchSession` JSON persistence, `TickerMemoryManager` vector episodic recall across trading days.
 
 ---
@@ -128,8 +128,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** equip the agent with structured planning and self-reflection tools,
   - **So that** complex multi-ticker inquiries (e.g. "Assess supply-chain contagion from NVDA earnings on TSM and ASML") are broken into disciplined research subtasks with automated error reflection.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 7 ([Notes](bin/build_an_ai_agent_notes.md#chapter-7-planning-and-reflection-for-complex-tasks)).
-  - *Effective Python*: Items 4, 9, 11, 31, 54 ([Notes](bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking)).
+  - *Build an AI Agent*: Chapter 7 ([Notes](writings/build_an_ai_agent_notes.md#chapter-7-planning-and-reflection-for-complex-tasks)).
+  - *Effective Python*: Items 4, 9, 11, 31, 54 ([Notes](writings/effective_python_v3_notes.md#chapter-1-pythonic-thinking)).
 - **Deliverables**: `FinancialResearchPlan` state machine, `reflect_on_signals` critique tool comparing contradictory catalysts.
 
 ---
@@ -140,8 +140,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** enable the CodeAct paradigm so the agent can write and execute Python code in an isolated sandbox (running Pandas, NumPy, TA-Lib),
   - **So that** the agent can compute custom technical indicators (RSI, Moving Averages, Volatility) and correlate pricing data with news release dates on the fly.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 8 ([Notes](bin/build_an_ai_agent_notes.md#chapter-8-empowering-agents-with-code-execution-codeact)).
-  - *Effective Python*: Items 72, 73, 84, 85, 98, 111, 116 ([Notes](bin/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism)).
+  - *Build an AI Agent*: Chapter 8 ([Notes](writings/build_an_ai_agent_notes.md#chapter-8-empowering-agents-with-code-execution-codeact)).
+  - *Effective Python*: Items 72, 73, 84, 85, 98, 111, 116 ([Notes](writings/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism)).
 - **Deliverables**: `LocalQuantSandbox` runner with subprocess timeouts, `execute_quant_code` tool.
 
 ---
@@ -152,8 +152,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** orchestrate a multi-agent team (News Sentiment Agent, Quantitative Technical Agent, and Risk Manager) using concurrent workflows and agent handoffs,
   - **So that** multiple specialized agents analyze a ticker in parallel and synthesize an institutional-grade investment signal.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 9.1-9.5 ([Notes](bin/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems)).
-  - *Effective Python*: Items 18, 50, 77-83, 103 ([Notes](bin/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism)).
+  - *Build an AI Agent*: Chapter 9.1-9.5 ([Notes](writings/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems)).
+  - *Effective Python*: Items 18, 50, 77-83, 103 ([Notes](writings/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism)).
 - **Deliverables**: `run_parallel_ticker_analysis` with `asyncio.TaskGroup`, `make_risk_reviewer_tool` context-isolated sub-agent adapter.
 
 ---
@@ -164,8 +164,8 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** implement the Agent-to-Agent (A2A) protocol with standardized Agent Cards and task endpoints over HTTP,
   - **So that** distributed financial agents (e.g. Remote News Agent in Cloud A, Execution Agent on premises) can discover each other and collaborate over the network.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 9.6 ([Notes](bin/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems)).
-  - *Effective Python*: Items 81, 82, 118, 119, 121, 124 ([Notes](bin/effective_python_v3_notes.md#chapter-14-collaboration)).
+  - *Build an AI Agent*: Chapter 9.6 ([Notes](writings/build_an_ai_agent_notes.md#chapter-9-orchestrating-multi-agent-systems)).
+  - *Effective Python*: Items 81, 82, 118, 119, 121, 124 ([Notes](writings/effective_python_v3_notes.md#chapter-14-collaboration)).
 - **Deliverables**: `FinancialAgentCard` specification, FastAPI A2A server, distributed market signals mesh client.
 
 ---
@@ -176,6 +176,6 @@ A practical engineering curriculum and backlog for building an autonomous **Fina
   - **I want to** instrument the agent with OpenTelemetry tracing and build an automated evaluation pipeline using historical earnings surprises and LLM-as-a-Judge rubrics in CI/CD,
   - **So that** we can quantitatively measure ticker signal precision, monitor token costs per ticker, and prevent performance regressions.
 - **Book References**:
-  - *Build an AI Agent*: Chapter 10, 1.4, 2.4 ([Notes](bin/build_an_ai_agent_notes.md#chapter-10-evaluating-agents)).
-  - *Effective Python*: Items 94-96, 108-113, 118 ([Notes](bin/effective_python_v3_notes.md#chapter-13-testing-and-debugging)).
+  - *Build an AI Agent*: Chapter 10, 1.4, 2.4 ([Notes](writings/build_an_ai_agent_notes.md#chapter-10-evaluating-agents)).
+  - *Effective Python*: Items 94-96, 108-113, 118 ([Notes](writings/effective_python_v3_notes.md#chapter-13-testing-and-debugging)).
 - **Deliverables**: `FinancialAgentTracer` OpenTelemetry spans, `FinancialSignalJudge`, CI regression test suite.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates bin/ch01_introduction.org, bin/ch02_vectors_and_matrices.org, and bin/ch03_rank_of_matrices.org."""
+"""Generates writings/ch01_introduction.org, writings/ch02_vectors_and_matrices.org, and writings/ch03_rank_of_matrices.org."""
 
 from pathlib import Path
 
@@ -595,12 +595,13 @@ assert rank_AB >= rank_A + rank_B - p
 """
 
 def main():
-    Path("bin/ch01_introduction.org").write_text(CH01, encoding="utf-8")
-    print("Wrote bin/ch01_introduction.org")
-    Path("bin/ch02_vectors_and_matrices.org").write_text(CH02, encoding="utf-8")
-    print("Wrote bin/ch02_vectors_and_matrices.org")
-    Path("bin/ch03_rank_of_matrices.org").write_text(CH03, encoding="utf-8")
-    print("Wrote bin/ch03_rank_of_matrices.org")
+    Path("writings").mkdir(parents=True, exist_ok=True)
+    Path("writings/ch01_introduction.org").write_text(CH01, encoding="utf-8")
+    print("Wrote writings/ch01_introduction.org")
+    Path("writings/ch02_vectors_and_matrices.org").write_text(CH02, encoding="utf-8")
+    print("Wrote writings/ch02_vectors_and_matrices.org")
+    Path("writings/ch03_rank_of_matrices.org").write_text(CH03, encoding="utf-8")
+    print("Wrote writings/ch03_rank_of_matrices.org")
 
 if __name__ == "__main__":
     main()

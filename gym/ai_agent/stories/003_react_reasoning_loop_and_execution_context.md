@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-4-the-react-loop-executioncontext))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-4-the-react-loop-executioncontext))
   - Chapter 4: *The ReAct loop* (4.1 Understanding ReAct, 4.5 ExecutionContext, 4.6 Implementing the agent: run, step, think, act, 4.7 Structured output)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-1-pythonic-thinking))
   - **Item 8**: Prevent Repetition with Assignment Expressions (`:=` walrus operator)
   - **Item 9**: Consider `match` for Destructuring in Flow Control (signal state matching)
   - **Item 19 & 20**: Avoid `else` Blocks After Loops; Never Use Loop Variables After the Loop Ends

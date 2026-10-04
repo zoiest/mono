@@ -7,25 +7,25 @@ Remote structure:
   helsinki/
     8.01/
       downloads/
-      bin/
+      writings/
     financial_economics_1/
       downloads/
-      bin/
+      writings/
     maths_physics_3a/
       downloads/
-      bin/
+      writings/
 
 Local structure:
   helsinki/
     8.01/
       downloads/
-      bin/
+      writings/
     financial_economics_1/
       downloads/
-      bin/
+      writings/
     maths_physics_3a/
       downloads/
-      bin/
+      writings/
 """
 
 import argparse
@@ -461,14 +461,14 @@ def compute_md5(file_path: Path) -> str:
 
 
 def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_name: str, local_course_dir: Path):
-    """Syncs downloads and bin for a single course directory."""
+    """Syncs downloads and writings for a single course directory."""
     print(f"\n{'='*70}")
     print(f"Course: {course_name}")
     print(f"Local:  {local_course_dir}")
     print(f"{'='*70}")
 
     local_downloads = local_course_dir / "downloads"
-    local_bin = local_course_dir / "bin"
+    local_writings = local_course_dir / "writings"
 
     # 1. Sync remote downloads -> local downloads
     local_downloads.mkdir(parents=True, exist_ok=True)
@@ -527,35 +527,35 @@ def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_
 
         print(f"Downloads: {dl_count} downloaded, {dl_skip} up-to-date.")
 
-    # 2. Sync local bin -> remote bin
-    local_bin.mkdir(parents=True, exist_ok=True)
-    remote_bin = client.get_child_folder(remote_course_id, ["bin"])
-    if not remote_bin:
-        remote_bin_id = client.create_folder(remote_course_id, "bin")
+    # 2. Sync local writings -> remote writings
+    local_writings.mkdir(parents=True, exist_ok=True)
+    remote_writings = client.get_child_folder(remote_course_id, ["writings"])
+    if not remote_writings:
+        remote_writings_id = client.create_folder(remote_course_id, "writings")
     else:
-        remote_bin_id = remote_bin["id"]
+        remote_writings_id = remote_writings["id"]
 
     local_files = []
-    for root, _, files in os.walk(local_bin):
+    for root, _, files in os.walk(local_writings):
         for f in files:
             if f.startswith("."):
                 continue
             full_path = Path(root) / f
-            rel_path = full_path.relative_to(local_bin)
+            rel_path = full_path.relative_to(local_writings)
             local_files.append((full_path, rel_path))
 
     up_count = 0
     up_skip = 0
 
     if not local_files:
-        print("Bin: local 'bin/' is empty. Nothing to upload.")
+        print("Writings: local 'writings/' is empty. Nothing to upload.")
     else:
         for full_path, rel_path in local_files:
             parent_rel = str(rel_path.parent) if rel_path.parent != Path(".") else ""
             if parent_rel:
-                dest_id = client.ensure_remote_path(remote_bin_id, parent_rel)
+                dest_id = client.ensure_remote_path(remote_writings_id, parent_rel)
             else:
-                dest_id = remote_bin_id
+                dest_id = remote_writings_id
 
             filename = full_path.name
             local_md5 = compute_md5(full_path)
@@ -570,33 +570,33 @@ def sync_single_course(client: GoogleDriveClient, remote_course_id: str, course_
             if existing_file:
                 if existing_file.get("md5Checksum") == local_md5:
                     if client.verbose:
-                        print(f"  [SKIP] bin/{rel_path} (already up-to-date remotely)")
+                        print(f"  [SKIP] writings/{rel_path} (already up-to-date remotely)")
                     up_skip += 1
                     continue
 
                 if client.dry_run:
-                    print(f"  [DRY-RUN UPDATE] bin/{rel_path} ({file_size:,} bytes)")
+                    print(f"  [DRY-RUN UPDATE] writings/{rel_path} ({file_size:,} bytes)")
                     up_count += 1
                 else:
-                    print(f"  [UPDATING] bin/{rel_path} ({file_size:,} bytes)...")
+                    print(f"  [UPDATING] writings/{rel_path} ({file_size:,} bytes)...")
                     try:
                         client.upload_file(full_path, dest_id, existing_file_id=existing_file["id"])
                         up_count += 1
                     except Exception as err:
-                        print(f"    Error updating bin/{rel_path}: {format_api_error(err)}", file=sys.stderr)
+                        print(f"    Error updating writings/{rel_path}: {format_api_error(err)}", file=sys.stderr)
             else:
                 if client.dry_run:
-                    print(f"  [DRY-RUN UPLOAD] bin/{rel_path} ({file_size:,} bytes)")
+                    print(f"  [DRY-RUN UPLOAD] writings/{rel_path} ({file_size:,} bytes)")
                     up_count += 1
                 else:
-                    print(f"  [UPLOADING] bin/{rel_path} ({file_size:,} bytes)...")
+                    print(f"  [UPLOADING] writings/{rel_path} ({file_size:,} bytes)...")
                     try:
                         client.upload_file(full_path, dest_id)
                         up_count += 1
                     except Exception as err:
-                        print(f"    Error uploading bin/{rel_path}: {format_api_error(err)}", file=sys.stderr)
+                        print(f"    Error uploading writings/{rel_path}: {format_api_error(err)}", file=sys.stderr)
 
-        print(f"Bin: {up_count} uploaded, {up_skip} up-to-date.")
+        print(f"Writings: {up_count} uploaded, {up_skip} up-to-date.")
 
 
 def find_token_file(candidates: list[Path]) -> Path | None:
@@ -714,7 +714,7 @@ def main():
     print(f"Connected to remote Google Drive path: '{resolved_remote_path}' (ID: {remote_dest_id})")
 
     # Determine what to sync
-    is_leaf_target = (target_dir / "downloads").exists() or (target_dir / "bin").exists()
+    is_leaf_target = (target_dir / "downloads").exists() or (target_dir / "writings").exists()
 
     if is_leaf_target:
         cname = args.course_name or target_dir.name
@@ -728,7 +728,7 @@ def main():
             courses_set = set()
             for child in target_dir.iterdir():
                 if child.is_dir() and not child.name.startswith((".", "bazel-")):
-                    if (child / "downloads").exists() or (child / "bin").exists() or (child / "BUILD.bazel").exists():
+                    if (child / "downloads").exists() or (child / "writings").exists() or (child / "BUILD.bazel").exists():
                         courses_set.add(child.name)
 
             try:

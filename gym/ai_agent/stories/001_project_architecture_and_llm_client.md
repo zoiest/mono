@@ -8,10 +8,10 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-1-what-is-an-ai-agent))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../writings/build_an_ai_agent_notes.md#chapter-1-what-is-an-ai-agent))
   - Chapter 1: *What is an AI agent?* (1.2 Understanding LLM agents, 1.3 Workflow vs. agent)
   - Chapter 2: *The brain of AI agents: LLMs* (2.2 LLM API basics, unifying providers with LiteLLM, structured outputs)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../writings/effective_python_v3_notes.md#chapter-1-pythonic-thinking))
   - **Item 1 & 2**: Know Which Version of Python You’re Using (Python 3.12+) & Follow PEP 8
   - **Item 31**: Return Dedicated Result Objects Instead of Requiring Callers to Unpack More Than Three Variables
   - **Item 36 & 37**: Use None for Dynamic Defaults; Enforce Clarity with Keyword-Only Arguments

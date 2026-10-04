@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates bin/index.org - Master Index & Map of Content."""
+"""Generates writings/index.org - Master Index & Map of Content."""
 
 import os
 from pathlib import Path
@@ -101,7 +101,8 @@ INDEX_CONTENT = r""":PROPERTIES:
 """
 
 def main():
-    out_path = Path("bin/index.org")
+    out_path = Path("writings/index.org")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(INDEX_CONTENT, encoding="utf-8")
     print(f"Generated {out_path} ({len(INDEX_CONTENT)} chars)")
 

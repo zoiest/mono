@@ -1,9 +1,10 @@
 # Bazel build artifacts and symlinks
 bazel-*
 
-# downloads and binaries
+# downloads, writings, and binaries
 **/bin
 **/downloads
+**/writings
 
 # org compiled database
 **/org-roam.db

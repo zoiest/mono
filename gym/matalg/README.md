@@ -21,7 +21,8 @@ Welcome to the **`matalg`** learning gym! This repository provides an end-to-end
 .
 ├── BUILD.bazel               # Bazel targets: org2html and Google Drive sync
 ├── README.md                 # Project architecture, curriculum, and guides
-├── bin/                      # Org-mode chapters & compiled HTML files
+├── bin/                      # Compiled binaries (used for binary generation)
+├── writings/                 # Org-mode chapters & compiled HTML files
 │   ├── index.org             # Master Org-Roam knowledge base & MOC
 │   ├── ch01_introduction.org # Chapter 1: Introduction & Syntax
 │   ├── ch02_vectors_and_matrices.org # Chapter 2: Vectors, Centering Matrix H_n, Trace
@@ -36,7 +37,7 @@ Welcome to the **`matalg`** learning gym! This repository provides an end-to-end
 ├── downloads/                # Local reference materials (gitignored)
 │   └── Basics_of_Matrix_Algebra_for_Statistics_with_R.pdf
 ├── scripts/                  # Automation scripts
-│   ├── gen_index.py          # Generator for bin/index.org
+│   ├── gen_index.py          # Generator for writings/index.org
 │   ├── gen_ch01_to_ch03.py   # Generator for chapters 1, 2, 3
 │   ├── gen_ch04_to_ch06.py   # Generator for chapters 4, 5, 6
 │   ├── gen_ch07_to_ch09.py   # Generator for chapters 7, 8, 9
@@ -54,22 +55,22 @@ Welcome to the **`matalg`** learning gym! This repository provides an end-to-end
 
 ## 📑 Org-Mode Book Chapters & Knowledge Base
 
-The book's entire mathematical theory, proofs, and numerical examples are converted to Org-mode documents in [`bin/`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/):
+The book's entire mathematical theory, proofs, and numerical examples are converted to Org-mode documents in [`writings/`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/):
 
 | Chapter | Title | Org Reference | Key Focus Areas |
 |:-------:|:------|:--------------|:----------------|
-| **Index** | Master Knowledge Base | [`bin/index.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/index.org) | Complete R-to-Python Rosetta Stone, 10 Cardinal Rules |
-| **01** | Introduction & Syntax | [`bin/ch01_introduction.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch01_introduction.org) | Memory order (F vs C), 0-indexing, 1D vs 2D arrays |
-| **02** | Vectors & Matrices | [`bin/ch02_vectors_and_matrices.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch02_vectors_and_matrices.org) | Centering matrix $H_n$, Idempotency, Trace cyclic properties |
-| **03** | Rank of Matrices | [`bin/ch03_rank_of_matrices.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch03_rank_of_matrices.org) | Rank factorization $A = BC$, Rank-1 $xy^T$, Sylvester inequality |
-| **04** | Determinants | [`bin/ch04_determinants.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch04_determinants.org) | Schur complements, Weinstein-Aronszajn identity $\det(I+AB)=\det(I+BA)$ |
-| **05** | Inverses | [`bin/ch05_inverses.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch05_inverses.org) | Sherman-Morrison rank-1 update, Banachiewicz block inversion |
-| **06** | Eigenanalysis | [`bin/ch06_eigenanalysis.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch06_eigenanalysis.org) | Spectral Theorem $A = P \Lambda P^T$, matrix square root, SVD |
-| **07** | Vector & Matrix Calculus | [`bin/ch07_vector_and_matrix_calculus.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch07_vector_and_matrix_calculus.org) | $\nabla (x^T S x) = 2Sx$, $\nabla \log\det(X) = X^{-1}$, Rayleigh quotient |
-| **08** | Further Topics | [`bin/ch08_further_topics.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch08_further_topics.org) | QR, Cholesky, Moore-Penrose $A^+$, Kronecker product, $\text{vec}(ABC)$ |
-| **09** | Applications to Statistics | [`bin/ch09_key_applications_to_statistics.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch09_key_applications_to_statistics.org) | MVN MLE, Hotelling $T^2$, MANOVA, PCA, Fisher LDA, MDS, OLS |
-| **10** | Outline Solutions | [`bin/ch10_outline_solutions.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch10_outline_solutions.org) | Complete Python numerical code solutions for all 9 chapters |
-| **11** | Capstone Project | [`bin/ch11_capstone_project.org`](file:///home/tofunth/stuffs/mono/gym/matalg/bin/ch11_capstone_project.org) | End-to-end Multivariate Financial Risk & Factor Analysis Engine |
+| **Index** | Master Knowledge Base | [`writings/index.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/index.org) | Complete R-to-Python Rosetta Stone, 10 Cardinal Rules |
+| **01** | Introduction & Syntax | [`writings/ch01_introduction.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch01_introduction.org) | Memory order (F vs C), 0-indexing, 1D vs 2D arrays |
+| **02** | Vectors & Matrices | [`writings/ch02_vectors_and_matrices.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch02_vectors_and_matrices.org) | Centering matrix $H_n$, Idempotency, Trace cyclic properties |
+| **03** | Rank of Matrices | [`writings/ch03_rank_of_matrices.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch03_rank_of_matrices.org) | Rank factorization $A = BC$, Rank-1 $xy^T$, Sylvester inequality |
+| **04** | Determinants | [`writings/ch04_determinants.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch04_determinants.org) | Schur complements, Weinstein-Aronszajn identity $\det(I+AB)=\det(I+BA)$ |
+| **05** | Inverses | [`writings/ch05_inverses.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch05_inverses.org) | Sherman-Morrison rank-1 update, Banachiewicz block inversion |
+| **06** | Eigenanalysis | [`writings/ch06_eigenanalysis.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch06_eigenanalysis.org) | Spectral Theorem $A = P \Lambda P^T$, matrix square root, SVD |
+| **07** | Vector & Matrix Calculus | [`writings/ch07_vector_and_matrix_calculus.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch07_vector_and_matrix_calculus.org) | $\nabla (x^T S x) = 2Sx$, $\nabla \log\det(X) = X^{-1}$, Rayleigh quotient |
+| **08** | Further Topics | [`writings/ch08_further_topics.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch08_further_topics.org) | QR, Cholesky, Moore-Penrose $A^+$, Kronecker product, $\text{vec}(ABC)$ |
+| **09** | Applications to Statistics | [`writings/ch09_key_applications_to_statistics.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch09_key_applications_to_statistics.org) | MVN MLE, Hotelling $T^2$, MANOVA, PCA, Fisher LDA, MDS, OLS |
+| **10** | Outline Solutions | [`writings/ch10_outline_solutions.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch10_outline_solutions.org) | Complete Python numerical code solutions for all 9 chapters |
+| **11** | Capstone Project | [`writings/ch11_capstone_project.org`](file:///home/tofunth/stuffs/mono/gym/matalg/writings/ch11_capstone_project.org) | End-to-end Multivariate Financial Risk & Factor Analysis Engine |
 
 ---
 
@@ -120,7 +121,7 @@ Dataset: [`data/asset_returns.csv`](file:///home/tofunth/stuffs/mono/gym/matalg/
 ```bash
 bazel run //gym/matalg:org2html
 ```
-Uses Emacs in batch mode with incremental SHA-256 build avoidance to compile all `.org` files into standalone `.html` files in `bin/`.
+Uses Emacs in batch mode with incremental SHA-256 build avoidance to compile all `.org` files into standalone `.html` files in `writings/`.
 
 ### Re-Sync Stories to GitHub Projects
 ```bash

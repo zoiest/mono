@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates bin/ch07_vector_and_matrix_calculus.org, bin/ch08_further_topics.org, and bin/ch09_key_applications_to_statistics.org."""
+"""Generates writings/ch07_vector_and_matrix_calculus.org, writings/ch08_further_topics.org, and writings/ch09_key_applications_to_statistics.org."""
 
 from pathlib import Path
 
@@ -608,12 +608,13 @@ print("RSS:", residuals.T @ residuals)
 """
 
 def main():
-    Path("bin/ch07_vector_and_matrix_calculus.org").write_text(CH07, encoding="utf-8")
-    print("Wrote bin/ch07_vector_and_matrix_calculus.org")
-    Path("bin/ch08_further_topics.org").write_text(CH08, encoding="utf-8")
-    print("Wrote bin/ch08_further_topics.org")
-    Path("bin/ch09_key_applications_to_statistics.org").write_text(CH09, encoding="utf-8")
-    print("Wrote bin/ch09_key_applications_to_statistics.org")
+    Path("writings").mkdir(parents=True, exist_ok=True)
+    Path("writings/ch07_vector_and_matrix_calculus.org").write_text(CH07, encoding="utf-8")
+    print("Wrote writings/ch07_vector_and_matrix_calculus.org")
+    Path("writings/ch08_further_topics.org").write_text(CH08, encoding="utf-8")
+    print("Wrote writings/ch08_further_topics.org")
+    Path("writings/ch09_key_applications_to_statistics.org").write_text(CH09, encoding="utf-8")
+    print("Wrote writings/ch09_key_applications_to_statistics.org")
 
 if __name__ == "__main__":
     main()
