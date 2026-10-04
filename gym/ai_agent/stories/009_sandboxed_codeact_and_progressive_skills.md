@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md#chapter-8-empowering-agents-with-code-execution-codeact))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-8-empowering-agents-with-code-execution-codeact))
   - Chapter 8: *Empowering agents with code execution* (8.1 Giving agents a computer, 8.2 Sandboxes, 8.3 Porting tools, 8.5 Agent Skills & progressive tool disclosure)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-9-concurrency-and-parallelism))
   - **Item 72 & 73**: Use `subprocess` to Manage Child Processes; Handle Pipes and Timeouts Safely
   - **Item 84 & 85**: Prevent Resource Leaks; Catch Specific Exceptions
   - **Item 98**: Lazy-Load Modules with Dynamic Imports to Reduce Startup Time

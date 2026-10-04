@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag--filesystem-tools))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-5-building-knowledge-bases-with-rag--filesystem-tools))
   - Chapter 5: *Building knowledge bases with RAG* (5.4 Structure-based search & filesystem tools, 5.5 Extending agents with callbacks)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md#chapter-5-functions))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-5-functions))
   - **Item 33**: Know How Closures Interact with Variable Scope and `nonlocal`
   - **Item 39**: Prefer `functools.partial` over lambda Expressions for Glue Functions
   - **Item 86**: Consider `contextlib` and `with` Statements for Reusable Behavior

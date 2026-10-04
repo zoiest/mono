@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md#chapter-7-planning-and-reflection-for-complex-tasks))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-7-planning-and-reflection-for-complex-tasks))
   - Chapter 7: *Planning and reflection for complex tasks* (7.1 Giving agents time to think, 7.2 Planning, 7.3 Reflection, 7.4 Integrating planning & reflection)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-1-pythonic-thinking))
   - **Item 4**: Write Helper Functions Instead of Complex Expressions
   - **Item 9**: Consider `match` for Destructuring in Flow Control (plan state machine)
   - **Item 11**: Prefer Interpolated F-Strings over C-Style Formatting

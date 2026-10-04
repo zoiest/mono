@@ -8,9 +8,9 @@
 ---
 
 ## 📖 Book Alignment
-* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/build_an_ai_agent_notes.md#chapter-3-enabling-actions-tool-use))
+* **Book:** *Build an AI Agent (From Scratch)* ([Study Notes](../bin/build_an_ai_agent_notes.md#chapter-3-enabling-actions-tool-use))
   - Chapter 3: *Enabling actions: Tool use* (3.1 Types of LLM tools, 3.2 How tool calling works, Model Context Protocol)
-* **Book:** *Effective Python (3rd Edition)* ([Study Notes](file:///home/tofunth/stuffs/mono/gym/ai_agent/bin/effective_python_v3_notes.md#chapter-5-functions))
+* **Book:** *Effective Python (3rd Edition)* ([Study Notes](../bin/effective_python_v3_notes.md#chapter-5-functions))
   - **Item 26 & 27**: Prefer `get` over `in`/`KeyError`; Prefer `defaultdict` over `setdefault`
   - **Item 29**: Compose Classes Instead of Deeply Nesting Dictionaries (`ToolSpec`, `ToolResult`)
   - **Item 32**: Prefer Raising Exceptions to Returning None (`ToolExecutionError`)
