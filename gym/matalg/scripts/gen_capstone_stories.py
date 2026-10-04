@@ -20,7 +20,7 @@ project_stories = [
             "Proving and verifying H_n symmetry (H_n^T = H_n) and idempotency (H_n^2 = H_n).",
             "Computing sample covariance S = (1 / (n - 1)) * X^T H_n X and correlation R."
         ],
-        """\
+        r"""
 ### 1. Ingestion & Matrix Statistics Implementation
 ```python
 import csv
@@ -78,7 +78,7 @@ print("Sample Correlation Matrix R:\n", np.round(R, 3))
             "Deriving partial correlation rho_{ij . rest} = -theta_{ij} / sqrt(theta_{ii} * theta_{jj}).",
             "Streaming O(p^2) covariance inverse updates via the Sherman-Morrison rank-1 formula."
         ],
-        """\
+        r"""
 ### 1. Precision Matrix & Streaming Update
 ```python
 import numpy as np
@@ -136,7 +136,7 @@ assert np.allclose(inv_batch_new, inv_sm_new, atol=1e-5)
             "Interpreting economic factor loadings: Market Factor, Duration/Tech Factor, Commodity Factor.",
             "Filtering noise via Eckart-Young optimal low-rank factor model: S_denoised = sum_{j=1}^k lambda_j p_j p_j^T + Psi."
         ],
-        """\
+        r"""
 ### 1. PCA Factor Model & Denoising
 ```python
 import numpy as np
@@ -184,7 +184,7 @@ print("Total variance preserved in denoised matrix.")
             "Equivalence of Mahalanobis distance D_M^2(x_t) = (x_t - xbar)^T S^{-1} (x_t - xbar) and ||z_t||_2^2.",
             "Hypothesis testing under Chi-Square(p=6) distribution and pinpointing Day 180 shock."
         ],
-        """\
+        r"""
 ### 1. Whitening & Anomaly Detection
 ```python
 import numpy as np
@@ -231,7 +231,7 @@ print(f"Day 180 Mahalanobis distance: {d_mahal[180]:.2f} (Extreme shock successf
             "Analytic solution w* = S^{-1} 1 / (1^T S^{-1} 1) and minimum portfolio variance sigma_{min}^2 = 1 / (1^T S^{-1} 1).",
             "Verifying Markowitz diversification theorem: portfolio volatility is strictly lower than every individual asset."
         ],
-        """\
+        r"""
 ### 1. Optimal GMV Portfolio Allocation
 ```python
 import numpy as np
@@ -277,7 +277,7 @@ assert vol_gmv_ann < np.min(indiv_vols_ann)
             "Properties of Residual Maker M = I - P: M X = 0, residuals e = M y.",
             "ANOVA total variance decomposition: y^T H_n y = y^T (P - (1/n)1 1^T) y + y^T M y."
         ],
-        """\
+        r"""
 ### 1. Factor Regression & Projection Geometry
 ```python
 import numpy as np

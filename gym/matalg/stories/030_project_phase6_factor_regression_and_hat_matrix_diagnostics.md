@@ -25,6 +25,7 @@
 
 ## 🛠️ Step-by-Step Implementation Guide
 
+
 ### 1. Factor Regression & Projection Geometry
 ```python
 import numpy as np

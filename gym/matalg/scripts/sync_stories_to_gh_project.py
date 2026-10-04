@@ -25,19 +25,29 @@ def run_cmd(cmd: list[str]) -> str:
         raise RuntimeError(f"Command failed ({res.returncode}): {' '.join(cmd)}\nStderr: {res.stderr}\nStdout: {res.stdout}")
     return res.stdout.strip()
 
-def get_existing_items() -> dict[str, str]:
-    """Returns mapping of title -> item_id for existing items in project."""
-    raw = run_cmd(["gh", "project", "item-list", str(PROJECT_NUMBER), "--owner", PROJECT_OWNER, "--format", "json"])
+def get_existing_items() -> dict[str, dict]:
+    """Returns mapping of title -> dict of item details for existing items in project."""
+    raw = run_cmd(["gh", "project", "item-list", str(PROJECT_NUMBER), "--owner", PROJECT_OWNER, "--limit", "100", "--format", "json"])
     data = json.loads(raw)
     items = {}
     for item in data.get("items", []):
         t = item.get("title", "")
-        i_id = item.get("id", "")
-        if t and i_id:
-            items[t] = i_id
+        pvti_id = item.get("id", "")
+        content = item.get("content", {})
+        draft_id = content.get("id", "")
+        body = content.get("body", "")
+        if t and pvti_id:
+            items[t] = {
+                "item_id": pvti_id,
+                "draft_id": draft_id,
+                "body": body,
+                "status": item.get("status"),
+                "priority": item.get("priority"),
+                "size": item.get("size"),
+            }
     return items
 
-def sync_story(story_file: Path, existing_items: dict[str, str]):
+def sync_story(story_file: Path, existing_items: dict[str, dict]):
     text = story_file.read_text(encoding="utf-8")
     lines = text.splitlines()
     title = lines[0].lstrip("# ").strip()
@@ -46,8 +56,21 @@ def sync_story(story_file: Path, existing_items: dict[str, str]):
     print(f"Syncing: {title} ...")
 
     if title in existing_items:
-        print(f"  Item already exists ({existing_items[title]}), skipping.")
-        return
+        info = existing_items[title]
+        item_id = info["item_id"]
+        draft_id = info["draft_id"]
+        if draft_id and info.get("body", "").strip() != body.strip():
+            print(f"  Updating body for draft issue ({draft_id})...")
+            run_cmd([
+                "gh", "project", "item-edit",
+                "--id", draft_id,
+                "--project-id", PROJECT_ID,
+                "--body", body
+            ])
+            info["body"] = body
+            print(f"  Updated body successfully.")
+        else:
+            print(f"  Body up to date.")
     else:
         # Create item
         res_raw = run_cmd([
@@ -60,7 +83,7 @@ def sync_story(story_file: Path, existing_items: dict[str, str]):
         item_data = json.loads(res_raw)
         item_id = item_data["id"]
         print(f"  Created item ID: {item_id}")
-        existing_items[title] = item_id
+        existing_items[title] = {"item_id": item_id, "draft_id": "", "body": body}
 
     # Set Status to 'Ready'
     try:

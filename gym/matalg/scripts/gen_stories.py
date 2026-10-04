@@ -18,7 +18,7 @@ stories_data = [
             "The difference between 1D arrays of shape (n,) and 2D column vectors of shape (n, 1).",
             "Basic matrix slicing, row/column extraction, and block sub-matrices in NumPy."
         ],
-        """\
+        r"""
 ### 1. Recreate R's Matrix Constructors
 In R:
 ```r
@@ -72,7 +72,7 @@ assert x_col.shape == (3, 1)
             "Testing orthogonality condition x^T y = 0.",
             "Rank properties of outer products."
         ],
-        """\
+        r"""
 ### 1. Vector Products & Angles
 ```python
 import numpy as np
@@ -119,7 +119,7 @@ assert np.linalg.matrix_rank(outer_ab) == 1
             "Trace linearity and cyclic invariance: tr(ABC) = tr(BCA) = tr(CAB).",
             "The Frobenius inner product tr(A^T B) and matrix Frobenius norm."
         ],
-        """\
+        r"""
 ### 1. Trace and Cross Products
 ```python
 import numpy as np
@@ -163,7 +163,7 @@ assert np.isclose(np.trace(A @ A.T), np.trace(A.T @ A))
             "Permutation matrices and row/column swaps.",
             "Symmetrization of quadratic forms x^T A x = x^T A_sym x."
         ],
-        """\
+        r"""
 ### 1. Matrix Decomposition & Quadratic Symmetrization
 ```python
 import numpy as np
@@ -207,7 +207,7 @@ assert np.isclose(q_orig, q_sym)
             "Mean centering of data matrix X: X_c = H_n X.",
             "Calculating sample covariance S = (1 / (n - 1)) * X^T H_n X."
         ],
-        """\
+        r"""
 ### 1. Centering Matrix Construction & Covariance
 ```python
 import numpy as np
@@ -259,7 +259,7 @@ assert np.allclose(S_matrix, S_numpy)
             "Verifying block matrix multiplication rules.",
             "Block diagonal matrices and sparse representation."
         ],
-        """\
+        r"""
 ### 1. Block Matrix Multiplication
 ```python
 import numpy as np
@@ -310,7 +310,7 @@ assert np.allclose(C_block, C_direct)
             "Detecting collinearity when a column is a linear combination of others.",
             "Gram matrix rank equality: rank(X^T X) == rank(X X^T) == rank(X)."
         ],
-        """\
+        r"""
 ### 1. Rank Evaluation & Collinearity
 ```python
 import numpy as np
@@ -350,7 +350,7 @@ assert np.linalg.matrix_rank(XtX) == rank_X
             "Eigenstructure of rank-1 matrices: non-zero eigenvalue equals y^T x.",
             "Constructing rank factorizations from SVD or row echelon form."
         ],
-        """\
+        r"""
 ### 1. Rank Factorization
 ```python
 import numpy as np
@@ -394,7 +394,7 @@ assert np.allclose(M, B_svd @ C_svd)
             "Sylvester's rank inequality: rank(AB) >= rank(A) + rank(B) - p.",
             "Connection between rank of idempotent matrices and degrees of freedom."
         ],
-        """\
+        r"""
 ### 1. Sylvester's Rank Inequality Verification
 ```python
 import numpy as np
@@ -434,7 +434,7 @@ assert rank_AB <= min(rank_A, rank_B)
             "Effects of elementary row operations.",
             "Using np.linalg.slogdet for robust likelihood evaluation."
         ],
-        """\
+        r"""
 ### 1. Determinants and slogdet
 ```python
 import numpy as np
@@ -475,7 +475,7 @@ assert np.isclose(logdet, np.sum(np.log(np.diag(Sigma))))
             "Schur complement formula: det(M) = det(A) * det(D - C A^{-1} B).",
             "Block triangular matrices: det([[A, B], [0, D]]) = det(A) det(D)."
         ],
-        """\
+        r"""
 ### 1. Schur Complement Determinant
 ```python
 import numpy as np
@@ -513,7 +513,7 @@ assert np.isclose(det_direct, det_schur)
             "Rank-1 update formula: det(A + x y^T) = det(A) * (1 + y^T A^{-1} x).",
             "Analytical determinant of equicorrelation matrix alpha I + beta 1 1^T."
         ],
-        """\
+        r"""
 ### 1. Rank-1 Determinant Update
 ```python
 import numpy as np
@@ -554,7 +554,7 @@ assert np.isclose(det_direct, det_formula)
             "Left inverse A_L = (A^T A)^{-1} A^T for overdetermined systems.",
             "Right inverse A_R = A^T (A A^T)^{-1} for underdetermined systems."
         ],
-        """\
+        r"""
 ### 1. Solving Linear Systems vs Inversion
 ```python
 import numpy as np
@@ -596,7 +596,7 @@ assert res_solve <= res_inv + 1e-12
             "The Sherman-Morrison formula: (A + x y^T)^{-1} = A^{-1} - (A^{-1} x y^T A^{-1}) / (1 + y^T A^{-1} x).",
             "The Woodbury identity for rank-k updates."
         ],
-        """\
+        r"""
 ### 1. Sherman-Morrison Update
 ```python
 import numpy as np
@@ -636,7 +636,7 @@ assert np.allclose(inv_direct, inv_sm)
             "Connection between the Schur complement and conditional variance: Cov(X_2 | X_1).",
             "Precision matrix structure in Gaussian graphical models."
         ],
-        """\
+        r"""
 ### 1. Banachiewicz Block Inversion
 ```python
 import numpy as np
@@ -683,7 +683,7 @@ print("Banachiewicz block inversion verified.")
             "Trace equals sum of eigenvalues; Determinant equals product of eigenvalues.",
             "Rank equals number of non-zero eigenvalues."
         ],
-        """\
+        r"""
 ### 1. Spectral Decomposition
 ```python
 import numpy as np
@@ -726,7 +726,7 @@ print("Spectral Theorem successfully verified.")
             "Matrix square root S^{1/2} and inverse square root S^{-1/2} for Mahalanobis whitening.",
             "Matrix exponential exp(A) = sum A^k / k! and comparison with scipy.linalg.expm."
         ],
-        """\
+        r"""
 ### 1. Matrix Square Root & Exponential
 ```python
 import numpy as np
@@ -764,7 +764,7 @@ print("Matrix square root and exponential verified.")
             "Relationship between singular values of A and eigenvalues of A^T A and A A^T.",
             "The Eckart-Young-Mirsky optimal rank-k approximation theorem."
         ],
-        """\
+        r"""
 ### 1. SVD and Rank-k Reconstruction
 ```python
 import numpy as np
@@ -808,7 +808,7 @@ assert np.linalg.matrix_rank(A_rank1) == 1
             "Log-determinant derivative: d log|X| / dX = X^{-1}.",
             "Deriving the OLS normal equations X^T X beta = X^T y."
         ],
-        """\
+        r"""
 ### 1. Numerical Gradient Verification
 ```python
 import numpy as np
@@ -849,7 +849,7 @@ print("Analytical gradient 2Sx verified numerically.")
             "Derivation of the Rayleigh quotient R_A(x) = (x^T A x) / (x^T x).",
             "Generalized Rayleigh quotient for x^T A x subject to x^T B x = 1."
         ],
-        """\
+        r"""
 ### 1. Rayleigh Quotient Optimization
 ```python
 import numpy as np
@@ -886,7 +886,7 @@ print(f"Max Rayleigh quotient: {R_max:.4f}, Min: {R_min:.4f}")
             "Cholesky decomposition: Sigma = L L^T for positive definite covariance.",
             "Simulating multivariate normals: X = mu + L Z."
         ],
-        """\
+        r"""
 ### 1. QR Least Squares & Cholesky Simulation
 ```python
 import numpy as np
@@ -930,7 +930,7 @@ print("QR and Cholesky algorithms successfully verified.")
             "General solution to consistent systems: x = A^- y + (I - A^- A) w.",
             "Minimum norm least squares solutions."
         ],
-        """\
+        r"""
 ### 1. Moore-Penrose Pseudoinverse Verification
 ```python
 import numpy as np
@@ -965,7 +965,7 @@ print("All 4 Moore-Penrose conditions verified.")
             "The fundamental identity: vec(ABC) = (C^T kron A) vec(B).",
             "Solving matrix equations A X B = C."
         ],
-        """\
+        r"""
 ### 1. Kronecker and Vec Identity
 ```python
 import numpy as np
@@ -1006,7 +1006,7 @@ print("vec(ABC) == (C^T kron A) vec(B) verified.")
             "Classical Metric Multidimensional Scaling (MDS) via double-centering.",
             "Gauss-Markov OLS, Hat matrix P, and residual maker M."
         ],
-        """\
+        r"""
 ### 1. Hotelling's T^2 & OLS Projection
 ```python
 import numpy as np
@@ -1046,9 +1046,21 @@ print("Hotelling's T^2 and OLS Hat/Residual operators verified.")
     )
 ]
 
+try:
+    from scripts.story_real_data_extensions import EXTENSIONS
+except ImportError:
+    from story_real_data_extensions import EXTENSIONS
+
 def generate_story_md(story):
     filename, title, role, goal, benefit, book_chap, sections, learnings, guide, criteria = story
     
+    prefix = filename[:3]
+    if prefix in EXTENSIONS:
+        ext = EXTENSIONS[prefix]
+        learnings = list(learnings) + ext["learnings"]
+        guide = guide.rstrip() + "\n\n" + ext["guide"].strip()
+        criteria = list(criteria) + ext["criteria"]
+
     learnings_md = "\n".join([f"{i+1}. {item}" for i, item in enumerate(learnings)])
     criteria_md = "\n".join([f"- [X] {item}" for item in criteria])
     

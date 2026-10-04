@@ -19,10 +19,13 @@
 2. Product bound: rank(AB) <= min(rank(A), rank(B)).
 3. Sylvester's rank inequality: rank(AB) >= rank(A) + rank(B) - p.
 4. Connection between rank of idempotent matrices and degrees of freedom.
+5. Demonstrating the '$p > n$' rank deficiency in rolling window covariance estimation.
+6. Verifying Sylvester's rank inequality on short financial time series.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
+
 
 ### 1. Sylvester's Rank Inequality Verification
 ```python
@@ -44,9 +47,48 @@ assert rank_AB >= sylvester_bound
 assert rank_AB <= min(rank_A, rank_B)
 ```
 
+### 2. 📊 Practical Dataset Application: Real Market Short-Window Rank Deficiency ($p > n$)
+```python
+import csv
+import numpy as np
+
+with open("data/asset_returns.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    next(reader)
+    X = np.array([[float(v) for v in row[1:]] for row in reader])
+
+# Short-window estimation: k = 4 days for p = 6 assets
+k = 4
+p = 6
+X_short = X[:k, :]  # (4, 6)
+H_short = np.eye(k) - np.ones((k, k)) / k
+S_short = (X_short.T @ H_short @ X_short) / (k - 1)  # (6, 6)
+
+# By rank inequality: rank(S_short) <= min(rank(X_short^T), rank(H_short)) <= k - 1 = 3
+rank_S_short = np.linalg.matrix_rank(S_short)
+print(f"Short window ({k} days, {p} assets) Covariance Rank: {rank_S_short}")
+assert rank_S_short <= k - 1
+assert rank_S_short < p
+
+# Demonstrating singularity
+det_S_short = np.linalg.det(S_short)
+print(f"det(S_short): {det_S_short:.2e}")
+assert np.isclose(det_S_short, 0.0)
+
+# Attempting naive inversion raises LinAlgError
+try:
+    np.linalg.inv(S_short)
+    assert False, "Should have raised LinAlgError"
+except np.linalg.LinAlgError:
+    print("Expected LinAlgError caught: Short-window covariance is non-invertible!")
+```
+
 ---
 
 ## ✅ Acceptance Criteria
 - [X] Sylvester's inequality `rank(AB) >= rank(A) + rank(B) - p` is confirmed.
 - [X] Product rank is bounded by `min(rank(A), rank(B))`.
 - [X] Subadditivity `rank(A + B) <= rank(A) + rank(B)` is verified.
+- [X] Short-window sample covariance ($k = 4, p = 6$) has $\text{rank}(S_{\text{short}}) \le 3$.
+- [X] Determinant of short-window covariance is verified to be 0.
+- [X] Inversion of rank-deficient covariance is confirmed to raise `LinAlgError`.

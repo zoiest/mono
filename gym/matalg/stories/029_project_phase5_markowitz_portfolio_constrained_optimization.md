@@ -24,6 +24,7 @@
 
 ## 🛠️ Step-by-Step Implementation Guide
 
+
 ### 1. Optimal GMV Portfolio Allocation
 ```python
 import numpy as np
@@ -44,8 +45,7 @@ print("GMV Weights (%):")
 for a, w in zip(assets, w_gmv):
     print(f"  {a:>4}: {w*100:+6.2f}%")
 
-print(f"
-GMV Annualized Volatility: {vol_gmv_ann*100:.2f}%")
+print(f"\nGMV Annualized Volatility: {vol_gmv_ann*100:.2f}%")
 print(f"Lowest Individual Asset Volatility: {np.min(indiv_vols_ann)*100:.2f}%")
 assert vol_gmv_ann < np.min(indiv_vols_ann)
 ```

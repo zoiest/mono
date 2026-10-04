@@ -24,6 +24,7 @@
 
 ## 🛠️ Step-by-Step Implementation Guide
 
+
 ### 1. Ingestion & Matrix Statistics Implementation
 ```python
 import csv
@@ -56,12 +57,9 @@ S = (X.T @ H @ X) / (n - 1)
 D_inv = np.diag(1.0 / np.sqrt(np.diag(S)))
 R = D_inv @ S @ D_inv
 
-print("Sample Mean Vector (daily %):
-", np.round(xbar.flatten() * 100, 3))
-print("Sample Covariance Matrix S (x 10^4):
-", np.round(S * 1e4, 3))
-print("Sample Correlation Matrix R:
-", np.round(R, 3))
+print("Sample Mean Vector (daily %):\n", np.round(xbar.flatten() * 100, 3))
+print("Sample Covariance Matrix S (x 10^4):\n", np.round(S * 1e4, 3))
+print("Sample Correlation Matrix R:\n", np.round(R, 3))
 ```
 
 ---

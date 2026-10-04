@@ -20,10 +20,13 @@
 3. Fisher's Linear Discriminant Analysis crimcoords via generalized eigenvalues B a = lambda W a.
 4. Classical Metric Multidimensional Scaling (MDS) via double-centering.
 5. Gauss-Markov OLS, Hat matrix P, and residual maker M.
+6. Performing Mahalanobis anomaly detection to uncover the Day 180 market shock event.
+7. Computing the OLS projection hat matrix $H = X(X^T X)^{-1} X^T$ and diagnosing influential trading days.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
+
 
 ### 1. Hotelling's T^2 & OLS Projection
 ```python
@@ -56,6 +59,48 @@ assert np.allclose(M @ X_reg, 0.0)  # Orthogonal to X
 print("Hotelling's T^2 and OLS Hat/Residual operators verified.")
 ```
 
+### 2. 📊 Practical Dataset Application: Real Market Mahalanobis Outlier Detection & OLS Hat Diagnostics
+```python
+import csv
+import numpy as np
+
+with open("data/asset_returns.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    assets = next(reader)[1:]
+    X = np.array([[float(v) for v in row[1:]] for row in reader])
+
+n, p = X.shape
+H_cent = np.eye(n) - np.ones((n, n)) / n
+X_tilde = H_cent @ X
+S = (X_tilde.T @ X_tilde) / (n - 1)
+Theta = np.linalg.inv(S)
+
+# 1. Mahalanobis Distance Anomaly Detection: D_M^2(x_t) = x_t^T Theta x_t
+d_mahal = np.sum((X_tilde @ Theta) * X_tilde, axis=1)
+
+# Find anomaly day
+anomaly_idx = np.argmax(d_mahal)
+print(f"Most extreme market outlier index: Day {anomaly_idx} with D_M^2 = {d_mahal[anomaly_idx]:.2f}")
+assert anomaly_idx == 180  # Day 180 injected shock detected!
+assert d_mahal[anomaly_idx] > 22.46  # Exceeds chi2(p=6, 0.999) critical value = 22.46
+
+# 2. Multi-factor Linear Model Diagnostics: SPY on remaining assets
+y = X[:, 0]
+X_reg = np.column_stack([np.ones(n), X[:, 1:]])  # Intercept + 5 assets (250, 6)
+
+# Hat Matrix P = X (X^T X)^{-1} X^T
+P = X_reg @ np.linalg.inv(X_reg.T @ X_reg) @ X_reg.T
+assert np.allclose(P @ P, P)          # Idempotent
+assert np.allclose(P, P.T)            # Symmetric
+assert np.isclose(np.trace(P), 6.0)   # tr(P) == rank(X) == 6
+
+# Leverage scores h_ii = P_ii
+leverage = np.diag(P)
+print(f"Average leverage: {np.mean(leverage):.4f} (p/n = {6/250:.4f})")
+print(f"Leverage of Day 180 shock: {leverage[anomaly_idx]:.4f}")
+assert leverage[anomaly_idx] > 2 * (6 / 250)  # Exceeds 2p/n high leverage threshold
+```
+
 ---
 
 ## ✅ Acceptance Criteria
@@ -63,3 +108,6 @@ print("Hotelling's T^2 and OLS Hat/Residual operators verified.")
 - [X] Hat matrix $P$ and residual maker $M$ confirmed symmetric and idempotent.
 - [X] Residual maker $M$ verified orthogonal to design matrix $X$ ($MX = 0$).
 - [X] Classical MDS coordinate recovery matches true pairwise distances.
+- [X] Day 180 is identified as the maximum Mahalanobis anomaly surpassing the $\chi^2_6(0.999)$ threshold of 22.46.
+- [X] Hat matrix $P$ is verified symmetric, idempotent, with trace equal to rank 6.
+- [X] Day 180 is diagnosed as a high-leverage observation ($h_{ii} > 2p/n$).

@@ -19,10 +19,13 @@
 2. Orthogonal matrices Q^T Q = I and preservation of norms.
 3. Permutation matrices and row/column swaps.
 4. Symmetrization of quadratic forms x^T A x = x^T A_sym x.
+5. Decomposing empirical cross-lag transition matrices into symmetric and skew-symmetric components.
+6. Computing portfolio variance as a strictly positive quadratic form $w^T S w > 0$.
 
 ---
 
 ## 🛠️ Step-by-Step Implementation Guide
+
 
 ### 1. Matrix Decomposition & Quadratic Symmetrization
 ```python
@@ -47,6 +50,48 @@ print(f"Original Q(x) = {q_orig}, Symmetric Q(x) = {q_sym}")
 assert np.isclose(q_orig, q_sym)
 ```
 
+### 2. 📊 Practical Dataset Application: Real Market Cross-Lag Symmetrization & Portfolio Variance
+```python
+import csv
+import numpy as np
+
+with open("data/asset_returns.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    next(reader)
+    X = np.array([[float(v) for v in row[1:]] for row in reader])
+
+n, p = X.shape
+
+# 1. Cross-lag covariance matrix between day t-1 and day t
+X_lag = X[:-1]
+X_lead = X[1:]
+H_sub = np.eye(n - 1) - np.ones((n - 1, n - 1)) / (n - 1)
+M_lag = (X_lag.T @ H_sub @ X_lead) / (n - 2)
+
+# Decompose non-symmetric cross-lag matrix into symmetric and skew-symmetric parts
+M_sym = 0.5 * (M_lag + M_lag.T)
+M_skew = 0.5 * (M_lag - M_lag.T)
+
+assert np.allclose(M_lag, M_sym + M_skew)
+assert np.allclose(M_skew.T, -M_skew)
+
+# Any quadratic form eliminates the skew-symmetric component: w^T M w == w^T M_sym w
+w = np.array([0.2, 0.2, 0.15, 0.15, 0.15, 0.15])
+q_raw = w.T @ M_lag @ w
+q_sym = w.T @ M_sym @ w
+q_skew = w.T @ M_skew @ w
+assert np.isclose(q_skew, 0.0)
+assert np.isclose(q_raw, q_sym)
+
+# 2. Portfolio variance quadratic form
+H = np.eye(n) - np.ones((n, n)) / n
+S = (X.T @ H @ X) / (n - 1)
+port_var = w.T @ S @ w
+port_vol = np.sqrt(port_var * 252)
+print(f"Portfolio Annualized Volatility: {port_vol * 100:.2f}%")
+assert port_var > 0  # Strict positive definiteness
+```
+
 ---
 
 ## ✅ Acceptance Criteria
@@ -54,3 +99,6 @@ assert np.isclose(q_orig, q_sym)
 - [X] `A_sym` is verified symmetric and `A_skew` skew-symmetric.
 - [X] Quadratic forms `x^T A x` and `x^T A_sym x` are verified equal.
 - [X] Orthogonal matrix length preservation is verified.
+- [X] Cross-lag transition matrix is decomposed into symmetric and skew-symmetric components.
+- [X] Skew-symmetric quadratic form $w^T M_{\text{skew}} w = 0$ is numerically verified.
+- [X] Portfolio variance quadratic form $w^T S w > 0$ confirms positive definiteness.
