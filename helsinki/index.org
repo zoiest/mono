@@ -26,6 +26,7 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 | *Measure and Integral* | MAT21007 / MAST30101 | 5 cr | [[file:measure_integral/index.org][Measure and Integral]] | Outer measure, Carathéodory criterion, measurable functions, Lebesgue integration (MCT, Fatou, DCT), Fubini-Tonelli, $L^p$ spaces, worked exercises |
 | *Introduction to Real and Fourier Analysis* | MAT21008 / BSMA2004 | 5 cr | [[file:intro_fourier/index.org][Intro Real & Fourier]] | Fourier series on $\mathbb{T}$, summation kernels (Dirichlet, Fejér, Poisson), FFT, Fourier transform on $\mathbb{R}$, Schwartz space, $L^2$ Plancherel isometry, heat equation |
 | *Measure, Probability, and Real Analysis* | MAST31001 / MAST31002 | 5 cr | [[file:measure_probability_analysis/index.org][Measure, Probability & Real]] | Abstract measure spaces $(X, \mathcal{F}, \mu)$, CDFs & Lebesgue-Stieltjes, Dynkin \(\pi\)-\(\lambda\) lemma, abstract limits, Carathéodory extension, product measures, Kolmogorov extension |
+| *Master's Thesis Project* | Master's Thesis | 30 cr | [[file:master_thesis/index.org][Master's Thesis]] | Quantum Amplitude Estimation vs. Monte Carlo for exotic option pricing & Greeks (Black-Scholes & Heston), supervisor notes & outreach guide |
 
 ---
 
@@ -78,7 +79,11 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 - *Primary References:* Ash & Doléans-Dade (/Probability & Measure Theory/); Shiryaev; Billingsley; Folland; Schilling.
 - *Core Guides:*
   - [[file:measure_probability_analysis/prepare.org][Strategic Preparation Guide]]: 3-session onboarding sequence, Dynkin \(\pi\)-\(\lambda\) lemma preview, analysis $\longleftrightarrow$ probability master dictionary.
-  - Topics: Abstract measure spaces $(X, \mathcal{F}, \mu)$, CDFs & Lebesgue-Stieltjes measures, monotone class arguments, abstract limit theorems, Carathéodory extension, infinite product spaces, Kolmogorov extension theorem, Borel-Cantelli lemmas, Laws of Large Numbers.
+** 6. Master's Thesis Project: Quantum Option Pricing & Greeks
+- *Primary Index:* [[file:master_thesis/index.org][master_thesis/index.org]]
+- *Supervisors & Outreach Guide:* [[file:master_thesis/writings/supervisors_notes.org][master_thesis/writings/supervisors_notes.org]]
+- *Working Title:* /Benchmarking Quantum Amplitude Estimation against Classical Monte Carlo for Exotic Option Pricing and Greeks: From Black-Scholes to Stochastic Volatility/
+- *Theoretical Pillars:* Continuous-time asset dynamics (Black-Scholes & Heston SDEs), exotic payoffs (vanilla, Asian, barrier), sensitivity analysis (the Greeks via pathwise derivatives & Malliavin weights), quantum state loading, Iterative QAE (IQAE), and NISQ noise benchmarking.
 
 ---
 
@@ -87,8 +92,8 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 #+caption: Cross-Course Analytical Connections
 | Foundational Engine | How It Manifests in Each Course |
 |---------------------+---------------------------------|
-| *Lebesgue Measure & Integration* | - *Real Analysis:* Abstract measure spaces $(X, \mathcal{F}, \mu)$ and $L^p$ spaces.<br>- *Fourier Analysis:* Justifying differentiation under the integral (DCT) and convolutions (Fubini-Tonelli).<br>- *Financial Economics:* Probability spaces $(\Omega, \mathcal{F}, \mathbb{P})$, expectation of payoffs, and equivalent martingale measures $\mathbb{Q} \sim \mathbb{P}$. |
-| *\(L^2\) Hilbert Spaces & Orthogonality* | - *Fourier Analysis:* Plancherel theorem, Parseval identity, orthogonal projection onto Fourier basis $\{e^{inx}\}$.<br>- *Quantum Mechanics:* State spaces $\mathcal{H}$, symmetry operators $U_g$, and representation theory.<br>- *Financial Economics:* Mean-Square Error Hedging as orthogonal projection $\operatorname{proj}_{\operatorname{Im}(S(1))}(X)$. |
+| *Lebesgue Measure & Integration* | - *Real Analysis:* Abstract measure spaces $(X, \mathcal{F}, \mu)$ and $L^p$ spaces.<br>- *Fourier Analysis:* Justifying differentiation under the integral (DCT) and convolutions (Fubini-Tonelli).<br>- *Financial Economics & Thesis:* Probability spaces $(\Omega, \mathcal{F}, \mathbb{P})$, expectation of payoffs, equivalent martingale measures $\mathbb{Q} \sim \mathbb{P}$, and Itô integration. |
+| *\(L^2\) Hilbert Spaces & Orthogonality* | - *Fourier Analysis:* Plancherel theorem, Parseval identity, orthogonal projection onto Fourier basis $\{e^{inx}\}$.<br>- *Quantum Mechanics & QC:* State spaces $\mathcal{H}$, unitary operators, qubit registers, and quantum state loading.<br>- *Financial Economics:* Mean-Square Error Hedging as orthogonal projection $\operatorname{proj}_{\operatorname{Im}(S(1))}(X)$. |
 | *Monotone Classes & Dynkin's \(\pi\)-\(\lambda\)* | - *Probability & Real Analysis:* Proving uniqueness of probability distributions from CDFs.<br>- *Financial Economics:* Generating market filtrations $(\mathcal{F}_t)$ and proving uniqueness of martingale measures. |
 
 ---
@@ -101,13 +106,14 @@ All courses utilize Bazel rules defined at the monorepo root:
    #+begin_src bash
    bazel run //helsinki:org2html
    #+end_src
-   Or compile a single course:
+   Or compile a single course / project:
    #+begin_src bash
    bazel run //helsinki/measure_integral:org2html
    bazel run //helsinki/intro_fourier:org2html
    bazel run //helsinki/measure_probability_analysis:org2html
    bazel run //helsinki/financial_economics_1:org2html
    bazel run //helsinki/maths_physics_3a:org2html
+   bazel run //helsinki/master_thesis:org2html
    #+end_src
 
 2. *Google Drive Synchronization:*

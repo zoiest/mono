@@ -1,0 +1,150 @@
+:PROPERTIES:
+:ID:       d54f7621-c124-419b-b0b2-3e4bfa56a120
+:ROAM_ALIASES: "Master Thesis Topic" "Quantum Option Pricing Thesis" "Helsinki Master Thesis"
+:END:
+#+title: Master's Thesis: Quantum Amplitude Estimation for Exotic Option Pricing & Greeks
+#+subtitle: Benchmarking Quantum Algorithms against Classical Monte Carlo from Black-Scholes to Stochastic Volatility
+#+author: Antigravity Notes
+#+date: [2026-10-07]
+#+filetags: :helsinki:master-thesis:quantitative-finance:option-pricing:quantum-computing:qae:heston:stochastic-calculus:
+
+[[file:../index.org][← Helsinki Courses Master Index]] | [[file:writings/supervisors_notes.org][Supervisors Research & Outreach Guide →]]
+
+* Thesis Proposal & Strategic Learning Philosophy
+
+** Working Title
+#+begin_quote
+*Benchmarking Quantum Amplitude Estimation against Classical Monte Carlo for Exotic Option Pricing and Greeks: From Black-Scholes to Stochastic Volatility*
+#+end_quote
+
+** Core Motivation: A Deep-Learning Vehicle for Quantitative Finance
+The primary objective of this Master's thesis is to serve as an *exhaustive educational engine* for mastering quantitative finance, derivatives engineering, and modern computational methods.
+
+By building an end-to-end derivative pricing framework that bridges classical stochastic calculus with quantum algorithms, this project achieves two vital goals:
+1. *Deep Mathematical & Computational Grounding in Option Pricing:* Mastering stochastic differential equations (SDEs), Itô's lemma, Girsanov change of measure, risk-neutral martingale valuation, stochastic volatility dynamics (Heston), path-dependent payoffs, and sensitivity risk analysis (the Greeks via pathwise differentiation and Malliavin weights).
+2. *Hands-On Mastery of Applied Quantum Computing:* Implementing state preparation, quantum arithmetic, payoff rotation oracles, Iterative Quantum Amplitude Estimation (IQAE), and realistic resource estimation (gate depth, CNOT count, T-depth, and noise susceptibility) using modern frameworks (`Qiskit`, `PennyLane`).
+
+---
+
+* The Theoretical Pillars
+
+#+caption: Three-Phase Architectural Blueprint
+| Pillar | Domain | Core Concepts & Techniques | Computational Deliverables |
+|--------+--------+----------------------------+----------------------------|
+| *Pillar 1* | Classical Quantitative Finance | Geometric Brownian Motion, Heston stochastic volatility, CIR variance, Feller condition, risk-neutral pricing ($\mathbb{Q}$-measure) | Monte Carlo simulator (Euler-Maruyama, Milstein, QE scheme for Heston) |
+| *Pillar 2* | Sensitivities & Risk (Greeks) | Functional derivatives, Delta ($\Delta$), Gamma ($\Gamma$), Vega ($\mathcal{V}$), finite differences, pathwise derivative method, Malliavin calculus weights | Pathwise and Malliavin Greeks evaluation engine |
+| *Pillar 3* | Quantum Amplitude Estimation | Qubit register discretization, quantum state loading, controlled $Y$-rotations for payoffs, Grover diffusion operator, Iterative QAE (IQAE) | Quantum circuit pipeline benchmarking pricing & Greeks vs classical MC |
+
+---
+
+* Mathematical Framework
+
+** 1. Classical Asset Dynamics & Pricing PDE
+
+*** The Black-Scholes-Merton Benchmark
+Under the risk-neutral measure $\mathbb{Q}$, the asset price $S_t$ satisfies:
+$$ dS_t = r S_t \, dt + \sigma S_t \, dW_t^\mathbb{Q}, $$
+where $r$ is the risk-free rate, $\sigma > 0$ is constant volatility, and $W_t^\mathbb{Q}$ is a standard Brownian motion.
+
+*** The Heston Stochastic Volatility Model
+To capture market volatility smiles and skews, the asset variance $v_t = \sigma_t^2$ is modeled as a mean-reverting Cox-Ingersoll-Ross (CIR) square-root diffusion:
+$$ dS_t = r S_t \, dt + \sqrt{v_t} S_t \, dW_{1, t}^\mathbb{Q}, $$
+$$ dv_t = \kappa (\theta - v_t) \, dt + \xi \sqrt{v_t} \, dW_{2, t}^\mathbb{Q}, $$
+with correlated Brownian motions $d\langle W_1^\mathbb{Q}, W_2^\mathbb{Q} \rangle_t = \rho \, dt$, where:
+- $\kappa > 0$ is the mean-reversion speed,
+- $\theta > 0$ is the long-term variance,
+- $\xi > 0$ is the volatility of variance (vol-of-vol),
+- $\rho \in [-1, 1]$ is the asset-volatility correlation (typically $\rho < 0$ for equity leverage effects),
+- The Feller condition $2\kappa\theta > \xi^2$ guarantees that the variance process $v_t$ remains strictly positive almost surely.
+
+** 2. Target Derivative Contracts & Payoffs
+
+The thesis systematically investigates three classes of European-style contingent claims:
+1. *Vanilla European Call/Put:*
+   $$ \Phi_{\text{vanilla}}(S_T) = \max(S_T - K, 0). $$
+2. *Path-Dependent Asian Option (Arithmetic Average):*
+   $$ \Phi_{\text{Asian}}\left(\{S_{t_k}\}_{k=1}^M\right) = \max\left( \frac{1}{M}\sum_{k=1}^M S_{t_k} - K, \, 0 \right). $$
+3. *Up-and-Out Barrier Option (Discontinuous Payoff):*
+   $$ \Phi_{\text{barrier}}\left(\{S_{t_k}\}_{k=1}^M\right) = \max(S_T - K, 0) \cdot \mathbf{1}_{\{\max_{k} S_{t_k} < B\}}. $$
+
+** 3. Sensitivity Risk Management (The Greeks)
+
+Hedging requires computing functional derivatives of the discounted price $V_0 = e^{-rT}\mathbb{E}^\mathbb{Q}[\Phi(S)]$:
+- *Delta:* $\Delta = \frac{\partial V_0}{\partial S_0}$
+- *Gamma:* $\Gamma = \frac{\partial^2 V_0}{\partial S_0^2}$
+- *Vega:* $\mathcal{V} = \frac{\partial V_0}{\partial \sigma}$ (or $\frac{\partial V_0}{\partial v_0}$)
+
+*Methodological Comparison:*
+1. *Finite Differences:* $\Delta \approx \frac{V(S_0 + \delta) - V(S_0 - \delta)}{2\delta}$. (Simple, but introduces high variance and step-size bias).
+2. *Pathwise Derivative Method (Broadie & Glasserman):* Differentiating inside the expectation when the payoff is Lipschitz continuous:
+   $$ \frac{\partial}{\partial S_0} \mathbb{E}^\mathbb{Q}[\Phi(S_T)] = \mathbb{E}^\mathbb{Q}\left[ \Phi'(S_T) \frac{\partial S_T}{\partial S_0} \right]. $$
+3. *Malliavin Calculus Weights:* Differentiating via integration by parts on Wiener space, transforming derivatives of discontinuous payoffs (e.g. barrier options) into expectations with stochastic weights $\pi$:
+   $$ \Delta = e^{-rT} \mathbb{E}^\mathbb{Q}[\Phi(S_T) \cdot \pi_\Delta], \quad \pi_\Delta = \frac{W_T^\mathbb{Q}}{S_0 \sigma T}. $$
+
+---
+
+* The Quantum Computing Pipeline
+
+#+begin_src
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │ 1. State Preparation: P_X |0...0> = \sum \sqrt{p_i} |i>               │
+  │    Discretize continuous terminal asset price S_T into 2^n bins.       │
+  └───────────────────────────────────┬────────────────────────────────────┘
+                                      │
+                                      ▼
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │ 2. Payoff Encoding: R_y(\theta_i) on ancilla qubit                     │
+  │    |i>|0> -> |i> ( \sqrt{1 - \tilde{f}(S_i)} |0> + \sqrt{\tilde{f}(S_i)} |1> )│
+  │    where \tilde{f}(S) is the normalized option payoff \in [0, 1].      │
+  └───────────────────────────────────┬────────────────────────────────────┘
+                                      │
+                                      ▼
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │ 3. Quantum Amplitude Estimation: Grover Iterator \mathcal{Q}           │
+  │    \mathcal{Q} = -\mathcal{A} \mathcal{S}_0 \mathcal{A}^\dagger \mathcal{S}_\chi     │
+  │    Extracts amplitude a = \mathbb{E}[\tilde{f}(S_T)] with O(1/\epsilon) samples. │
+  └───────────────────────────────────┬────────────────────────────────────┘
+                                      │
+                                      ▼
+  ┌────────────────────────────────────────────────────────────────────────┐
+  │ 4. Rescaling & Pricing: V_0 = e^{-rT} ( (f_max - f_min) a + f_min )     │
+  └────────────────────────────────────────────────────────────────────────┘
+#+end_src
+
+** Quantum Advantage & Resource Profiling
+- *Classical Monte Carlo Complexity:* To achieve precision $\varepsilon$, classical Monte Carlo requires $N = O(\varepsilon^{-2})$ sample trajectories (standard central limit theorem rate).
+- *Quantum Amplitude Estimation Complexity:* IQAE achieves precision $\varepsilon$ using $M = O(\varepsilon^{-1})$ quantum oracle calls—a *quadratic speedup*.
+- *The Practical Reality Check:*
+  - Circuit depth grows proportionally to $O(\varepsilon^{-1})$.
+  - Under NISQ decoherence and gate noise, deep Grover iterations accumulate error.
+  - The thesis will establish the exact crossover point where quantum gate count surpasses classical GPU throughput under simulated device noise models.
+
+---
+
+* Phased Research & Implementation Roadmap
+
+#+caption: 6-Stage Master's Thesis Execution Timeline
+| Stage | Weeks | Primary Objective | Key Milestones & Outputs |
+|-------+-------+-------------------+--------------------------|
+| *Stage 1* | 1–4 | Mathematical Grounding & SDE Formulation | Formalize Itô calculus, Girsanov theorem, Heston PDE/SDE, and Malliavin weight derivations in thesis Chapter 2. |
+| *Stage 2* | 5–8 | Classical Monte Carlo Engine | Build vectorized Python/C++ engine for Black-Scholes and Heston; benchmark European, Asian, and barrier payoffs with finite difference and pathwise Greeks. |
+| *Stage 3* | 9–12 | Quantum Circuit Design & State Loading | Implement Grover-Rudolph and affine discretization in `Qiskit Finance` / `PennyLane`; construct controlled rotation payoff oracles for each contract. |
+| *Stage 4* | 13–16 | Iterative QAE Implementation & Pricing | Run IQAE and MLQAE; verify the $O(1/\varepsilon)$ scaling rate on statevector simulators; price vanillas, Asians, and barriers. |
+| *Stage 5* | 17–20 | Quantum Greeks & Noise Profiling | Formulate quantum circuits for Greeks via Malliavin weights; inject depolarizing/dephasing noise models to determine noise thresholds. |
+| *Stage 6* | 21–24 | Thesis Synthesis & Defense Preparation | Write up empirical comparisons, complexity plots, and conclusions; finalize master's thesis dissertation. |
+
+---
+
+* Software Stack & Reproducibility Tools
+
+- *Stochastic Simulation & Classical Pricing:* Python (`NumPy`, `SciPy`, `Numba`), `QuantLib-Python` for Black-Scholes analytic formulas and Dupire local volatility benchmarks.
+- *Quantum Algorithm Simulation:* `Qiskit` (`qiskit-finance`, `qiskit-aer`), `PennyLane` (for variational and parameter-shift comparisons).
+- *High-Performance Computing:* CSC / LUMI or local multi-core workstations for large-sample Monte Carlo benchmarks ($N \ge 10^7$ paths).
+
+---
+
+* Next Steps & Supervision
+
+Detailed profiles of prospective supervisors at the University of Helsinki (Kumpula Campus), departmental co-supervision strategies, and outreach email drafts are documented in:
+
+[[file:writings/supervisors_notes.org][→ Read the Detailed University of Helsinki Supervisors Notes & Outreach Guide]]
