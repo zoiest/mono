@@ -28,6 +28,7 @@
 |----------+-----------------+----------------|
 | [[file:prepare.org][Strategic Preparation Guide]] | 3-session pre-course onboarding plan | Readiness assessment, \(\pi\)-\(\lambda\) lemma preview, master dictionary |
 | [[file:../measure_integral/index.org][Measure & Integral Prerequisite]] | Foundational notes on Lebesgue theory | Concrete $\mathbb{R}^n$ intuition, Carathéodory criterion, MCT, Fatou, DCT |
+| [[file:../measure_integral/index.org][Notational & Convention Dictionary]] | Holopainen vs. Graduate analysis notation | Monotone arrows $\nearrow$ & $\searrow$, $\dot{\mathbb{R}}$ vs $\overline{\mathbb{R}}$, $\Gamma$ vs $\mathrm{Leb}(\mathbb{R}^n)$ |
 | [[file:../measure_integral/writings/generated_exercises.org][Generated Practice Exercises]] | 10 worked calculation & proof problems | Problem 3 (sublevel sets) & Problem 10 (Part C: First Borel-Cantelli Lemma) |
 
 ---

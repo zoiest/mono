@@ -39,6 +39,35 @@ The knowledge base is organized into five core theoretical modules and one exhau
 | *Module 5* | [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][The Bridge to Probability & Real Analysis]] | Full Analysis $\leftrightarrow$ Probability dictionary, Dynkin's \(\pi\)-\(\lambda\) lemma preview, Lebesgue-Stieltjes measures & CDFs, independent random variables, $L^p$ spaces & completeness, Borel-Cantelli & Laws of Large Numbers |
 | *Practice* | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Generated Exercises & Worked Solutions]] | 10 comprehensive problems: Cantor set outer measure, Carathéodory verification, measurable functions, dyadic construction, MCT series, Fatou strict inequality, DCT limits, Gaussian Leibniz differentiation, Tonelli-Fubini, Markov/Chebyshev/Borel-Cantelli |
 
+* Mathematical Conventions & Notational Dictionary
+
+When reading the official lecture notes (=MeasInt17.pdf= by Ilkka Holopainen) alongside these synthesized notes and graduate textbooks (e.g. Schilling, Folland, Billingsley), be aware of the following notational conventions:
+
+#+caption: Notational Translation: Holopainen (MeasInt17.pdf) vs. Modern Standards
+| Concept / Object | Holopainen (=MeasInt17.pdf=) | Modern / Shorthand (Used in Notes) | Meaning & Context |
+|------------------+------------------------------+------------------------------------+-------------------|
+| *Increasing sets limit* | $A_1 \subset A_2 \subset \dots$, $A = \bigcup_{j=1}^\infty A_j$ | $A_j \nearrow A$ | Sets expand monotonically into $A$ (Thm 1.32, p. 23). |
+| *Decreasing sets limit* | $A_1 \supset A_2 \supset \dots$, $A = \bigcap_{j=1}^\infty A_j$ | $A_j \searrow A$ | Sets shrink monotonically into $A$ (Thm 1.33, p. 23). |
+| *Monotone function limit* | $f_1 \le f_2 \le \dots$, $f(x) = \lim_{j\to\infty} f_j(x)$ | $f_j \nearrow f$ | Functions increase pointwise to $f$ (Thm 3.9 & Thm 3.17 MCT). |
+| *Extended real numbers* | $\dot{\mathbb{R}}$ (dotted $\mathbb{R}$) | $\overline{\mathbb{R}}$ or $[-\infty, +\infty]$ | Extended real line $\mathbb{R} \cup \{-\infty, +\infty\}$ (p. 2). |
+| *Lebesgue measurable sets* | $\Gamma$ or $\Gamma_n$ | $\mathrm{Leb}(\mathbb{R}^n)$ or $\mathcal{M}(\mathbb{R}^n)$ | The \(\sigma\)-algebra of Carathéodory measurable sets (p. 15). |
+| *Indicator / Characteristic* | $\chi_A(x)$ | $\mathbf{1}_A(x)$ or $\mathbb{I}_A(x)$ | $1$ if $x \in A$, $0$ otherwise. Modern probability avoids $\chi$ (reserved for characters). |
+| *Subset inclusion* | $A \subset B$ | $A \subseteq B$ | Holopainen writes $\subset$ for non-strict subset inclusion (p. 1). |
+| *Non-negative simple functions* | $Y$ or $Y_n$ | $\mathrm{Simp}^+(\mathbb{R}^n)$ or $\mathcal{S}^+$ | Measurable functions taking finitely many non-negative values (p. 40). |
+| *Elementary volume* | $\ell(I)$ | $\ell(I)$ or $\mathrm{vol}(I)$ | Product of side lengths $\prod_{j=1}^n (b_j - a_j)$ for an \(n\)-interval (p. 5). |
+| *Almost everywhere* | a.e. / m-m.k. (Finnish) | a.e. (Analysis) / a.s. (Probability) | Holds outside a null set $m(N) = 0$ (p. 36). |
+
+** Why $\nearrow$ and $\searrow$ Are Used Extensively
+- Holopainen spells out monotone sequences longhand: /"Let $A_j$ be an increasing sequence... so $A_1 \subset A_2 \subset \dots$"/.
+- The upward arrow ($\nearrow$) and downward arrow ($\searrow$) represent the standard international mathematical shorthand combining *monotonicity* and *convergence*:
+  - $x_n \nearrow x \iff x_1 \le x_2 \le x_3 \le \dots \text{ and } \lim_{n\to\infty} x_n = x$.
+  - $x_n \searrow x \iff x_1 \ge x_2 \ge x_3 \ge \dots \text{ and } \lim_{n\to\infty} x_n = x$.
+- This shorthand makes core limit theorems much faster to read and apply:
+  - *Continuity of measure from below:* $A_n \nearrow A \implies m(A_n) \nearrow m(A)$.
+  - *Continuity of measure from above:* $B_n \searrow B$ with $m(B_1) < \infty \implies m(B_n) \searrow m(B)$.
+  - *Monotone Convergence Theorem (MCT):* $0 \le f_n \nearrow f \implies \int f_n \, dm \nearrow \int f \, dm$.
+  - *Dyadic simple approximation:* Non-negative measurable $f$ has $\phi_k \nearrow f$.
+
 ---
 
 * The Core Dictionary: Measure Theory $\longleftrightarrow$ Probability Theory

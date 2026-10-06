@@ -64,6 +64,7 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
   4. [[file:measure_integral/04_fubini_tonelli_and_product_measures.org][Fubini & Tonelli Theorems on Product Spaces]]
   5. [[file:measure_integral/05_bridge_to_probability_and_real_analysis.org][The Bridge to Probability & Real Analysis]]
   6. [[file:measure_integral/writings/generated_exercises.org][Generated Exercises & Worked Solutions]] (10 high-yield calculation & proof problems)
+- *Notational Conventions:* Notational dictionary in [[file:measure_integral/index.org][measure_integral/index.org]] bridging Holopainen's notes (=MeasInt17.pdf=) with modern analysis ($\nearrow/\searrow$ monotone limits, $\dot{\mathbb{R}}$ vs $\overline{\mathbb{R}}$, $\Gamma$ vs $\mathrm{Leb}(\mathbb{R}^n)$, $\chi_A$ vs $\mathbf{1}_A$).
 
 ** 4. Introduction to Real and Fourier Analysis (MAT21008)
 - *Primary Index:* [[file:intro_fourier/index.org][intro_fourier/index.org]]
