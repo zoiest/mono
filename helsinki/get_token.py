@@ -98,19 +98,28 @@ def get_token(client_id: str, client_secret: str, out_file: Path):
     token_data["client_id"] = client_id
     token_data["client_secret"] = client_secret
 
+    out_file.parent.mkdir(parents=True, exist_ok=True)
     out_file.write_text(json.dumps(token_data, indent=2), encoding="utf-8")
     print(f"\nSuccess! Credentials saved to: {out_file}")
     print("This token includes a refresh_token, so it will renew automatically.")
 
 
 def main():
+    script_dir = Path(__file__).resolve().parent
+    default_out = script_dir / ".google_drive_token.json"
+
     parser = argparse.ArgumentParser(description="Generate Google Drive token.")
     parser.add_argument("--client-id", help="Google OAuth Client ID")
     parser.add_argument("--client-secret", help="Google OAuth Client Secret")
     parser.add_argument("--credentials-json", help="Path to client_secret_xxx.json")
-    parser.add_argument("--out", default=".google_drive_token.json", help="Output token file path")
+    parser.add_argument("--out", default=str(default_out), help="Output token file path")
 
     args = parser.parse_args()
+    out_arg = Path(args.out)
+    if Path.cwd().name == "helsinki" and out_arg.parts and out_arg.parts[0] == "helsinki":
+        out_path = Path.cwd().joinpath(*out_arg.parts[1:]).resolve()
+    else:
+        out_path = out_arg.resolve()
 
     client_id = args.client_id
     client_secret = args.client_secret
@@ -118,8 +127,19 @@ def main():
     if args.credentials_json:
         creds = json.loads(Path(args.credentials_json).read_text(encoding="utf-8"))
         info = creds.get("installed") or creds.get("web") or creds
-        client_id = info["client_id"]
-        client_secret = info["client_secret"]
+        client_id = info.get("client_id")
+        client_secret = info.get("client_secret")
+
+    if not client_id or not client_secret:
+        if out_path.is_file():
+            try:
+                existing = json.loads(out_path.read_text(encoding="utf-8"))
+                client_id = client_id or existing.get("client_id")
+                client_secret = client_secret or existing.get("client_secret")
+                if client_id and client_secret:
+                    print(f"Loaded existing client credentials from: {out_path.name}")
+            except Exception:
+                pass
 
     if not client_id or not client_secret:
         print("Please provide client_id and client_secret, or a credentials JSON file.")
@@ -127,7 +147,7 @@ def main():
         client_id = input("Client ID: ").strip()
         client_secret = input("Client Secret: ").strip()
 
-    get_token(client_id, client_secret, Path(args.out).resolve())
+    get_token(client_id, client_secret, out_path)
 
 
 if __name__ == "__main__":
