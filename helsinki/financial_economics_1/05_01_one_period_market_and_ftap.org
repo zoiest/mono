@@ -105,7 +105,7 @@ If $f(y) \ne 0$ for some $y \in V$, taking $\alpha \to \pm \infty$ would make $f
 Therefore, we must have $f(y) = 0$ for all $y \in V$, which implies $\gamma \le 0$.
 Consequently:
 $$ f(x) < 0 \quad \text{for all } x \in A $$
-Choosing $x = e_j$ (the $j$-th standard basis vector, which lies in $A$), we have:
+Choosing $x = e_j$ (the \(j\)-th standard basis vector, which lies in $A$), we have:
 $$ f(e_j) = z'_j < 0 \quad \text{for all } j = 1, \dots, K $$
 Defining $z_j = -z'_j > 0$ yields a strictly positive vector $z \gg 0$ satisfying $z^T y = 0$ for all $y \in V$. $\blacksquare$
 
@@ -165,5 +165,5 @@ Notice that:
 *Fundamental Identity of Risk-Neutral Pricing:*
 Under the equivalent martingale measure $\mathbb{Q}$, the current price of every asset equals its expected discounted payoff:
 $$ S_n(0) = \mathbb{E}_{\mathbb{Q}}\left[ \frac{S_n(1)}{1 + r} \right] $$
-The discounted price process $\frac{S_n(t)}{S_1(t)}$ is a $\mathbb{Q}$-martingale.
+The discounted price process $\frac{S_n(t)}{S_1(t)}$ is a \(\mathbb{Q}\)-martingale.
 #+end_quote

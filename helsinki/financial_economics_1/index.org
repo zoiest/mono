@@ -117,7 +117,7 @@
 
 10. [[id:9dd04db2-dde4-4cec-a799-1e68538fd858][Local Risk Minimization in Incomplete Multi-Period Markets]]
     - Non-self-financing strategies and the cumulative cost process $C(t)$.
-    - Mean self-financing condition: $C(t)$ is a $(\mathbb{P}, \mathbb{F})$-martingale.
+    - Mean self-financing condition: $C(t)$ is a \((\mathbb{P}, \mathbb{F})\)-martingale.
     - Local risk process $R_\theta(k) = \mathbb{E}[(\Delta C(k+1))^2 \mid \mathcal{F}_k]$.
     - Theorem 5.17: Characterization of locally risk-minimizing strategies via orthogonality:
       $$ \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] = 0 \quad \text{and} \quad \operatorname{Cov}(\Delta C(k+1), \Delta S(k+1) \mid \mathcal{F}_k) = 0 $$
