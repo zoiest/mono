@@ -1,0 +1,147 @@
+:PROPERTIES:
+:ID:       4c99f3d6-fa85-444f-ae96-055c56a09370
+:ROAM_ALIASES: "Fubini Theorem" "Tonelli Theorem" "Product Measures" "Cavalieri Principle" "Iterated Integrals"
+:ROAM_REFS: [cite:@holopainen2017mitta]
+:END:
+#+title: Fubini's Theorems, Tonelli's Theorem, and Product Measures
+#+subtitle: Chapter 4 — Foundations of Measure and Integral (Ilkka Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-10-06]
+#+filetags: :math:measure-theory:fubini:tonelli:product-measures:cavalieri:iterated-integrals:
+
+[[id:580b3400-63c6-4473-8873-ebdb54755ef8][← Previous: Lebesgue Integration & Convergence Theorems]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][Next: The Bridge to Probability & Real Analysis →]]
+
+* Product Spaces, Sections, and Slices
+
+** Cartesian Products and Geometry
+Let $p, q \in \mathbb{N}$ and consider the Euclidean space $\mathbb{R}^{p+q} = \mathbb{R}^p \times \mathbb{R}^q$.
+A point $z \in \mathbb{R}^{p+q}$ is written as $z = (x, y)$ with $x \in \mathbb{R}^p$ and $y \in \mathbb{R}^q$.
+If $I \subset \mathbb{R}^p$ and $J \subset \mathbb{R}^q$ are intervals, then $I \times J \subset \mathbb{R}^{p+q}$ is a $(p+q)$-interval with volume:
+$$ \ell_{p+q}(I \times J) = \ell_p(I) \cdot \ell_q(J). $$
+
+** Slices (Sections) of Sets and Functions
+#+begin_quote
+*Definition (Sections):*
+1. *Section of a Set:* Let $E \subset \mathbb{R}^{p+q}$. For each $x \in \mathbb{R}^p$ and $y \in \mathbb{R}^q$, the *cross-sections* are:
+   $$ E_x = \{ y \in \mathbb{R}^q : (x, y) \in E \} \subset \mathbb{R}^q, $$
+   $$ E^y = \{ x \in \mathbb{R}^p : (x, y) \in E \} \subset \mathbb{R}^p. $$
+2. *Section of a Function:* Let $f : \mathbb{R}^{p+q} \to \dot{\mathbb{R}}$. The *partial functions* are:
+   $$ f_x : \mathbb{R}^q \to \dot{\mathbb{R}}, \quad f_x(y) = f(x, y), $$
+   $$ f^y : \mathbb{R}^p \to \dot{\mathbb{R}}, \quad f^y(x) = f(x, y). $$
+#+end_quote
+
+** Measurability of Sections
+#+begin_quote
+*Theorem (Measurability of Slices):*
+If $E \in \mathrm{Leb}(\mathbb{R}^{p+q})$, then for almost every $x \in \mathbb{R}^p$, the section $E_x \in \mathrm{Leb}(\mathbb{R}^q)$, and the map
+$$ x \mapsto m_q(E_x) $$
+is a measurable function on $\mathbb{R}^p$.
+Similarly, if $f : \mathbb{R}^{p+q} \to \dot{\mathbb{R}}$ is measurable, then $y \mapsto f(x, y)$ is measurable on $\mathbb{R}^q$ for almost every $x \in \mathbb{R}^p$.
+#+end_quote
+
+** Cavalieri's Principle
+Before Fubini, Bonaventura Cavalieri (1635) observed that the volume of a 3D solid is obtained by integrating the areas of its 2D parallel planar cross-sections. In Lebesgue theory, this is completely formalized:
+$$ m_{p+q}(E) = \int_{\mathbb{R}^p} m_q(E_x) \, dm_p(x) = \int_{\mathbb{R}^q} m_p(E^y) \, dm_q(y). $$
+
+---
+
+* Fubini's First Theorem: Tonelli's Theorem ($f \ge 0$)
+
+When working with non-negative functions, we never need to worry about integrability or convergence: the integral exists in $[0, +\infty]$, and order of integration can always be exchanged. Leonida Tonelli proved this foundational result in 1909.
+
+#+begin_quote
+*Theorem 4.1 (Tonelli's Theorem / Fubini's 1st Theorem):*
+Let $f : \mathbb{R}^{p+q} \to [0, +\infty]$ be a non-negative measurable function.
+Then:
+1. For almost every $x \in \mathbb{R}^p$, the function $y \mapsto f(x, y)$ is measurable on $\mathbb{R}^q$.
+2. The function $F(x) = \int_{\mathbb{R}^q} f(x, y) \, dm_q(y)$ is measurable on $\mathbb{R}^p$.
+3. For almost every $y \in \mathbb{R}^q$, the function $x \mapsto f(x, y)$ is measurable on $\mathbb{R}^p$.
+4. The function $G(y) = \int_{\mathbb{R}^p} f(x, y) \, dm_p(x)$ is measurable on $\mathbb{R}^q$.
+5. *The Equality of Iterated Integrals:*
+   $$ \int_{\mathbb{R}^{p+q}} f \, dm_{p+q} = \int_{\mathbb{R}^p} \left( \int_{\mathbb{R}^q} f(x, y) \, dm_q(y) \right) dm_p(x) = \int_{\mathbb{R}^q} \left( \int_{\mathbb{R}^p} f(x, y) \, dm_p(x) \right) dm_q(y). $$
+   All three expressions are equal in $[0, +\infty]$ (finite or $+\infty$).
+#+end_quote
+
+*Proof Architecture:*
+1. Prove for characteristic functions of measurable sets $\chi_E$ using Cavalieri's principle.
+2. Extend by linearity to non-negative simple functions $\phi = \sum a_i \chi_{A_i}$.
+3. For general $f \ge 0$, take the dyadic staircase sequence $\phi_k \nearrow f$ and pass to the limit under the integral using the Monotone Convergence Theorem (MCT) on both iterated integrals. $\blacksquare$
+
+---
+
+* Fubini's Second Theorem: General Integrable Functions
+
+Guido Fubini (1907) established the theorem for signed functions, under the essential hypothesis that the function is absolutely integrable.
+
+#+begin_quote
+*Theorem 4.2 (Fubini's 2nd Theorem):*
+Let $f : \mathbb{R}^{p+q} \to \dot{\mathbb{R}}$ be measurable and suppose that
+$$ \int_{\mathbb{R}^{p+q}} |f| \, dm_{p+q} < +\infty \quad (f \in L^1(\mathbb{R}^{p+q})). $$
+Then:
+1. For almost every $x \in \mathbb{R}^p$, the slice function $y \mapsto f(x, y)$ is integrable on $\mathbb{R}^q$ ($f_x \in L^1(\mathbb{R}^q)$).
+2. The function $x \mapsto \int_{\mathbb{R}^q} f(x, y) \, dm_q(y)$ is defined almost everywhere and belongs to $L^1(\mathbb{R}^p)$.
+3. Symmetrically, for almost every $y \in \mathbb{R}^q$, $x \mapsto f(x, y) \in L^1(\mathbb{R}^p)$, and $y \mapsto \int_{\mathbb{R}^p} f(x, y) \, dm_p(x) \in L^1(\mathbb{R}^q)$.
+4. *Interchange of Integrals:*
+   $$ \int_{\mathbb{R}^{p+q}} f \, dm_{p+q} = \int_{\mathbb{R}^p} \left( \int_{\mathbb{R}^q} f(x, y) \, dm_q(y) \right) dm_p(x) = \int_{\mathbb{R}^q} \left( \int_{\mathbb{R}^p} f(x, y) \, dm_p(x) \right) dm_q(y). $$
+#+end_quote
+
+*Proof:*
+Split $f = f^+ - f^-$.
+Since $|f| = f^+ + f^- \in L^1(\mathbb{R}^{p+q})$, both $f^+$ and $f^-$ are non-negative with finite integrals $\int f^+ < \infty$ and $\int f^- < \infty$.
+Apply Tonelli's Theorem (Theorem 4.1) separately to $f^+$ and $f^-$.
+Subtract the resulting finite real numbers using linearity of the integral. $\blacksquare$
+
+---
+
+* The Standard Practical Workflow: The Tonelli-Fubini Strategy
+
+When faced with an integral $\iint f(x, y) \, dx \, dy$ in analysis or probability, *never jump straight into exchanging the order of integration for signed functions!* Follow the two-step protocol:
+
+#+begin_quote
+*The Two-Step Tonelli-Fubini Method:*
+- *Step 1 (Check Integrability with Tonelli):*
+  Consider the non-negative function $|f(x, y)| \ge 0$. By Tonelli's Theorem, you may evaluate the iterated integral of the absolute value in /any/ order:
+  $$ J = \int \left( \int |f(x, y)| \, dy \right) dx. $$
+- *Step 2 (Apply Fubini):*
+  - If $J < +\infty$, then $f \in L^1$, and Fubini's Theorem guarantees that you may freely switch the order of integration to evaluate $\iint f(x, y) \, dy \, dx$.
+  - If $J = +\infty$, Fubini's theorem /does not apply/. The iterated integrals of $f$ may disagree, or may depend on the order of integration!
+#+end_quote
+
+---
+
+* Instructive Counterexamples: What Happens When Hypotheses Fail
+
+** Example 1: The Canonical Counterexample on $(0, 1) \times (0, 1)$
+Consider the function
+$$ f(x, y) = \frac{x^2 - y^2}{(x^2 + y^2)^2} $$
+defined on the unit square $Q = (0, 1) \times (0, 1)$.
+
+*First Iterated Integral:*
+Notice that $\frac{\partial}{\partial y} \left( \frac{y}{x^2 + y^2} \right) = \frac{(x^2+y^2) - y(2y)}{(x^2+y^2)^2} = \frac{x^2 - y^2}{(x^2+y^2)^2}$.
+Therefore, integrating with respect to $y$ first:
+$$ \int_0^1 f(x, y) \, dy = \left[ \frac{y}{x^2 + y^2} \right]_{y=0}^{y=1} = \frac{1}{x^2 + 1} - 0 = \frac{1}{1 + x^2}. $$
+Now integrating with respect to $x$:
+$$ \int_0^1 \left( \int_0^1 f(x, y) \, dy \right) dx = \int_0^1 \frac{1}{1 + x^2} \, dx = [\arctan(x)]_0^1 = \frac{\pi}{4}. $$
+
+*Second Iterated Integral:*
+By antisymmetry $f(y, x) = -f(x, y)$, integrating with respect to $x$ first yields:
+$$ \int_0^1 \left( \int_0^1 f(x, y) \, dx \right) dy = -\frac{\pi}{4}. $$
+
+*Diagnosis:*
+$$ \frac{\pi}{4} \ne -\frac{\pi}{4}! $$
+Why did Fubini fail?
+Check Tonelli on $|f(x, y)|$:
+Switching to polar coordinates near the origin, $|f(r, \theta)| \sim \frac{|\cos(2\theta)|}{r^2}$.
+Then $\int_0^\varepsilon \frac{1}{r^2} r \, dr = \int_0^\varepsilon \frac{1}{r} \, dr = +\infty$.
+Because $\iint_Q |f| = +\infty$, $f \notin L^1(Q)$, so Fubini's Theorem does not apply!
+
+** Example 2: Discrete Matrix Counterexample
+Consider an infinite matrix $(a_{m, n})_{m,n \ge 1}$ where:
+$$ a_{m, m} = 1, \qquad a_{m, m+1} = -1, \qquad a_{m, n} = 0 \text{ otherwise.} $$
+- Summing rows first: for each row $m$, $\sum_{n=1}^\infty a_{m, n} = 1 - 1 = 0$.
+  Thus $\sum_{m=1}^\infty \left(\sum_{n=1}^\infty a_{m, n}\right) = \sum_{m=1}^\infty 0 = 0$.
+- Summing columns first:
+  Column 1: $a_{1, 1} = 1$.
+  Column $n \ge 2$: $a_{n-1, n} + a_{n, n} = -1 + 1 = 0$.
+  Thus $\sum_{n=1}^\infty \left(\sum_{m=1}^\infty a_{m, n}\right) = 1 + 0 + 0 + \dots = 1$.
+Here $0 \ne 1$. Again, the sum of absolute values $\sum_{m, n} |a_{m, n}| = 1 + 1 + 1 + \dots = +\infty$.

@@ -1,0 +1,314 @@
+:PROPERTIES:
+:ID:       9af58b48-3891-498a-a1a4-eea01e5cf0ba
+:ROAM_ALIASES: "Lebesgue Outer Measure" "Caratheodory Condition" "Measurable Sets" "Vitali Construction"
+:ROAM_REFS: [cite:@holopainen2017mitta]
+:END:
+#+title: Lebesgue Outer Measure and Carathéodory's Measurable Sets
+#+subtitle: Chapter 1 — Foundations of Measure and Integral (Ilkka Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-10-06]
+#+filetags: :math:measure-theory:outer-measure:caratheodory:borel:vitali:
+
+[[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][← Course Index & Self-Study Bridge]] | [[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][Next: Measurable Mappings & Functions →]]
+
+* Motivation: Why We Need Measure Theory
+
+** Shortcomings of the Classical Riemann Integral
+The Riemann integral, introduced in 1854, works well for continuous and piecewise continuous functions on compact intervals $[a, b] \subset \mathbb{R}$. However, in modern analysis and probability theory, it suffers from severe foundational defects:
+1. *Discontinuous & Indicator Functions:*
+   Consider Dirichlet's function on $[0, 1]$:
+   $$ \chi_{\mathbb{Q} \cap [0, 1]}(x) = \begin{cases} 1, & x \in \mathbb{Q} \cap [0, 1], \\ 0, & x \in [0, 1] \setminus \mathbb{Q}. \end{cases} $$
+   Every upper Darboux sum equals $1$ and every lower Darboux sum equals $0$. The function is not Riemann integrable, even though the rationals form a countable set of "zero length".
+2. *Fragility of Limit Processes:*
+   Passing limits under the Riemann integral sign typically requires *uniform convergence* ($f_j \rightrightarrows f$). Pointwise limits of bounded Riemann integrable functions need not be Riemann integrable.
+3. *Incompleteness of Function Spaces:*
+   The space of Riemann integrable functions equipped with the $L^1$-norm $\|f\|_1 = \int_a^b |f(x)|\,dx$ is not complete (it is not a Banach space). Cauchy sequences of functions may fail to converge to a Riemann integrable limit.
+
+** The Measure Problem
+To resolve this, Henri Lebesgue (1902) inverted the perspective: instead of partitioning the /domain/ (the $x$-axis) into tiny intervals, partition the /range/ (the $y$-axis) and measure the "size" of the preimage sets $E = \{x : y_k \le f(x) < y_{k+1}\}$.
+
+This requires assigning a non-negative "measure" or generalized volume $m(E) \in [0, \infty]$ to subsets $E \subset \mathbb{R}^n$ satisfying:
+- *Normalization:* For any $n$-interval $I = [a_1, b_1] \times \dots \times [a_n, b_n]$, $m(I) = \prod_{j=1}^n (b_j - a_j)$.
+- *Translation Invariance:* $m(x + E) = m(E)$ for all $x \in \mathbb{R}^n$.
+- *Countable Additivity (\(\sigma\)-additivity):* If $E_1, E_2, \dots$ are pairwise disjoint, then
+  $$ m\left(\bigcup_{j=1}^\infty E_j\right) = \sum_{j=1}^\infty m(E_j). $$
+
+*Crucial Discovery (Vitali, 1905):* Assuming the Axiom of Choice, it is mathematically impossible to define such a measure on the /entire power set/ $\mathcal{P}(\mathbb{R}^n)$. We must restrict the domain of $m$ to a rich subcollection of "well-behaved" sets: the \(\sigma\)-algebra of *Lebesgue measurable sets*.
+
+---
+
+* Geometry of $n$-Intervals and Elementary Volume
+
+** Definition of $n$-Intervals
+Let $n \in \mathbb{N}$. An *open $n$-interval* in $\mathbb{R}^n$ is the Cartesian product of $n$ bounded open intervals in $\mathbb{R}$:
+$$ I = ]a_1, b_1[ \times \dots \times ]a_n, b_n[ = \{x = (x_1, \dots, x_n) \in \mathbb{R}^n : a_j < x_j < b_j, \, j = 1, \dots, n\}, $$
+where $-\infty < a_j < b_j < +\infty$ for each $j$.
+
+Similarly, closed $n$-intervals $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$ and half-open $n$-intervals are defined with the corresponding endpoints.
+A set $I$ is a *degenerate $n$-interval* if $a_j = b_j$ for some $j \in \{1, \dots, n\}$ (a "flat" slice with empty interior).
+
+** Elementary Volume (Length)
+The *elementary volume* (or length) of an $n$-interval $I$ is:
+$$ \ell(I) = \prod_{j=1}^n (b_j - a_j). $$
+For the empty set and degenerate intervals, $\ell(\emptyset) = 0$.
+The volume $\ell(I)$ does not depend on whether the interval is open, closed, or half-open.
+
+---
+
+* The Lebesgue Outer Measure $m^*$
+
+** Extended Real Number Arithmetic Conventions
+In measure theory, working in the extended real line $\dot{\mathbb{R}} = [-\infty, +\infty]$ is essential:
+- $a + (+\infty) = +\infty$ for $a > -\infty$.
+- $a \cdot (+\infty) = +\infty$ if $a > 0$, and $-\infty$ if $a < 0$.
+- *Critical convention:* $0 \cdot (+\infty) = 0 \cdot (-\infty) = 0$. (A set of measure $0$ weighted by infinite value carries $0$ contribution).
+- $\infty - \infty$ and $\frac{\infty}{\infty}$ remain undefined.
+
+** Definition: Lebesgue Cover and Outer Measure
+#+begin_quote
+*Definition (Lebesgue Outer Measure):*
+Let $A \subset \mathbb{R}^n$. A countable (finite or infinite) collection of bounded open $n$-intervals
+$$ \mathcal{F} = \{I_1, I_2, I_3, \dots\} $$
+is called a *Lebesgue cover* of $A$ if
+$$ A \subset \bigcup_{k=1}^\infty I_k. $$
+For each cover $\mathcal{F}$, define the sum of volumes:
+$$ S(\mathcal{F}) = \sum_{k=1}^\infty \ell(I_k) \in [0, +\infty]. $$
+The *$n$-dimensional Lebesgue outer measure* of $A$, denoted $m^*_n(A)$ (or simply $m^*(A)$), is:
+$$ m^*(A) = \inf \{ S(\mathcal{F}) : \mathcal{F} \text{ is a Lebesgue cover of } A \}. $$
+#+end_quote
+
+** Immediate Observations
+1. *Existence of Covers:* $\mathbb{R}^n$ can be covered by the cubes $J_k = ]-k, k[^n$ for $k \in \mathbb{N}$. Hence, every subset $A \subset \mathbb{R}^n$ possesses at least one Lebesgue cover, so the infimum is well-defined in $[0, +\infty]$.
+2. *$\varepsilon$-Approximation Property:* For every $A \subset \mathbb{R}^n$ and every $\varepsilon > 0$, there exists a Lebesgue cover $\mathcal{F}_\varepsilon = \{I_k\}_{k=1}^\infty$ such that:
+   $$ \sum_{k=1}^\infty \ell(I_k) \le m^*(A) + \varepsilon. $$
+3. *Domain:* $m^* : \mathcal{P}(\mathbb{R}^n) \to [0, +\infty]$ is defined on *all* subsets of $\mathbb{R}^n$.
+
+** Fundamental Properties of Outer Measure
+#+begin_quote
+*Theorem 1.3 (Properties of $m^*$):*
+1. *Null empty set:* $m^*(\emptyset) = 0$.
+2. *Monotonicity:* If $A \subset B \subset \mathbb{R}^n$, then $m^*(A) \le m^*(B)$.
+3. *Countable Subadditivity:* For any sequence of sets $A_1, A_2, A_3, \dots \subset \mathbb{R}^n$:
+   $$ m^*\left(\bigcup_{j=1}^\infty A_j\right) \le \sum_{j=1}^\infty m^*(A_j). $$
+#+end_quote
+
+*Proof of Countable Subadditivity:*
+If $\sum_{j=1}^\infty m^*(A_j) = +\infty$, the inequality holds trivially.
+Assume $\sum_{j=1}^\infty m^*(A_j) < +\infty$. Then $m^*(A_j) < +\infty$ for all $j$.
+Let $\varepsilon > 0$. For each $j \in \mathbb{N}$, choose a Lebesgue cover $\mathcal{F}_j = \{I_{j, k}\}_{k=1}^\infty$ of $A_j$ such that:
+$$ \sum_{k=1}^\infty \ell(I_{j, k}) \le m^*(A_j) + \frac{\varepsilon}{2^j}. $$
+Then the double union $\bigcup_{j=1}^\infty \bigcup_{k=1}^\infty I_{j, k}$ covers $\bigcup_{j=1}^\infty A_j$. By re-indexing as a single countable sum of non-negative terms:
+$$ m^*\left(\bigcup_{j=1}^\infty A_j\right) \le \sum_{j=1}^\infty \sum_{k=1}^\infty \ell(I_{j, k}) \le \sum_{j=1}^\infty \left( m^*(A_j) + \frac{\varepsilon}{2^j} \right) = \sum_{j=1}^\infty m^*(A_j) + \varepsilon \sum_{j=1}^\infty \frac{1}{2^j} = \sum_{j=1}^\infty m^*(A_j) + \varepsilon. $$
+Taking $\varepsilon \to 0$ yields the result. $\blacksquare$
+
+** Transformation Invariance
+#+begin_quote
+*Theorem 1.4 (Rigid Motions & Dilations):*
+1. *Translation Invariance:* For all $A \subset \mathbb{R}^n$ and $x \in \mathbb{R}^n$, $m^*(x + A) = m^*(A)$.
+2. *Scaling (Homothety):* For all $A \subset \mathbb{R}^n$ and $c \in \mathbb{R}$, $m^*(c A) = |c|^n m^*(A)$.
+3. *Orthogonal Invariance:* If $T : \mathbb{R}^n \to \mathbb{R}^n$ is an orthogonal transformation ($T \in O(n)$), then $m^*(T(A)) = m^*(A)$.
+#+end_quote
+
+** Outer Measure of Elementary Sets and Null Sets
+- *Singletons:* For any $x \in \mathbb{R}^n$, $m^*(\{x\}) = 0$. (Cover by a cube of side $\varepsilon^{1/n}$ with volume $\varepsilon$).
+- *Countable Sets:* If $A = \{x_1, x_2, \dots\} \subset \mathbb{R}^n$ is countable, then by countable subadditivity:
+  $$ 0 \le m^*(A) \le \sum_{j=1}^\infty m^*(\{x_j\}) = \sum_{j=1}^\infty 0 = 0 \implies m^*(A) = 0. $$
+  In particular, the rationals $m^*(\mathbb{Q}) = 0$, and $\mathbb{Q}^n$ has measure zero in $\mathbb{R}^n$.
+- *Lower-Dimensional Subspaces:* Any hyperplane or line segment in $\mathbb{R}^n$ ($n \ge 2$) has outer measure zero.
+- *Outer Measure of $n$-Intervals:*
+  For any bounded $n$-interval $I \subset \mathbb{R}^n$, $m^*(I) = \ell(I)$.
+  (The proof uses compactness for closed intervals to deduce $\ell(I) \le \sum \ell(I_k)$, and approximation by open/closed subintervals).
+
+---
+
+* Carathéodory's Measurability Condition
+
+** The Failure of Additivity on $\mathcal{P}(\mathbb{R}^n)$
+Subadditivity guarantees $m^*(A \cup B) \le m^*(A) + m^*(B)$. But for general disjoint sets, equality can fail!
+If we demanded finite additivity for /all/ subsets, we would hit Vitali's paradox. Constantin Carathéodory (1914) discovered the elegant way forward: isolate the sets that divide /every/ test set additively.
+
+** The Carathéodory Criterion
+#+begin_quote
+*Definition (Carathéodory Condition):*
+A set $E \subset \mathbb{R}^n$ is said to be *(Lebesgue) measurable* if for every "test set" $A \subset \mathbb{R}^n$:
+$$ m^*(A) = m^*(A \cap E) + m^*(A \setminus E). $$
+We denote the collection of all Lebesgue measurable subsets of $\mathbb{R}^n$ by $\mathrm{Leb}(\mathbb{R}^n)$ (or $\mathcal{M}_n$).
+If $E \in \mathrm{Leb}(\mathbb{R}^n)$, we write $m(E) = m^*(E)$ and call $m(E)$ the *Lebesgue measure* of $E$.
+#+end_quote
+
+** Practical Simplification
+Since $A = (A \cap E) \cup (A \setminus E)$, subadditivity always gives:
+$$ m^*(A) \le m^*(A \cap E) + m^*(A \setminus E). $$
+Therefore, to verify that $E$ is measurable, it suffices to prove the reverse inequality:
+$$ m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E) \quad \text{for all } A \subset \mathbb{R}^n \text{ with } m^*(A) < +\infty. $$
+(If $m^*(A) = +\infty$, the inequality is trivially satisfied).
+
+#+caption: Geometric intuition of Carathéodory's splitting criterion
+| Test Set $A$ | $\longrightarrow$ Split by $E$ into | $A \cap E$ (inside $E$) | and $A \setminus E$ (outside $E$) | Additivity holds: $m^*(A) = m^*(A \cap E) + m^*(A \setminus E)$ |
+
+---
+
+* Structure of the Class $\mathrm{Leb}(\mathbb{R}^n)$
+
+** Null Sets are Automatically Measurable
+#+begin_quote
+*Theorem 1.12 (Null Sets are Measurable):*
+If $m^*(E) = 0$, then $E \in \mathrm{Leb}(\mathbb{R}^n)$.
+#+end_quote
+*Proof:* Let $A \subset \mathbb{R}^n$ be any test set. Since $A \cap E \subset E$, monotonicity implies $m^*(A \cap E) \le m^*(E) = 0$, so $m^*(A \cap E) = 0$.
+Also $A \setminus E \subset A$, so $m^*(A \setminus E) \le m^*(A)$. Thus:
+$$ m^*(A \cap E) + m^*(A \setminus E) = 0 + m^*(A \setminus E) \le m^*(A). $$
+Hence $E$ is measurable. $\blacksquare$
+
+*Consequence (Completeness):* If $E$ is measurable with $m(E) = 0$, every subset $E' \subset E$ has $m^*(E') \le m^*(E) = 0$, so $E'$ is also measurable! A measure space with this property is called *complete*.
+
+** Complements are Measurable
+#+begin_quote
+*Theorem 1.13:* $E \in \mathrm{Leb}(\mathbb{R}^n) \iff E^c \in \mathrm{Leb}(\mathbb{R}^n)$.
+#+end_quote
+*Proof:* In Carathéodory's equation, $A \cap E^c = A \setminus E$ and $A \setminus E^c = A \cap (E^c)^c = A \cap E$. The definition is symmetric in $E$ and $E^c$. $\blacksquare$
+
+** Finite Unions and Disjoint Additivity
+#+begin_quote
+*Lemma 1.14 & 1.16:*
+1. If $E_1, E_2 \in \mathrm{Leb}(\mathbb{R}^n)$, then $E_1 \cup E_2 \in \mathrm{Leb}(\mathbb{R}^n)$ and $E_1 \cap E_2 \in \mathrm{Leb}(\mathbb{R}^n)$.
+2. If $E_1, \dots, E_k \in \mathrm{Leb}(\mathbb{R}^n)$ are pairwise disjoint, then for any test set $A \subset \mathbb{R}^n$:
+   $$ m^*\left(A \cap \bigcup_{i=1}^k E_i\right) = \sum_{i=1}^k m^*(A \cap E_i). $$
+   In particular, taking $A = \bigcup_{i=1}^k E_i$:
+   $$ m\left(\bigcup_{i=1}^k E_i\right) = \sum_{i=1}^k m(E_i). $$
+#+end_quote
+
+** Countable Operations: $\mathrm{Leb}(\mathbb{R}^n)$ is a \(\sigma\)-Algebra
+#+begin_quote
+*Theorem 1.18 (The Main Structural Theorem):*
+Let $E_1, E_2, E_3, \dots \in \mathrm{Leb}(\mathbb{R}^n)$. Then:
+1. $\bigcup_{j=1}^\infty E_j \in \mathrm{Leb}(\mathbb{R}^n)$ and $\bigcap_{j=1}^\infty E_j \in \mathrm{Leb}(\mathbb{R}^n)$.
+2. If the sets $E_j$ are pairwise disjoint, then
+   $$ m\left(\bigcup_{j=1}^\infty E_j\right) = \sum_{j=1}^\infty m(E_j) \quad \text{(\(\sigma\)-additivity!)}. $$
+#+end_quote
+
+*Proof Sketch:*
+First, make the sequence disjoint if necessary: $F_1 = E_1$, $F_2 = E_2 \setminus E_1$, $F_k = E_k \setminus \bigcup_{j=1}^{k-1} E_j$.
+Let $E = \bigcup_{j=1}^\infty F_j$. For any test set $A$ and any $k \in \mathbb{N}$, since $\bigcup_{j=1}^k F_j$ is measurable:
+$$ m^*(A) = m^*\left(A \cap \bigcup_{j=1}^k F_j\right) + m^*\left(A \setminus \bigcup_{j=1}^k F_j\right) = \sum_{j=1}^k m^*(A \cap F_j) + m^*\left(A \setminus \bigcup_{j=1}^k F_j\right). $$
+Since $A \setminus \bigcup_{j=1}^k F_j \supset A \setminus E$, monotonicity gives:
+$$ m^*(A) \ge \sum_{j=1}^k m^*(A \cap F_j) + m^*(A \setminus E). $$
+Letting $k \to \infty$:
+$$ m^*(A) \ge \sum_{j=1}^\infty m^*(A \cap F_j) + m^*(A \setminus E) \ge m^*\left(A \cap \bigcup_{j=1}^\infty F_j\right) + m^*(A \setminus E) = m^*(A \cap E) + m^*(A \setminus E). $$
+Hence $E \in \mathrm{Leb}(\mathbb{R}^n)$, and choosing $A = E$ establishes countable additivity. $\blacksquare$
+
+---
+
+* Borel Sets and Topological Regularity
+
+** Measurability of Intervals and Open Sets
+1. *Every $n$-interval is measurable:*
+   For any open, closed, or half-open interval $I$, $I \in \mathrm{Leb}(\mathbb{R}^n)$ and $m(I) = \ell(I)$.
+2. *Lindelöf's Theorem:* Every open set $G \subset \mathbb{R}^n$ can be expressed as a countable union of bounded open $n$-intervals:
+   $$ G = \bigcup_{k=1}^\infty I_k. $$
+3. *Open and Closed Sets are Measurable:*
+   Since each $I_k \in \mathrm{Leb}(\mathbb{R}^n)$ and $\mathrm{Leb}(\mathbb{R}^n)$ is closed under countable unions:
+   $$ G \in \mathrm{Leb}(\mathbb{R}^n) \quad \text{for all open } G \subset \mathbb{R}^n. $$
+   Since closed sets are complements of open sets, every closed set $F \subset \mathbb{R}^n$ is also measurable!
+
+** The Borel \(\sigma\)-Algebra $\mathcal{B}(\mathbb{R}^n)$
+#+begin_quote
+*Definition (Borel \(\sigma\)-Algebra):*
+The *Borel \(\sigma\)-algebra* of $\mathbb{R}^n$, denoted $\mathcal{B}(\mathbb{R}^n)$ (or $\mathrm{Bor}(\mathbb{R}^n)$), is the smallest \(\sigma\)-algebra of subsets of $\mathbb{R}^n$ containing all open sets:
+$$ \mathcal{B}(\mathbb{R}^n) = \sigma(\mathcal{T}_{\mathbb{R}^n}), $$
+where $\mathcal{T}_{\mathbb{R}^n}$ is the standard Euclidean topology.
+#+end_quote
+
+Elements of $\mathcal{B}(\mathbb{R}^n)$ include:
+- Open sets ($G$) and Closed sets ($F$).
+- $G_\delta$ sets: countable intersections of open sets ($\bigcap G_j$).
+- $F_\sigma$ sets: countable unions of closed sets ($\bigcup F_j$).
+- $G_{\delta\sigma}, F_{\sigma\delta}$, and higher hierarchy levels.
+
+** Hierarchy and Completion
+$$ \mathcal{B}(\mathbb{R}^n) \subsetneq \mathrm{Leb}(\mathbb{R}^n) \subsetneq \mathcal{P}(\mathbb{R}^n). $$
+#+begin_quote
+*Regularity / Approximation by Borel Sets:*
+For every $E \in \mathrm{Leb}(\mathbb{R}^n)$:
+1. There exists an $F_\sigma$ set $F$ and a $G_\delta$ set $G$ such that
+   $$ F \subset E \subset G \quad \text{and} \quad m(G \setminus F) = 0. $$
+2. In particular, every Lebesgue measurable set differs from a Borel set by a null set:
+   $$ E = B \cup N, \quad B \in \mathcal{B}(\mathbb{R}^n), \quad m^*(N) = 0. $$
+Thus, $\mathrm{Leb}(\mathbb{R}^n)$ is precisely the *completion* of $\mathcal{B}(\mathbb{R}^n)$ with respect to the Lebesgue measure.
+#+end_quote
+
+---
+
+* Abstract Measure Spaces and Continuity of Measures
+
+** Definition of Measure Space
+#+begin_quote
+*Definition (Abstract Measure Space):*
+A triple $(X, \Gamma, \mu)$ is a *measure space* if:
+1. $X$ is a non-empty set.
+2. $\Gamma \subset \mathcal{P}(X)$ is a \(\sigma\)-algebra on $X$.
+3. $\mu : \Gamma \to [0, +\infty]$ is a measure:
+   - $\mu(\emptyset) = 0$,
+   - $\mu\left(\bigcup_{j=1}^\infty A_j\right) = \sum_{j=1}^\infty \mu(A_j)$ for pairwise disjoint $A_j \in \Gamma$.
+#+end_quote
+
+** Continuity of Measure: Monotone Limits
+#+begin_quote
+*Theorem 1.32 & 1.33 (Continuity from Below and Above):*
+Let $(X, \Gamma, \mu)$ be a measure space.
+1. *Continuity from Below (Increasing Sequences):*
+   If $A_1 \subset A_2 \subset A_3 \subset \dots \in \Gamma$, then:
+   $$ \mu\left(\bigcup_{j=1}^\infty A_j\right) = \lim_{j\to\infty} \mu(A_j). $$
+2. *Continuity from Above (Decreasing Sequences):*
+   If $A_1 \supset A_2 \supset A_3 \supset \dots \in \Gamma$ and *$\mu(A_1) < +\infty$*, then:
+   $$ \mu\left(\bigcap_{j=1}^\infty A_j\right) = \lim_{j\to\infty} \mu(A_j). $$
+#+end_quote
+
+*Proof of Continuity from Below:*
+Disjointify the sequence: let $C_1 = A_1$, and $C_j = A_j \setminus A_{j-1}$ for $j \ge 2$.
+Then the sets $C_j$ are pairwise disjoint and $\bigcup_{j=1}^k C_j = A_k$, $\bigcup_{j=1}^\infty C_j = \bigcup_{j=1}^\infty A_j$.
+By countable additivity:
+$$ \mu\left(\bigcup_{j=1}^\infty A_j\right) = \sum_{j=1}^\infty \mu(C_j) = \lim_{k\to\infty} \sum_{j=1}^k \mu(C_j) = \lim_{k\to\infty} \mu\left(\bigcup_{j=1}^k C_j\right) = \lim_{k\to\infty} \mu(A_k). \quad \blacksquare $$
+
+*Counterexample when $\mu(A_1) = +\infty$:*
+Let $X = \mathbb{R}$ with Lebesgue measure, and $A_j = [j, +\infty[$.
+Then $A_1 \supset A_2 \supset \dots$, and $\bigcap_{j=1}^\infty A_j = \emptyset$.
+Here $\mu(\bigcap A_j) = \mu(\emptyset) = 0$, but $\mu(A_j) = +\infty$ for all $j$, so $\lim \mu(A_j) = +\infty \ne 0$.
+The finiteness condition $\mu(A_k) < \infty$ for some $k$ is essential!
+
+---
+
+* Non-Measurable Sets: Vitali's Construction (1905)
+
+#+begin_quote
+*Theorem 1.35 (Vitali):*
+There exists a subset $V \subset [0, 1]$ that is not Lebesgue measurable ($V \notin \mathrm{Leb}(\mathbb{R})$).
+#+end_quote
+
+*Construction & Proof:*
+1. *Equivalence Relation:* On $[0, 1]$, define $x \sim y \iff x - y \in \mathbb{Q}$.
+   This is an equivalence relation:
+   - Reflexive: $x - x = 0 \in \mathbb{Q}$.
+   - Symmetric: $x - y \in \mathbb{Q} \implies y - x \in \mathbb{Q}$.
+   - Transitive: $x - y \in \mathbb{Q}, y - z \in \mathbb{Q} \implies x - z \in \mathbb{Q}$.
+2. *Selection of Representatives:*
+   The equivalence relation partitions $[0, 1]$ into disjoint equivalence classes $[x] = (x + \mathbb{Q}) \cap [0, 1]$.
+   By the *Axiom of Choice*, there exists a set $V \subset [0, 1]$ containing exactly one element from each equivalence class.
+3. *Enumerate Disjoint Rational Translates:*
+   Enumerate the rationals in $[-1, 1]$ as $\{r_1, r_2, r_3, \dots\} = \mathbb{Q} \cap [-1, 1]$.
+   Define the translates $V_k = V + r_k = \{v + r_k : v \in V\}$.
+4. *Key Properties of $V_k$:*
+   - *Disjoint:* If $k \ne j$ and $w \in V_k \cap V_j$, then $w = v_k + r_k = v_j + r_j$ with $v_k, v_j \in V$.
+     Then $v_k - v_j = r_j - r_k \in \mathbb{Q}$, so $v_k \sim v_j$. Since $V$ contains only one element from each class, $v_k = v_j \implies r_k = r_j$, contradiction.
+   - *Containment:*
+     Every $x \in [0, 1]$ belongs to some class $[v]$ with $v \in V$, so $x - v = r \in \mathbb{Q} \cap [-1, 1]$. Thus:
+     $$ [0, 1] \subset \bigcup_{k=1}^\infty V_k \subset [-1, 2]. $$
+5. *Contradiction if $V$ were Measurable:*
+   Suppose $V \in \mathrm{Leb}(\mathbb{R})$.
+   By translation invariance, $m(V_k) = m(V)$ for all $k$.
+   By monotonicity and countable additivity:
+   $$ m([0, 1]) \le m\left(\bigcup_{k=1}^\infty V_k\right) \le m([-1, 2]). $$
+   $$ 1 \le \sum_{k=1}^\infty m(V) \le 3. $$
+   - If $m(V) = 0$, the sum is $0$, contradicting $1 \le 0$.
+   - If $m(V) > 0$, the sum is $+\infty$, contradicting $+\infty \le 3$.
+   Therefore, $V$ cannot be measurable! $\blacksquare$

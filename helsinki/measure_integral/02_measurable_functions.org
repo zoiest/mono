@@ -1,0 +1,254 @@
+:PROPERTIES:
+:ID:       5c9f4daa-e553-48a1-b57f-a5acaebd0041
+:ROAM_ALIASES: "Measurable Functions" "Measurable Mappings" "Pointwise Limits" "Simple Function Approximation"
+:ROAM_REFS: [cite:@holopainen2017mitta]
+:END:
+#+title: Measurable Mappings and Functions
+#+subtitle: Chapter 2 — Foundations of Measure and Integral (Ilkka Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-10-06]
+#+filetags: :math:measure-theory:measurable-functions:simple-functions:pointwise-limits:almost-everywhere:
+
+[[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][← Previous: Lebesgue Outer Measure & Carathéodory]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Next: Lebesgue Integration & Convergence Theorems →]]
+
+* Definition and Geometric Meaning of Measurable Functions
+
+** The Role of Measurable Functions
+In topology, the natural structure-preserving mappings are *continuous functions* (preimages of open sets are open).
+In measure theory and probability, the natural structure-preserving mappings are *measurable functions* (preimages of measurable sets are measurable).
+In probability theory, a measurable function defined on a sample space $\Omega$ is called a *random variable* $X : \Omega \to \mathbb{R}$.
+
+** Formal Definition
+#+begin_quote
+*Definition (Measurable Mapping):*
+Let $A \subset \mathbb{R}^n$. A mapping $f : A \to \mathbb{R}^m$ is said to be *measurable* (with respect to $\mathrm{Leb}(\mathbb{R}^n)$) if for every open set $G \subset \mathbb{R}^m$, the preimage
+$$ f^{-1}(G) = \{x \in A : f(x) \in G\} $$
+is a Lebesgue measurable set, i.e., $f^{-1}(G) \in \mathrm{Leb}(\mathbb{R}^n)$.
+#+end_quote
+
+*Remarks:*
+1. If $f : A \to \mathbb{R}^m$ is measurable, then the domain $A = f^{-1}(\mathbb{R}^m)$ is necessarily measurable because $\mathbb{R}^m$ is open.
+2. If $f : A \to \mathbb{R}^m$ is measurable and $B \subset A$ is measurable, the restriction $f|_B : B \to \mathbb{R}^m$ is measurable.
+3. For extended real-valued functions $f : A \to \dot{\mathbb{R}} = [-\infty, +\infty]$, $f$ is measurable if $f^{-1}(G) \in \mathrm{Leb}(\mathbb{R}^n)$ for all open $G \subset \mathbb{R}$ and $f^{-1}(\{+\infty\}), f^{-1}(\{-\infty\}) \in \mathrm{Leb}(\mathbb{R}^n)$.
+
+---
+
+* Equivalent Characterizations for Real-Valued Functions
+
+** The Four Sublevel/Superlevel Criteria
+For functions taking values in the extended real numbers $\dot{\mathbb{R}}$, checking preimages of all open sets is cumbersome. Fortunately, testing single rays suffices.
+
+#+begin_quote
+*Theorem 2.9 (Fundamental Characterization):*
+Let $A \in \mathrm{Leb}(\mathbb{R}^n)$ and $f : A \to \dot{\mathbb{R}}$. The following conditions are equivalent:
+1. $\{x \in A : f(x) > a\} \in \mathrm{Leb}(\mathbb{R}^n)$ for all $a \in \mathbb{R}$.
+2. $\{x \in A : f(x) \ge a\} \in \mathrm{Leb}(\mathbb{R}^n)$ for all $a \in \mathbb{R}$.
+3. $\{x \in A : f(x) < a\} \in \mathrm{Leb}(\mathbb{R}^n)$ for all $a \in \mathbb{R}$.
+4. $\{x \in A : f(x) \le a\} \in \mathrm{Leb}(\mathbb{R}^n)$ for all $a \in \mathbb{R}$.
+5. $f$ is measurable.
+#+end_quote
+
+*Proof of Equivalences:*
+- *(1) $\implies$ (2):*
+  Notice that $f(x) \ge a \iff f(x) > a - \frac{1}{k}$ for all $k \in \mathbb{N}$. Therefore:
+  $$ \{x \in A : f(x) \ge a\} = \bigcap_{k=1}^\infty \left\{x \in A : f(x) > a - \frac{1}{k}\right\}. $$
+  Since $\mathrm{Leb}(\mathbb{R}^n)$ is closed under countable intersections, (2) holds.
+- *(2) $\implies$ (3):*
+  The set $\{x \in A : f(x) < a\} = A \setminus \{x \in A : f(x) \ge a\}$.
+  Since the complement of a measurable set within $A$ is measurable, (3) holds.
+- *(3) $\implies$ (4):*
+  Analogously, $f(x) \le a \iff f(x) < a + \frac{1}{k}$ for all $k \in \mathbb{N}$, so:
+  $$ \{x \in A : f(x) \le a\} = \bigcap_{k=1}^\infty \left\{x \in A : f(x) < a + \frac{1}{k}\right\}. $$
+- *(4) $\implies$ (1):*
+  $\{x \in A : f(x) > a\} = A \setminus \{x \in A : f(x) \le a\}$.
+- *Connecting to open sets (5):*
+  Every open interval $]a, b[ = ]-\infty, b[ \cap ]a, +\infty[$, so
+  $$ f^{-1}(]a, b[) = \{x : f(x) < b\} \cap \{x : f(x) > a\} \in \mathrm{Leb}(\mathbb{R}^n). $$
+  Since every open set in $\mathbb{R}$ is a countable union of disjoint open intervals $G = \bigcup_k I_k$:
+  $$ f^{-1}(G) = \bigcup_k f^{-1}(I_k) \in \mathrm{Leb}(\mathbb{R}^n). \quad \blacksquare $$
+
+---
+
+* Continuous Functions and Preimages of Borel Sets
+
+** Continuous Functions are Measurable
+#+begin_quote
+*Theorem 2.3 & 2.4:*
+1. If $A \in \mathrm{Leb}(\mathbb{R}^n)$ and $f : A \to \mathbb{R}^m$ is continuous, then $f$ is measurable.
+2. If $f : A \to \mathbb{R}^m$ is measurable, then for *every Borel set* $B \in \mathcal{B}(\mathbb{R}^m)$:
+   $$ f^{-1}(B) \in \mathrm{Leb}(\mathbb{R}^n). $$
+#+end_quote
+
+*Proof of (2):*
+Consider the family of target sets whose preimage is measurable:
+$$ \mathcal{H} = \{S \subset \mathbb{R}^m : f^{-1}(S) \in \mathrm{Leb}(\mathbb{R}^n)\}. $$
+- $\mathcal{H}$ contains all open sets by definition of measurability.
+- $f^{-1}(\mathbb{R}^m \setminus S) = A \setminus f^{-1}(S) \in \mathrm{Leb}(\mathbb{R}^n)$, so $\mathcal{H}$ is closed under complements.
+- $f^{-1}\left(\bigcup_k S_k\right) = \bigcup_k f^{-1}(S_k) \in \mathrm{Leb}(\mathbb{R}^n)$, so $\mathcal{H}$ is closed under countable unions.
+Thus $\mathcal{H}$ is a \(\sigma\)-algebra containing all open sets. Since $\mathcal{B}(\mathbb{R}^m)$ is the /smallest/ such \(\sigma\)-algebra, $\mathcal{B}(\mathbb{R}^m) \subset \mathcal{H}$. $\blacksquare$
+
+*Immediate Corollary:*
+For any single point $y \in \mathbb{R}^m$, $\{y\}$ is closed (hence Borel), so the level set $f^{-1}(\{y\}) = \{x \in A : f(x) = y\}$ is always measurable.
+
+** Composition of Functions
+#+begin_quote
+*Theorem 2.6 (Composition with Continuous / Borel Functions):*
+Let $f : A \to \mathbb{R}^m$ be measurable ($A \subset \mathbb{R}^n$). If $g : \mathbb{R}^m \to \mathbb{R}^k$ is continuous (or Borel measurable), then the composite function
+$$ h = g \circ f : A \to \mathbb{R}^k $$
+is measurable.
+#+end_quote
+*Proof:* For any open $U \subset \mathbb{R}^k$, $g^{-1}(U)$ is open (or Borel). By Theorem 2.4, $(g \circ f)^{-1}(U) = f^{-1}(g^{-1}(U)) \in \mathrm{Leb}(\mathbb{R}^n)$. $\blacksquare$
+
+> [!WARNING]
+> *Subtlety on Composition:* The composition of two *Lebesgue* measurable functions $g \circ f$ is *not* guaranteed to be Lebesgue measurable! If $f$ is only Lebesgue measurable, $g^{-1}(G)$ might be Lebesgue measurable but not Borel, so $f^{-1}(g^{-1}(G))$ could fail to be measurable. The outer function $g$ must be Borel measurable (which holds whenever $g$ is continuous).
+
+---
+
+* Algebraic Operations and Coordinate Mappings
+
+** Vector-Valued Mappings
+#+begin_quote
+*Theorem 2.7:*
+A mapping $f = (f_1, \dots, f_m) : A \to \mathbb{R}^m$ is measurable if and only if each coordinate component $f_j : A \to \mathbb{R}$ is measurable for all $j \in \{1, \dots, m\}$.
+#+end_quote
+
+** Arithmetic Operations
+#+begin_quote
+*Theorem 2.8:*
+Let $f, g : A \to \dot{\mathbb{R}}$ be measurable. Then:
+1. $c f$ is measurable for any constant $c \in \mathbb{R}$.
+2. $f + g$ and $f - g$ are measurable (where defined, avoiding $\infty - \infty$).
+3. $f \cdot g$ is measurable.
+4. $f / g$ is measurable (where $g(x) \ne 0$).
+5. $|f|$ is measurable.
+6. $\max(f, g)$ and $\min(f, g)$ are measurable.
+#+end_quote
+
+*Proof that $f + g$ is measurable:*
+For any $a \in \mathbb{R}$, $f(x) + g(x) > a \iff f(x) > a - g(x)$.
+Between any two real numbers there exists a rational number $q \in \mathbb{Q}$.
+Thus $f(x) > q$ and $q > a - g(x)$, meaning $g(x) > a - q$.
+Therefore:
+$$ \{x \in A : f(x) + g(x) > a\} = \bigcup_{q \in \mathbb{Q}} \left( \{x \in A : f(x) > q\} \cap \{x \in A : g(x) > a - q\} \right). $$
+Since $\mathbb{Q}$ is countable, this is a countable union of measurable sets, hence measurable! $\blacksquare$
+
+** Positive and Negative Parts
+Every function $f : A \to \dot{\mathbb{R}}$ decomposes into non-negative parts:
+- *Positive part:* $f^+(x) = \max\{f(x), 0\} \ge 0$.
+- *Negative part:* $f^-(x) = \max\{-f(x), 0\} = -\min\{f(x), 0\} \ge 0$.
+Then:
+$$ f(x) = f^+(x) - f^-(x) \quad \text{and} \quad |f(x)| = f^+(x) + f^-(x). $$
+If $f$ is measurable, both $f^+$ and $f^-$ are non-negative measurable functions. This decomposition is the foundation of Lebesgue integration!
+
+---
+
+* Limits of Sequences of Measurable Functions
+
+** Supremum, Infimum, $\limsup$, and $\liminf$
+#+begin_quote
+*Theorem 2.14 (Closure under Pointwise Operations):*
+Let $f_j : A \to \dot{\mathbb{R}}$ ($j \in \mathbb{N}$) be measurable functions. Then the following functions defined pointwise on $A$ are measurable:
+1. $g_1(x) = \sup_{j \in \mathbb{N}} f_j(x)$
+2. $g_2(x) = \inf_{j \in \mathbb{N}} f_j(x)$
+3. $g_3(x) = \limsup_{j \to \infty} f_j(x)$
+4. $g_4(x) = \liminf_{j \to \infty} f_j(x)$
+#+end_quote
+
+*Proof:*
+- For the supremum: $\sup_{j} f_j(x) > a \iff \exists j \in \mathbb{N}$ such that $f_j(x) > a$.
+  $$ \{x \in A : \sup_j f_j(x) > a\} = \bigcup_{j=1}^\infty \{x \in A : f_j(x) > a\} \in \mathrm{Leb}(\mathbb{R}^n). $$
+- For the infimum: $\inf_j f_j(x) = -\sup_j (-f_j(x))$.
+- For $\limsup$ and $\liminf$:
+  Recall the analytical definitions:
+  $$ \limsup_{j\to\infty} f_j(x) = \inf_{k \in \mathbb{N}} \left( \sup_{j \ge k} f_j(x) \right), \qquad \liminf_{j\to\infty} f_j(x) = \sup_{k \in \mathbb{N}} \left( \inf_{j \ge k} f_j(x) \right). $$
+  For each fixed $k$, $u_k(x) = \sup_{j \ge k} f_j(x)$ is measurable. Then $\inf_k u_k(x)$ is the infimum of a countable family of measurable functions, hence measurable! $\blacksquare$
+
+** Measurability of Pointwise Limits
+#+begin_quote
+*Corollary:* If $f_j : A \to \dot{\mathbb{R}}$ are measurable and $f(x) = \lim_{j\to\infty} f_j(x)$ exists for all $x \in A$, then
+$$ f \text{ is measurable.} $$
+#+end_quote
+Because when the limit exists, $f(x) = \limsup_{j\to\infty} f_j(x) = \liminf_{j\to\infty} f_j(x)$.
+This is a tremendous triumph of measure theory over Riemann integration: pointwise limits of measurable functions are always measurable!
+
+---
+
+* Almost Everywhere ($a.e.$) Equality
+
+** Definition of "Almost Everywhere"
+#+begin_quote
+*Definition:*
+A mathematical statement holds *almost everywhere* in $A$ (abbreviated *a.e.*, or Finnish *m.k.* = /melkein kaikkialla/) if the set of points where the statement fails has Lebesgue measure zero:
+$$ m(\{x \in A : \text{statement is false}\}) = 0. $$
+#+end_quote
+
+** Stability under Null Set Modifications
+#+begin_quote
+*Theorem 2.17 & 2.18:*
+1. If $f : A \to \dot{\mathbb{R}}$ is measurable and $g = f$ a.e. in $A$, then $g$ is measurable.
+2. If $f_j : A \to \dot{\mathbb{R}}$ are measurable and $f_j \to f$ a.e. in $A$, then $f$ is measurable.
+#+end_quote
+
+*Proof of (1):*
+Let $N = \{x \in A : f(x) \ne g(x)\}$. By assumption, $m(N) = 0$.
+For any $a \in \mathbb{R}$:
+$$ \{x \in A : g(x) > a\} = \left( \{x \in A \setminus N : f(x) > a\} \right) \cup \{x \in N : g(x) > a\}. $$
+The first term is $\{x \in A : f(x) > a\} \setminus N$ which is measurable.
+The second term is a subset of $N$, which has measure zero and is therefore measurable by completeness (Theorem 1.12).
+Their union is measurable, so $g$ is measurable. $\blacksquare$
+
+*Practical Takeaway:* Null sets are "invisible" to measurability. We can redefine functions on sets of measure zero (e.g. at isolated points, countable sets, or boundaries) without affecting their measurability or integrals.
+
+---
+
+* Simple Functions and the Canonical Approximation Theorem
+
+** Definition: Simple Functions
+#+begin_quote
+*Definition (Simple Function):*
+A function $\phi : \mathbb{R}^n \to \mathbb{R}$ is called a *simple function* if:
+1. $\phi$ takes only finitely many distinct values $\{a_1, \dots, a_k\} \subset \mathbb{R}$.
+2. The preimage sets $A_i = \phi^{-1}(\{a_i\}) = \{x \in \mathbb{R}^n : \phi(x) = a_i\}$ are Lebesgue measurable.
+#+end_quote
+
+The representation
+$$ \phi(x) = \sum_{i=1}^k a_i \chi_{A_i}(x), $$
+where the sets $A_1, \dots, A_k \in \mathrm{Leb}(\mathbb{R}^n)$ are pairwise disjoint and $\bigcup_{i=1}^k A_i = \mathbb{R}^n$, is called the *standard representation* of $\phi$.
+Here $\chi_E$ denotes the *characteristic (indicator) function*:
+$$ \chi_E(x) = \begin{cases} 1, & x \in E, \\ 0, & x \notin E. \end{cases} $$
+We denote the set of non-negative simple functions by $\mathcal{Y}$ (or $\mathcal{S}^+$).
+
+** The Fundamental Approximation Theorem (The Staircase Theorem)
+#+begin_quote
+*Theorem 3.9 (Approximation by Simple Functions):*
+Let $f : \mathbb{R}^n \to [0, +\infty]$ be a non-negative measurable function.
+Then there exists an *increasing sequence* of non-negative simple functions $(\phi_k)_{k=1}^\infty$ such that:
+$$ 0 \le \phi_1(x) \le \phi_2(x) \le \dots \le \phi_k(x) \le \phi_{k+1}(x) \le \dots \le f(x) $$
+and
+$$ \lim_{k\to\infty} \phi_k(x) = f(x) \quad \text{for all } x \in \mathbb{R}^n. $$
+Moreover, if $f$ is bounded on a set $E$, the convergence $\phi_k \to f$ is *uniform* on $E$.
+#+end_quote
+
+** The Explicit Dyadic Construction
+For each $k \in \mathbb{N}$, partition the vertical interval $[0, k[$ into $k 2^k$ subintervals of width $2^{-k}$:
+$$ E_{k, j} = \left\{ x \in \mathbb{R}^n : \frac{j-1}{2^k} \le f(x) < \frac{j}{2^k} \right\}, \quad j = 1, 2, \dots, k 2^k. $$
+For values $f(x) \ge k$, define the "overflow" set:
+$$ F_k = \{ x \in \mathbb{R}^n : f(x) \ge k \}. $$
+Now define $\phi_k : \mathbb{R}^n \to [0, \infty)$ by:
+$$ \phi_k(x) = \sum_{j=1}^{k 2^k} \frac{j-1}{2^k} \chi_{E_{k, j}}(x) + k \chi_{F_k}(x). $$
+
+#+caption: Structure of the Dyadic Approximation Sequence $\phi_k$
+| Level $k$ | Truncation Height | Resolution (Step Size) | Number of Levels |
+|-----------+-------------------+------------------------+------------------|
+| $k = 1$   | $1$               | $1/2 = 0.5$            | $2$ steps        |
+| $k = 2$   | $2$               | $1/4 = 0.25$           | $8$ steps        |
+| $k = 3$   | $3$               | $1/8 = 0.125$          | $24$ steps       |
+| general   | $k$               | $2^{-k}$               | $k \cdot 2^k$    |
+
+*Why $\phi_k \nearrow f$:*
+1. *Monotonicity:* When passing from $k$ to $k+1$, each interval of width $2^{-k}$ splits into two subintervals of width $2^{-(k+1)}$. On the left half $\phi_{k+1} = \phi_k$, and on the right half $\phi_{k+1} = \phi_k + 2^{-(k+1)} > \phi_k$. On $F_k$, either $f(x) \ge k+1$ (so $\phi_{k+1} \ge k+1 > k = \phi_k$) or $k \le f(x) < k+1$ (so $\phi_{k+1} \ge k = \phi_k$). Thus $\phi_k(x) \le \phi_{k+1}(x)$.
+2. *Convergence:* For any $x \in \mathbb{R}^n$:
+   - If $f(x) < +\infty$, choose $k > f(x)$. For all such $k$, $x \notin F_k$, so $0 \le f(x) - \phi_k(x) < 2^{-k} \to 0$.
+   - If $f(x) = +\infty$, then $x \in F_k$ for all $k$, so $\phi_k(x) = k \to +\infty = f(x)$. $\blacksquare$
+
+This construction is the *engine of Lebesgue integration*: we define integrals for simple functions first, then take the limit along $\phi_k \nearrow f$ for arbitrary measurable functions!
