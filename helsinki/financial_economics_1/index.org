@@ -9,6 +9,8 @@
 #+date: [2026-09-27]
 #+filetags: :economics:finance:helsinki:index:arbitrage:interest-rates:martingales:stochastic-finance:
 
+[[file:../index.org][← Helsinki Courses Master Index]]
+
 * Course Information and Overview
 
 - *Course Title:* Financial Economics I (MAST31807)

@@ -9,6 +9,8 @@
 #+date: [2026-09-26]
 #+filetags: :physics:math:helsinki:index:group-theory:representation-theory:
 
+[[file:../index.org][← Helsinki Courses Master Index]]
+
 * Course and Textbook Information
 
 - *Course:* Mathematical Methods for Physics IIIa (Matemaattiset menetelmät fysiikassa IIIa)

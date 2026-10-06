@@ -1,0 +1,107 @@
+:PROPERTIES:
+:ID:       2eeafd14-3dbc-4681-97f5-772d7a24fe7b
+:ROAM_ALIASES: "Measure Probability Analysis Index" "MAST31001 Index" "Advanced Measure Theory Index"
+:ROAM_REFS: [cite:@ash2000probability; @shiryaev2016probability; @billingsley1995probability; @folland1999real]
+:END:
+#+title: Measure, Probability, and Real Analysis (MAST31001) — Course Index
+#+subtitle: Advanced Measure Theory & Foundations of Rigorous Probability (University of Helsinki, 5 cr)
+#+author: Antigravity Notes
+#+date: [2026-10-07]
+#+filetags: :math:helsinki:measure-theory:probability:real-analysis:index:sigma-algebra:martingales:
+
+[[file:../index.org][← Helsinki Courses Master Index]] | [[file:prepare.org][Strategic Preparation Guide →]]
+
+* Course Information and Overview
+
+- *Course Title:* Measure, Probability, and Real Analysis (Mitta, todennäköisyys ja reaalianalyysi)
+- *Course Code:* MAST31001 / MAST31002 (5 cr)
+- *Institution:* Department of Mathematics and Statistics, University of Helsinki (Helsingin yliopisto)
+- *Prerequisites:* MAT21007 / BSMA2003 / MAST30101 [[file:../measure_integral/index.org][Measure and Integral (Mitta ja integraali)]]
+- *Target Audience:* Advanced undergraduate and master's students specializing in Analysis, Probability, Mathematical Physics, and Stochastic Finance.
+
+---
+
+* Study Guides & Course Modules
+
+#+caption: Course Map & Navigation
+| Document | Focus & Content | Key Highlights |
+|----------+-----------------+----------------|
+| [[file:prepare.org][Strategic Preparation Guide]] | 3-session pre-course onboarding plan | Readiness assessment, \(\pi\)-\(\lambda\) lemma preview, master dictionary |
+| [[file:../measure_integral/index.org][Measure & Integral Prerequisite]] | Foundational notes on Lebesgue theory | Concrete $\mathbb{R}^n$ intuition, Carathéodory criterion, MCT, Fatou, DCT |
+| [[file:../measure_integral/writings/generated_exercises.org][Generated Practice Exercises]] | 10 worked calculation & proof problems | Problem 3 (sublevel sets) & Problem 10 (Part C: First Borel-Cantelli Lemma) |
+
+---
+
+* Core Syllabus Breakdown
+
+** 1. Abstract Measure Spaces and \(\sigma\)-Algebras
+- Definitions: measurable space $(X, \mathcal{F})$, measure space $(X, \mathcal{F}, \mu)$, finite, $\sigma$-finite, and probability measures ($\mathbb{P}(X) = 1$).
+- Generated \(\sigma\)-algebras $\sigma(\mathcal{E})$ and the Borel \(\sigma\)-algebra $\mathcal{B}(X)$ on topological spaces.
+- Continuity of measure: continuity from below ($\mu(A_n) \nearrow \mu(\bigcup A_n)$ for $A_n \nearrow A$) and continuity from above ($\mu(B_n) \searrow \mu(\bigcap B_n)$ for $B_n \searrow B$ with $\mu(B_1) < \infty$).
+
+** 2. Random Variables, CDFs, and Lebesgue-Stieltjes Measures
+- Measurable mappings $X: (\Omega, \mathcal{F}) \to (\mathbb{R}, \mathcal{B}(\mathbb{R}))$.
+- Cumulative distribution function (CDF) $F(t) = \mathbb{P}(X \le t)$: right-continuity, monotonicity, limits at $\pm \infty$.
+- The Lebesgue-Stieltjes measure $\mu_F$ associated with $F$, integrating expectations: $\mathbb{E}[g(X)] = \int_{\mathbb{R}} g(t) \, dF(t)$.
+
+** 3. Monotone Class Arguments & Dynkin's \(\pi\)-\(\lambda\) Lemma
+- Definition: $\pi$-systems (closed under finite intersections) and $\lambda$-systems (monotone classes closed under complements and disjoint countable unions).
+- *Dynkin's \(\pi\)-\(\lambda\) Theorem:* If $\mathcal{P}$ is a $\pi$-system and $\mathcal{L}$ is a $\lambda$-system with $\mathcal{P} \subseteq \mathcal{L}$, then $\sigma(\mathcal{P}) \subseteq \mathcal{L}$.
+- Uniqueness of measures: if two probability measures agree on a $\pi$-system that generates the \(\sigma\)-algebra, they are identical everywhere.
+
+** 4. Abstract Integration and Passage to the Limit
+- The Standard Machine: indicator functions $\mathbf{1}_E \longrightarrow$ simple functions $\sum a_i \mathbf{1}_{E_i} \longrightarrow$ non-negative functions $\sup \int \phi \longrightarrow$ integrable functions $f = f^+ - f^-$.
+- Monotone Convergence Theorem (MCT) for sequences $0 \le f_n \nearrow f$.
+- Fatou's Lemma: $\int \liminf f_n \le \liminf \int f_n$.
+- Dominated Convergence Theorem (DCT): if $\lvert f_n \rvert \le g \in L^1$, then $\int f_n \to \int f$.
+
+** 5. Carathéodory's Extension Theorem and Product Measures
+- Pre-measures on algebras of sets.
+- *Carathéodory Extension Theorem:* Any pre-measure on an algebra $\mathcal{A}$ extends uniquely to a measure on $\sigma(\mathcal{A})$.
+- Product measure spaces $(X \times Y, \mathcal{F} \otimes \mathcal{G}, \mu \otimes \nu)$.
+- Monotone class theorem for functions and Fubini-Tonelli theorems on general $\sigma$-finite measure spaces.
+
+** 6. Independence of Random Variables and Product Spaces
+- Independence of events, sub-\(\sigma\)-algebras $\mathcal{F}_1, \dots, \mathcal{F}_n$, and random variables.
+- Factorization of joint distributions $\mathbb{P}_{(X, Y)} = \mathbb{P}_X \otimes \mathbb{P}_Y$ and expectations $\mathbb{E}[X Y] = \mathbb{E}[X] \mathbb{E}[Y]$.
+- Infinite product spaces and the Kolmogorov Extension Theorem for stochastic processes $(X_t)_{t \in T}$.
+
+** 7. \(L^p\) Spaces and Modes of Convergence
+- Definition of \(L^p(X, \mu)\), Hölder's inequality, and Minkowski's inequality.
+- Completeness: the Riesz-Fischer theorem (\(L^p\) is a Banach space for $1 \le p \le \infty$).
+- Hierarchy of convergence:
+  $$\text{Almost Sure (a.s.)} \quad \implies \quad \text{Convergence in Probability } (X_n \xrightarrow{\mathbb{P}} X) \quad \implies \quad \text{Convergence in Distribution } (X_n \xrightarrow{d} X)$$
+  $$L^p \text{ Convergence } (X_n \xrightarrow{L^p} X) \quad \implies \quad \text{Convergence in Probability } (X_n \xrightarrow{\mathbb{P}} X)$$
+
+** 8. Borel-Cantelli Lemmas and Laws of Large Numbers
+- *First Borel-Cantelli Lemma:* $\sum \mathbb{P}(A_n) < \infty \implies \mathbb{P}(\limsup A_n) = 0$.
+- *Second Borel-Cantelli Lemma:* For independent events, $\sum \mathbb{P}(A_n) = \infty \implies \mathbb{P}(\limsup A_n) = 1$.
+- Markov and Chebyshev inequalities.
+- Weak Law of Large Numbers (WLLN) via \(L^2\) bounds and characteristic functions.
+- Strong Law of Large Numbers (SLLN) via truncation and Borel-Cantelli arguments.
+
+---
+
+* Master Dictionary: Measure Theory $\longleftrightarrow$ Probability Theory
+
+| Real Analysis / Measure Theory | Symbol | Probability Theory | Symbol |
+|--------------------------------+--------+--------------------+--------|
+| Measure space | $(X, \mathcal{F}, \mu)$ | Probability space | $(\Omega, \mathcal{F}, \mathbb{P})$ |
+| Measurable set | $E \in \mathcal{F}$ | Event | $A \in \mathcal{F}$ |
+| Measurable function | $f: X \to \mathbb{R}$ | Random variable | $X: \Omega \to \mathbb{R}$ |
+| Characteristic function $\mathbf{1}_E$ | $\mathbf{1}_E$ | Indicator variable $\mathbf{1}_A$ | $\mathbf{1}_A$ |
+| Lebesgue integral $\int f \, d\mu$ | $\int_X f \, d\mu$ | Mathematical Expectation | $\mathbb{E}[X]$ |
+| Almost everywhere ($a.e.$) | a.e. | Almost surely ($a.s.$) | a.s. |
+| Convergence in measure | $f_n \xrightarrow{\mu} f$ | Convergence in probability | $X_n \xrightarrow{\mathbb{P}} X$ |
+| \(L^1\)-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lvert X_n - X \rvert] \to 0$ |
+| Product measure | $\mu \otimes \nu$ | Joint distribution of independent variables | $\mathbb{P}_X \otimes \mathbb{P}_Y$ |
+
+---
+
+* Primary Literature & References
+
+1. *Ash, R. B., & Doléans-Dade, C. A. (2000).* /Probability and Measure Theory/ (2nd ed.). Academic Press.
+2. *Shiryaev, A. N. (2016).* /Probability-1 & Probability-2/ (3rd ed.). Graduate Texts in Mathematics, Springer.
+3. *Billingsley, P. (1995).* /Probability and Measure/ (3rd ed.). John Wiley & Sons.
+4. *Folland, G. B. (1999).* /Real Analysis: Modern Techniques and Their Applications/ (2nd ed.). John Wiley & Sons.
+5. *Schilling, R. L. (2017).* /Measures, Integrals and Martingales/ (2nd ed.). Cambridge University Press.

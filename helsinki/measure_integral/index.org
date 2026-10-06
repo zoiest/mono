@@ -9,6 +9,8 @@
 #+date: [2026-10-06]
 #+filetags: :math:helsinki:measure-theory:lebesgue:integration:probability:real-analysis:index:
 
+[[file:../index.org][← Helsinki Courses Master Index]]
+
 * Welcome & Strategic Gap Analysis
 
 ** Can You Self-Study This Prerequisite Concurrently?

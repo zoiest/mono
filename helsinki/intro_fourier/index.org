@@ -1,0 +1,94 @@
+:PROPERTIES:
+:ID:       647bfc5c-b694-406c-aac9-8d6bbb45c284
+:ROAM_ALIASES: "Intro Fourier Index" "Fourier Analysis Index" "MAT21008 Index"
+:ROAM_REFS: [cite:@stein2003fourier; @katznelson2004introduction; @folland1992fourier]
+:END:
+#+title: Introduction to Real and Fourier Analysis (MAT21008) — Course Index
+#+subtitle: Comprehensive Knowledge Base for Reaali- ja Fourier-analyysi (University of Helsinki, 5 cr)
+#+author: Antigravity Notes
+#+date: [2026-10-07]
+#+filetags: :math:helsinki:fourier-analysis:real-analysis:index:harmonic-analysis:
+
+[[file:../index.org][← Helsinki Courses Master Index]] | [[file:prepare.org][Preparation Guide & Prerequisite Bridge →]]
+
+* Course Information and Overview
+
+- *Course Title:* Introduction to Real and Fourier Analysis (Reaali- ja Fourier-analyysi)
+- *Course Code:* MAT21008 / BSMA2004 (5 cr)
+- *Institution:* Department of Mathematics and Statistics, University of Helsinki (Helsingin yliopisto)
+- *Prerequisites:*
+  - MAT110 / BSMA1000 Mathematics, basic studies
+  - MAT21005 Topology IA
+  - MAT21006 Topology IB
+  - MAT21007 / BSMA2003 / MAST30101 [[file:../measure_integral/index.org][Measure and Integral]]
+- *Key Learning Outcomes:*
+  - Fluency with Fourier series on the torus $\mathbb{T}$ and periodic boundary conditions.
+  - Mastery of summation kernels (Dirichlet, Fejér, Poisson) and uniform vs. pointwise convergence criteria.
+  - Algorithmic principles of the Fast Fourier Transform (FFT).
+  - Harmonic analysis on $\mathbb{R}$: the Fourier transform, Schwartz space $\mathcal{S}(\mathbb{R})$, and Fourier inversion.
+  - Hilbert space techniques: Plancherel's theorem, Parseval's identity, and \(L^2\)-isometry.
+  - Applications to partial differential equations (the heat equation) and integral geometry (Radon transform).
+
+---
+
+* Study Guides & Course Modules
+
+#+caption: Course Map & Navigation
+| Document | Focus & Content | Key Highlights |
+|----------+-----------------+----------------|
+| [[file:prepare.org][Strategic Preparation Guide]] | Prerequisite bridge & self-study checklist | Background assessment, the 4 measure theory pillars, Gaussian ODE differentiation |
+| [[file:../measure_integral/index.org][Measure & Integral Prerequisite]] | Upstream foundational course notes | MCT, Fatou, DCT, Fubini-Tonelli, \(L^1\) & \(L^2\) norms |
+| [[file:../measure_integral/writings/generated_exercises.org][Generated Practice Exercises]] | 10 worked calculation & proof problems | Problem 8: Gaussian Fourier transform via Leibniz differentiation |
+
+---
+
+* Core Syllabus Breakdown
+
+** 1. Fourier Series on the Circle and Torus
+- Periodic functions $f(x+2\pi) = f(x)$, Fourier coefficients $\hat{f}(n) = \frac{1}{2\pi} \int_{-\pi}^\pi f(x) e^{-i n x} dx$.
+- Orthogonality of complex exponentials $\{e^{i n x}\}_{n \in \mathbb{Z}}$ in \(L^2([-\pi, \pi])\).
+- Partial sum operators $S_N(f)(x) = \sum_{n=-N}^N \hat{f}(n) e^{i n x} = (f * D_N)(x)$.
+
+** 2. Summation Kernels and Convergence
+- *The Dirichlet Kernel* $D_N(x) = \frac{\sin((N + 1/2)x)}{\sin(x/2)}$: non-positivity of $D_N$ and the Du Bois-Reymond failure of pointwise convergence.
+- *Good Kernels and Approximate Identities:* definition and properties.
+- *The Fejér Kernel* $F_N(x) = \frac{1}{N} \sum_{k=0}^{N-1} D_k(x)$ (Cesàro summation): positivity and uniform convergence for continuous functions.
+- *The Poisson Kernel* $P_r(\theta)$ (Abel summation) and the Dirichlet problem on the unit disk.
+- Riemann-Lebesgue Lemma: $\lim_{\lvert n \rvert \to \infty} \hat{f}(n) = 0$.
+
+** 3. Brief Introduction to the Fast Fourier Transform (FFT)
+- Discrete Fourier Transform (DFT) on $\mathbb{C}^N$: naive $O(N^2)$ matrix-vector multiplication.
+- The Cooley-Tukey divide-and-conquer algorithm: factorization into even/odd indices yielding $O(N \log N)$ complexity.
+- Bit-reversal permutation and practical applications in digital signal processing.
+
+** 4. The Continuous Fourier Transform on $\mathbb{R}$
+- Definition: $\hat{f}(\xi) = \int_{-\infty}^\infty f(x) e^{-i x \xi} \, dx$ for $f \in L^1(\mathbb{R})$.
+- Basic properties: translation, modulation, dilation/scaling, and Riemann-Lebesgue lemma on $\mathbb{R}$.
+- Convolutions: $\widehat{f * g}(\xi) = \hat{f}(\xi) \hat{g}(\xi)$.
+- Regularity vs. decay duality: smoothness of $f$ implies decay of $\hat{f}$, and decay of $f$ implies smoothness of $\hat{f}$.
+
+** 5. The Schwartz Space $\mathcal{S}(\mathbb{R})$ and Inversion Formula
+- Definition of rapidly decreasing smooth functions: $\sup_x \lvert x^\alpha \partial^\beta f(x) \rvert < \infty$.
+- Invariance of $\mathcal{S}(\mathbb{R})$ under the Fourier transform: $\mathcal{F}(\mathcal{S}) = \mathcal{S}$.
+- Differentiating under the integral sign and polynomial multiplication: $\widehat{f'}(\xi) = i \xi \hat{f}(\xi)$, $\widehat{x f}(\xi) = i \frac{d}{d\xi} \hat{f}(\xi)$.
+- Fourier Inversion Theorem on $\mathcal{S}(\mathbb{R})$: $f(x) = \frac{1}{2\pi} \int_{-\infty}^\infty \hat{f}(\xi) e^{i x \xi} \, d\xi$.
+
+** 6. Fourier Transform of \(L^2\)-Functions (Plancherel Theorem)
+- Extending the Fourier transform from dense subspace $\mathcal{S}(\mathbb{R})$ to the Hilbert space \(L^2(\mathbb{R})\).
+- *Plancherel's Theorem:* $\lVert \hat{f} \rVert_{L^2} = \sqrt{2\pi} \lVert f \rVert_{L^2}$.
+- *Parseval's Identity:* $\langle f, g \rangle_{L^2} = \frac{1}{2\pi} \langle \hat{f}, \hat{g} \rangle_{L^2}$.
+- Unitarity of the normalized Fourier operator $\mathcal{F}: L^2(\mathbb{R}) \to L^2(\mathbb{R})$.
+
+** 7. Applications to PDEs and Analysis
+- *The Heat Equation:* $\partial_t u = \partial_{xx} u$ with initial condition $u(x, 0) = f(x)$. Solving via Fourier transform leads directly to convolution with the Gauss-Weierstrass kernel $K_t(x) = \frac{1}{\sqrt{4\pi t}} e^{-x^2 / (4t)}$.
+- *The Wave Equation:* D'Alembert's formula and dispersive properties.
+- *The Radon Transform:* Inversion via the Fourier slice theorem (foundational in medical CT imaging).
+
+---
+
+* Primary Literature & References
+
+1. *Stein, E. M., & Shakarchi, R. (2003).* /Fourier Analysis: An Introduction/ (Princeton Lectures in Analysis, Vol. 1). Princeton University Press.
+2. *Katznelson, Y. (2004).* /An Introduction to Harmonic Analysis/ (3rd ed.). Cambridge University Press.
+3. *Folland, G. B. (1992).* /Fourier Analysis and Its Applications/. Brooks/Cole.
+4. *Rudin, W. (1987).* /Real and Complex Analysis/ (3rd ed.). McGraw-Hill.
