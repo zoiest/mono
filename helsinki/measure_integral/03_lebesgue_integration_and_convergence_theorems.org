@@ -1,0 +1,287 @@
+:PROPERTIES:
+:ID:       580b3400-63c6-4473-8873-ebdb54755ef8
+:ROAM_ALIASES: "Lebesgue Integral" "Monotone Convergence Theorem" "Fatous Lemma" "Dominated Convergence Theorem" "MCT" "DCT"
+:ROAM_REFS: [cite:@holopainen2017mitta]
+:END:
+#+title: Lebesgue Integration and the Great Convergence Theorems
+#+subtitle: Chapter 3 — Foundations of Measure and Integral (Ilkka Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-10-06]
+#+filetags: :math:measure-theory:lebesgue-integral:mct:fatou:dct:convergence-theorems:riemann-vs-lebesgue:
+
+[[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][← Previous: Measurable Mappings & Functions]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][Next: Fubini-Tonelli & Product Measures →]]
+
+* The Architecture of Lebesgue Integration: The Standard Machine
+
+The construction of the Lebesgue integral proceeds systematically through four successive levels of generality:
+1. *Indicator functions:* $\chi_E \implies \int \chi_E \, dm = m(E)$.
+2. *Non-negative simple functions:* $\phi = \sum_{i=1}^k a_i \chi_{A_i} \implies I(\phi) = \sum_{i=1}^k a_i m(A_i)$.
+3. *Non-negative measurable functions:* $f \ge 0 \implies I(f) = \sup \{ I(\phi) : 0 \le \phi \le f, \, \phi \text{ simple} \}$.
+4. *General integrable functions:* $f = f^+ - f^- \implies \int f = \int f^+ - \int f^-$.
+
+This tiered approach is called the *"Standard Machine"* of measure theory. In proofs, whenever you need to prove a formula for an integral, you prove it in this exact four-step order!
+
+---
+
+* Step 1 & 2: Integration of Non-Negative Simple Functions
+
+** Definition: Integral of a Simple Function
+Recall that $\mathcal{Y}$ denotes the collection of all non-negative simple functions on $\mathbb{R}^n$.
+
+#+begin_quote
+*Definition (Integral of Simple Functions):*
+Let $\phi \in \mathcal{Y}$ with standard representation $\phi = \sum_{i=1}^k a_i \chi_{A_i}$ ($a_i \ge 0$, sets $A_i \in \mathrm{Leb}(\mathbb{R}^n)$ pairwise disjoint).
+For any measurable set $E \in \mathrm{Leb}(\mathbb{R}^n)$, the *(Lebesgue) integral* of $\phi$ over $E$ is:
+$$ I(\phi, E) = \sum_{i=1}^k a_i m(A_i \cap E) \in [0, +\infty]. $$
+If $E = \mathbb{R}^n$, we write simply $I(\phi) = I(\phi, \mathbb{R}^n) = \sum_{i=1}^k a_i m(A_i)$.
+#+end_quote
+
+*Convention:* If $a_i = 0$ and $m(A_i \cap E) = +\infty$, then $0 \cdot (+\infty) = 0$.
+
+** Invariance and Algebraic Properties of $I(\phi, E)$
+#+begin_quote
+*Theorem 3.2 & 3.5:*
+Let $\phi, \psi \in \mathcal{Y}$, $E \in \mathrm{Leb}(\mathbb{R}^n)$, and $c \ge 0$.
+1. *Representation Invariance:* If $\phi = \sum_{j=1}^m b_j \chi_{B_j}$ is /any/ representation (not necessarily disjoint or standard) with $b_j \ge 0$ and $B_j \in \mathrm{Leb}(\mathbb{R}^n)$, then:
+   $$ I(\phi, E) = \sum_{j=1}^m b_j m(B_j \cap E). $$
+2. *Homogeneity:* $I(c\phi, E) = c I(\phi, E)$.
+3. *Linear Additivity:* $I(\phi + \psi, E) = I(\phi, E) + I(\psi, E)$.
+4. *Monotonicity:* If $\phi(x) \le \psi(x)$ for all $x \in E$, then $I(\phi, E) \le I(\psi, E)$.
+5. *Domain Additivity:* If $E_1, E_2, \dots$ are pairwise disjoint measurable sets and $E = \bigcup_{j=1}^\infty E_j$:
+   $$ I(\phi, E) = \sum_{j=1}^\infty I(\phi, E_j). $$
+#+end_quote
+
+---
+
+* Step 3: Integration of Non-Negative Measurable Functions
+
+** Definition via Supremum
+#+begin_quote
+*Definition (Integral of Non-Negative Function):*
+Let $E \in \mathrm{Leb}(\mathbb{R}^n)$ and let $f : E \to [0, +\infty]$ be a non-negative measurable function.
+The *Lebesgue integral* of $f$ over $E$ is defined by:
+$$ I(f, E) = \int_E f \, dm = \sup \left\{ I(\phi, E) : \phi \in \mathcal{Y}, \, 0 \le \phi \le f \text{ on } E \right\} \in [0, +\infty]. $$
+When $E = \mathbb{R}^n$, we write $I(f) = \int f \, dm$.
+#+end_quote
+
+** Immediate Elementary Properties
+#+begin_quote
+*Theorem 3.12:*
+Let $f, g : E \to [0, +\infty]$ be measurable, $E \in \mathrm{Leb}(\mathbb{R}^n)$, and $c \ge 0$.
+1. *Consistency:* If $f \in \mathcal{Y}$, the supremum coincides with the simple function integral $I(f, E)$.
+2. *Monotonicity:* If $f \le g$ on $E$, then $\int_E f \le \int_E g$.
+3. *Domain Monotonicity:* If $A \subset B \subset E$, then $\int_A f \le \int_B f$.
+4. *Homogeneity:* $\int_E c f = c \int_E f$ (with $0 \cdot \infty = 0$).
+5. *Null Sets Carry Zero Integral:* If $m(E) = 0$, then $\int_E f = 0$ (even if $f = +\infty$).
+6. *Almost Everywhere Vanishing:*
+   $$ \int_E f = 0 \iff f(x) = 0 \quad \text{a.e. on } E. $$
+#+end_quote
+
+*Proof of (6):*
+If $f = 0$ a.e., then any simple $\phi \le f$ satisfies $\phi = 0$ a.e., so $I(\phi, E) = 0 \implies \int_E f = 0$.
+Conversely, suppose $\int_E f = 0$. For each $k \in \mathbb{N}$, consider $A_k = \{x \in E : f(x) \ge 1/k\}$.
+Then $\frac{1}{k} \chi_{A_k} \le f$, so by monotonicity:
+$$ \frac{1}{k} m(A_k) = I\left(\frac{1}{k}\chi_{A_k}, E\right) \le \int_E f = 0 \implies m(A_k) = 0. $$
+The set where $f(x) > 0$ is $\{x \in E : f(x) > 0\} = \bigcup_{k=1}^\infty A_k$.
+By countable subadditivity, $m(\{f > 0\}) \le \sum_{k=1}^\infty m(A_k) = 0$. Thus $f = 0$ a.e. $\blacksquare$
+
+---
+
+* The Monotone Convergence Theorem (MCT / Beppo Levi, 1906)
+
+** Statement
+The Monotone Convergence Theorem is the cornerstone of modern integration. It asserts that for non-negative functions, limits and integrals commute under mere monotonicity!
+
+#+begin_quote
+*Theorem 3.17 (Monotone Convergence Theorem — MCT):*
+Let $E \in \mathrm{Leb}(\mathbb{R}^n)$ and let $(f_j)_{j=1}^\infty$ be a sequence of measurable functions $f_j : E \to [0, +\infty]$ such that:
+$$ 0 \le f_1(x) \le f_2(x) \le \dots \le f_j(x) \le f_{j+1}(x) \le \dots \quad \text{for all } x \in E. $$
+Let $f(x) = \lim_{j\to\infty} f_j(x) = \sup_{j} f_j(x)$. Then $f$ is measurable and:
+$$ \lim_{j\to\infty} \int_E f_j \, dm = \int_E f \, dm = \int_E \left( \lim_{j\to\infty} f_j \right) dm. $$
+#+end_quote
+
+** Rigorous Proof
+Since $f_j \le f_{j+1} \le f$, monotonicity of the integral implies that the numerical sequence $\int_E f_j$ is non-decreasing and bounded above by $\int_E f$. Thus:
+$$ \lim_{j\to\infty} \int_E f_j \le \int_E f. $$
+To establish the reverse inequality $\int_E f \le \lim_{j\to\infty} \int_E f_j$, let $\phi \in \mathcal{Y}$ be any simple function with $0 \le \phi \le f$, and let $0 < \varepsilon < 1$.
+Define the increasing sequence of sets:
+$$ E_j = \{ x \in E : f_j(x) \ge (1 - \varepsilon)\phi(x) \}. $$
+- *Measurability & Monotonicity:* Each $E_j$ is measurable and $E_1 \subset E_2 \subset E_3 \subset \dots$.
+- *Union Covers $E$:* For any $x \in E$:
+  - If $\phi(x) = 0$, then $(1 - \varepsilon)\phi(x) = 0 \le f_1(x)$, so $x \in E_1 \subset \bigcup E_j$.
+  - If $\phi(x) > 0$, then $(1 - \varepsilon)\phi(x) < \phi(x) \le f(x) = \lim f_j(x)$, so there exists $j$ with $f_j(x) \ge (1 - \varepsilon)\phi(x)$, hence $x \in E_j$.
+  Thus $\bigcup_{j=1}^\infty E_j = E$.
+Now, for each $j \in \mathbb{N}$:
+$$ \int_E f_j \ge \int_{E_j} f_j \ge \int_{E_j} (1 - \varepsilon)\phi = (1 - \varepsilon) I(\phi, E_j). $$
+By domain additivity for simple functions (Theorem 3.5), $\lim_{j\to\infty} I(\phi, E_j) = I(\phi, E)$. Taking $j \to \infty$:
+$$ \lim_{j\to\infty} \int_E f_j \ge (1 - \varepsilon) I(\phi, E). $$
+Since this holds for every $\varepsilon \in (0, 1)$, letting $\varepsilon \to 0$ gives:
+$$ \lim_{j\to\infty} \int_E f_j \ge I(\phi, E). $$
+Taking the supremum over all simple $\phi \le f$ yields $\lim_{j\to\infty} \int_E f_j \ge \int_E f$. $\blacksquare$
+
+** Major Consequences of MCT
+1. *Linearity for Non-Negative Functions:*
+   For any measurable $f, g \ge 0$, choose simple sequences $\phi_k \nearrow f$ and $\psi_k \nearrow g$.
+   Then $(\phi_k + \psi_k) \nearrow (f + g)$. Applying MCT:
+   $$ \int_E (f + g) = \lim_{k\to\infty} \int_E (\phi_k + \psi_k) = \lim_{k\to\infty} \int_E \phi_k + \lim_{k\to\infty} \int_E \psi_k = \int_E f + \int_E g. $$
+2. *Term-by-Term Integration of Series (Beppo Levi Series Theorem):*
+   If $u_k : E \to [0, +\infty]$ are non-negative measurable functions:
+   $$ \int_E \left( \sum_{k=1}^\infty u_k(x) \right) dm(x) = \sum_{k=1}^\infty \int_E u_k(x) \, dm(x). $$
+   *(No uniform convergence needed — only non-negativity!)*
+
+---
+
+* Fatou's Lemma (Pierre Fatou, 1906)
+
+** Statement
+When a sequence is /not/ monotonic, we cannot expect equality of limits, but Fatou's Lemma gives a universal, unbreakable inequality for the lower limit.
+
+#+begin_quote
+*Theorem 3.20 (Fatou's Lemma):*
+Let $E \in \mathrm{Leb}(\mathbb{R}^n)$ and let $(f_j)_{j=1}^\infty$ be any sequence of non-negative measurable functions $f_j : E \to [0, +\infty]$.
+Then:
+$$ \int_E \left( \liminf_{j\to\infty} f_j \right) dm \le \liminf_{j\to\infty} \int_E f_j \, dm. $$
+#+end_quote
+
+** Proof
+For each $k \in \mathbb{N}$, define the lower envelope function:
+$$ g_k(x) = \inf_{j \ge k} f_j(x). $$
+Then $g_k : E \to [0, +\infty]$ is measurable, and:
+1. $g_k(x) \le f_j(x)$ for all $j \ge k$. Hence $\int_E g_k \le \int_E f_j$ for all $j \ge k$, which implies:
+   $$ \int_E g_k \le \inf_{j \ge k} \int_E f_j. $$
+2. The sequence $(g_k)_{k=1}^\infty$ is non-decreasing: $g_1 \le g_2 \le g_3 \le \dots$.
+3. By definition, $\lim_{k\to\infty} g_k(x) = \liminf_{j\to\infty} f_j(x)$.
+Applying MCT to the sequence $(g_k)_{k=1}^\infty$:
+$$ \int_E \left( \liminf_{j\to\infty} f_j \right) = \int_E \lim_{k\to\infty} g_k = \lim_{k\to\infty} \int_E g_k \le \lim_{k\to\infty} \left( \inf_{j \ge k} \int_E f_j \right) = \liminf_{j\to\infty} \int_E f_j. \quad \blacksquare $$
+
+** The "Escaping Mass" Phenomenon (Strict Inequality)
+Fatou's Lemma often exhibits strict inequality $<$. Where does the integral go? Mass can escape in two ways:
+1. *Escape to Infinity (Horizontal Escape):*
+   Let $E = \mathbb{R}$ and $f_j = \chi_{[j, j+1]}$.
+   For each $x \in \mathbb{R}$, $f_j(x) = 0$ for all $j > x$, so $f_j(x) \to 0$ pointwise everywhere.
+   Thus $\liminf f_j = 0 \implies \int \liminf f_j = 0$.
+   However, $\int_\mathbb{R} f_j = m([j, j+1]) = 1$ for all $j$, so $\liminf \int f_j = 1$.
+   Here $0 < 1$. The "mass" rolled away to $+\infty$.
+2. *Escape to a Spike (Vertical Escape / Singular Concentration):*
+   Let $E = [0, 1]$ and $f_j = j \chi_{(0, 1/j)}$.
+   For every $x \in (0, 1]$, $f_j(x) = 0$ for all $j > 1/x$, and for $x = 0$, $f_j(0) = 0$.
+   Thus $f_j(x) \to 0$ everywhere on $[0, 1]$.
+   Then $\int_{[0, 1]} \liminf f_j = 0$.
+   Yet $\int_{[0, 1]} f_j = j \cdot \frac{1}{j} = 1$ for all $j$, so $\liminf \int f_j = 1$.
+   Here $0 < 1$. The function spiked into an infinitely tall, infinitely thin needle.
+
+---
+
+* Step 4: General Integrable Functions ($L^1$ Space)
+
+** Decomposition into Positive and Negative Parts
+For any extended real-valued function $f : E \to \dot{\mathbb{R}}$, recall:
+$$ f^+(x) = \max\{f(x), 0\}, \qquad f^-(x) = \max\{-f(x), 0\}, $$
+$$ f = f^+ - f^-, \qquad |f| = f^+ + f^-. $$
+
+** Definition of Lebesgue Integrability
+#+begin_quote
+*Definition (Integrability):*
+Let $E \in \mathrm{Leb}(\mathbb{R}^n)$ and $f : E \to \dot{\mathbb{R}}$ be measurable.
+The function $f$ is said to be *(Lebesgue) integrable* on $E$ (written $f \in L^1(E)$ or $f \in L(E)$) if:
+$$ \int_E f^+ \, dm < +\infty \quad \text{and} \quad \int_E f^- \, dm < +\infty. $$
+In this case, the *Lebesgue integral* of $f$ over $E$ is:
+$$ \int_E f \, dm = \int_E f^+ \, dm - \int_E f^- \, dm \in \mathbb{R}. $$
+#+end_quote
+
+** Absolute Integrability Criterion
+#+begin_quote
+*Theorem 3.24 (Absolute Integrability):*
+A measurable function $f : E \to \dot{\mathbb{R}}$ is integrable if and only if
+$$ \int_E |f| \, dm < +\infty. $$
+#+end_quote
+*Proof:* Since $|f| = f^+ + f^-$, additivity for non-negative functions gives $\int |f| = \int f^+ + \int f^-$. The sum of two non-negative numbers is finite if and only if both numbers are finite. $\blacksquare$
+
+> [!IMPORTANT]
+> In Lebesgue theory, *there is no such thing as conditional integrability!* Every Lebesgue integrable function is absolutely integrable. (Functions like $\frac{\sin x}{x}$ on $[0, \infty)$ are conditionally convergent improper Riemann integrals, but are *not* Lebesgue integrable).
+
+** Core Algebraic and Analytical Properties
+#+begin_quote
+*Theorem 3.25 & 3.27 (Properties of $L^1$):*
+Let $f, g \in L^1(E)$ and $\alpha, \beta \in \mathbb{R}$.
+1. *Finite Almost Everywhere:* $f \in L^1(E) \implies |f(x)| < +\infty$ a.e. on $E$.
+2. *Linearity:* $\alpha f + \beta g \in L^1(E)$ and
+   $$ \int_E (\alpha f + \beta g) \, dm = \alpha \int_E f \, dm + \beta \int_E g \, dm. $$
+3. *Monotonicity:* If $f(x) \le g(x)$ a.e. on $E$, then $\int_E f \le \int_E g$.
+4. *Triangle Inequality:*
+   $$ \left| \int_E f \, dm \right| \le \int_E |f| \, dm. $$
+5. *Majorization Principle:* If $f$ is measurable, $g \in L^1(E)$, and $|f(x)| \le g(x)$ a.e., then $f \in L^1(E)$.
+#+end_quote
+
+---
+
+* The Dominated Convergence Theorem (DCT / Lebesgue, 1908)
+
+** Statement
+The Dominated Convergence Theorem is the most frequently used theorem in practical mathematical analysis and probability. It provides the definitive criteria for passing limits under the integral sign for signed functions.
+
+#+begin_quote
+*Theorem 3.28 (Lebesgue Dominated Convergence Theorem — DCT):*
+Let $E \in \mathrm{Leb}(\mathbb{R}^n)$ and let $(f_j)_{j=1}^\infty$ be a sequence of measurable functions on $E$ such that:
+1. *Pointwise convergence:* $f_j(x) \to f(x)$ almost everywhere on $E$ as $j \to \infty$.
+2. *Dominating function:* There exists an integrable function $g \in L^1(E)$ such that
+   $$ |f_j(x)| \le g(x) \quad \text{almost everywhere on } E, \quad \text{for all } j \in \mathbb{N}. $$
+Then $f \in L^1(E)$, and:
+$$ \lim_{j\to\infty} \int_E f_j \, dm = \int_E f \, dm = \int_E \left( \lim_{j\to\infty} f_j \right) dm, $$
+and moreover
+$$ \lim_{j\to\infty} \int_E |f_j - f| \, dm = 0 \quad \text{($L^1$-convergence)}. $$
+#+end_quote
+
+** Proof via Fatou's Lemma
+Since $|f_j| \le g$ a.e. and $f_j \to f$ a.e., taking limits gives $|f| \le g$ a.e., so $f \in L^1(E)$.
+Now consider two sequences of non-negative functions:
+$$ u_j = g + f_j \ge 0, \qquad v_j = g - f_j \ge 0. $$
+Applying Fatou's Lemma to $u_j$:
+$$ \int_E \liminf_{j\to\infty} (g + f_j) \le \liminf_{j\to\infty} \int_E (g + f_j). $$
+Since $\liminf (g + f_j) = g + f$ and $\int_E (g + f_j) = \int_E g + \int_E f_j$:
+$$ \int_E g + \int_E f \le \int_E g + \liminf_{j\to\infty} \int_E f_j \implies \int_E f \le \liminf_{j\to\infty} \int_E f_j. $$
+Now apply Fatou's Lemma to $v_j = g - f_j \ge 0$:
+$$ \int_E (g - f) \le \liminf_{j\to\infty} \int_E (g - f_j) = \int_E g - \limsup_{j\to\infty} \int_E f_j. $$
+Subtracting the finite number $\int_E g$:
+$$ -\int_E f \le -\limsup_{j\to\infty} \int_E f_j \implies \limsup_{j\to\infty} \int_E f_j \le \int_E f. $$
+Combining both inequalities:
+$$ \int_E f \le \liminf_{j\to\infty} \int_E f_j \le \limsup_{j\to\infty} \int_E f_j \le \int_E f. $$
+Hence $\lim_{j\to\infty} \int_E f_j = \int_E f$.
+Finally, $|f_j - f| \le |f_j| + |f| \le 2g \in L^1(E)$, so applying the same result to $|f_j - f| \to 0$ gives $\int_E |f_j - f| \to 0$. $\blacksquare$
+
+** Major Application: Differentiation Under the Integral Sign
+#+begin_quote
+*Theorem (Leibniz Integral Rule via DCT):*
+Let $U \subset \mathbb{R}$ be an open interval and $f : E \times U \to \mathbb{R}$ such that:
+1. For each $t \in U$, $x \mapsto f(x, t)$ is integrable on $E$.
+2. For almost every $x \in E$, $t \mapsto f(x, t)$ is differentiable on $U$.
+3. There exists an integrable function $g \in L^1(E)$ such that for all $t \in U$:
+   $$ \left| \frac{\partial f}{\partial t}(x, t) \right| \le g(x) \quad \text{a.e. on } E. $$
+Then $F(t) = \int_E f(x, t) \, dm(x)$ is differentiable on $U$, and:
+$$ F'(t) = \frac{d}{dt} \int_E f(x, t) \, dm(x) = \int_E \frac{\partial f}{\partial t}(x, t) \, dm(x). $$
+#+end_quote
+*Proof:* Let $t_j \to t$ with $t_j \ne t$. The difference quotients $h_j(x) = \frac{f(x, t_j) - f(x, t)}{t_j - t}$ converge pointwise to $\frac{\partial f}{\partial t}(x, t)$.
+By the Mean Value Theorem, $|h_j(x)| = |\frac{\partial f}{\partial t}(x, \xi_j)| \le g(x)$.
+Apply DCT directly to $h_j$! $\blacksquare$
+
+---
+
+* Comparison with the Riemann Integral
+
+#+caption: Comparison between Riemann and Lebesgue Integrals
+| Feature | Riemann Integral $\int_a^b f(x)\,dx$ | Lebesgue Integral $\int_{[a, b]} f\,dm$ |
+|---------+--------------------------------------+------------------------------------------|
+| *Domain Partition* | $x$-axis (horizontal slices $\Delta x_k$) | $y$-axis (vertical slices of range) |
+| *Measurable Sets* | Jordan measurable (boundary has content $0$) | Lebesgue measurable (\(\sigma\)-algebra) |
+| *Dirichlet Function $\chi_{\mathbb{Q}}$* | Not integrable | Integrable (integral $= 0$) |
+| *Limit under Integral* | Requires uniform convergence $f_j \rightrightarrows f$ | Monotone (MCT) or Dominated (DCT) |
+| *Completeness of Space* | Incomplete normed space | $L^1$ is a complete Banach space |
+
+#+begin_quote
+*Theorem 3.13 & 3.26 (Lebesgue-Vitali Criterion):*
+Let $E = [a, b] \subset \mathbb{R}$ be a compact interval and $f : [a, b] \to \mathbb{R}$ a bounded function.
+1. $f$ is Riemann integrable on $[a, b]$ if and only if the set of its discontinuities has Lebesgue measure zero:
+   $$ m\left(\{x \in [a, b] : f \text{ is discontinuous at } x\}\right) = 0. $$
+2. In this case, $f$ is Lebesgue integrable, and both integrals coincide:
+   $$ \int_{[a, b]} f \, dm = \int_a^b f(x) \, dx. $$
+#+end_quote
