@@ -16,9 +16,9 @@
 - *Institution:* Department of Mathematics and Statistics, University of Helsinki
 - *Formal Prerequisites:* MAT21007 / BSMA2003 / MAST30101 Measure and Integral (Mitta ja integraali)
 - *Official Syllabus & Planned Contents:*
-  1. Measure theory beyond the Lebesgue case: general measure spaces $(X, \mathcal{F}, \mu)$ and $\sigma$-algebras
+  1. Measure theory beyond the Lebesgue case: general measure spaces $(X, \mathcal{F}, \mu)$ and \(\sigma\)-algebras
   2. Probabilities, expectations, cumulative distribution functions (CDFs), and Lebesgue-Stieltjes integrals
-  3. Monotone class arguments (Dynkin's $\pi$-$\lambda$ lemma) and uniqueness of measures
+  3. Monotone class arguments (Dynkin's \(\pi\)-\(\lambda\) lemma) and uniqueness of measures
   4. Abstract integration and passage to the limit under the integral sign (abstract MCT, Fatou, DCT)
   5. Carathéodory's extension theorem, construction of finite and infinite product measures, Fubini's theorem
   6. Independence of random variables and product spaces
@@ -79,7 +79,7 @@ Ensure you have these four foundational concepts solid before stepping into your
 
 You do **not** need to study these before Week 1; the course will develop them systematically:
 1. *Carathéodory's Extension Theorem proof:* The course will state or prove this in Weeks 2–3 when constructing product measures and Lebesgue-Stieltjes measures. Just understand the *result* (a pre-measure extends uniquely to a \(\sigma\)-algebra).
-2. *Dynkin's $\pi$-$\lambda$ lemma proof:* This will be taught explicitly as the standard tool to prove uniqueness of measures on $\sigma(\mathcal{P})$.
+2. *Dynkin's \(\pi\)-\(\lambda\) lemma proof:* This will be taught explicitly as the standard tool to prove uniqueness of measures on $\sigma(\mathcal{P})$.
 3. *Infinite Kolmogorov extension:* This comes in later weeks when defining infinite sequences of independent random variables $(X_1, X_2, \dots)$.
 
 ---
@@ -110,7 +110,7 @@ Spend three focused 90-minute study sessions completing this exact sequence befo
 | Lebesgue integral $\int f \, d\mu$ | $\int_X f \, d\mu$ | Mathematical Expectation | $\mathbb{E}[X]$ |
 | Almost everywhere ($a.e.$) | a.e. | Almost surely ($a.s.$) | a.s. |
 | Convergence in measure | $f_n \xrightarrow{\mu} f$ | Convergence in probability | $X_n \xrightarrow{\mathbb{P}} X$ |
-| $L^1$-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lVert X_n - X \rVert] \to 0$ |
+| \(L^1\)-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lVert X_n - X \rVert] \to 0$ |
 | Product measure | $\mu \otimes \nu$ | Joint distribution of independent variables | $\mathbb{P}_X \otimes \mathbb{P}_Y$ |
 
 ---

@@ -229,7 +229,7 @@ Let $E \in \mathrm{Leb}(\mathbb{R}^n)$ and let $(f_j)_{j=1}^\infty$ be a sequenc
 Then $f \in L^1(E)$, and:
 $$ \lim_{j\to\infty} \int_E f_j \, dm = \int_E f \, dm = \int_E \left( \lim_{j\to\infty} f_j \right) dm, $$
 and moreover
-$$ \lim_{j\to\infty} \int_E |f_j - f| \, dm = 0 \quad \text{($L^1$-convergence)}. $$
+$$ \lim_{j\to\infty} \int_E |f_j - f| \, dm = 0 \quad \text{(\(L^1\)-convergence)}. $$
 #+end_quote
 
 ** Proof via Fatou's Lemma
@@ -271,7 +271,7 @@ Apply DCT directly to $h_j$! $\blacksquare$
 #+caption: Comparison between Riemann and Lebesgue Integrals
 | Feature | Riemann Integral $\int_a^b f(x)\,dx$ | Lebesgue Integral $\int_{[a, b]} f\,dm$ |
 |---------+--------------------------------------+------------------------------------------|
-| *Domain Partition* | $x$-axis (horizontal slices $\Delta x_k$) | $y$-axis (vertical slices of range) |
+| *Domain Partition* | \(x\)-axis (horizontal slices $\Delta x_k$) | \(y\)-axis (vertical slices of range) |
 | *Measurable Sets* | Jordan measurable (boundary has content $0$) | Lebesgue measurable (\(\sigma\)-algebra) |
 | *Dirichlet Function $\chi_{\mathbb{Q}}$* | Not integrable | Integrable (integral $= 0$) |
 | *Limit under Integral* | Requires uniform convergence $f_j \rightrightarrows f$ | Monotone (MCT) or Dominated (DCT) |

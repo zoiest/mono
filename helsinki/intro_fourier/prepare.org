@@ -25,7 +25,7 @@
   3. Brief introduction to the Fast Fourier Transform (FFT)
   4. Fourier transform on the real line $\mathbb{R}$
   5. Rapidly decreasing functions (Schwartz space $\mathcal{S}$) and the Fourier inversion formula
-  6. Fourier transform of $L^2$-functions (Plancherel's theorem and $L^2$-isometry)
+  6. Fourier transform of \(L^2\)-functions (Plancherel's theorem and \(L^2\)-isometry)
   7. Applications (Radon transform, initial value problem for the heat equation, PDEs)
 
 ---
@@ -38,8 +38,8 @@ Unlike abstract measure theory courses, Fourier Analysis treats measure theory a
 1. *You do NOT need:*
    - Tricky Carathéodory outer measure construction proofs.
    - Non-measurable sets (Vitali sets).
-   - Abstract Dynkin $\pi$-$\lambda$ system arguments.
-   - Intricate $\varepsilon$-interval covering gymnastics.
+   - Abstract Dynkin \(\pi\)-\(\lambda\) system arguments.
+   - Intricate \(\varepsilon\)-interval covering gymnastics.
 2. *The measure is almost exclusively 1D Lebesgue measure:*
    All integrals in this course are standard integrals over the real line $\mathbb{R}$ or over compact intervals $[-\pi, \pi]$.
 3. *What you actually use:*
@@ -58,7 +58,7 @@ Unlike abstract measure theory courses, Fourier Analysis treats measure theory a
 |------+--------------------------------------+--------------------------------|
 | *1. Dominated Convergence Theorem (DCT)* | Proving that the Fourier transform $\hat{f}(\xi) = \int f(x) e^{-i x \xi} dx$ is *continuous*, and justifying differentiation under the integral. | [[file:../measure_integral/03_lebesgue_integration_and_convergence_theorems.org][Module 3 (DCT Section)]] |
 | *2. Fubini & Tonelli Theorems* | Evaluating convolutions $(f * g)(x) = \int f(x - y) g(y) \, dy$ and proving the multiplication formula $\int f \hat{g} = \int \hat{f} g$. | [[file:../measure_integral/04_fubini_tonelli_and_product_measures.org][Module 4 (Fubini-Tonelli)]] |
-| *3. $L^1$ and $L^2$ Norms* | Defining integrable functions $\|f\|_1 = \int \lvert f \rvert$ and square-integrable functions $\|f\|_2 = \sqrt{\int \lvert f \rvert^2}$. | [[file:../measure_integral/03_lebesgue_integration_and_convergence_theorems.org][Module 3 ($L^1$ Section)]] |
+| *3. $L^1$ and $L^2$ Norms* | Defining integrable functions $\lVert f \rVert_1 = \int \lvert f \rvert$ and square-integrable functions $\lVert f \rVert_2 = \sqrt{\int \lvert f \rvert^2}$. | [[file:../measure_integral/03_lebesgue_integration_and_convergence_theorems.org][Module 3 ($L^1$ Section)]] |
 | *4. Cauchy-Schwarz & $L^2$ Completeness* | Parseval's identity and Plancherel's theorem: extending the Fourier transform from smooth functions $\mathcal{S}(\mathbb{R})$ to all of $L^2(\mathbb{R})$ by density. | [[file:../measure_integral/05_bridge_to_probability_and_real_analysis.org][Module 5 ($L^p$ Spaces)]] |
 
 ---

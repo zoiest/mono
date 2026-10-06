@@ -30,11 +30,11 @@ The knowledge base is organized into five core theoretical modules and one exhau
 #+caption: Course Map & Navigation
 | Module | File | Key Topics Covered |
 |--------+------+--------------------|
-| *Module 1* | [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][Lebesgue Outer Measure & Carathéodory]] | $n$-intervals, volume $\ell(I)$, outer measure $m^*$, subadditivity, Carathéodory splitting criterion, \(\sigma\)-algebra $\mathrm{Leb}(\mathbb{R}^n)$, null sets, Borel sets $\mathcal{B}(\mathbb{R}^n)$, continuity from below/above, Vitali non-measurable set |
+| *Module 1* | [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][Lebesgue Outer Measure & Carathéodory]] | \(n\)-intervals, volume $\ell(I)$, outer measure $m^*$, subadditivity, Carathéodory splitting criterion, \(\sigma\)-algebra $\mathrm{Leb}(\mathbb{R}^n)$, null sets, Borel sets $\mathcal{B}(\mathbb{R}^n)$, continuity from below/above, Vitali non-measurable set |
 | *Module 2* | [[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][Measurable Mappings & Functions]] | Preimages of open sets, 4 equivalent sublevel criteria, continuous & Borel mappings, algebra of measurable functions, $\limsup/\liminf$ limits, almost everywhere ($a.e.$), dyadic simple function staircase $\phi_k \nearrow f$ |
 | *Module 3* | [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Lebesgue Integration & Convergence Theorems]] | "The Standard Machine", simple function integrals, integral of non-negative functions, Monotone Convergence Theorem (MCT), Fatou's Lemma, escaping mass, $L^1$ space, Dominated Convergence Theorem (DCT), differentiation under integral, Riemann comparison |
 | *Module 4* | [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][Fubini's Theorems & Product Measures]] | Cross-sections $E_x, E^y$, Cavalieri's principle, Tonelli's Theorem ($f \ge 0$), Fubini's Theorem ($f \in L^1$), the Tonelli-Fubini two-step protocol, classic counterexamples ($\frac{x^2-y^2}{(x^2+y^2)^2}$) |
-| *Module 5* | [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][The Bridge to Probability & Real Analysis]] | Full Analysis $\leftrightarrow$ Probability dictionary, Dynkin's $\pi$-$\lambda$ lemma preview, Lebesgue-Stieltjes measures & CDFs, independent random variables, $L^p$ spaces & completeness, Borel-Cantelli & Laws of Large Numbers |
+| *Module 5* | [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][The Bridge to Probability & Real Analysis]] | Full Analysis $\leftrightarrow$ Probability dictionary, Dynkin's \(\pi\)-\(\lambda\) lemma preview, Lebesgue-Stieltjes measures & CDFs, independent random variables, $L^p$ spaces & completeness, Borel-Cantelli & Laws of Large Numbers |
 | *Practice* | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Generated Exercises & Worked Solutions]] | 10 comprehensive problems: Cantor set outer measure, Carathéodory verification, measurable functions, dyadic construction, MCT series, Fatou strict inequality, DCT limits, Gaussian Leibniz differentiation, Tonelli-Fubini, Markov/Chebyshev/Borel-Cantelli |
 
 ---
@@ -54,7 +54,7 @@ Keep this translation matrix in mind throughout your concurrent study:
 | Lebesgue integral $\int f \, d\mu$ | $\int_X f \, d\mu$ | Mathematical Expectation | $\mathbb{E}[X]$ |
 | Almost everywhere ($a.e.$) | a.e. | Almost surely ($a.s.$) | a.s. |
 | Convergence in measure | $f_n \xrightarrow{\mu} f$ | Convergence in probability | $X_n \xrightarrow{\mathbb{P}} X$ |
-| $L^1$-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lVert X_n - X \rVert] \to 0$ |
+| \(L^1\)-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lVert X_n - X \rVert] \to 0$ |
 | Product measure | $\mu \otimes \nu$ | Joint distribution of independent variables | $\mathbb{P}_X \otimes \mathbb{P}_Y$ |
 
 ---

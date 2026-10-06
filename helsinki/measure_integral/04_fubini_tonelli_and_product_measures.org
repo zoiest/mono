@@ -16,7 +16,7 @@
 ** Cartesian Products and Geometry
 Let $p, q \in \mathbb{N}$ and consider the Euclidean space $\mathbb{R}^{p+q} = \mathbb{R}^p \times \mathbb{R}^q$.
 A point $z \in \mathbb{R}^{p+q}$ is written as $z = (x, y)$ with $x \in \mathbb{R}^p$ and $y \in \mathbb{R}^q$.
-If $I \subset \mathbb{R}^p$ and $J \subset \mathbb{R}^q$ are intervals, then $I \times J \subset \mathbb{R}^{p+q}$ is a $(p+q)$-interval with volume:
+If $I \subset \mathbb{R}^p$ and $J \subset \mathbb{R}^q$ are intervals, then $I \times J \subset \mathbb{R}^{p+q}$ is a \((p+q)\)-interval with volume:
 $$ \ell_{p+q}(I \times J) = \ell_p(I) \cdot \ell_q(J). $$
 
 ** Slices (Sections) of Sets and Functions

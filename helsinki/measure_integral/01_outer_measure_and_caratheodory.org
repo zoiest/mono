@@ -22,13 +22,13 @@ The Riemann integral, introduced in 1854, works well for continuous and piecewis
 2. *Fragility of Limit Processes:*
    Passing limits under the Riemann integral sign typically requires *uniform convergence* ($f_j \rightrightarrows f$). Pointwise limits of bounded Riemann integrable functions need not be Riemann integrable.
 3. *Incompleteness of Function Spaces:*
-   The space of Riemann integrable functions equipped with the $L^1$-norm $\|f\|_1 = \int_a^b |f(x)|\,dx$ is not complete (it is not a Banach space). Cauchy sequences of functions may fail to converge to a Riemann integrable limit.
+   The space of Riemann integrable functions equipped with the \(L^1\)-norm $\|f\|_1 = \int_a^b |f(x)|\,dx$ is not complete (it is not a Banach space). Cauchy sequences of functions may fail to converge to a Riemann integrable limit.
 
 ** The Measure Problem
-To resolve this, Henri Lebesgue (1902) inverted the perspective: instead of partitioning the /domain/ (the $x$-axis) into tiny intervals, partition the /range/ (the $y$-axis) and measure the "size" of the preimage sets $E = \{x : y_k \le f(x) < y_{k+1}\}$.
+To resolve this, Henri Lebesgue (1902) inverted the perspective: instead of partitioning the /domain/ (the \(x\)-axis) into tiny intervals, partition the /range/ (the \(y\)-axis) and measure the "size" of the preimage sets $E = \{x : y_k \le f(x) < y_{k+1}\}$.
 
 This requires assigning a non-negative "measure" or generalized volume $m(E) \in [0, \infty]$ to subsets $E \subset \mathbb{R}^n$ satisfying:
-- *Normalization:* For any $n$-interval $I = [a_1, b_1] \times \dots \times [a_n, b_n]$, $m(I) = \prod_{j=1}^n (b_j - a_j)$.
+- *Normalization:* For any \(n\)-interval $I = [a_1, b_1] \times \dots \times [a_n, b_n]$, $m(I) = \prod_{j=1}^n (b_j - a_j)$.
 - *Translation Invariance:* $m(x + E) = m(E)$ for all $x \in \mathbb{R}^n$.
 - *Countable Additivity (\(\sigma\)-additivity):* If $E_1, E_2, \dots$ are pairwise disjoint, then
   $$ m\left(\bigcup_{j=1}^\infty E_j\right) = \sum_{j=1}^\infty m(E_j). $$
@@ -37,18 +37,18 @@ This requires assigning a non-negative "measure" or generalized volume $m(E) \in
 
 ---
 
-* Geometry of $n$-Intervals and Elementary Volume
+* Geometry of \(n\)-Intervals and Elementary Volume
 
-** Definition of $n$-Intervals
-Let $n \in \mathbb{N}$. An *open $n$-interval* in $\mathbb{R}^n$ is the Cartesian product of $n$ bounded open intervals in $\mathbb{R}$:
+** Definition of \(n\)-Intervals
+Let $n \in \mathbb{N}$. An *open \(n\)-interval* in $\mathbb{R}^n$ is the Cartesian product of $n$ bounded open intervals in $\mathbb{R}$:
 $$ I = ]a_1, b_1[ \times \dots \times ]a_n, b_n[ = \{x = (x_1, \dots, x_n) \in \mathbb{R}^n : a_j < x_j < b_j, \, j = 1, \dots, n\}, $$
 where $-\infty < a_j < b_j < +\infty$ for each $j$.
 
-Similarly, closed $n$-intervals $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$ and half-open $n$-intervals are defined with the corresponding endpoints.
-A set $I$ is a *degenerate $n$-interval* if $a_j = b_j$ for some $j \in \{1, \dots, n\}$ (a "flat" slice with empty interior).
+Similarly, closed \(n\)-intervals $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$ and half-open \(n\)-intervals are defined with the corresponding endpoints.
+A set $I$ is a *degenerate \(n\)-interval* if $a_j = b_j$ for some $j \in \{1, \dots, n\}$ (a "flat" slice with empty interior).
 
 ** Elementary Volume (Length)
-The *elementary volume* (or length) of an $n$-interval $I$ is:
+The *elementary volume* (or length) of an \(n\)-interval $I$ is:
 $$ \ell(I) = \prod_{j=1}^n (b_j - a_j). $$
 For the empty set and degenerate intervals, $\ell(\emptyset) = 0$.
 The volume $\ell(I)$ does not depend on whether the interval is open, closed, or half-open.
@@ -67,19 +67,19 @@ In measure theory, working in the extended real line $\dot{\mathbb{R}} = [-\inft
 ** Definition: Lebesgue Cover and Outer Measure
 #+begin_quote
 *Definition (Lebesgue Outer Measure):*
-Let $A \subset \mathbb{R}^n$. A countable (finite or infinite) collection of bounded open $n$-intervals
+Let $A \subset \mathbb{R}^n$. A countable (finite or infinite) collection of bounded open \(n\)-intervals
 $$ \mathcal{F} = \{I_1, I_2, I_3, \dots\} $$
 is called a *Lebesgue cover* of $A$ if
 $$ A \subset \bigcup_{k=1}^\infty I_k. $$
 For each cover $\mathcal{F}$, define the sum of volumes:
 $$ S(\mathcal{F}) = \sum_{k=1}^\infty \ell(I_k) \in [0, +\infty]. $$
-The *$n$-dimensional Lebesgue outer measure* of $A$, denoted $m^*_n(A)$ (or simply $m^*(A)$), is:
+The *\(n\)-dimensional Lebesgue outer measure* of $A$, denoted $m^*_n(A)$ (or simply $m^*(A)$), is:
 $$ m^*(A) = \inf \{ S(\mathcal{F}) : \mathcal{F} \text{ is a Lebesgue cover of } A \}. $$
 #+end_quote
 
 ** Immediate Observations
 1. *Existence of Covers:* $\mathbb{R}^n$ can be covered by the cubes $J_k = ]-k, k[^n$ for $k \in \mathbb{N}$. Hence, every subset $A \subset \mathbb{R}^n$ possesses at least one Lebesgue cover, so the infimum is well-defined in $[0, +\infty]$.
-2. *$\varepsilon$-Approximation Property:* For every $A \subset \mathbb{R}^n$ and every $\varepsilon > 0$, there exists a Lebesgue cover $\mathcal{F}_\varepsilon = \{I_k\}_{k=1}^\infty$ such that:
+2. *\(\varepsilon\)-Approximation Property:* For every $A \subset \mathbb{R}^n$ and every $\varepsilon > 0$, there exists a Lebesgue cover $\mathcal{F}_\varepsilon = \{I_k\}_{k=1}^\infty$ such that:
    $$ \sum_{k=1}^\infty \ell(I_k) \le m^*(A) + \varepsilon. $$
 3. *Domain:* $m^* : \mathcal{P}(\mathbb{R}^n) \to [0, +\infty]$ is defined on *all* subsets of $\mathbb{R}^n$.
 
@@ -115,8 +115,8 @@ Taking $\varepsilon \to 0$ yields the result. $\blacksquare$
   $$ 0 \le m^*(A) \le \sum_{j=1}^\infty m^*(\{x_j\}) = \sum_{j=1}^\infty 0 = 0 \implies m^*(A) = 0. $$
   In particular, the rationals $m^*(\mathbb{Q}) = 0$, and $\mathbb{Q}^n$ has measure zero in $\mathbb{R}^n$.
 - *Lower-Dimensional Subspaces:* Any hyperplane or line segment in $\mathbb{R}^n$ ($n \ge 2$) has outer measure zero.
-- *Outer Measure of $n$-Intervals:*
-  For any bounded $n$-interval $I \subset \mathbb{R}^n$, $m^*(I) = \ell(I)$.
+- *Outer Measure of \(n\)-Intervals:*
+  For any bounded \(n\)-interval $I \subset \mathbb{R}^n$, $m^*(I) = \ell(I)$.
   (The proof uses compactness for closed intervals to deduce $\ell(I) \le \sum \ell(I_k)$, and approximation by open/closed subintervals).
 
 ---
@@ -202,9 +202,9 @@ Hence $E \in \mathrm{Leb}(\mathbb{R}^n)$, and choosing $A = E$ establishes count
 * Borel Sets and Topological Regularity
 
 ** Measurability of Intervals and Open Sets
-1. *Every $n$-interval is measurable:*
+1. *Every \(n\)-interval is measurable:*
    For any open, closed, or half-open interval $I$, $I \in \mathrm{Leb}(\mathbb{R}^n)$ and $m(I) = \ell(I)$.
-2. *Lindelöf's Theorem:* Every open set $G \subset \mathbb{R}^n$ can be expressed as a countable union of bounded open $n$-intervals:
+2. *Lindelöf's Theorem:* Every open set $G \subset \mathbb{R}^n$ can be expressed as a countable union of bounded open \(n\)-intervals:
    $$ G = \bigcup_{k=1}^\infty I_k. $$
 3. *Open and Closed Sets are Measurable:*
    Since each $I_k \in \mathrm{Leb}(\mathbb{R}^n)$ and $\mathrm{Leb}(\mathbb{R}^n)$ is closed under countable unions:
