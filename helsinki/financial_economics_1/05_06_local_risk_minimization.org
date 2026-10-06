@@ -53,7 +53,7 @@ An admissible strategy $\bar{\theta}$ is defined to be *locally risk-minimizing*
 An admissible strategy $\bar{\theta}$ is *locally risk-minimizing* if and only if for all $k = 0, 1, \dots, T-1$:
 1. *Mean Self-Financing Condition:*
    $$ \mathbb{E}[\Delta C(k+1) \mid \mathcal{F}_k] = 0 \tag{5.38} $$
-   That is, the cost process $C(t)$ is a $(\mathbb{P}, \mathbb{F})$-martingale: on average, no external capital is injected or withdrawn.
+   That is, the cost process $C(t)$ is a \((\mathbb{P}, \mathbb{F})\)-martingale: on average, no external capital is injected or withdrawn.
 2. *Orthogonality Condition:*
    $$ \operatorname{Cov}(\Delta C(k+1), \Delta S(k+1) \mid \mathcal{F}_k) = 0 \tag{5.39} $$
    That is, the cost increment $\Delta C(k+1)$ is conditionally uncorrelated with all asset price increments $\Delta S(k+1)$.
@@ -66,7 +66,7 @@ $$ R_\theta(k) = \mathbb{E}[(\Delta C(k+1))^2 \mid \mathcal{F}_k] = \operatornam
 
 Using $\Delta C(k+1) = V(k+1) - V(k) - \theta(k+1) \cdot \Delta S(k+1)$:
 - *First term (Conditional Variance):*
-  Since $V(k)$ is $\mathcal{F}_k$-measurable, it drops out of the variance:
+  Since $V(k)$ is \(\mathcal{F}_k\)-measurable, it drops out of the variance:
   $$ \operatorname{Var}(\Delta C(k+1) \mid \mathcal{F}_k) = \operatorname{Var}\left( V(k+1) - \theta(k+1) \cdot \Delta S(k+1) \;\middle|\; \mathcal{F}_k \right) \tag{5.41} $$
   *Notice that this term depends only on $\theta(k+1)$, and is completely independent of $V(k)$!*
 
@@ -89,7 +89,7 @@ Setting the gradient with respect to $\theta(k+1)$ to zero:
 $$ -2 \operatorname{Cov}(V(k+1), \Delta S(k+1) \mid \mathcal{F}_k) + 2 \operatorname{Var}(\Delta S(k+1) \mid \mathcal{F}_k) \theta(k+1) = 0 \tag{5.48} $$
 which rearranges to:
 $$ \operatorname{Cov}\left( V(k+1) - \theta(k+1) \cdot \Delta S(k+1), \, \Delta S(k+1) \;\middle|\; \mathcal{F}_k \right) = 0 $$
-Since $V(k)$ is $\mathcal{F}_k$-measurable, $\operatorname{Cov}(V(k), \Delta S(k+1) \mid \mathcal{F}_k) = 0$.
+Since $V(k)$ is \(\mathcal{F}_k\)-measurable, $\operatorname{Cov}(V(k), \Delta S(k+1) \mid \mathcal{F}_k) = 0$.
 Thus:
 $$ \operatorname{Cov}(\Delta C(k+1), \Delta S(k+1) \mid \mathcal{F}_k) = 0 $$
 proving Condition (5.39).

@@ -29,7 +29,7 @@ Here, $s_j$ is the annualized *spot interest rate* for maturity $j\Delta$. By co
 
 ** Zero-Coupon Bonds
 A *zero-coupon bond (ZCB)* of maturity $j\Delta$ and face value (nominal value) $1$ pays exactly $1$ unit of currency at time $j\Delta$ and zero at all other times.
-By Formula (3.1), the unique arbitrage-free price of a $j$-period zero-coupon bond at time $0$ is:
+By Formula (3.1), the unique arbitrage-free price of a \(j\)-period zero-coupon bond at time $0$ is:
 $$ P(0, j\Delta) = (1 + s_j)^{-j\Delta} \tag{3.8} $$
 Zero-coupon bonds serve as the fundamental building blocks of fixed-income financial markets.
 
