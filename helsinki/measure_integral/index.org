@@ -37,7 +37,7 @@ The knowledge base is organized into five core theoretical modules and one exhau
 | *Module 3* | [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Lebesgue Integration & Convergence Theorems]] | "The Standard Machine", simple function integrals, integral of non-negative functions, Monotone Convergence Theorem (MCT), Fatou's Lemma, escaping mass, $L^1$ space, Dominated Convergence Theorem (DCT), differentiation under integral, Riemann comparison |
 | *Module 4* | [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][Fubini's Theorems & Product Measures]] | Cross-sections $E_x, E^y$, Cavalieri's principle, Tonelli's Theorem ($f \ge 0$), Fubini's Theorem ($f \in L^1$), the Tonelli-Fubini two-step protocol, classic counterexamples ($\frac{x^2-y^2}{(x^2+y^2)^2}$) |
 | *Module 5* | [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][The Bridge to Probability & Real Analysis]] | Full Analysis $\leftrightarrow$ Probability dictionary, Dynkin's \(\pi\)-\(\lambda\) lemma preview, Lebesgue-Stieltjes measures & CDFs, independent random variables, $L^p$ spaces & completeness, Borel-Cantelli & Laws of Large Numbers |
-| *Practice* | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Generated Exercises & Worked Solutions]] | 10 comprehensive problems: Cantor set outer measure, Carathéodory verification, measurable functions, dyadic construction, MCT series, Fatou strict inequality, DCT limits, Gaussian Leibniz differentiation, Tonelli-Fubini, Markov/Chebyshev/Borel-Cantelli |
+| *Practice* | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Generated Exercises & Worked Solutions]] | 20 comprehensive problems across all 5 modules: Cantor set, Carathéodory, Vitali non-measurable set, \(G_\delta\)/\(F_\sigma\) regularity, measurable functions, composition counterexample, Egorov's theorem, MCT, Fatou, DCT, Leibniz differentiation, Scheffé's lemma, Riemann vs. Lebesgue, Tonelli-Fubini, \(n\)-ball volume, Markov/Chebyshev, \(L^p\) completeness (Riesz-Fischer), Borel-Cantelli I & II |
 
 * Mathematical Conventions & Notational Dictionary
 
@@ -95,12 +95,12 @@ Keep this translation matrix in mind throughout your concurrent study:
 #+caption: Weekly Synchronization Schedule
 | Week | Advanced Course (Lectures & Problem Sets) | Your Self-Study Milestone (`measure_integral`) | Practice Exercise to Solve |
 |------+-------------------------------------------+------------------------------------------------+----------------------------|
-| *W1* | General measure spaces, \(\sigma\)-algebras | Read [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][Module 1]]: $m^*$, Carathéodory, null sets | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 1 & 2]] |
-| *W2* | Random variables, CDFs, Lebesgue-Stieltjes | Read [[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][Module 2]]: sublevel sets, dyadic $\phi_k \nearrow f$ | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 3 & 4]] |
-| *W3* | Abstract integration, Monotone Convergence, Fatou | Read [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Module 3]] (Part 1): MCT & Fatou proofs | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 5 & 6]] |
-| *W4* | Dominated Convergence (DCT), $L^1$ spaces | Read [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Module 3]] (Part 2): DCT & Leibniz rule | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 7 & 8]] |
-| *W5* | Product measures, Fubini-Tonelli, Independence | Read [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][Module 4]]: Tonelli-Fubini two-step method | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problem 9]] |
-| *W6* | $L^p$ spaces, Borel-Cantelli, Laws of Large Numbers | Read [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][Module 5]]: inequalities & tail bounds | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problem 10]] |
+| *W1* | General measure spaces, \(\sigma\)-algebras | Read [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][Module 1]]: $m^*$, Carathéodory, null sets | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 1, 2, 11, 12]] |
+| *W2* | Random variables, CDFs, Lebesgue-Stieltjes | Read [[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][Module 2]]: sublevel sets, dyadic $\phi_k \nearrow f$ | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 3, 4, 13, 14]] |
+| *W3* | Abstract integration, Monotone Convergence, Fatou | Read [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Module 3]] (Part 1): MCT & Fatou proofs | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 5, 6, 15]] |
+| *W4* | Dominated Convergence (DCT), $L^1$ spaces | Read [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Module 3]] (Part 2): DCT & Leibniz rule | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 7, 8, 16]] |
+| *W5* | Product measures, Fubini-Tonelli, Independence | Read [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][Module 4]]: Tonelli-Fubini two-step method | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 9, 17, 18]] |
+| *W6* | $L^p$ spaces, Borel-Cantelli, Laws of Large Numbers | Read [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][Module 5]]: inequalities & tail bounds | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 10, 19, 20]] |
 
 ---
 
