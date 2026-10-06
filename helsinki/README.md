@@ -7,12 +7,24 @@ This Bazel module provides synchronized access between local course materials an
 ```
 Remote (Google Drive)                  Local (mono/helsinki)
 helsinki/                              helsinki/
-├── financial_economics_1/            ├── financial_economics_1/
-│   ├── downloads/                    │   ├── downloads/
-│   └── writings/                     │   └── writings/
-└── maths_physics_3a/                 └── maths_physics_3a/
-    ├── downloads/                        ├── downloads/
-    └── writings/                         └── writings/
+├── 8.01/                              ├── 8.01/
+│   ├── downloads/                     │   ├── downloads/
+│   └── writings/                      │   └── writings/
+├── financial_economics_1/             ├── financial_economics_1/
+│   ├── downloads/                     │   ├── downloads/
+│   └── writings/                      │   └── writings/
+├── maths_physics_3a/                  ├── maths_physics_3a/
+│   ├── downloads/                     │   ├── downloads/
+│   └── writings/                      │   └── writings/
+├── measure_integral/                  ├── measure_integral/
+│   ├── downloads/                     │   ├── downloads/
+│   └── writings/                      │   └── writings/
+├── intro_fourier/                     ├── intro_fourier/
+│   ├── downloads/                     │   ├── downloads/
+│   └── writings/                      │   └── writings/
+└── measure_probability_analysis/      └── measure_probability_analysis/
+    ├── downloads/                         ├── downloads/
+    └── writings/                          └── writings/
 ```
 
 ## How It Works
@@ -26,36 +38,29 @@ helsinki/                              helsinki/
 
 ## Usage
 
-### 1. Sync Financial Economics 1
-From `financial_economics_1/` directory:
-```bash
-cd financial_economics_1
-bazel run :sync
-```
-Or from `helsinki/` root:
-```bash
-bazel run //financial_economics_1:sync
-```
-
-### 2. Sync Maths Physics 3a
-From `maths_physics_3a/` directory:
-```bash
-cd maths_physics_3a
-bazel run :sync
-```
-Or from `helsinki/` root:
-```bash
-bazel run //maths_physics_3a:sync
-```
-
-### 3. Sync All Courses
-From `helsinki/` root:
+### 1. Sync All Sub-Directories
+From `helsinki/` directory:
 ```bash
 bazel run :sync
 ```
+Or from the monorepo root:
+```bash
+bazel run //helsinki:sync
+```
 
-### 4. Dry-Run Mode
+### 2. Sync Individual Courses
+From any course directory (or with target path):
+```bash
+bazel run //helsinki/financial_economics_1:sync
+bazel run //helsinki/maths_physics_3a:sync
+bazel run //helsinki/measure_integral:sync
+bazel run //helsinki/intro_fourier:sync
+bazel run //helsinki/measure_probability_analysis:sync
+bazel run //helsinki/8.01:sync
+```
+
+### 3. Dry-Run Mode
 Preview changes without modifying local or remote files:
 ```bash
-bazel run :sync -- --dry-run
+bazel run //helsinki:sync -- --dry-run
 ```

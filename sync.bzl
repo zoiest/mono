@@ -17,13 +17,19 @@ def _sync_impl(ctx):
             remote_path = "helsinki"
 
     course_name = ctx.attr.course_name
-    root_folder_name = ctx.attr.root_folder_name
+    package_path = ctx.label.package
 
     script_content = """#!/usr/bin/env bash
 set -euo pipefail
 
 WORKSPACE_DIR="${{BUILD_WORKSPACE_DIRECTORY:-$(pwd)}}"
-TARGET_DIR="${{BUILD_WORKING_DIRECTORY:-$(pwd)}}"
+PACKAGE_PATH="{package_path}"
+
+if [ -n "$PACKAGE_PATH" ]; then
+    TARGET_DIR="$WORKSPACE_DIR/$PACKAGE_PATH"
+else
+    TARGET_DIR="${{BUILD_WORKING_DIRECTORY:-$(pwd)}}"
+fi
 
 if command -v python3 >/dev/null 2>&1; then
     PYTHON_BIN="python3"
@@ -74,9 +80,10 @@ exec "$PYTHON_BIN" "$SCRIPT_PATH" \\
         workspace_name = ctx.workspace_name,
         remote_path = remote_path,
         course_name = course_name,
-        root_folder_name = root_folder_name,
+        root_folder_name = ctx.attr.root_folder_name,
         root_folder_id = ctx.attr.root_folder_id,
         token_file = ctx.attr.token_file,
+        package_path = package_path,
     )
 
     ctx.actions.write(

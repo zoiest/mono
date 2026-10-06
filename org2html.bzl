@@ -4,11 +4,19 @@ def _org2html_impl(ctx):
     runner = ctx.actions.declare_file(ctx.label.name + ".sh")
     py_tool = ctx.file._compiler
 
+    package_path = ctx.label.package
+
     script_content = """#!/usr/bin/env bash
 set -euo pipefail
 
 WORKSPACE_DIR="${{BUILD_WORKSPACE_DIRECTORY:-$(pwd)}}"
-TARGET_DIR="${{BUILD_WORKING_DIRECTORY:-$(pwd)}}"
+PACKAGE_PATH="{package_path}"
+
+if [ -n "$PACKAGE_PATH" ]; then
+    TARGET_DIR="$WORKSPACE_DIR/$PACKAGE_PATH"
+else
+    TARGET_DIR="${{BUILD_WORKING_DIRECTORY:-$(pwd)}}"
+fi
 
 if command -v python3 >/dev/null 2>&1; then
     PYTHON_BIN="python3"
@@ -49,6 +57,7 @@ exec "$PYTHON_BIN" "$SCRIPT_PATH" \\
 """.format(
         tool_short_path = py_tool.short_path,
         workspace_name = ctx.workspace_name,
+        package_path = package_path,
     )
 
     ctx.actions.write(
