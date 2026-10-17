@@ -55,6 +55,8 @@ When reading the official lecture notes (=MeasInt17.pdf= by Ilkka Holopainen) al
 | *Subset inclusion* | $A \subset B$ | $A \subseteq B$ | Holopainen writes $\subset$ for non-strict subset inclusion (p. 1). |
 | *Non-negative simple functions* | $Y$ or $Y_n$ | $\mathrm{Simp}^+(\mathbb{R}^n)$ or $\mathcal{S}^+$ | Measurable functions taking finitely many non-negative values (p. 40). |
 | *Elementary volume* | $\ell(I)$ | $\ell(I)$ or $\mathrm{vol}(I)$ | Product of side lengths $\prod_{j=1}^n (b_j - a_j)$ for an \(n\)-interval (p. 5). |
+| *Open intervals* | $]a, b[$ | $(a, b)$ | Reversed brackets denote open/excluded endpoints (Bourbaki / ISO 80000-2 standard; p. 5). |
+| *Half-open intervals & rays* | $]-\infty, t]$, $[a, b[$ | $(-\infty, t]$, $[a, b)$ | Outward bracket indicates excluded endpoint; e.g. $]-\infty, t]$ generates Borel \(\sigma\)-algebra $\mathcal{B}(\mathbb{R})$. |
 | *Almost everywhere* | a.e. / m-m.k. (Finnish) | a.e. (Analysis) / a.s. (Probability) | Holds outside a null set $m(N) = 0$ (p. 36). |
 
 ** Why $\nearrow$ and $\searrow$ Are Used Extensively
@@ -67,6 +69,15 @@ When reading the official lecture notes (=MeasInt17.pdf= by Ilkka Holopainen) al
   - *Continuity of measure from above:* $B_n \searrow B$ with $m(B_1) < \infty \implies m(B_n) \searrow m(B)$.
   - *Monotone Convergence Theorem (MCT):* $0 \le f_n \nearrow f \implies \int f_n \, dm \nearrow \int f \, dm$.
   - *Dyadic simple approximation:* Non-negative measurable $f$ has $\phi_k \nearrow f$.
+
+** Interval Bracket Conventions: Bourbaki vs. Anglo-American
+- In the Finnish/European university tradition (including Holopainen's notes and ISO 80000-2), intervals use reversed square brackets:
+  - *Open interval:* $]a, b[ \iff (a, b) = \{x \in \mathbb{R} : a < x < b\}$.
+  - *Left-open, right-closed ray:* $]-\infty, t] \iff (-\infty, t] = \{x \in \mathbb{R} : x \le t\}$.
+  - *Half-open interval:* $[a, b[ \iff [a, b) = \{x \in \mathbb{R} : a \le x < b\}$.
+  - *Closed interval:* $[a, b] \iff [a, b] = \{x \in \mathbb{R} : a \le x \le b\}$.
+- *Why this convention exists:* It eliminates syntactic confusion with coordinates / ordered pairs $(a, b) \in \mathbb{R}^2$ and inner products $(u, v)$.
+- In these notes and problem sets, you will encounter both notations: $]a, b[$ when referencing the Finnish source texts and $(a, b)$ when citing Anglo-American references (Folland, Schilling). Both formats denote the exact same underlying subsets of $\mathbb{R}$.
 
 ---
 
