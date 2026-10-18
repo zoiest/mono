@@ -1,0 +1,697 @@
+:PROPERTIES:
+:ID:       89837dae-bb79-4a43-88e7-65de89801493
+:ROAM_ALIASES: "Exam Review Notes" "Financial Economics I Exam Notes" "MAST31807 Review"
+:ROAM_REFS: [cite:@lehtomaa2026financial]
+:END:
+#+title: Financial Economics I — Comprehensive Exam Review Notes
+#+subtitle: Tailored Review & Problem-Solving Guide for MAST31807 (University of Helsinki)
+#+author: Antigravity Notes
+#+date: [2026-10-18]
+#+filetags: :economics:finance:helsinki:exam:review:arbitrage:ftap:martingales:
+
+[[id:d97bc23f-4456-4337-825a-6e7708bcb131][← Course Map / Index]]
+
+#+begin_quote
+  *Exam Scope & Exclusions:*
+- *Included & Emphasized:* First-principles probability theory for exercises, unified arbitrage definitions across the course, 1-period market model & FTAP 1, *Equations (5.4) and (5.5) in Section 5.1 of the lecture notes (Example 5.3)*, market completeness & FTAP 2, 1-period portfolio selection & utility theory, *Exercises 5.4 & 5.5 from Problem Set 5*, and multi-period market models (self-financing condition, martingales, FTAP 1 & 2, CRR binomial model).
+- *Explicitly Excluded:* Page 22 calculations (Redington parallel shift flat yield arithmetic), completeness proof in Theorem 5.8, Lemma 5.12 and proof of Theorem 5.10 (p. 48), and Section 5.2.3 onwards (multi-period portfolio selection, local risk minimization).
+#+end_quote
+
+---
+
+* Probability Theory Primer (Exercise-Level Foundation)
+
+/If you haven't taken a formal probability theory course yet, don't worry: everything you need for Financial Economics I can be understood concretely using finite sets, simple averages, and vectors./
+
+** States of Nature and the Sample Space $\Omega$
+In finance, future asset prices are uncertain. We model all possible "states of the world" at time $t = 1$ by a finite sample space:
+$$ \Omega = \{\omega_1, \omega_2, \dots, \omega_M\} $$
+- Each $\omega_m$ represents one specific scenario (e.g., $\omega_1 = \text{"Boom"}$, $\omega_2 = \text{"Normal"}$, $\omega_3 = \text{"Recession"}$).
+- Each state has a physical (real-world) probability $\mathbb{P}(\{\omega_m\}) = p_m > 0$.
+- Probabilities must sum to $1$:
+  $$ \sum_{m=1}^M p_m = p_1 + p_2 + \dots + p_M = 1 $$
+
+** Random Variables as Payoff Vectors
+A *random variable* $X$ is simply a rule that assigns a real number $X(\omega_m)$ to each possible state $\omega_m$.
+In our finite setting, $X$ is just a column vector of $M$ numbers:
+$$ X = \begin{pmatrix} X(\omega_1) \\ X(\omega_2) \\ \vdots \\ X(\omega_M) \end{pmatrix} \in \mathbb{R}^M $$
+
+** Almost Surely (a.s.) and Events of Probability 1
+
+#+begin_quote
+*The Plain English Meaning of "Almost Surely":*
+When a mathematician or financial economist says a statement holds *"almost surely"* (abbreviated *a.s.*, or in Finnish /melkein varmasti/), they mean:
+$$ \mathbb{P}(\text{Statement Holds}) = 1 $$
+That is, the statement is true with *100% certainty* (probability 1). Any possible exceptions can only happen on an event with zero probability ($\mathbb{P} = 0$).
+#+end_quote
+
+*** The Finite Market Simplification (Crucial for Exams!)
+In all one-period and multi-period tree models in this course, we assume the sample space is finite:
+$$ \Omega = \{\omega_1, \omega_2, \dots, \omega_M\} \quad \text{with } \mathbb{P}(\{\omega_m\}) > 0 \text{ for all } m = 1, \dots, M $$
+Because *every single state $\omega_m$ has strictly positive probability*, there are *no zero-probability states*.
+Therefore, throughout this course:
+$$ \mathbf{\text{Property holds almost surely (a.s.)}} \iff \mathbf{\text{Property holds in EVERY state } \omega_m \in \Omega!} $$
+
+*** Why do textbooks and exam questions write "a.s." instead of "always"?
+1. *Universal Mathematical Rigor:* In advanced probability and continuous-time finance (e.g., Brownian motion, Black-Scholes), individual outcomes have probability $0$. Stating theorems with "almost surely" ensures the results are mathematically sound across both discrete and continuous settings.
+2. *Equivalence of Measures ($\mathbb{P} \sim \mathbb{Q}$):* Two probability measures $\mathbb{P}$ and $\mathbb{Q}$ are equivalent if they agree on what is impossible: $\mathbb{P}(A) = 0 \iff \mathbb{Q}(A) = 0$. Hence, an event that holds \(\mathbb{P}\)-almost surely also holds \(\mathbb{Q}\)-almost surely!
+
+*** Cheat Sheet: Translating "a.s." in Exam Questions
+#+caption: How to Read and Translate "Almost Surely" (a.s.) in Financial Economics
+| Formula in Notes / Exam | Formal Meaning | What it Means in Practice on the Exam |
+|-------------------------+----------------+---------------------------------------|
+| $S(1)\theta \ge 0$ *a.s.* | $\mathbb{P}(S(1)\theta \ge 0) = 1$ | Portfolio suffers *no loss in any state*: $\sum_{n=1}^N \theta_n S_n(1, \omega_m) \ge 0$ for all $m = 1, \dots, M$. |
+| $X = S(1)\theta$ *a.s.* | $\mathbb{P}(X = S(1)\theta) = 1$ | Portfolio replicates claim $X$ *in every single state*: $(S(1)\theta)_m = X(\omega_m)$ for all $m$. |
+| $\varphi_1 = \varphi_2$ *a.s.* | $\mathbb{P}(\varphi_1 = \varphi_2) = 1$ | Deflator is unique: $\varphi_1(\omega_m) = \varphi_2(\omega_m)$ for all possible outcomes. |
+| $S(1)\theta \ge X$ *a.s.* | $\mathbb{P}(S(1)\theta \ge X) = 1$ | Super-replication: Portfolio payoff *at least covers liability $X$ in every state*. |
+| $S_1(1) = 1$ *a.s.* | $\mathbb{P}(S_1(1) = 1) = 1$ | Risk-free asset: Pays exactly $1$ euro regardless of what state of nature occurs. |
+| $I_2$ is a constant *a.s.* | $\operatorname{Var}(I_2) = 0$ | The random variable does not vary across states; it is a deterministic constant. |
+
+** Mathematical Expectation (Expected Value)
+The *expected value* $\mathbb{E}[X]$ is the probability-weighted average of the values $X$ can take:
+$$ \mathbb{E}[X] = \sum_{m=1}^M \mathbb{P}(\{\omega_m\}) X(\omega_m) = p_1 X(\omega_1) + p_2 X(\omega_2) + \dots + p_M X(\omega_M) $$
+
+  *Crucial Properties of Expectation:*
+1. *Linearity:* For any constants $a, b \in \mathbb{R}$ and random variables $X, Y$:
+   $$ \mathbb{E}[aX + bY] = a\mathbb{E}[X] + b\mathbb{E}[Y] $$
+2. *Expectation of a Constant:* If $c$ is a constant, $\mathbb{E}[c] = c$.
+3. *Positivity:* If $X(\omega_m) \ge 0$ for all $m$, then $\mathbb{E}[X] \ge 0$. If in addition $X(\omega_m) > 0$ for at least one state with $p_m > 0$, then $\mathbb{E}[X] > 0$.
+
+** Variance and Covariance (Measuring Risk and Co-movement)
+- *Variance* measures the dispersion (squared deviation) around the expected value:
+  $$ \operatorname{Var}(X) = \mathbb{E}\left[(X - \mathbb{E}[X])^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2 $$
+  - *Properties:* $\operatorname{Var}(X) \ge 0$. For constant $c$, $\operatorname{Var}(c) = 0$, and $\operatorname{Var}(aX + b) = a^2 \operatorname{Var}(X)$.
+- *Covariance* measures how two random variables vary together:
+  $$ \operatorname{Cov}(X, Y) = \mathbb{E}\left[(X - \mathbb{E}[X])(Y - \mathbb{E}[Y])\right] = \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y] $$
+  - *Properties:*
+    - $\operatorname{Cov}(X, X) = \operatorname{Var}(X)$.
+    - Symmetry: $\operatorname{Cov}(X, Y) = \operatorname{Cov}(Y, X)$.
+    - Bilinearity: $\operatorname{Cov}(aX + bY, Z) = a\operatorname{Cov}(X, Z) + b\operatorname{Cov}(Y, Z)$.
+    - Variance of a sum: $\operatorname{Var}(aX + bY) = a^2 \operatorname{Var}(X) + b^2 \operatorname{Var}(Y) + 2ab\operatorname{Cov}(X, Y)$.
+
+** Independence
+Two random variables $X$ and $Y$ are *independent* if knowledge of one provides no information about the other.
+- If $X$ and $Y$ are independent:
+  $$ \mathbb{E}[XY] = \mathbb{E}[X] \mathbb{E}[Y] \implies \operatorname{Cov}(X, Y) = 0 $$
+
+** Information Filtrations and Conditional Expectation in Trees
+In a multi-period model ($t = 0, 1, \dots, T$), information is revealed gradually over time.
+- At time $0$, we only know the starting point (root node).
+- At time $1$, nature selects a branch, so we know which sub-group of states we are in.
+- A *filtration* $\mathbb{F} = (\mathcal{F}_0, \mathcal{F}_1, \dots, \mathcal{F}_T)$ represents this increasing knowledge:
+  $$ \mathcal{F}_0 \subseteq \mathcal{F}_1 \subseteq \dots \subseteq \mathcal{F}_T $$
+- *Conditional Expectation $\mathbb{E}[X \mid \mathcal{F}_t]$:*
+  At time $t$, given that we have arrived at a specific node/event $A \in \mathcal{F}_t$, what is the best estimate of the future payoff $X$?
+  $$ \mathbb{E}[X \mid A] = \sum_{\omega \in A} X(\omega) \mathbb{P}(\{\omega\} \mid A) = \sum_{\omega \in A} X(\omega) \frac{\mathbb{P}(\{\omega\})}{\mathbb{P}(A)} $$
+  *Intuition:* $\mathbb{E}[X \mid \mathcal{F}_t]$ is simply the expected value calculated over the remaining possible future branches emanating from your current node at time $t$!
+
+** The "Grand Dictionary" of Asset Pricing Variables
+#+caption: Universal Translation Dictionary of Pricing Variables
+| Concept | Symbol | Definition / Formula | Economic Meaning |
+|---------+--------+----------------------+------------------|
+| *Physical Probability* | $p_m = \mathbb{P}(\{\omega_m\})$ | $p_m > 0, \sum p_m = 1$ | The actual real-world probability of state $\omega_m$. |
+| *State Price Vector* | $\psi = (\psi_1, \dots, \psi_M)^T$ | $\psi_m > 0$ for all $m$ | The price today of receiving $1$ euro in state $\omega_m$ and $0$ otherwise (Arrow-Debreu security). |
+| *State Price Deflator (Pricing Kernel)* | $\varphi(\omega_m)$ | $\varphi(\omega_m) = \frac{\psi_m}{p_m} > 0$ | A positive random variable such that $S(0) = \mathbb{E}[\varphi S(1)]$. |
+| *Risk-Neutral Measure* | $\mathbb{Q} = (q_1, \dots, q_M)^T$ | $q_m = (1+i)\psi_m = \frac{\varphi(\omega_m)}{\mathbb{E}[\varphi]} p_m$ | Artificial probabilities where discounted asset prices are martingales. |
+
+$$ \text{Universal Connection:} \quad S(0) = \sum_{m=1}^M \psi_m S(1, \omega_m) = \mathbb{E}_\mathbb{P}[\varphi S(1)] = \frac{1}{1+i} \mathbb{E}_\mathbb{Q}[S(1)] $$
+
+---
+
+* Arbitrage Theory & Fixed Income (Deterministic & Stochastic Rates)
+
+** Universal Definition of Arbitrage
+An *arbitrage opportunity* is a financial trading strategy that:
+1. Costs non-positive capital to enter at time $0$ ($S(0)\theta \le 0$),
+2. Has *zero risk of loss* in every future state ($S(1,\omega)\theta \ge 0$ for all $\omega$),
+3. Has a *strictly positive chance of making a profit* ($S(0)\theta < 0$ or $\mathbb{P}(S(1)\theta > 0) > 0$).
+
+#+begin_quote
+  *Equivalence:* If a riskless bank deposit exists, receiving cash at time $0$ ($S(0)\theta < 0$) can be deposited into the bank to produce guaranteed positive terminal wealth with zero initial outlay. Thus, both forms of arbitrage are equivalent.
+#+end_quote
+
+** Deterministic Interest Rate Model & Present Value
+Let $\Delta > 0$ be the period length. Over period $[(j-1)\Delta, j\Delta)$, the annualized rate is $i_j > -1$.
+A deposit $C$ accumulates over period $j$ to $C(1+i_j)^\Delta$. Over $n$ periods, it grows to:
+$$ C \prod_{k=1}^n (1+i_k)^\Delta $$
+
+*** Theorem 2.1 (Arbitrage-Free Price of Cash Flows)
+For a deterministic cash flow $B(\Delta), B(2\Delta), \dots, B(T\Delta)$, the unique arbitrage-free price at time $0$ is:
+$$ V(0) = \sum_{j=1}^T \left[\prod_{k=1}^j (1+i_k)\right]^{-\Delta} B(j\Delta) $$
+
+*** Arbitrage Exploitation Strategy on the Exam
+- *If Market Price $V > V(0)$ (Overpriced):*
+  1. Sell (short) the cash flow at market price $V$, pocketing $+V$.
+  2. Create $T$ separate bank deposit accounts: into account $j$, deposit $D_j = [\prod_{k=1}^j (1+i_k)]^{-\Delta} B(j\Delta)$. Total initial cost is $\sum D_j = V(0)$.
+  3. Immediate riskless profit at $t = 0$: $V - V(0) > 0$.
+  4. At each future date $j\Delta$, account $j$ has grown to exactly $D_j \prod_{k=1}^j (1+i_k)^\Delta = B(j\Delta)$, which pays off the contractual obligation. Future net balance is identically $0$.
+- *If Market Price $V < V(0)$ (Underpriced):*
+  1. Buy the cash flow at price $V$.
+  2. Fund the purchase by borrowing $V$ at time $0$ via fractional loans matched to future payments.
+  3. Repayments at each date $j\Delta$ are strictly less than $B(j\Delta)$, leaving guaranteed positive cash inflows at future dates with zero initial capital.
+
+** Term Structure and Forward Rates
+- *Spot rate $s_j$:* Annualized rate for an investment from $0$ to $j\Delta$. Capital $C$ grows to $C(1+s_j)^{j\Delta}$.
+- *Zero-Coupon Bond (ZCB):* Pays $1$ at maturity $j\Delta$. Price at $t = 0$:
+  $$ P(0, j\Delta) = (1+s_j)^{-j\Delta} $$
+- *Forward rate $f_j$:* Annualized rate contracted at time $0$ for borrowing/lending during the future interval $[(j-1)\Delta, j\Delta)$.
+
+*** Forward Rate Derivation & Multi-Period Relation
+By comparing a direct spot deposit with a rolled-over forward deposit:
+$$ (1+s_j)^{j\Delta} = (1+s_{j-1})^{(j-1)\Delta} (1+f_j)^\Delta \implies f_j = \left[\frac{(1+s_j)^{j\Delta}}{(1+s_{j-1})^{(j-1)\Delta}}\right]^{1/\Delta} - 1 $$
+By telescoping multiplication:
+$$ (1+s_k)^{k\Delta} = \prod_{j=1}^k (1+f_j)^\Delta $$
+
+*** Arbitrage-Free Condition: $f_j \ge 0$
+Assuming cash can be held without storage cost (earning at least $0\%$ nominal interest):
+$$ \text{No Arbitrage} \iff f_j \ge 0 \quad \forall j \ge 1 \iff (1+s_k)^k \ge (1+s_j)^j \quad \forall k \ge j $$
+
+  *The Arbitrage Strategy if $f_j < 0$ (Problem Set 2, Exercise 2.1):*
+If $f_j < 0$, then $(1+s_j)^j < (1+s_{j-1})^{j-1}$.
+1. At $t = 0$, borrow amount $C$ for $j$ periods at spot rate $s_j$. (Liability at $t = j$: $C(1+s_j)^j$).
+2. Deposit $C$ for $j-1$ periods at spot rate $s_{j-1}$.
+3. At $t = j-1$, withdraw the deposit: you have $C(1+s_{j-1})^{j-1}$.
+4. Hold this money as physical cash until $t = j$ (earning $0\%$).
+5. At $t = j$, repay the loan: Net profit is:
+   $$ C(1+s_{j-1})^{j-1} - C(1+s_j)^j > 0 $$
+Zero cash spent at $t = 0$, zero liabilities remain, guaranteed risk-free profit!
+
+** Duration, Convexity, and Immunization Theory
+Let a cash flow have inflows $A_j$ and liabilities $L_j$. The net surplus under flat yield $s$ is:
+$$ f(s) = V_A(s) - V_L(s) = \sum_{j=1}^T (A_j - L_j)(1+s)^{-j} $$
+
+- *Macaulay Duration $D(s)$:* Weighted average time to payment:
+  $$ D(s) = \frac{\sum_{j=1}^T j A_j (1+s)^{-j}}{\sum_{j=1}^T A_j (1+s)^{-j}} = \sum_{j=1}^T j \cdot w_j, \quad w_j = \frac{A_j(1+s)^{-j}}{V_A(s)} $$
+- *Modified Duration $D^*(s)$:*
+  $$ D^*(s) = \frac{D(s)}{1+s} = -\frac{1}{V(s)}\frac{dV(s)}{ds} \implies \frac{\Delta V}{V} \approx -D^*(s) \Delta s $$
+- *Duration of a Constant Annuity $B(1) = \dots = B(T) = A$ (Problem Set 3, Ex 3.1):*
+  $$ D(s) = \frac{1+s}{s} - \frac{T}{(1+s)^T - 1} $$
+
+*** Redington Immunization (Theorem 3.2)
+To protect net surplus against small interest rate shifts around $s_0$, require:
+1. *Value Matching:* $V_A(s_0) = V_L(s_0) \implies f(s_0) = 0$.
+2. *Duration Matching:* $D_A(s_0) = D_L(s_0) \implies f'(s_0) = 0$.
+3. *Convexity Dominance:* $C_A(s_0) > C_L(s_0) \implies f''(s_0) > 0$.
+Under these conditions, $s_0$ is a strict local minimum: any small shock $\Delta s \ne 0$ makes $f(s_0 + \Delta s) \approx \frac{1}{2} f''(s_0)(\Delta s)^2 > 0$ (surplus increases!).
+
+*** Mathematical Property: Duration Decreases with Interest Rate (Ex 3.2)
+Let $M(s) = \frac{\sum j^2 A_j (1+s)^{-j}}{g(s)}$. Treating $w_j$ as a probability distribution:
+$$ D(s) = \mathbb{E}_w[J], \quad M(s) = \mathbb{E}_w[J^2] $$
+By non-negativity of variance:
+$$ \operatorname{Var}_w(J) = M(s) - D(s)^2 \ge 0 \implies M(s) \ge D(s)^2 $$
+Differentiating duration directly:
+$$ \frac{d D(s)}{ds} = -\frac{1}{1+s}\left[M(s) - D(s)^2\right] = -\frac{1}{1+s} \operatorname{Var}_w(J) < 0 $$
+Thus, *duration is strictly decreasing in $s$*.
+
+#+begin_quote
+  *Conceptual Note on Page 22 (Calculation Excluded):*
+Classical Redington immunization assumes a flat yield curve that shifts by a constant parallel amount. As shown conceptually on page 22 of the lecture notes, assuming that interest rates of all maturities always move by the identical constant parallel amount permits an arbitrage opportunity (constructing a butterfly of maturities that captures positive convexity for free). In realistic models, parallel shifts are restricted to eliminate arbitrage.
+#+end_quote
+
+---
+
+* The One-Period Market Model & FTAP 1
+
+** Model Setup
+- Finite state space $\Omega = \{\omega_1, \dots, \omega_M\}$, with physical probabilities $\mathbb{P}(\{\omega_m\}) > 0$.
+- $N$ traded securities:
+  - Time $0$ price vector: $S(0) = (S_1(0), \dots, S_N(0))^T \in \mathbb{R}^N$.
+  - Time $1$ payoff matrix: $S(1) \in \mathbb{R}^{M \times N}$, where row $m$ is $S(1, \omega_m)^T$.
+- Portfolio: $\theta = (\theta_1, \dots, \theta_N)^T \in \mathbb{R}^N$.
+  - Initial cost: $S(0)\theta = \sum_{n=1}^N \theta_n S_n(0)$.
+  - Terminal payoff in state $\omega_m$: $(S(1)\theta)_m = \sum_{n=1}^N \theta_n S_n(1, \omega_m)$.
+
+** First Fundamental Theorem of Asset Pricing (FTAP 1)
+#+begin_quote
+  *Theorem 5.3 (FTAP 1):*
+The one-period market model is *arbitrage-free* if and only if there exists a *strictly positive state price vector* $\psi \in \mathbb{R}^M$ ($\psi_m > 0$ for all $m$) such that:
+$$ S(0) = S(1)^T \psi $$
+Equivalently:
+1. There exists a strictly positive *pricing kernel (deflator)* $\varphi > 0$ such that $S_n(0) = \mathbb{E}[\varphi S_n(1)]$ for all $n$.
+2. When Security 1 is a riskless bond ($S_1(0)=1, S_1(1)=1+i$), there exists an *equivalent martingale measure $\mathbb{Q} \sim \mathbb{P}$* ($q_m > 0, \sum q_m = 1$) such that:
+   $$ S_n(0) = \frac{1}{1+i} \mathbb{E}_\mathbb{Q}[S_n(1)] $$
+#+end_quote
+
+** Practical Arbitrage Detection at the Exercise Level
+
+*** Case 1: Two Securities (Bond + Stock) — Problem Set 4, Exercises 4.1 & 4.2
+Let Security 1 be a bond with interest rate $i \ge 0$, and Security 2 be a share with possible payoffs $0 < \alpha_1 < \alpha_2 < \dots < \alpha_M$ and current price $p$.
+$$ \text{Market is Arbitrage-Free} \iff p \in \left(\frac{\alpha_1}{1+i}, \frac{\alpha_M}{1+i}\right) $$
+
+- *Necessity ($\implies$):* By FTAP 1, $p = \sum_{m=1}^M \psi_m \alpha_m$. Since $\frac{1}{1+i} = \sum \psi_m$ and $\alpha_1 < \alpha_m < \alpha_M$:
+  $$ \frac{\alpha_1}{1+i} = \alpha_1 \sum \psi_m < \sum \psi_m \alpha_m = p < \alpha_M \sum \psi_m = \frac{\alpha_M}{1+i} $$
+- *Sufficiency ($\impliedby$):* If $p$ is strictly inside the bounds, any zero-cost portfolio $\theta_1 \frac{1}{1+i} + \theta_2 p = 0 \implies \theta_1 = -(1+i)p\theta_2$.
+  Its payoff is $S(1)\theta = \theta_2 [S_2(1) - (1+i)p]$.
+  Since $(1+i)p \in (\alpha_1, \alpha_M)$, the term $[S_2(1) - (1+i)p]$ is strictly negative in state $\omega_1$ and strictly positive in state $\omega_M$.
+  Whether $\theta_2 > 0$ or $\theta_2 < 0$, the payoff is strictly negative in at least one state. Hence, no arbitrage can exist!
+
+*** Case 2: Three Securities & Linear System Solving — Problem Set 4, Exercise 4.4
+Consider $\Omega = \{\omega_1, \omega_2, \omega_3\}$, riskless rate $i = 0$ ($S_1(0)=1, S_1(1)=(1,1,1)^T$).
+Two risky assets have payoffs:
+$S_2(1) = (3, 3, 1)^T$, price $p$.
+$S_3(1) = (1, 1, 3)^T$, price $q$.
+
+To find all arbitrage-free price pairs $(p, q)$, write the system $S(0) = S(1)^T \psi$:
+$$ \begin{cases} 1 = \psi_1 + \psi_2 + \psi_3 \\ p = 3(\psi_1 + \psi_2) + \psi_3 \\ q = (\psi_1 + \psi_2) + 3\psi_3 \end{cases} $$
+Let $a = \psi_1 + \psi_2$ and $b = \psi_3$. The equations become:
+$$ a + b = 1, \quad 3a + b = p, \quad a + 3b = q $$
+Summing the last two: $p + q = 4(a+b) = 4 \implies q = 4 - p$.
+Solving for $a$ and $b$:
+$$ a = \frac{p-1}{2}, \quad b = \frac{3-p}{2} $$
+For a state price vector to exist, we need $a > 0$ and $b > 0$:
+$$ a > 0 \implies p > 1, \quad b > 0 \implies p < 3 $$
+Whenever $p \in (1, 3)$, we can choose $\psi_1 = \psi_2 = a/2 > 0$ and $\psi_3 = b > 0$.
+  *Conclusion:* The market is arbitrage-free if and only if $p \in (1, 3)$ and $q = 4 - p$.
+
+*** Case 3: Forward Contract Pricing on a Share — Problem Set 4, Exercise 4.3
+A contract promises to buy one share at time $1$ for pre-agreed price $\gamma$.
+Payoff at $t = 1$: $X = S_2(1) - \gamma S_1(1)$.
+By linearity of replication:
+$$ V(0) = S_2(0) - \gamma S_1(0) = p - \frac{\gamma}{1+i} $$
+
+---
+
+** Deep Focus: Equations (5.4) and (5.5) in Section 5.1 of Lecture Notes
+/(Lecturer: Jaakko Lehtomaa, Lecture Notes pages 30–31, Example 5.3)/
+
+#+begin_quote
+  *The Core Theoretical Lesson of Section 5.1:*
+In traditional finance (Section 4), it was naively assumed that every risky asset must offer a positive expected return: $P_0 = \frac{\mathbb{E}[P_1]}{1 + i'}$ with $i' > 0$.
+  *Example 5.3 proves that this naive assumption is completely FALSE and directly creates ARBITRAGE!*
+Insurance/hedging assets must have a *strictly negative expected return*, and pricing them with a positive risk premium violates absence of arbitrage.
+#+end_quote
+
+*** Step 1: The Base Market (Example 5.1)
+- Two states of nature: $\Omega = \{\omega_1, \omega_2\}$.
+  Physical probabilities: $\mathbb{P}(\{\omega_1\}) = q \in (0, 1)$, $\mathbb{P}(\{\omega_2\}) = 1 - q$.
+- Security 1 (Bond): $i = 0$, so $S_1(0) = 1$ and $S_1(1) = (1, 1)^T$.
+- Security 2 (Stock): $S_2(0) = p$, with terminal payoffs $S_2(1, \omega_1) = \alpha$ and $S_2(1, \omega_2) = \beta$, where:
+  $$ 0 < \alpha < \beta $$
+- For the market to be arbitrage-free, we must have $p \in (\alpha, \beta)$.
+- By Theorem 5.3, the unique state prices are:
+  $$ \psi(\omega_1) = \frac{\beta - p}{\beta - \alpha}, \quad \psi(\omega_2) = \frac{p - \alpha}{\beta - \alpha} $$
+- The unique state price deflator (pricing kernel) is:
+  $$ \varphi(\omega_1) = \frac{\psi(\omega_1)}{\mathbb{P}(\omega_1)} = \frac{\beta - p}{q(\beta - \alpha)}, \quad \varphi(\omega_2) = \frac{\psi(\omega_2)}{\mathbb{P}(\omega_2)} = \frac{p - \alpha}{(1-q)(\beta - \alpha)} $$
+
+*** Step 2: Equation (5.4) — Positive Risk Premium on the Stock
+Because Security 2 is a risky investment, investors demand a positive expected return (a positive risk premium):
+$$ p < \mathbb{E}[S_2(1)] = q\alpha + (1-q)\beta \tag{5.4} $$
+This means the stock is discounted at an expected rate of return $i' > 0$:
+$$ p = \frac{\mathbb{E}[S_2(1)]}{1 + i'}, \quad i' > 0 $$
+
+Let us analyze what Inequality (5.4) implies algebraically for the probability $q$:
+$$ p < q\alpha + (1-q)\beta = \beta - q(\beta - \alpha) $$
+$$ q(\beta - \alpha) < \beta - p $$
+Since $\beta > \alpha$, dividing by $(\beta - \alpha) > 0$ yields:
+$$ q < \frac{\beta - p}{\beta - \alpha} = \psi(\omega_1) \tag{*} $$
+  *Crucial insight:* The physical probability $q = \mathbb{P}(\omega_1)$ is *strictly smaller* than the state price $\psi(\omega_1)$!
+
+*** Step 3: Equation (5.5) — Introducing Security 3 (Insurance Against Downturn)
+Now add a new derivative, Security 3, whose terminal payoff is:
+$$ S_3(1, \omega_1) = \beta, \quad S_3(1, \omega_2) = 0 $$
+- Notice that Security 3 pays $\beta > 0$ only in state $\omega_1$ (when the stock crashes to its low price $\alpha$).
+- In state $\omega_2$ (when the stock booms to $\beta$), Security 3 pays $0$.
+- Thus, Security 3 is *negatively correlated* with the stock: it is an *insurance contract* against market downturns.
+
+To prevent arbitrage in the extended market, Theorem 5.3 dictates that Security 3 must be priced using the pricing deflator $\varphi$ (or state price $\psi$):
+$$ S_3(0) = \mathbb{E}[\varphi S_3(1)] = \varphi(\omega_1) S_3(1, \omega_1) q + \varphi(\omega_2) S_3(1, \omega_2) (1-q) $$
+$$ S_3(0) = \left[\frac{\beta - p}{q(\beta - \alpha)}\right] \cdot \beta \cdot q + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5} $$
+Equivalently, via state prices:
+$$ S_3(0) = \psi(\omega_1) S_3(1, \omega_1) + \psi(\omega_2) S_3(1, \omega_2) = \left(\frac{\beta - p}{\beta - \alpha}\right) \beta + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5} $$
+
+*** Step 4: The Counter-Intuitive Discovery — Negative Expected Return!
+What is the mathematical expectation of Security 3's terminal payoff under the real-world probability $\mathbb{P}$?
+$$ \mathbb{E}[S_3(1)] = q \cdot \beta + (1-q) \cdot 0 = q\beta $$
+
+Now substitute the inequality $q < \frac{\beta - p}{\beta - \alpha}$ from Equation (5.4) / (*):
+$$ \mathbb{E}[S_3(1)] = q\beta < \left(\frac{\beta - p}{\beta - \alpha}\right)\beta = S_3(0) $$
+Look at this startling inequality:
+$$ S_3(0) > \mathbb{E}[S_3(1)] \iff \frac{\mathbb{E}[S_3(1)] - S_3(0)}{S_3(0)} < 0 $$
+
+#+begin_quote
+  *Crucial Economic Lesson:*
+  *Buying Security 3 causes losses on average!*
+The expected rate of return of Security 3 is *strictly negative*.
+Why are investors willing to pay a price $S_3(0)$ that is higher than the expected future payoff $\mathbb{E}[S_3(1)]$?
+Because Security 3 pays off exactly when things go badly ($\omega_1$, market crash). It provides valuable insurance/hedging protection. Investors gladly pay an "insurance premium" (accepting an expected loss) to hedge their downside risk!
+#+end_quote
+
+*** Step 5: Why Traditional Pricing Creates Arbitrage
+Suppose someone ignorant of arbitrage pricing applies the naive formula from Section 4:
+/"Security 3 is a risky asset, so it must offer a positive expected return $i'' > 0$":/
+$$ S_3^{\text{naive}}(0) = \frac{\mathbb{E}[S_3(1)]}{1 + i''}, \quad \text{with } i'' > 0 $$
+Since $i'' > 0$, this naive price satisfies:
+$$ S_3^{\text{naive}}(0) < \mathbb{E}[S_3(1)] < \frac{\beta(\beta - p)}{\beta - \alpha} = S_3(0) $$
+Thus, Security 3 is *underpriced* on the market!
+
+  *Constructing the Arbitrage Trade (Exam Solution):*
+1. Replicate Security 3 using Bond ($S_1$) and Stock ($S_2$):
+   $$ \theta_1 \cdot 1 + \theta_2 \cdot \alpha = \beta \quad (\text{state } \omega_1) $$
+   $$ \theta_1 \cdot 1 + \theta_2 \cdot \beta = 0 \quad (\text{state } \omega_2) $$
+   Subtracting gives: $\theta_2(\beta - \alpha) = -\beta \implies \theta_2 = -\frac{\beta}{\beta - \alpha} < 0$ (short the stock).
+   From the second equation: $\theta_1 = -\theta_2 \beta = \frac{\beta^2}{\beta - \alpha} > 0$ (buy bonds).
+   The cost of this replicating portfolio is:
+   $$ S(0)\theta = \theta_1 \cdot 1 + \theta_2 \cdot p = \frac{\beta^2}{\beta - \alpha} - \frac{\beta p}{\beta - \alpha} = \frac{\beta(\beta - p)}{\beta - \alpha} $$
+2. Execute the arbitrage strategy at time $0$:
+   - *Buy 1 unit of Security 3* at market price $S_3^{\text{naive}}(0)$ (outflow: $-S_3^{\text{naive}}(0)$).
+   - *Sell (short) the replicating portfolio $\theta$* (inflow: $+S(0)\theta = \frac{\beta(\beta - p)}{\beta - \alpha}$).
+   - *Immediate cash pocketed at time 0:*
+     $$ \frac{\beta(\beta - p)}{\beta - \alpha} - S_3^{\text{naive}}(0) > 0 $$
+3. Payoffs at time 1:
+   - State $\omega_1$: Security 3 pays $\beta$. The short portfolio liability is $\theta_1 + \alpha\theta_2 = \beta$. Net: $\beta - \beta = 0$.
+   - State $\omega_2$: Security 3 pays $0$. The short portfolio liability is $\theta_1 + \beta\theta_2 = 0$. Net: $0 - 0 = 0$.
+4. *Conclusion:* Free money today with zero future liability in every state. This is a pure *arbitrage opportunity*!
+
+---
+
+** Complementary Examples in Section 5.1 (Pages 31–33)
+
+*** Example 5.4: Multi-Maturity Zero-Coupon Bonds and Flat Yield Arbitrage
+Consider ZCBs of maturities 1, 2, and 3 years. The interest rate in year 1 is $i_1$, and stochastic rates in years 2 and 3 are $I_2$ and $I_3$.
+Under a flat yield curve assumption, prices at $k=0$ and $k=1$ satisfy:
+$$ S_1(0) = \frac{1}{1+i_1}, \quad S_2(0) = \frac{1}{(1+i_1)^2}, \quad S_3(0) = \frac{1}{(1+i_1)^3} $$
+$$ S_1(1) = 1, \quad S_2(1) = \frac{1}{1+I_2}, \quad S_3(1) = \frac{1}{(1+I_2)^2} $$
+Applying FTAP 1 (Theorem 5.3), a risk-neutral measure $\mathbb{Q}$ must price these assets:
+$$ S_2(0) = \frac{1}{1+i_1} \mathbb{E}_\mathbb{Q}[S_2(1)] \implies \mathbb{E}_\mathbb{Q}\left[\frac{1}{1+I_2}\right] = \frac{1}{1+i_1} $$
+$$ S_3(0) = \frac{1}{1+i_1} \mathbb{E}_\mathbb{Q}[S_3(1)] \implies \mathbb{E}_\mathbb{Q}\left[\frac{1}{(1+I_2)^2}\right] = \frac{1}{(1+i_1)^2} $$
+Comparing these two equations:
+$$ \mathbb{E}_\mathbb{Q}\left[\left(\frac{1}{1+I_2}\right)^2\right] = \left(\mathbb{E}_\mathbb{Q}\left[\frac{1}{1+I_2}\right]\right)^2 \implies \operatorname{Var}_\mathbb{Q}\left(\frac{1}{1+I_2}\right) = 0 $$
+This is possible *only if $I_2$ is a deterministic constant* \(\mathbb{Q}\)-a.s. (and hence \(\mathbb{P}\)-a.s.)!
+  *Takeaway:* If $I_2$ is truly stochastic, no risk-neutral measure can exist, meaning the flat yield curve model *must admit arbitrage*!
+
+*** Example 5.5: Arbitrage Freedom with Continuous Payoff Density
+Let Security 1 be a bond ($S_1(0)=1/(1+i), S_1(1)=1$), and Security 2 have continuous density $f(x) > 0$ on $(0, \infty)$ and $S_2(0) = p$.
+- If $p \le 0$, buying the stock is an immediate arbitrage.
+- If $p > 0$, any zero-cost portfolio $\theta_1/(1+i) + p\theta_2 = 0$ has $S(1)\theta = \theta_2[S_2(1) - (1+i)p]$. Because $S_2(1)$ has full support on $(0, \infty)$, $S_2(1) - (1+i)p$ takes both positive and negative values with positive probability. Thus, no arbitrage exists.
+- In Theorem 5.3 terms, when $f(x) = \mu e^{-\mu x}$, a valid deflator can be constructed as an exponential tilting $\varphi(x) = a e^{bx}$ with $b < \mu$.
+
+---
+
+* Attainability, Market Completeness, & FTAP 2
+
+** Attainability and the Law of One Price
+A contingent claim $X \in \mathbb{R}^M$ is *attainable* (or *replicable*) if there exists a portfolio $\theta \in \mathbb{R}^N$ such that:
+$$ S(1)\theta = X \quad \left(\text{i.e. } \sum_{n=1}^N \theta_n S_n(1, \omega_m) = X(\omega_m) \quad \forall m\right) $$
+
+*** Theorem 5.6 (Pricing Attainable Claims)
+In an arbitrage-free market, the unique price of an attainable claim $X$ is:
+$$ V_X(0) = S(0)\theta = \mathbb{E}[\varphi X] = \frac{1}{1+i} \mathbb{E}_\mathbb{Q}[X] $$
+  *Every valid pricing kernel $\varphi$ and every risk-neutral measure $\mathbb{Q}$ gives the exact same price for an attainable claim!*
+
+** Market Completeness and FTAP 2
+#+begin_quote
+  *Definition 5.7 (Market Completeness):*
+A market is *complete* if /every/ contingent claim $X \in \mathbb{R}^M$ is attainable:
+$$ \operatorname{Im}(S(1)) = \mathbb{R}^M \iff \operatorname{rank}(S(1)) = M $$
+This requires that there are at least as many linearly independent assets as states of nature: $N \ge M$.
+#+end_quote
+
+#+begin_quote
+  *Theorem 5.8 (Second Fundamental Theorem of Asset Pricing - FTAP 2):*
+Suppose the market is arbitrage-free. Then:
+$$ \text{The market is complete} \iff \text{The deflator } \varphi \text{ (or state price vector } \psi \text{, or measure } \mathbb{Q}\text{) is UNIQUE.} $$
+#+end_quote
+
+/(Proof omitted per exam syllabus instructions)./
+  *Intuitive Meaning:*
+The pricing system $S(1)^T \psi = S(0)$ has $N$ equations and $M$ unknowns ($\psi_1, \dots, \psi_M$).
+- If $\operatorname{rank}(S(1)) = M$, the matrix has full column rank $M$, so the solution $\psi \gg 0$ is unique. Every risk is priced uniquely.
+- If $\operatorname{rank}(S(1)) < M$ (incomplete market), there are degrees of freedom: multiple deflators exist, and unreplicable claims have a range of arbitrage-free prices $(\underline{V}, \overline{V})$.
+
+** Core Derivative Formulas & Replications
+
+*** Put-Call Parity (Problem Set 5, Exercise 5.1)
+Consider a Call option $C = (S(1) - \gamma)^+$ and Put option $P = (\gamma - S(1))^+$.
+Notice the algebraic identity for any real numbers:
+$$ (S(1) - \gamma)^+ - (\gamma - S(1))^+ = S(1) - \gamma = S_2(1) - \gamma S_1(1) $$
+Multiplying by any deflator $\varphi$ and taking expectations:
+$$ \mathbb{E}[\varphi C] - \mathbb{E}[\varphi P] = \mathbb{E}[\varphi S_2(1)] - \gamma \mathbb{E}[\varphi S_1(1)] $$
+$$ r - q = p - \frac{\gamma}{1+i} \iff r + \frac{\gamma}{1+i} = p + q $$
+/(where $r$ is call price, $q$ is put price, $p$ is share price)./
+
+*** Capital Protection / Structured Note (Problem Set 5, Exercise 5.2)
+A security guarantees return of its initial purchase price $h$ at time $1$, plus any upside price gain of the share:
+$$ S_4(1) = h + (S_2(1) - p)^+ = h S_1(1) + S_3(1) $$
+where $S_3$ is an ATM call option with strike $p$ and price $q$.
+Using any deflator $\varphi$:
+$$ h = S_4(0) = h \mathbb{E}[\varphi S_1(1)] + \mathbb{E}[\varphi S_3(1)] = h \frac{1}{1+i} + q $$
+$$ h \left(1 - \frac{1}{1+i}\right) = q \implies h \left(\frac{i}{1+i}\right) = q \implies h = \frac{q(1+i)}{i} $$
+
+*** Butterfly Spread Decomposition (Problem Set 5, Exercise 5.3)
+Payoff: $X = (\hat{K} - |S(1) - S(0)|)^+$.
+This piecewise linear "tent" payoff peaked at $S(0)$ can be replicated by options with strikes $K_1 = S(0)-\hat{K}$, $K_2 = S(0)$, $K_3 = S(0)+\hat{K}$:
+- *Using Calls:*
+  $$ X = (S(1) - (S(0)-\hat{K}))^+ - 2(S(1) - S(0))^+ + (S(1) - (S(0)+\hat{K}))^+ $$
+- *Using Puts:*
+  $$ X = ((S(0)+\hat{K}) - S(1))^+ - 2(S(0) - S(1))^+ + ((S(0)-\hat{K}) - S(1))^+ $$
+  *Recipe:* Buy 1 low-strike option, sell 2 middle-strike options, buy 1 high-strike option!
+
+---
+
+* One-Period Portfolio Selection & Utility Theory
+
+** Utility Functions and Risk Aversion
+An investor evaluates terminal wealth $W = V(1)$ through a concave utility function $u(w)$:
+- *Non-satiation (Greed):* $u'(w) > 0$ (more wealth is always preferred).
+- *Risk Aversion:* $u''(w) < 0$ (strictly concave).
+  - By Jensen's inequality: $\mathbb{E}[u(W)] < u(\mathbb{E}[W])$. An investor always prefers the sure expectation over a risky gamble.
+
+*** Arrow-Pratt Risk Aversion Measures
+- *Absolute Risk Aversion (ARA):* $R_A(w) = -\frac{u''(w)}{u'(w)}$ (measures aversion to absolute dollar risk).
+- *Relative Risk Aversion (RRA):* $R_R(w) = -w \frac{u''(w)}{u'(w)}$ (measures aversion to percentage wealth risk).
+
+#+caption: Standard Utility Function Families
+| Utility Name | Formula $u(w)$ | ARA $R_A(w)$ | RRA $R_R(w)$ |
+|--------------+----------------+--------------+--------------|
+| *Logarithmic* | $\log(w)$ | $1/w$ | $1$ (CRRA) |
+| *Power (CRRA)* | $\frac{w^{1-\gamma}-1}{1-\gamma} \; (\gamma > 0, \ne 1)$ | $\gamma/w$ | $\gamma$ (CRRA) |
+| *Exponential (CARA)* | $-\frac{1}{\alpha} e^{-\alpha w} \; (\alpha > 0)$ | $\alpha$ (constant) | $\alpha w$ |
+
+** The One-Period Optimization Problem
+Given initial wealth $V(0) > 0$, the investor solves:
+$$ \max_{\theta \in \mathbb{R}^N} \mathbb{E}[u(S(1)\theta)] \quad \text{subject to} \quad S(0)\theta = V(0) \tag{5.10} $$
+
+*** First-Order Condition (Euler Equation) via Lagrange Multipliers
+Form the Lagrangian:
+$$ \mathcal{L}(\theta, \lambda) = \mathbb{E}[u(S(1)\theta)] - \lambda (S(0)\theta - V(0)) $$
+Differentiating with respect to $\theta_n$ ($n = 1, \dots, N$):
+$$ \frac{\partial \mathcal{L}}{\partial \theta_n} = \mathbb{E}[u'(S(1)\theta) S_n(1)] - \lambda S_n(0) = 0 $$
+$$ \implies S_n(0) = \mathbb{E}\left[\frac{u'(V(1))}{\lambda} S_n(1)\right] \quad \forall n = 1, \dots, N $$
+
+** Endogenous Pricing Kernel
+Notice the profound connection to FTAP 1:
+Define the random variable:
+$$ \varphi = \frac{u'(V(1))}{\lambda} $$
+Since $u'(w) > 0$ and $\lambda > 0$, $\varphi > 0$ strictly almost surely.
+  *The marginal utility of the optimal portfolio creates an endogenous state price deflator!*
+
+If Security 1 is a riskless bond ($S_1(0)=1, S_1(1)=1+i$):
+$$ 1 = \mathbb{E}\left[\frac{u'(V(1))}{\lambda}(1+i)\right] \implies \lambda = (1+i)\mathbb{E}[u'(V(1))] $$
+Substituting $\lambda$ back gives the *marginal rate of substitution*:
+$$ \varphi = \frac{1}{1+i} \frac{u'(V(1))}{\mathbb{E}[u'(V(1))]} $$
+
+---
+
+* Deep Dive: Exercises 5.4 & 5.5 from Problem Set 5
+
+** Exercise 5.4: Variance-Minimizing / Mean-Square Hedging
+  *Setting:* Two securities: Security 1 is a zero-coupon bond ($S_1(0)=1, S_1(1)=1$), Security 2 is a share with payoffs $S_2(1)$.
+An investor faces a contractual liability $X$ at time $1$.
+The investor selects a portfolio $\theta = (\theta_1, \theta_2)^T$ at time $0$ to *minimize $\operatorname{Var}(X - S(1)\theta)$* subject to the unbiasedness constraint:
+$$ \mathbb{E}[S(1)\theta] = \mathbb{E}[X] $$
+
+*** Detailed Step-by-Step Solution:
+  *Step 1: Use the constraint to eliminate $\theta_1$.*
+$$ S(1)\theta = \theta_1 S_1(1) + \theta_2 S_2(1) = \theta_1 + \theta_2 S_2(1) $$
+Taking expectations:
+$$ \mathbb{E}[S(1)\theta] = \theta_1 + \theta_2 \mathbb{E}[S_2(1)] = \mathbb{E}[X] \implies \theta_1 = \mathbb{E}[X] - \theta_2 \mathbb{E}[S_2(1)] \tag{1} $$
+
+  *Step 2: Express the tracking error.*
+$$ X - S(1)\theta = [X - \mathbb{E}[X]] - \theta_2 [S_2(1) - \mathbb{E}[S_2(1)]] $$
+
+  *Step 3: Compute the variance.*
+$$ \operatorname{Var}(X - S(1)\theta) = \mathbb{E}\left[\left([X - \mathbb{E}[X]] - \theta_2 [S_2(1) - \mathbb{E}[S_2(1)]]\right)^2\right] $$
+$$ = \operatorname{Var}(X) - 2\theta_2 \operatorname{Cov}(X, S_2(1)) + \theta_2^2 \operatorname{Var}(S_2(1)) \tag{2} $$
+
+  *Step 4: Minimize with respect to $\theta_2$.*
+Equation (2) is a strictly convex parabola in $\theta_2$. Setting derivative to zero:
+$$ \frac{d}{d\theta_2}\operatorname{Var}(X - S(1)\theta) = -2\operatorname{Cov}(X, S_2(1)) + 2\theta_2 \operatorname{Var}(S_2(1)) = 0 $$
+$$ \hat{\theta}_2 = \frac{\operatorname{Cov}(X, S_2(1))}{\operatorname{Var}(S_2(1))} $$
+/(This is the linear regression beta / hedge ratio of $X$ onto $S_2(1)$!)./
+
+  *Step 5: Obtain $\hat{\theta}_1$.*
+$$ \hat{\theta}_1 = \mathbb{E}[X] - \hat{\theta}_2 \mathbb{E}[S_2(1)] = \mathbb{E}[X] - \frac{\operatorname{Cov}(X, S_2(1))}{\operatorname{Var}(S_2(1))} \mathbb{E}[S_2(1)] $$
+
+The optimal minimizing portfolio is:
+$$ \hat{\theta} = \begin{pmatrix} \mathbb{E}[X] - \frac{\operatorname{Cov}(X, S_2(1))}{\operatorname{Var}(S_2(1))} \mathbb{E}[S_2(1)] \\ \frac{\operatorname{Cov}(X, S_2(1))}{\operatorname{Var}(S_2(1))} \end{pmatrix} $$
+
+** Exercise 5.5: Pricing Bounds & Super-Replication
+  *Setting:* Let the initial market be arbitrage-free.
+Let $\Phi = \{\varphi > 0 \mid S(0) = \mathbb{E}[\varphi S(1)]\}$ be the set of all deflators.
+A new claim $X$ is added to the market with price $V$ at $t = 0$.
+Define the lower and upper pricing bounds:
+$$ \underline{V} = \inf_{\varphi \in \Phi} \mathbb{E}[\varphi X], \quad \overline{V} = \sup_{\varphi \in \Phi} \mathbb{E}[\varphi X] $$
+Assume $\underline{V} < \overline{V}$.
+
+*** Part (a): Show the extended market is arbitrage-free for any $V \in (\underline{V}, \overline{V})$.
+1. *Convexity of the Deflator Set $\Phi$:*
+   Let $\varphi_1, \varphi_2 \in \Phi$ and $t \in [0, 1]$. Define $\varphi_t = t \varphi_1 + (1-t) \varphi_2$.
+   - $\varphi_t > 0$ strictly.
+   - For any asset $n$: $\mathbb{E}[\varphi_t S_n(1)] = t S_n(0) + (1-t) S_n(0) = S_n(0)$.
+   Thus, $\Phi$ is *convex*.
+2. *Constructing a Deflator for the New Claim:*
+   For any $V \in (\underline{V}, \overline{V})$, there exist $\varphi_1, \varphi_2 \in \Phi$ such that $\mathbb{E}[\varphi_1 X] \le V \le \mathbb{E}[\varphi_2 X]$.
+   By the Intermediate Value Theorem, there exists $t_V \in [0, 1]$ such that:
+   $$ V = t_V \mathbb{E}[\varphi_1 X] + (1 - t_V) \mathbb{E}[\varphi_2 X] = \mathbb{E}[(t_V \varphi_1 + (1 - t_V) \varphi_2) X] $$
+   Setting $\varphi' = t_V \varphi_1 + (1 - t_V) \varphi_2 \in \Phi$, $\varphi'$ prices all original assets and prices $X$ at $V$.
+   By FTAP 1, *the extended market is completely arbitrage-free!* $\blacksquare$
+
+*** Part (b): Super-Replication when $W > \overline{V}$.
+Assume $\overline{V} < \infty$, and let $W > \overline{V}$.
+Show there exists a portfolio $\theta$ of original securities such that $S(0)\theta = W$ and $S(1)\theta \ge X$ almost surely.
+
+1. *Hypothetical Market:* If claim $X$ traded at price $W > \overline{V}$, no deflator could exist in $\Phi$ pricing $X$ at $W$.
+2. *Arbitrage Portfolio:* By FTAP 1, there exists an arbitrage portfolio $(\theta_1, \dots, \theta_N, \theta_{N+1})^T$:
+   $$ \sum_{n=1}^N S_n(0)\theta_n + W \theta_{N+1} \le 0 \tag{A} $$
+   $$ \sum_{n=1}^N S_n(1)\theta_n + X \theta_{N+1} \ge 0 \quad \text{a.s.} \tag{B} $$
+3. *Sign Analysis of $\theta_{N+1}$:*
+   - $\theta_{N+1} \ne 0$ (otherwise original market would have arbitrage).
+   - $\theta_{N+1} < 0$: If $\theta_{N+1} > 0$, replacing $W$ with $V_0 = \frac{\underline{V}+\overline{V}}{2} < W$ would create arbitrage in the market with price $V_0$, contradicting Part (a). Thus, $\theta_{N+1} < 0$.
+4. *Constructing the Super-Hedging Portfolio:*
+   Define $\hat{\theta}_n = \frac{\theta_n}{-\theta_{N+1}} = -\frac{\theta_n}{\theta_{N+1}}$.
+   Dividing (B) by $-\theta_{N+1} > 0$: $S(1)\hat{\theta} \ge X$ a.s.
+   Dividing (A) by $-\theta_{N+1} > 0$: $S(0)\hat{\theta} \le W$.
+   Investing any remainder $W - S(0)\hat{\theta} \ge 0$ in the bond gives a portfolio costing exactly $W$ that super-replicates $X$! $\blacksquare$
+
+---
+
+* Multi-Period Market Model: Self-Financing & Martingales
+
+** Multi-Period Setup
+- Discrete trading dates $t \in \{0, 1, \dots, T\}$.
+- Information filtration $\mathbb{F} = (\mathcal{F}_0, \mathcal{F}_1, \dots, \mathcal{F}_T)$.
+- Asset price processes $S(t) = (S_1(t), \dots, S_N(t))^T$, adapted to $\mathbb{F}$.
+- Asset 1 is the numeraire (bank account / bond), $S_1(t) > 0$.
+  - Discounted prices: $S^*(t) = \frac{S(t)}{S_1(t)}$.
+
+** Predictable Strategies & The Self-Financing Condition
+A trading strategy is a sequence of portfolios $\theta(t) = (\theta_1(t), \dots, \theta_N(t))^T$, $t = 1, \dots, T$.
+- *Predictability:* $\theta(t)$ is \(\mathcal{F}_{t-1}\)-measurable. The portfolio held during period $(t-1, t]$ must be chosen at time $t-1$.
+- *Portfolio Value:* $V(t) = S(t)\theta(t) = \sum_{n=1}^N \theta_n(t) S_n(t)$.
+
+#+begin_quote
+  *Definition (Self-Financing Strategy):*
+A trading strategy $\theta$ is *self-financing* if at each rebalancing date $t \in \{1, \dots, T-1\}$:
+$$ S(t)\theta(t+1) = S(t)\theta(t) \tag{5.16} $$
+  *Intuition:* The value of the new portfolio $\theta(t+1)$ purchased at time $t$ exactly equals the liquidated value of the old portfolio $\theta(t)$. No outside capital is added or removed!
+#+end_quote
+
+*** Wealth Increments under Self-Financing
+$$ \Delta V(t) = V(t) - V(t-1) = \theta(t) \cdot \Delta S(t) $$
+In discounted terms:
+$$ V^*(t) = V^*(0) + \sum_{k=1}^t \theta(k) \cdot \Delta S^*(k) \tag{5.17} $$
+
+** Multi-Period Fundamental Theorems of Asset Pricing
+
+*** Definition 5.9 (Multi-Period Arbitrage)
+A self-financing strategy $\theta$ is an arbitrage opportunity if:
+$$ V(0) \le 0, \quad V(T) \ge 0 \text{ a.s.}, \quad \text{and } \mathbb{P}(V(T) > 0) > 0 \text{ (or } V(0) < 0\text{)} $$
+
+*** Theorem 5.10 (Multi-Period FTAP 1)
+#+begin_quote
+  *Theorem 5.10:*
+The multi-period market is *arbitrage-free* if and only if there exists a probability measure $\mathbb{Q} \sim \mathbb{P}$ (equivalent martingale measure) such that all discounted asset price processes $S^*(t)$ are \((\mathbb{Q}, \mathbb{F})\)-*martingales*:
+$$ \mathbb{E}_\mathbb{Q}[S^*(t+1) \mid \mathcal{F}_t] = S^*(t) \quad \forall t = 0, 1, \dots, T-1 \tag{5.18} $$
+#+end_quote
+/(Proof and Lemma 5.12 omitted per exam syllabus instructions)./
+
+*** Theorem 5.14 (Multi-Period FTAP 2)
+#+begin_quote
+  *Theorem 5.14:*
+An arbitrage-free multi-period market is *complete* if and only if the equivalent martingale measure $\mathbb{Q}$ is *unique*.
+#+end_quote
+
+** The Binomial Tree Model (Cox-Ross-Rubinstein)
+- Bond: $S_1(t) = (1+r)^t$.
+- Stock: $S_2(t+1) \in \{u S_2(t), d S_2(t)\}$ with $0 < d < 1+r < u$.
+- *Unique Risk-Neutral Probability:*
+  $$ q = \frac{1+r-d}{u-d} $$
+- *Rollback Valuation (Backward Induction):*
+  $$ V(t) = \frac{1}{1+r}\left[q V_{u}(t+1) + (1-q) V_{d}(t+1)\right] $$
+- *Replicating Stock Holding (\(\Delta\)-Hedging):*
+  $$ \theta_2(t+1) = \frac{V_u(t+1) - V_d(t+1)}{S_2(t)(u - d)} $$
+
+** Walkthrough of Problem Set 6 Exercises
+
+*** Exercise 6.1: Risk-Neutral Measures on a 6-State Two-Period Tree
+Two periods ($t = 0, 1, 2$), zero interest ($r = 0, S_1(t) \equiv 1$).
+$S_2(0) = 2$, $S_2(1) \in \{1, 2, 3\}$, $S_2(2) = S_2(1)(1+\xi_2)$ with $\xi_2 \in \{-1/2, 1/2\}$.
+- In period 2: From every node at $t = 1$, the up/down factors are $3/2$ and $1/2$. The martingale equation gives $q_{up} = 1/2, q_{down} = 1/2$.
+- In period 1: Probabilities $p, q, r$ of reaching nodes $1, 2, 3$ must satisfy:
+  $$ p + q + r = 1, \quad 1\cdot p + 2\cdot q + 3\cdot r = 2 \implies p = r, \quad q = 1 - 2p \quad \text{with } p \in (0, 1/2) $$
+- The risk-neutral measures form a family: $\mathbb{Q} = (p/2, p/2, (1-2p)/2, (1-2p)/2, p/2, p/2)^T$. Because $p$ is not unique, this market is *incomplete*.
+
+*** Exercise 6.5: Extension of Arbitrage Freedom to General Derivatives
+For a derivative $S_{N+1}(T)$ with price process $S_{N+1}^*(k) = \mathbb{E}_\mathbb{Q}[S_{N+1}^*(T) \mid \mathcal{F}_k]$:
+By the *Tower Property of conditional expectations*:
+$$ \mathbb{E}_\mathbb{Q}[S_{N+1}^*(k+1) \mid \mathcal{F}_k] = \mathbb{E}_\mathbb{Q}[\mathbb{E}_\mathbb{Q}[S_{N+1}^*(T) \mid \mathcal{F}_{k+1}] \mid \mathcal{F}_k] = \mathbb{E}_\mathbb{Q}[S_{N+1}^*(T) \mid \mathcal{F}_k] = S_{N+1}^*(k) $$
+Thus, $S_{N+1}^*$ is automatically a martingale, proving the extended market is strictly arbitrage-free! $\blacksquare$
+
+---
+
+* Exam Problem-Solving Toolkit & Formula Cheat Sheet
+
+** Decision Trees for Typical Exam Questions
+#+begin_example
+                    HOW TO SOLVE EXAM PROBLEMS
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. "Check if the market is arbitrage-free"                                   │
+│    • Deterministic rates / Term structure: Check if all forward rates       │
+│      f_j >= 0 (or (1+s_k)^k >= (1+s_j)^j).                                  │
+│    • 1-Period Bond + 1 Share: Check if p in (alpha_1/(1+i), alpha_M/(1+i)). │
+│    • General 1-Period: Solve S(0) = S(1)^T psi with psi_m > 0 for all m.    │
+│    • Multi-Period Tree: Check if at each node d < 1+r < u.                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 2. "Replicate a derivative / Find arbitrage-free price"                     │
+│    • Set up replication system: S(1) theta = X.                             │
+│    • If theta exists, unique price is V(0) = S(0) theta.                    │
+│    • Alternatively, compute V(0) = 1/(1+i) E_Q[X] = sum psi_m X(omega_m).   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 3. "Incomplete Market: Find arbitrage-free price interval (V_, V-bar)"       │
+│    • Parametrize all valid state price vectors psi(t) or measures Q(p).     │
+│    • V_ = inf E_Q[X],  V-bar = sup E_Q[X].                                  │
+│    • Arbitrage-free interval is the open set (V_, V-bar).                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 4. "Mean-Square Error Hedging" (Exercise 5.4 style)                         │
+│    • theta_2* = Cov(X, S_2(1)) / Var(S_2(1))                                │
+│    • theta_1* = E[X] - theta_2* E[S_2(1)]                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 5. "Multi-Period Binomial Tree Pricing"                                     │
+│    • Risk-neutral probability: q = (1 + r - d) / (u - d)                    │
+│    • Roll backward: V_node = 1/(1+r) [ q V_up + (1-q) V_down ]              │
+│    • Delta hedge: theta_stock = (V_up - V_down) / (S_node * (u - d))        │
+└─────────────────────────────────────────────────────────────────────────────┘
+#+end_example
+
+** Quick-Reference Formula Summary
+#+caption: Master Equation Reference
+| Topic | Key Equation | Notes |
+|-------+--------------+-------|
+| *Deterministic Compounding* | $C \prod_{k=1}^n (1+i_k)^\Delta$ | Standard discrete model |
+| *Cash Flow PV* | $V(0) = \sum_{j=1}^T \left[\prod_{k=1}^j (1+i_k)\right]^{-\Delta} B(j\Delta)$ | Unique no-arbitrage price |
+| *Forward Rate* | $(1+f_j)^\Delta = \frac{(1+s_j)^{j\Delta}}{(1+s_{j-1})^{(j-1)\Delta}}$ | No arbitrage $\iff f_j \ge 0$ |
+| *Macaulay Duration* | $D(s) = \frac{\sum j A_j (1+s)^{-j}}{\sum A_j (1+s)^{-j}}$ | Weight $w_j = \frac{PV(A_j)}{V}$ |
+| *Modified Duration* | $D^*(s) = \frac{D(s)}{1+s} = -\frac{V'(s)}{V(s)}$ | $\frac{\Delta V}{V} \approx -D^*(s)\Delta s$ |
+| *Redington Conditions* | $V_A = V_L, \quad D_A = D_L, \quad C_A > C_L$ | $f(s_0)=0, f'(s_0)=0, f''(s_0)>0$ |
+| *FTAP 1 (1-Period)* | $S(0) = S(1)^T \psi = \mathbb{E}[\varphi S(1)] = \frac{\mathbb{E}_\mathbb{Q}[S(1)]}{1+i}$ | $\psi \gg 0 \iff$ No Arbitrage |
+| *Section 5.1 Eq (5.4)* | $p < \mathbb{E}[S_2(1)] \iff q < \frac{\beta - p}{\beta - \alpha} = \psi(\omega_1)$ | Stock has positive risk premium |
+| *Section 5.1 Eq (5.5)* | $S_3(0) = \frac{\beta(\beta - p)}{\beta - \alpha} > \mathbb{E}[S_3(1)] = q\beta$ | Insurance asset has negative return! |
+| *FTAP 2 (Completeness)* | $\operatorname{rank}(S(1)) = M \iff \psi \text{ (or } \mathbb{Q}\text{) is unique}$ | $N \ge M$ necessary |
+| *Put-Call Parity* | $r + \frac{\gamma}{1+i} = p + q$ | $r=\text{call}, q=\text{put}, p=\text{stock}, \gamma=\text{strike}$ |
+| *Utility FOC* | $S_n(0) = \mathbb{E}\left[\frac{u'(V(1))}{\lambda} S_n(1)\right]$ | $\varphi = \frac{u'(V(1))}{(1+i)\mathbb{E}[u'(V(1))]}$ |
+| *Optimal MSE Hedge* | $\theta_2 = \frac{\operatorname{Cov}(X, S_2)}{\operatorname{Var}(S_2)}, \quad \theta_1 = \mathbb{E}[X] - \theta_2 \mathbb{E}[S_2]$ | Linear regression projection |
+| *Super-Replication* | $W > \overline{V} \implies \exists \hat{\theta}: S(0)\hat{\theta}=W, S(1)\hat{\theta} \ge X$ | Derived via $\theta_{N+1} < 0$ |
+| *Self-Financing* | $S(t)\theta(t+1) = S(t)\theta(t)$ | $\Delta V^*(t) = \theta(t)\cdot \Delta S^*(t)$ |
+| *Binomial Probability* | $q = \frac{1+r-d}{u-d}$ | Valid when $d < 1+r < u$ |
+| *Binomial Valuation* | $V_t = \frac{1}{1+r}[q V_u + (1-q) V_d]$ | Backward induction |
+| *Binomial Delta* | $\theta_2(t+1) = \frac{V_u - V_d}{S(t)(u - d)}$ | Replicating stock shares |

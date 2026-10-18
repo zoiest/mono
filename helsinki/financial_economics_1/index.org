@@ -48,6 +48,18 @@
 
 * Map of Content (MOC)
 
+** Comprehensive Exam Review Notes (Full Syllabus Synthesis)
+
+- [[id:89837dae-bb79-4a43-88e7-65de89801493][Financial Economics I — Comprehensive Exam Review Notes]]
+  - *Probability Theory Primer:* Exercise-level foundation (almost surely / a.s., expectations, variances, tree filtrations) for students without prior probability theory.
+  - *Arbitrage Theory & Fixed Income:* Deterministic/stochastic interest rates, forward rate bounds $f_j \ge 0$, Macaulay duration, and Redington immunization.
+  - *One-Period Market Model & FTAP 1:* State prices, deflators, and *Deep Focus on Section 5.1 Equations (5.4) & (5.5)* (negative expected return on insurance assets & breakdown of naive discounting).
+  - *Attainability & Completeness (FTAP 2):* Replicating portfolios, Put-Call Parity, and derivative payoffs.
+  - *Portfolio Selection & Utility Theory:* Risk aversion, Euler equations, and endogenous pricing kernels.
+  - *Problem Set 5 Deep Dive:* Detailed solutions for Exercise 5.4 (mean-square hedging regression beta) & Exercise 5.5 (pricing bounds & super-replication).
+  - *Multi-Period Market Models & Martingales:* Predictable strategies, self-financing condition $S(t)\theta(t+1)=S(t)\theta(t)$, $(\mathbb{Q}, \mathbb{F})$-martingales, and CRR binomial tree rollback pricing.
+  - *Problem-Solving Toolkit:* Exam decision trees and master equation formula summary.
+
 ** Core Theoretical Modules (Financial Economics I)
 
 1. [[id:2957cc4b-1bfb-45d8-9b10-0a99d51ed808][Deterministic Interest Rates and Valuation]]
