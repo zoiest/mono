@@ -53,7 +53,7 @@
 - [[id:89837dae-bb79-4a43-88e7-65de89801493][Financial Economics I — Comprehensive Exam Review Notes]]
   - *Probability Theory Primer:* Exercise-level foundation (almost surely / a.s., expectations, variances, tree filtrations) for students without prior probability theory.
   - *Arbitrage Theory & Fixed Income:* Deterministic/stochastic interest rates, forward rate bounds $f_j \ge 0$, Macaulay duration, and Redington immunization.
-  - *One-Period Market Model & FTAP 1:* Definition 5.1 (arbitrage opportunity), Remark 5.2 (reinvestment equivalence), complete proof of Theorem 5.3 via Farkas' Lemma, Problem Set 4 walkthrough, and *Deep Focus on Section 5.1 Equations (5.4) & (5.5)* (negative expected return on insurance assets & breakdown of naive discounting).
+  - *One-Period Market Model & FTAP 1:* Definition 5.1 (arbitrage opportunity), Remark 5.2 (reinvestment equivalence), complete proof of Theorem 5.3, Problem Set 4 walkthrough, and *Deep Focus on Lemma 5.4 (Hahn-Banach Separation) & Corollary 5.5 (Farkas' Lemma)* as the separation engine of FTAP 1.
   - *Attainability & Completeness (FTAP 2):* Replicating portfolios, Put-Call Parity, and derivative payoffs.
   - *Portfolio Selection & Utility Theory:* Risk aversion, Euler equations, and endogenous pricing kernels.
   - *Multi-Period Market Models & Martingales:* Predictable strategies, self-financing condition $S(t)\theta(t+1)=S(t)\theta(t)$, $(\mathbb{Q}, \mathbb{F})$-martingales, and CRR binomial tree rollback pricing.

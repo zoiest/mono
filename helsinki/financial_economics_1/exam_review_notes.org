@@ -17,7 +17,7 @@
 
 #+begin_quote
   *Exam Scope & Exclusions:*
-- *Included & Emphasized:* First-principles probability theory for exercises, unified arbitrage definitions across the course, 1-period market model, Definition 5.1 & the full proof of Theorem 5.3 (FTAP 1), *Equations (5.4) and (5.5) in Section 5.1 of the lecture notes (Example 5.3)*, market completeness & FTAP 2, 1-period portfolio selection & utility theory, and multi-period market models (self-financing condition, martingales, FTAP 1 & 2, CRR binomial model).
+- *Included & Emphasized:* First-principles probability theory for exercises, unified arbitrage definitions across the course, 1-period market model, Definition 5.1 & the full proof of Theorem 5.3 (FTAP 1), *Deep Focus on Lemma 5.4 (Hahn-Banach Separation) & Corollary 5.5 (Farkas' Lemma)*, market completeness & FTAP 2, 1-period portfolio selection & utility theory, and multi-period market models (self-financing condition, martingales, FTAP 1 & 2, CRR binomial model).
 - *Explicitly Excluded:* Page 22 calculations (Redington parallel shift flat yield arithmetic), completeness proof in Theorem 5.8, Lemma 5.12 and proof of Theorem 5.10 (p. 48), and Section 5.2.3 onwards (multi-period portfolio selection, local risk minimization).
 #+end_quote
 
@@ -409,104 +409,107 @@ Therefore, absence of arbitrage *strictly forces* $S_N(0) = \sum_{n=1}^{N-1} \th
 
 ---
 
-** Deep Focus: Equations (5.4) and (5.5) in Section 5.1 of Lecture Notes
-/(Lecturer: Jaakko Lehtomaa, Lecture Notes pages 30–31, Example 5.3)/
+** Deep Focus: Lemma 5.4 and Corollary 5.5 (The Separation Engine of FTAP 1)
+/(Lecture Notes Section 5.1.1, pages 34–35)/
 
 #+begin_quote
-  *The Core Theoretical Lesson of Section 5.1:*
-In traditional finance (Section 4), it was naively assumed that every risky asset must offer a positive expected return: $P_0 = \frac{\mathbb{E}[P_1]}{1 + i'}$ with $i' > 0$.
-  *Example 5.3 proves that this naive assumption is completely FALSE and directly creates ARBITRAGE!*
-Insurance/hedging assets must have a *strictly negative expected return*, and pricing them with a positive risk premium violates absence of arbitrage.
+  *Why Convex Separation is Fundamental to Financial Economics:*
+The First Fundamental Theorem of Asset Pricing (Theorem 5.3) is the foundational theorem of mathematical finance. Its proof does not rely on calculus or matrix inverses, but on *convex analysis*. Specifically, it uses the geometry of convex sets to prove that absence of arbitrage is mathematically identical to the existence of a strictly positive hyperplane separating the portfolio payoff space from the non-negative cone.
 #+end_quote
 
-*** Step 1: The Base Market (Example 5.1)
-- Two states of nature: $\Omega = \{\omega_1, \omega_2\}$.
-  Physical probabilities: $\mathbb{P}(\{\omega_1\}) = q \in (0, 1)$, $\mathbb{P}(\{\omega_2\}) = 1 - q$.
-- Security 1 (Bond): $i = 0$, so $S_1(0) = 1$ and $S_1(1) = (1, 1)^T$.
-- Security 2 (Stock): $S_2(0) = p$, with terminal payoffs $S_2(1, \omega_1) = \alpha$ and $S_2(1, \omega_2) = \beta$, where:
-  $$ 0 < \alpha < \beta $$
-- For the market to be arbitrage-free, we must have $p \in (\alpha, \beta)$.
-- By Theorem 5.3, the unique state prices are:
-  $$ \psi(\omega_1) = \frac{\beta - p}{\beta - \alpha}, \quad \psi(\omega_2) = \frac{p - \alpha}{\beta - \alpha} $$
-- The unique state price deflator (pricing kernel) is:
-  $$ \varphi(\omega_1) = \frac{\psi(\omega_1)}{\mathbb{P}(\omega_1)} = \frac{\beta - p}{q(\beta - \alpha)}, \quad \varphi(\omega_2) = \frac{\psi(\omega_2)}{\mathbb{P}(\omega_2)} = \frac{p - \alpha}{(1-q)(\beta - \alpha)} $$
-
-*** Step 2: Equation (5.4) — Positive Risk Premium on the Stock
-Because Security 2 is a risky investment, investors demand a positive expected return (a positive risk premium):
-\begin{equation}
-p < \mathbb{E}[S_2(1)] = q\alpha + (1-q)\beta \tag{5.4}
-\end{equation}
-This means the stock is discounted at an expected rate of return $i' > 0$:
-$$ p = \frac{\mathbb{E}[S_2(1)]}{1 + i'}, \quad i' > 0 $$
-
-Let us analyze what Inequality (5.4) implies algebraically for the probability $q$:
-$$ p < q\alpha + (1-q)\beta = \beta - q(\beta - \alpha) $$
-$$ q(\beta - \alpha) < \beta - p $$
-Since $\beta > \alpha$, dividing by $(\beta - \alpha) > 0$ yields:
-\begin{equation}
-q < \frac{\beta - p}{\beta - \alpha} = \psi(\omega_1) \tag{*}
-\end{equation}
-  *Crucial insight:* The physical probability $q = \mathbb{P}(\omega_1)$ is *strictly smaller* than the state price $\psi(\omega_1)$!
-
-*** Step 3: Equation (5.5) — Introducing Security 3 (Insurance Against Downturn)
-Now add a new derivative, Security 3, whose terminal payoff is:
-$$ S_3(1, \omega_1) = \beta, \quad S_3(1, \omega_2) = 0 $$
-- Notice that Security 3 pays $\beta > 0$ only in state $\omega_1$ (when the stock crashes to its low price $\alpha$).
-- In state $\omega_2$ (when the stock booms to $\beta$), Security 3 pays $0$.
-- Thus, Security 3 is *negatively correlated* with the stock: it is an *insurance contract* against market downturns.
-
-To prevent arbitrage in the extended market, Theorem 5.3 dictates that Security 3 must be priced using the pricing deflator $\varphi$ (or state price $\psi$):
-$$ S_3(0) = \mathbb{E}[\varphi S_3(1)] = \varphi(\omega_1) S_3(1, \omega_1) q + \varphi(\omega_2) S_3(1, \omega_2) (1-q) $$
-\begin{equation}
-S_3(0) = \left[\frac{\beta - p}{q(\beta - \alpha)}\right] \cdot \beta \cdot q + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5}
-\end{equation}
-Equivalently, via state prices:
-\begin{equation}
-S_3(0) = \psi(\omega_1) S_3(1, \omega_1) + \psi(\omega_2) S_3(1, \omega_2) = \left(\frac{\beta - p}{\beta - \alpha}\right) \beta + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5}
-\end{equation}
-
-*** Step 4: The Counter-Intuitive Discovery — Negative Expected Return!
-What is the mathematical expectation of Security 3's terminal payoff under the real-world probability $\mathbb{P}$?
-$$ \mathbb{E}[S_3(1)] = q \cdot \beta + (1-q) \cdot 0 = q\beta $$
-
-Now substitute the inequality $q < \frac{\beta - p}{\beta - \alpha}$ from Equation (5.4) / (*):
-$$ \mathbb{E}[S_3(1)] = q\beta < \left(\frac{\beta - p}{\beta - \alpha}\right)\beta = S_3(0) $$
-Look at this startling inequality:
-$$ S_3(0) > \mathbb{E}[S_3(1)] \iff \frac{\mathbb{E}[S_3(1)] - S_3(0)}{S_3(0)} < 0 $$
-
+*** Lemma 5.4: The Hahn-Banach Separation Theorem for $\mathbb{R}^n$
 #+begin_quote
-  *Crucial Economic Lesson:*
-  *Buying Security 3 causes losses on average!*
-The expected rate of return of Security 3 is *strictly negative*.
-Why are investors willing to pay a price $S_3(0)$ that is higher than the expected future payoff $\mathbb{E}[S_3(1)]$?
-Because Security 3 pays off exactly when things go badly ($\omega_1$, market crash). It provides valuable insurance/hedging protection. Investors gladly pay an "insurance premium" (accepting an expected loss) to hedge their downside risk!
+  *Lemma 5.4 (Hahn-Banach Separation Theorem in Euclidean Space):*
+Let $\mathbb{R}^n$ be Euclidean space and suppose $A$ and $B$ are disjoint, non-empty, and convex subsets of $\mathbb{R}^n$. Assume further that $A$ is *compact* (closed and bounded) and $B$ is *closed*.
+Then there exists a linear mapping $f: \mathbb{R}^n \to \mathbb{R}$ (represented by vector $z' \in \mathbb{R}^n$, $f(x) = z'^T x$) and a real number $\gamma \in \mathbb{R}$ such that:
+\begin{equation}
+f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \; y \in B
+\end{equation}
 #+end_quote
 
-*** Step 5: Why Traditional Pricing Creates Arbitrage
-Suppose someone ignorant of arbitrage pricing applies the naive formula from Section 4:
-/"Security 3 is a risky asset, so it must offer a positive expected return $i'' > 0$":/
-$$ S_3^{\text{naive}}(0) = \frac{\mathbb{E}[S_3(1)]}{1 + i''}, \quad \text{with } i'' > 0 $$
-Since $i'' > 0$, this naive price satisfies:
-$$ S_3^{\text{naive}}(0) < \mathbb{E}[S_3(1)] < \frac{\beta(\beta - p)}{\beta - \alpha} = S_3(0) $$
-Thus, Security 3 is *underpriced* on the market!
+- *Geometric Meaning:* The sets $A$ and $B$ lie entirely on opposite sides of the affine hyperplane $H = \{w \in \mathbb{R}^n \mid f(w) = \gamma\}$.
+- *Why is Compactness of $A$ Required?*
+  If both $A$ and $B$ were merely closed but neither was compact, they could approach each other asymptotically at infinity without intersecting, making strict separation impossible!
+  /(Classic counterexample: $A = \{(x, y) \in \mathbb{R}^2 \mid x > 0, y \ge 1/x\}$ and $B = \{(x, y) \in \mathbb{R}^2 \mid y \le 0\}$. Both are closed, convex, and disjoint, but they cannot be strictly separated by any straight line)./
+  In Lemma 5.4, compactness of $A$ guarantees a strictly positive distance $\operatorname{dist}(A, B) > 0$.
 
-  *Constructing the Arbitrage Trade (Exam Solution):*
-1. Replicate Security 3 using Bond ($S_1$) and Stock ($S_2$):
-   $$ \theta_1 \cdot 1 + \theta_2 \cdot \alpha = \beta \quad (\text{state } \omega_1) $$
-   $$ \theta_1 \cdot 1 + \theta_2 \cdot \beta = 0 \quad (\text{state } \omega_2) $$
-   Subtracting gives: $\theta_2(\beta - \alpha) = -\beta \implies \theta_2 = -\frac{\beta}{\beta - \alpha} < 0$ (short the stock).
-   From the second equation: $\theta_1 = -\theta_2 \beta = \frac{\beta^2}{\beta - \alpha} > 0$ (buy bonds).
-   The cost of this replicating portfolio is:
-   $$ S(0)\theta = \theta_1 \cdot 1 + \theta_2 \cdot p = \frac{\beta^2}{\beta - \alpha} - \frac{\beta p}{\beta - \alpha} = \frac{\beta(\beta - p)}{\beta - \alpha} $$
-2. Execute the arbitrage strategy at time $0$:
-   - *Buy 1 unit of Security 3* at market price $S_3^{\text{naive}}(0)$ (outflow: $-S_3^{\text{naive}}(0)$).
-   - *Sell (short) the replicating portfolio $\theta$* (inflow: $+S(0)\theta = \frac{\beta(\beta - p)}{\beta - \alpha}$).
-   - *Immediate cash pocketed at time 0:*
-     $$ \frac{\beta(\beta - p)}{\beta - \alpha} - S_3^{\text{naive}}(0) > 0 $$
-3. Payoffs at time 1:
-   - State $\omega_1$: Security 3 pays $\beta$. The short portfolio liability is $\theta_1 + \alpha\theta_2 = \beta$. Net: $\beta - \beta = 0$.
-   - State $\omega_2$: Security 3 pays $0$. The short portfolio liability is $\theta_1 + \beta\theta_2 = 0$. Net: $0 - 0 = 0$.
-4. *Conclusion:* Free money today with zero future liability in every state. This is a pure *arbitrage opportunity*!
+*** Corollary 5.5: Variant of Farkas' Lemma for Linear Subspaces
+#+begin_quote
+  *Corollary 5.5 (Alternative Theorem for Linear Subspaces):*
+Let $V \subseteq \mathbb{R}^K$ be a linear vector subspace. Denote the non-negative orthant by:
+$$ \mathbb{R}_+^K = \{x = (x_1, \dots, x_K) \in \mathbb{R}^K \mid x_j \ge 0 \text{ for all } j = 1, \dots, K\} $$
+Suppose $V \cap \mathbb{R}_+^K = \{0\}$.
+Then there exists a strictly positive vector $z = (z_1, \dots, z_K)^T \in \mathbb{R}^K$ ($z_j > 0$ for all $j = 1, \dots, K$) such that:
+\begin{equation}
+z \cdot y = \sum_{j=1}^K z_j y_j = 0 \quad \text{for all } y \in V
+\end{equation}
+#+end_quote
+
+- *The Two Incompatible Realities (Theorem of the Alternative):*
+  Corollary 5.5 establishes that for any subspace $V \subseteq \mathbb{R}^K$, *exactly one* of the following two statements holds:
+  1. *Either* $V$ contains a non-zero non-negative vector ($V \cap (\mathbb{R}_+^K \setminus \{0\}) \ne \emptyset$) $\implies$ *Arbitrage exists!*
+  2. *Or* there exists a strictly positive normal vector $z \gg 0$ orthogonal to $V$ ($z^T y = 0 \; \forall y \in V$) $\implies$ *A positive state price vector / deflator exists!*
+  They can *never* both occur, and at least one *must* occur.
+
+*** Complete Mathematical Proof of Corollary 5.5 from Lemma 5.4
+/(Crucial for exams: You may be asked to prove Corollary 5.5 directly using Lemma 5.4!)/
+
+*Step 1: Set Up the Sets $A$ and $B$*
+- We may assume $V \ne \{0\}$ (if $V = \{0\}$, any $z = (1, 1, \dots, 1)^T \gg 0$ trivially satisfies $z \cdot 0 = 0$).
+- Let $e_j = (0, \dots, 0, 1, 0, \dots, 0)^T \in \mathbb{R}^K$ be the $j$-th standard unit basis vector ($j = 1, \dots, K$).
+- Define set $A$ as the standard unit simplex:
+  $$ A = \left\{ \sum_{j=1}^K \lambda_j e_j \;\middle|\; \lambda_j \ge 0 \; \forall j, \; \sum_{j=1}^K \lambda_j = 1 \right\} $$
+  - $A$ is the convex hull of the standard basis vectors $\{e_1, \dots, e_K\} \subset A$.
+  - $A$ is *convex*, *closed*, and *bounded* (hence *compact* by Heine-Borel).
+  - Every vector $x \in A$ satisfies $x_j \ge 0$ and $\sum x_j = 1$, so $x \in \mathbb{R}_+^K \setminus \{0\}$.
+- Define $B = V$. Since $V$ is a linear subspace of $\mathbb{R}^K$, $B$ is *convex* and *closed*.
+- *Disjointness:* By hypothesis, $V \cap \mathbb{R}_+^K = \{0\}$. Since $0 \notin A$, we have:
+  $$ A \cap B = A \cap V = \emptyset $$
+
+*Step 2: Apply the Hahn-Banach Separation Theorem (Lemma 5.4)*
+Because $A$ is compact, $B = V$ is closed, and $A \cap B = \emptyset$, Lemma 5.4 guarantees the existence of a linear functional $f: \mathbb{R}^K \to \mathbb{R}$ and a constant $\gamma \in \mathbb{R}$ such that:
+$$ f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \; y \in V $$
+Since $f$ is a linear functional on $\mathbb{R}^K$, it is represented by a dot product with some vector $z' = (z'_1, \dots, z'_K)^T \in \mathbb{R}^K$:
+$$ f(w) = \sum_{j=1}^K z'_j w_j = z'^T w \quad \text{for all } w \in \mathbb{R}^K $$
+
+*Step 3: Show that $f(y) = 0$ for all $y \in V$ and $\gamma \le 0$*
+- Let $y \in V$ be arbitrary. Because $V$ is a linear subspace, for any scalar $\alpha \in \mathbb{R}$, the scaled vector $\alpha y$ also belongs to $V$.
+- Therefore, by the separation inequality:
+  $$ f(\alpha y) = \alpha f(y) \ge \gamma \quad \text{for all } \alpha \in \mathbb{R} $$
+- If $f(y) \ne 0$:
+  - If $f(y) > 0$, taking $\alpha \to -\infty$ gives $\alpha f(y) \to -\infty < \gamma$, a contradiction!
+  - If $f(y) < 0$, taking $\alpha \to +\infty$ gives $\alpha f(y) \to -\infty < \gamma$, a contradiction!
+- Thus, we must have:
+  $$ f(y) = 0 \quad \text{for all } y \in V $$
+- Since $0 \in V$, evaluating at $y = 0$ yields:
+  $$ \gamma \le f(0) = 0 \implies \gamma \le 0 $$
+
+*Step 4: Show that $z'_j < 0$ strictly for all $j$*
+- Since $f(x) < \gamma \le 0$ for all $x \in A$, we have $f(x) < 0$ for every vector in the simplex $A$.
+- In particular, each standard unit basis vector $e_j$ belongs to $A$ (set $\lambda_j = 1$ and all other $\lambda_k = 0$).
+- Evaluating $f$ on $e_j$:
+  $$ f(e_j) = z'^T e_j = z'_j < \gamma \le 0 \implies z'_j < 0 \quad \text{for all } j = 1, \dots, K $$
+
+*Step 5: Define the Strictly Positive Vector $z$*
+- Define $z_j := -z'_j$.
+- Since $z'_j < 0$, we have:
+  $$ z_j > 0 \quad \text{for all } j = 1, \dots, K \implies z \gg 0 $$
+- For any $y \in V$:
+  $$ z \cdot y = \sum_{j=1}^K z_j y_j = -\sum_{j=1}^K z'_j y_j = -f(y) = -0 = 0 $$
+Thus, $z \gg 0$ is strictly positive and orthogonal to $V$. $\blacksquare$
+
+*** How Lemma 5.4 & Corollary 5.5 Prove FTAP 1 (Theorem 5.3)
+To see the full power of this machinery, observe how directly it proves Theorem 5.3:
+1. In a one-period market with $N$ assets and $M$ states, set $K = M + 1$.
+2. Define the subspace of all possible portfolio outcomes:
+   $$ V = \left\{ \begin{pmatrix} -S(0)\theta \\ S(1, \omega_1)\theta \\ \vdots \\ S(1, \omega_M)\theta \end{pmatrix} \in \mathbb{R}^{M+1} \;\middle|\; \theta \in \mathbb{R}^N \right\} $$
+3. By Definition 5.1, an arbitrage opportunity is a non-zero vector in $V \cap \mathbb{R}_+^{M+1}$.
+4. Thus, *absence of arbitrage means $V \cap \mathbb{R}_+^{M+1} = \{0\}$*.
+5. Corollary 5.5 instantly gives a vector $z = (z_0, z_1, \dots, z_M)^T \gg 0$ orthogonal to $V$:
+   $$ -z_0 (S(0)\theta) + \sum_{m=1}^M z_m (S(1, \omega_m)\theta) = 0 \quad \forall \theta $$
+6. Dividing by $z_0 > 0$ yields the strictly positive state price vector:
+   $$ \psi_m = \frac{z_m}{z_0} > 0 \implies S(0) = S(1)^T \psi $$
+Without Lemma 5.4 and Corollary 5.5, proving FTAP 1 would be impossible. They are the core mathematical engine of asset pricing!
 
 ---
 
@@ -765,8 +768,8 @@ Thus, $S_{N+1}^*$ is automatically a martingale, proving the extended market is 
 | *Modified Duration* | $D^*(s) = \frac{D(s)}{1+s} = -\frac{V'(s)}{V(s)}$ | $\frac{\Delta V}{V} \approx -D^*(s)\Delta s$ |
 | *Redington Conditions* | $V_A = V_L, \quad D_A = D_L, \quad C_A > C_L$ | $f(s_0)=0, f'(s_0)=0, f''(s_0)>0$ |
 | *FTAP 1 (1-Period)* | $S(0) = S(1)^T \psi = \mathbb{E}[\varphi S(1)] = \frac{\mathbb{E}_\mathbb{Q}[S(1)]}{1+i}$ | $\psi \gg 0 \iff$ No Arbitrage |
-| *Section 5.1 Eq (5.4)* | $p < \mathbb{E}[S_2(1)] \iff q < \frac{\beta - p}{\beta - \alpha} = \psi(\omega_1)$ | Stock has positive risk premium |
-| *Section 5.1 Eq (5.5)* | $S_3(0) = \frac{\beta(\beta - p)}{\beta - \alpha} > \mathbb{E}[S_3(1)] = q\beta$ | Insurance asset has negative return! |
+| *Lemma 5.4 (Hahn-Banach)* | $f(x) < \gamma \le f(y) \quad \forall x \in A, y \in B$ | Strict separation for $A$ compact, $B$ closed |
+| *Corollary 5.5 (Farkas)* | $V \cap \mathbb{R}_+^K = \{0\} \iff \exists z \gg 0: z^T y = 0 \; \forall y \in V$ | Alternative theorem for linear subspaces |
 | *FTAP 2 (Completeness)* | $\operatorname{rank}(S(1)) = M \iff \psi \text{ (or } \mathbb{Q}\text{) is unique}$ | $N \ge M$ necessary |
 | *Put-Call Parity* | $r + \frac{\gamma}{1+i} = p + q$ | $r=\text{call}, q=\text{put}, p=\text{stock}, \gamma=\text{strike}$ |
 | *Utility FOC* | $S_n(0) = \mathbb{E}\left[\frac{u'(V(1))}{\lambda} S_n(1)\right]$ | $\varphi = \frac{u'(V(1))}{(1+i)\mathbb{E}[u'(V(1))]}$ |
