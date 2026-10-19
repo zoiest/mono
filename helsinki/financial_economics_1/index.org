@@ -59,6 +59,7 @@
   - *Problem Set 5 Deep Dive:* Detailed solutions for Exercise 5.4 (mean-square hedging regression beta) & Exercise 5.5 (pricing bounds & super-replication).
   - *Multi-Period Market Models & Martingales:* Predictable strategies, self-financing condition $S(t)\theta(t+1)=S(t)\theta(t)$, $(\mathbb{Q}, \mathbb{F})$-martingales, and CRR binomial tree rollback pricing.
   - *Problem-Solving Toolkit:* Exam decision trees and master equation formula summary.
+  - *Practice Exam Exercises & Detailed Solutions:* 4 comprehensive exam-style problems with step-by-step solutions (arbitrage detection & portfolio construction, mean-square error hedging, two-period tree self-financing verification, and super-hedging in incomplete markets).
 
 ** Core Theoretical Modules (Financial Economics I)
 

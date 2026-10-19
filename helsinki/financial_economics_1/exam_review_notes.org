@@ -695,3 +695,269 @@ Thus, $S_{N+1}^*$ is automatically a martingale, proving the extended market is 
 | *Binomial Probability* | $q = \frac{1+r-d}{u-d}$ | Valid when $d < 1+r < u$ |
 | *Binomial Valuation* | $V_t = \frac{1}{1+r}[q V_u + (1-q) V_d]$ | Backward induction |
 | *Binomial Delta* | $\theta_2(t+1) = \frac{V_u - V_d}{S(t)(u - d)}$ | Replicating stock shares |
+
+---
+
+* Practice Exam Exercises and Detailed Solutions
+
+** Practice Exercise 1: Arbitrage Detection, State Price Vectors, and Constructing Arbitrage Portfolios
+*Setting (Style of Problem Set 4, Exercises 4.1, 4.2, 4.4):*
+Consider a one-period market with three states of nature: $\Omega = \{\omega_1, \omega_2, \omega_3\}$.
+There are three securities traded at time $0$:
+- Security 1 (Risk-free Bond): $S_1(0) = 1$, terminal payoff $S_1(1) = (1, 1, 1)^T$ (interest rate $i = 0$).
+- Security 2 (Stock A): $S_2(0) = 6$, terminal payoff $S_2(1) = (3, 6, 9)^T$.
+- Security 3 (Stock B): $S_3(0) = p$, terminal payoff $S_3(1) = (9, 6, 3)^T$.
+
+*Questions:*
+1. State the linear system of equations that a state price vector $\psi = (\psi_1, \psi_2, \psi_3)^T$ must satisfy for this market.
+2. Find all strictly positive state price vectors $\psi \gg 0$ as a function of the price $p$.
+3. Determine the exact price $p$ for which the market is arbitrage-free.
+4. Suppose $p = 10$. Show that the market admits an arbitrage opportunity and construct an explicit portfolio $\theta = (\theta_1, \theta_2, \theta_3)^T$ that achieves an arbitrage.
+
+*** Solution to Practice Exercise 1
+
+*Part 1: The Linear System for State Prices*
+By Theorem 5.3 (FTAP 1), the market is arbitrage-free if and only if there exists a vector $\psi = (\psi_1, \psi_2, \psi_3)^T$ with $\psi_1 > 0, \psi_2 > 0, \psi_3 > 0$ such that $S(0) = S(1)^T \psi$:
+$$ 1 = \psi_1 + \psi_2 + \psi_3 \tag{1} $$
+$$ 6 = 3\psi_1 + 6\psi_2 + 9\psi_3 \tag{2} $$
+$$ p = 9\psi_1 + 6\psi_2 + 3\psi_3 \tag{3} $$
+
+*Part 2: Solving for $\psi$*
+Divide Equation (2) by 3:
+$$ 2 = \psi_1 + 2\psi_2 + 3\psi_3 \tag{2'} $$
+Subtract Equation (1) from (2'):
+$$ 2 - 1 = (\psi_1 - \psi_1) + (2\psi_2 - \psi_2) + (3\psi_3 - \psi_3) \implies 1 = \psi_2 + 2\psi_3 \implies \psi_2 = 1 - 2\psi_3 $$
+Substitute $\psi_2 = 1 - 2\psi_3$ into Equation (1):
+$$ \psi_1 + (1 - 2\psi_3) + \psi_3 = 1 \implies \psi_1 - \psi_3 = 0 \implies \psi_1 = \psi_3 $$
+For $\psi$ to be strictly positive ($\psi \gg 0$):
+- $\psi_3 > 0$
+- $\psi_2 = 1 - 2\psi_3 > 0 \implies \psi_3 < 1/2$.
+Thus, any $\psi_3 \in (0, 1/2)$ yields a strictly positive state price vector:
+$$ \psi = (\psi_3, 1 - 2\psi_3, \psi_3)^T, \quad \psi_3 \in (0, 1/2) $$
+
+Now substitute these into Equation (3) to find the required price $p$:
+$$ p = 9\psi_1 + 6\psi_2 + 3\psi_3 = 9\psi_3 + 6(1 - 2\psi_3) + 3\psi_3 = 6 + (9 - 12 + 3)\psi_3 = 6 $$
+*Conclusion:* The state price equation requires $p = 6$ exactly. When $p = 6$, there are infinitely many state price vectors parameterized by $\psi_3 \in (0, 1/2)$.
+
+*Part 3: Arbitrage-Free Condition*
+The market is arbitrage-free if and only if $p = 6$. For any $p \ne 6$, no positive state price vector exists, so the market admits arbitrage.
+
+*Part 4: Arbitrage Construction when $p = 10$*
+Notice that terminal payoffs satisfy:
+$$ S_2(1) + S_3(1) = \begin{pmatrix} 3 \\ 6 \\ 9 \end{pmatrix} + \begin{pmatrix} 9 \\ 6 \\ 3 \end{pmatrix} = \begin{pmatrix} 12 \\ 12 \\ 12 \end{pmatrix} = 12 S_1(1) $$
+Therefore, a portfolio of 1 unit of Stock A and 1 unit of Stock B perfectly replicates 12 units of the Bond in every state.
+Under no arbitrage, their prices must satisfy:
+$$ S_2(0) + S_3(0) = 12 S_1(0) = 12 $$
+When $p = 10$, $S_2(0) + S_3(0) = 6 + 10 = 16 > 12$. The risky stocks are collectively overpriced relative to the bond!
+
+*Arbitrage Strategy:*
+1. Sell (short) 1 unit of Stock A and 1 unit of Stock B at time $0$, receiving $+6 + 10 = +16$.
+2. Buy 12 units of the Bond at time $0$, costing $-12(1) = -12$.
+3. Net cash pocketed at time $0$:
+   $$ +16 - 12 = +4 > 0 $$
+4. Terminal payoff at time $1$ in every state:
+   $$ 12 S_1(1) - S_2(1) - S_3(1) = 12 - (S_2(1) + S_3(1)) = 12 - 12 = 0 $$
+The portfolio $\theta = (12, -1, -1)^T$ yields $+4$ riskless cash upfront with identically zero future liabilities. This is a pure arbitrage opportunity! $\blacksquare$
+
+#+begin_quote
+*Exam Tip:* Whenever two risky assets sum to a constant multiple of the riskless bond (here $S_2(1) + S_3(1) = 12 S_1(1)$), their initial prices MUST sum to that same constant multiple ($S_2(0) + S_3(0) = 12 S_1(0)$). If they do not, you can immediately construct an arbitrage with zero terminal risk!
+#+end_quote
+
+---
+
+** Practice Exercise 2: Concrete Numerical Mean-Square Error Hedging
+*Setting (Style of Problem Set 5, Exercise 5.4 & Section 5.1.4):*
+An investor operates in a one-period market with finite state space $\Omega = \{\omega_1, \omega_2, \omega_3\}$.
+The physical probabilities are:
+$$ \mathbb{P}(\{\omega_1\}) = \frac{1}{4}, \quad \mathbb{P}(\{\omega_2\}) = \frac{1}{2}, \quad \mathbb{P}(\{\omega_3\}) = \frac{1}{4} $$
+There are two assets:
+- Security 1 (Bond): $S_1(0) = 1$, $S_1(1) = (1, 1, 1)^T$ ($i = 0$).
+- Security 2 (Stock): $S_2(0) = 10$, $S_2(1) = (6, 10, 14)^T$.
+
+The investor has sold a European Call option with strike $K = 9$ expiring at time $1$.
+The option payoff is the random variable $X = (S_2(1) - 9)^+$:
+$$ X(\omega_1) = (6 - 9)^+ = 0, \quad X(\omega_2) = (10 - 9)^+ = 1, \quad X(\omega_3) = (14 - 9)^+ = 5 $$
+The investor wants to hedge this liability by finding a portfolio $\theta = (\theta_1, \theta_2)^T$ that minimizes the tracking error variance $\operatorname{Var}(X - S(1)\theta)$ subject to the unbiased expectation condition $\mathbb{E}[S(1)\theta] = \mathbb{E}[X]$.
+
+*Questions:*
+1. Calculate $\mathbb{E}[S_2(1)]$, $\operatorname{Var}(S_2(1))$, $\mathbb{E}[X]$, and $\operatorname{Cov}(X, S_2(1))$.
+2. Find the optimal mean-square hedging portfolio $\hat{\theta} = (\hat{\theta}_1, \hat{\theta}_2)^T$.
+3. Compute the minimal residual unhedgeable variance $\operatorname{Var}(X - S(1)\hat{\theta})$.
+4. What is the initial setup cost $S(0)\hat{\theta}$ of this hedging portfolio?
+
+*** Solution to Practice Exercise 2
+
+*Part 1: Calculating Moments*
+- Expected stock price:
+  $$ \mathbb{E}[S_2(1)] = \frac{1}{4}(6) + \frac{1}{2}(10) + \frac{1}{4}(14) = 1.5 + 5 + 3.5 = 10 $$
+- Variance of stock price:
+  $$ \operatorname{Var}(S_2(1)) = \mathbb{E}[(S_2(1) - \mathbb{E}[S_2(1)])^2] = \frac{1}{4}(6 - 10)^2 + \frac{1}{2}(10 - 10)^2 + \frac{1}{4}(14 - 10)^2 $$
+  $$ = \frac{1}{4}(16) + 0 + \frac{1}{4}(16) = 4 + 4 = 8 $$
+- Expected claim payoff:
+  $$ \mathbb{E}[X] = \frac{1}{4}(0) + \frac{1}{2}(1) + \frac{1}{4}(5) = 0 + 0.5 + 1.25 = 1.75 = \frac{7}{4} $$
+- Covariance $\operatorname{Cov}(X, S_2(1))$:
+  $$ \operatorname{Cov}(X, S_2(1)) = \mathbb{E}[(X - \mathbb{E}[X])(S_2(1) - \mathbb{E}[S_2(1)])] $$
+  - State $\omega_1$: $(0 - 1.75)(6 - 10) = (-1.75)(-4) = 7$
+  - State $\omega_2$: $(1 - 1.75)(10 - 10) = (-0.75)(0) = 0$
+  - State $\omega_3$: $(5 - 1.75)(14 - 10) = (3.25)(4) = 13$
+  Taking expectation:
+  $$ \operatorname{Cov}(X, S_2(1)) = \frac{1}{4}(7) + \frac{1}{2}(0) + \frac{1}{4}(13) = \frac{20}{4} = 5 $$
+
+*Part 2: Finding Optimal Portfolio $\hat{\theta}$*
+From the derivation in Exercise 5.4:
+$$ \hat{\theta}_2 = \frac{\operatorname{Cov}(X, S_2(1))}{\operatorname{Var}(S_2(1))} = \frac{5}{8} = 0.625 $$
+From the unbiased constraint $\mathbb{E}[S(1)\theta] = \theta_1 S_1(1) + \theta_2 \mathbb{E}[S_2(1)] = \mathbb{E}[X]$:
+$$ \hat{\theta}_1 = \mathbb{E}[X] - \hat{\theta}_2 \mathbb{E}[S_2(1)] = 1.75 - (0.625)(10) = 1.75 - 6.25 = -4.50 $$
+Thus, the optimal minimizing portfolio is:
+$$ \hat{\theta} = \begin{pmatrix} -4.50 \\ 0.625 \end{pmatrix} $$
+*(Hold $0.625$ shares of stock and borrow $4.50$ in the bond account).*
+
+*Part 3: Minimal Residual Variance*
+Using formula (8) from Exercise 5.4:
+$$ \operatorname{Var}(X - S(1)\hat{\theta}) = \operatorname{Var}(X) - \frac{[\operatorname{Cov}(X, S_2(1))]^2}{\operatorname{Var}(S_2(1))} $$
+Compute $\operatorname{Var}(X)$:
+$$ \mathbb{E}[X^2] = \frac{1}{4}(0^2) + \frac{1}{2}(1^2) + \frac{1}{4}(5^2) = 0 + 0.5 + 6.25 = 6.75 = \frac{27}{4} $$
+$$ \operatorname{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2 = 6.75 - (1.75)^2 = 6.75 - 3.0625 = 3.6875 = \frac{59}{16} $$
+Now subtract the hedgeable variance:
+$$ \frac{[\operatorname{Cov}(X, S_2(1))]^2}{\operatorname{Var}(S_2(1))} = \frac{5^2}{8} = \frac{25}{8} = \frac{50}{16} = 3.125 $$
+Therefore:
+$$ \operatorname{Var}(X - S(1)\hat{\theta}) = \frac{59}{16} - \frac{50}{16} = \frac{9}{16} = 0.5625 $$
+*(The hedging strategy eliminates $\frac{50}{59} \approx 84.7\%$ of the variance of the claim!).*
+
+*Part 4: Setup Cost of the Hedge*
+$$ S(0)\hat{\theta} = \hat{\theta}_1 S_1(0) + \hat{\theta}_2 S_2(0) = (-4.50)(1) + (0.625)(10) = -4.50 + 6.25 = 1.75 $$
+
+---
+
+** Practice Exercise 3: Two-Period Binomial Tree, Delta-Hedging, and Self-Financing Verification
+*Setting (Style of Problem Set 6, Exercises 6.1–6.4):*
+Consider a two-period binomial market ($t = 0, 1, 2$).
+- Interest rate: $r = 10\%$ per period ($S_1(0) = 1, S_1(1) = 1.10, S_1(2) = 1.21$).
+- Stock: Initial price $S_2(0) = 100$.
+  At each step, the stock price moves up by factor $u = 1.30$ or down by factor $d = 0.90$.
+  (Notice $0.90 < 1.10 < 1.30$).
+- Target claim: A European Call option expiring at $t = 2$ with strike price $K = 110$.
+
+*Questions:*
+1. Calculate the unique risk-neutral probability $q$.
+2. Compute the stock prices and terminal option payoffs at $t = 2$.
+3. Using backward induction, compute the option price at time $1$ ($V_u, V_d$) and at time $0$ ($V_0$).
+4. Calculate the replicating portfolio $\theta(1) = (\theta_1(1), \theta_2(1))$ held during the first period.
+5. Calculate the replicating portfolio $\theta(2)$ held during the second period at node $u$.
+6. *Verify explicitly that the self-financing condition holds at $t = 1$ at node $u$:*
+   $$ S(1)\theta(2) = S(1)\theta(1) $$
+
+*** Solution to Practice Exercise 3
+
+*Part 1: Risk-Neutral Probability*
+By the martingale condition $1+r = q u + (1-q) d$:
+$$ q = \frac{1 + r - d}{u - d} = \frac{1.10 - 0.90}{1.30 - 0.90} = \frac{0.20}{0.40} = \frac{1}{2} = 0.50 $$
+$$ 1 - q = 0.50 $$
+
+*Part 2: Stock Prices and Terminal Payoffs at $t = 2$*
+- At $t = 0$: $S_2(0) = 100$.
+- At $t = 1$:
+  - Up node $u$: $S_u = 100 \times 1.30 = 130$.
+  - Down node $d$: $S_d = 100 \times 0.90 = 90$.
+- At $t = 2$:
+  - Node $uu$: $S_{uu} = 130 \times 1.30 = 169$. Payoff: $V_{uu} = (169 - 110)^+ = 59$.
+  - Node $ud$: $S_{ud} = 130 \times 0.90 = 117$. Payoff: $V_{ud} = (117 - 110)^+ = 7$.
+  - Node $dd$: $S_{dd} = 90 \times 0.90 = 81$. Payoff: $V_{dd} = (81 - 110)^+ = 0$.
+
+*Part 3: Backward Induction Valuation*
+- At node $u$ ($t = 1$):
+  $$ V_u = \frac{1}{1+r}[q V_{uu} + (1-q) V_{ud}] = \frac{1}{1.10}[0.5(59) + 0.5(7)] = \frac{29.5 + 3.5}{1.10} = \frac{33}{1.10} = 30 $$
+- At node $d$ ($t = 1$):
+  $$ V_d = \frac{1}{1+r}[q V_{ud} + (1-q) V_{dd}] = \frac{1}{1.10}[0.5(7) + 0.5(0)] = \frac{3.5}{1.10} = \frac{35}{11} \approx 3.1818 $$
+- At time $0$:
+  $$ V_0 = \frac{1}{1+r}[q V_u + (1-q) V_d] = \frac{1}{1.10}\left[0.5(30) + 0.5\left(\frac{35}{11}\right)\right] = \frac{10}{11}\left[15 + \frac{35}{22}\right] = \frac{10}{11}\left[\frac{365}{22}\right] = \frac{1825}{121} \approx 15.0826 $$
+
+*Part 4: Replicating Portfolio in First Period $\theta(1)$*
+- Stock holding:
+  $$ \theta_2(1) = \frac{V_u - V_d}{S_u - S_d} = \frac{30 - 35/11}{130 - 90} = \frac{295/11}{40} = \frac{59}{88} \approx 0.6705 \text{ shares} $$
+- Bond holding:
+  $$ \theta_1(1) = \frac{V_0 - \theta_2(1) S_2(0)}{S_1(0)} = \frac{1825}{121} - \left(\frac{59}{88}\right)(100) = \frac{1825}{121} - \frac{1475}{22} = \frac{3650 - 16225}{242} = -\frac{12575}{242} \approx -51.9628 $$
+
+*Part 5: Replicating Portfolio in Second Period $\theta(2)$ at Node $u$*
+At node $u$ ($S_u = 130$):
+- Stock holding for period 2:
+  $$ \theta_2^u(2) = \frac{V_{uu} - V_{ud}}{S_{uu} - S_{ud}} = \frac{59 - 7}{169 - 117} = \frac{52}{52} = 1.00 \text{ share} $$
+- Bond holding for period 2:
+  $$ \theta_1^u(2) = \frac{V_u - \theta_2^u(2) S_u}{S_1(1)} = \frac{30 - (1.00)(130)}{1.10} = \frac{-100}{1.10} = -\frac{1000}{11} \approx -90.9091 $$
+
+*Part 6: Verification of the Self-Financing Condition at Node $u$*
+At $t = 1$, the portfolio held over the first period $\theta(1)$ has value:
+$$ S(1)\theta(1) = \theta_1(1) S_1(1) + \theta_2(1) S_u = \left(-\frac{12575}{242}\right)(1.10) + \left(\frac{59}{88}\right)(130) $$
+$$ = -\frac{12575}{220} + \frac{7670}{88} = -\frac{2515}{44} + \frac{3835}{44} = \frac{1320}{44} = 30 = V_u $$
+The value of the rebalanced portfolio $\theta(2)$ at the same time $t = 1$ is:
+$$ S(1)\theta(2) = \theta_1^u(2) S_1(1) + \theta_2^u(2) S_u = \left(-\frac{1000}{11}\right)(1.10) + (1.00)(130) = -100 + 130 = 30 = V_u $$
+Since:
+$$ S(1)\theta(1) = S(1)\theta(2) = 30 $$
+*The self-financing condition holds identically:* exactly zero capital is injected or withdrawn when rebalancing from $\theta(1)$ to $\theta(2)$! $\blacksquare$
+
+---
+
+** Practice Exercise 4: Incomplete Market: Pricing Bounds and Super-Replication
+*Setting (Style of Problem Set 5, Exercise 5.5):*
+Consider a one-period market with three states: $\Omega = \{\omega_1, \omega_2, \omega_3\}$.
+Two securities are traded:
+- Security 1 (Bond): $S_1(0) = 1, S_1(1) = (1, 1, 1)^T$ ($i = 0$).
+- Security 2 (Stock): $S_2(0) = 5, S_2(1) = (2, 6, 8)^T$.
+Since $N = 2 < M = 3$, the market is incomplete.
+
+*Questions:*
+1. Parametrize all strictly positive state price vectors $\psi = (\psi_1, \psi_2, \psi_3)^T \gg 0$.
+2. A new claim $X$ has terminal payoff $X = (0, 4, 10)^T$.
+   Find the lower and upper arbitrage-free pricing bounds:
+   $$ \underline{V} = \inf_{\psi \gg 0} \psi^T X, \quad \overline{V} = \sup_{\psi \gg 0} \psi^T X $$
+3. If $X$ is traded at price $V = 4.50 \in (\underline{V}, \overline{V})$, show that the extended market is arbitrage-free by constructing a valid state price vector.
+4. Suppose an investor is willing to spend $W = 6.50 > \overline{V}$ to super-hedge $X$. Find a portfolio $\theta = (\theta_1, \theta_2)^T$ of the original assets such that $S(0)\theta = W$ and $S(1)\theta \ge X$ almost surely.
+
+*** Solution to Practice Exercise 4
+
+*Part 1: Parametrizing State Prices*
+The state price vector $\psi = (\psi_1, \psi_2, \psi_3)^T$ must satisfy:
+$$ 1 = \psi_1 + \psi_2 + \psi_3 \tag{1} $$
+$$ 5 = 2\psi_1 + 6\psi_2 + 8\psi_3 \tag{2} $$
+From (1), $\psi_1 = 1 - \psi_2 - \psi_3$. Substitute into (2):
+$$ 5 = 2(1 - \psi_2 - \psi_3) + 6\psi_2 + 8\psi_3 = 2 + 4\psi_2 + 6\psi_3 \implies 4\psi_2 + 6\psi_3 = 3 \implies \psi_2 = \frac{3 - 6\psi_3}{4} $$
+Then:
+$$ \psi_1 = 1 - \frac{3 - 6\psi_3}{4} - \psi_3 = \frac{1 + 2\psi_3}{4} $$
+For $\psi \gg 0$:
+- $\psi_3 > 0$
+- $\psi_2 = \frac{3-6\psi_3}{4} > 0 \implies \psi_3 < 1/2$.
+Thus, the set of state price vectors is parameterized by $\psi_3 \in (0, 1/2)$:
+$$ \psi(\psi_3) = \begin{pmatrix} \frac{1+2\psi_3}{4} \\ \frac{3-6\psi_3}{4} \\ \psi_3 \end{pmatrix}, \quad \psi_3 \in \left(0, \frac{1}{2}\right) $$
+
+*Part 2: Finding Pricing Bounds $\underline{V}$ and $\overline{V}$*
+Compute the price of $X = (0, 4, 10)^T$:
+$$ \psi^T X = \psi_1(0) + \psi_2(4) + \psi_3(10) = 4\left(\frac{3-6\psi_3}{4}\right) + 10\psi_3 = (3 - 6\psi_3) + 10\psi_3 = 3 + 4\psi_3 $$
+Since $\psi_3 \in (0, 1/2)$:
+- As $\psi_3 \to 0$: $\psi^T X \to 3 + 4(0) = 3$.
+- As $\psi_3 \to 1/2$: $\psi^T X \to 3 + 4(1/2) = 3 + 2 = 5$.
+Therefore, the arbitrage-free price interval for $X$ is:
+$$ (\underline{V}, \overline{V}) = (3, 5) $$
+
+*Part 3: Arbitrage-Freedom for Price $V = 4.50$*
+Since $4.50 \in (3, 5)$, set $\psi^T X = 3 + 4\psi_3 = 4.50$:
+$$ 4\psi_3 = 1.50 \implies \psi_3 = \frac{1.5}{4} = \frac{3}{8} = 0.375 \in \left(0, \frac{1}{2}\right) $$
+Then:
+$$ \psi_1 = \frac{1 + 2(3/8)}{4} = \frac{7}{16} = 0.4375 > 0 $$
+$$ \psi_2 = \frac{3 - 6(3/8)}{4} = \frac{3}{16} = 0.1875 > 0 $$
+$$ \psi_3 = \frac{6}{16} = 0.375 > 0 $$
+Since $\psi \gg 0$, the extended market with $V_X(0) = 4.50$ is strictly arbitrage-free by FTAP 1.
+
+*Part 4: Super-Hedging with Budget $W = 6.50$*
+We seek a portfolio $\theta = (\theta_1, \theta_2)^T$ such that:
+$$ S(0)\theta = \theta_1(1) + \theta_2(5) = 6.50 \implies \theta_1 = 6.50 - 5\theta_2 $$
+and $S(1)\theta \ge X$ in all states:
+1. State $\omega_1$: $(6.50 - 5\theta_2) + 2\theta_2 \ge 0 \implies 6.50 \ge 3\theta_2 \implies \theta_2 \le \frac{6.50}{3} \approx 2.167$.
+2. State $\omega_2$: $(6.50 - 5\theta_2) + 6\theta_2 \ge 4 \implies 6.50 + \theta_2 \ge 4 \implies \theta_2 \ge -2.50$.
+3. State $\omega_3$: $(6.50 - 5\theta_2) + 8\theta_2 \ge 10 \implies 6.50 + 3\theta_2 \ge 10 \implies 3\theta_2 \ge 3.50 \implies \theta_2 \ge \frac{3.50}{3} \approx 1.167$.
+Any $\theta_2 \in [1.167, 2.167]$ super-hedges $X$. Choose $\theta_2 = 1.50$:
+$$ \theta_1 = 6.50 - 5(1.50) = -1.00 $$
+Checking payoffs:
+- State $\omega_1$: $(-1)(1) + (1.5)(2) = 2 \ge 0 = X(\omega_1)$ (Surplus $+2$).
+- State $\omega_2$: $(-1)(1) + (1.5)(6) = 8 \ge 4 = X(\omega_2)$ (Surplus $+4$).
+- State $\omega_3$: $(-1)(1) + (1.5)(8) = 11 \ge 10 = X(\omega_3)$ (Surplus $+1$).
+$S(1)\theta \ge X$ almost surely in every state! $\blacksquare$
