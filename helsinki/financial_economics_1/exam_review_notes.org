@@ -295,7 +295,9 @@ Insurance/hedging assets must have a *strictly negative expected return*, and pr
 
 *** Step 2: Equation (5.4) — Positive Risk Premium on the Stock
 Because Security 2 is a risky investment, investors demand a positive expected return (a positive risk premium):
-$$ p < \mathbb{E}[S_2(1)] = q\alpha + (1-q)\beta \tag{5.4} $$
+\begin{equation}
+p < \mathbb{E}[S_2(1)] = q\alpha + (1-q)\beta \tag{5.4}
+\end{equation}
 This means the stock is discounted at an expected rate of return $i' > 0$:
 $$ p = \frac{\mathbb{E}[S_2(1)]}{1 + i'}, \quad i' > 0 $$
 
@@ -303,7 +305,9 @@ Let us analyze what Inequality (5.4) implies algebraically for the probability $
 $$ p < q\alpha + (1-q)\beta = \beta - q(\beta - \alpha) $$
 $$ q(\beta - \alpha) < \beta - p $$
 Since $\beta > \alpha$, dividing by $(\beta - \alpha) > 0$ yields:
-$$ q < \frac{\beta - p}{\beta - \alpha} = \psi(\omega_1) \tag{*} $$
+\begin{equation}
+q < \frac{\beta - p}{\beta - \alpha} = \psi(\omega_1) \tag{*}
+\end{equation}
   *Crucial insight:* The physical probability $q = \mathbb{P}(\omega_1)$ is *strictly smaller* than the state price $\psi(\omega_1)$!
 
 *** Step 3: Equation (5.5) — Introducing Security 3 (Insurance Against Downturn)
@@ -315,9 +319,13 @@ $$ S_3(1, \omega_1) = \beta, \quad S_3(1, \omega_2) = 0 $$
 
 To prevent arbitrage in the extended market, Theorem 5.3 dictates that Security 3 must be priced using the pricing deflator $\varphi$ (or state price $\psi$):
 $$ S_3(0) = \mathbb{E}[\varphi S_3(1)] = \varphi(\omega_1) S_3(1, \omega_1) q + \varphi(\omega_2) S_3(1, \omega_2) (1-q) $$
-$$ S_3(0) = \left[\frac{\beta - p}{q(\beta - \alpha)}\right] \cdot \beta \cdot q + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5} $$
+\begin{equation}
+S_3(0) = \left[\frac{\beta - p}{q(\beta - \alpha)}\right] \cdot \beta \cdot q + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5}
+\end{equation}
 Equivalently, via state prices:
-$$ S_3(0) = \psi(\omega_1) S_3(1, \omega_1) + \psi(\omega_2) S_3(1, \omega_2) = \left(\frac{\beta - p}{\beta - \alpha}\right) \beta + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5} $$
+\begin{equation}
+S_3(0) = \psi(\omega_1) S_3(1, \omega_1) + \psi(\omega_2) S_3(1, \omega_2) = \left(\frac{\beta - p}{\beta - \alpha}\right) \beta + 0 = \frac{\beta(\beta - p)}{\beta - \alpha} \tag{5.5}
+\end{equation}
 
 *** Step 4: The Counter-Intuitive Discovery — Negative Expected Return!
 What is the mathematical expectation of Security 3's terminal payoff under the real-world probability $\mathbb{P}$?
@@ -469,7 +477,9 @@ An investor evaluates terminal wealth $W = V(1)$ through a concave utility funct
 
 ** The One-Period Optimization Problem
 Given initial wealth $V(0) > 0$, the investor solves:
-$$ \max_{\theta \in \mathbb{R}^N} \mathbb{E}[u(S(1)\theta)] \quad \text{subject to} \quad S(0)\theta = V(0) \tag{5.10} $$
+\begin{equation}
+\max_{\theta \in \mathbb{R}^N} \mathbb{E}[u(S(1)\theta)] \quad \text{subject to} \quad S(0)\theta = V(0) \tag{5.10}
+\end{equation}
 
 *** First-Order Condition (Euler Equation) via Lagrange Multipliers
 Form the Lagrangian:
@@ -504,14 +514,18 @@ $$ \mathbb{E}[S(1)\theta] = \mathbb{E}[X] $$
   *Step 1: Use the constraint to eliminate $\theta_1$.*
 $$ S(1)\theta = \theta_1 S_1(1) + \theta_2 S_2(1) = \theta_1 + \theta_2 S_2(1) $$
 Taking expectations:
-$$ \mathbb{E}[S(1)\theta] = \theta_1 + \theta_2 \mathbb{E}[S_2(1)] = \mathbb{E}[X] \implies \theta_1 = \mathbb{E}[X] - \theta_2 \mathbb{E}[S_2(1)] \tag{1} $$
+\begin{equation}
+\mathbb{E}[S(1)\theta] = \theta_1 + \theta_2 \mathbb{E}[S_2(1)] = \mathbb{E}[X] \implies \theta_1 = \mathbb{E}[X] - \theta_2 \mathbb{E}[S_2(1)] \tag{1}
+\end{equation}
 
   *Step 2: Express the tracking error.*
 $$ X - S(1)\theta = [X - \mathbb{E}[X]] - \theta_2 [S_2(1) - \mathbb{E}[S_2(1)]] $$
 
   *Step 3: Compute the variance.*
 $$ \operatorname{Var}(X - S(1)\theta) = \mathbb{E}\left[\left([X - \mathbb{E}[X]] - \theta_2 [S_2(1) - \mathbb{E}[S_2(1)]]\right)^2\right] $$
-$$ = \operatorname{Var}(X) - 2\theta_2 \operatorname{Cov}(X, S_2(1)) + \theta_2^2 \operatorname{Var}(S_2(1)) \tag{2} $$
+\begin{equation}
+= \operatorname{Var}(X) - 2\theta_2 \operatorname{Cov}(X, S_2(1)) + \theta_2^2 \operatorname{Var}(S_2(1)) \tag{2}
+\end{equation}
 
   *Step 4: Minimize with respect to $\theta_2$.*
 Equation (2) is a strictly convex parabola in $\theta_2$. Setting derivative to zero:
@@ -552,8 +566,12 @@ Show there exists a portfolio $\theta$ of original securities such that $S(0)\th
 
 1. *Hypothetical Market:* If claim $X$ traded at price $W > \overline{V}$, no deflator could exist in $\Phi$ pricing $X$ at $W$.
 2. *Arbitrage Portfolio:* By FTAP 1, there exists an arbitrage portfolio $(\theta_1, \dots, \theta_N, \theta_{N+1})^T$:
-   $$ \sum_{n=1}^N S_n(0)\theta_n + W \theta_{N+1} \le 0 \tag{A} $$
-   $$ \sum_{n=1}^N S_n(1)\theta_n + X \theta_{N+1} \ge 0 \quad \text{a.s.} \tag{B} $$
+   \begin{equation}
+   \sum_{n=1}^N S_n(0)\theta_n + W \theta_{N+1} \le 0 \tag{A}
+   \end{equation}
+   \begin{equation}
+   \sum_{n=1}^N S_n(1)\theta_n + X \theta_{N+1} \ge 0 \quad \text{a.s.} \tag{B}
+   \end{equation}
 3. *Sign Analysis of $\theta_{N+1}$:*
    - $\theta_{N+1} \ne 0$ (otherwise original market would have arbitrage).
    - $\theta_{N+1} < 0$: If $\theta_{N+1} > 0$, replacing $W$ with $V_0 = \frac{\underline{V}+\overline{V}}{2} < W$ would create arbitrage in the market with price $V_0$, contradicting Part (a). Thus, $\theta_{N+1} < 0$.
@@ -582,14 +600,18 @@ A trading strategy is a sequence of portfolios $\theta(t) = (\theta_1(t), \dots,
 #+begin_quote
   *Definition (Self-Financing Strategy):*
 A trading strategy $\theta$ is *self-financing* if at each rebalancing date $t \in \{1, \dots, T-1\}$:
-$$ S(t)\theta(t+1) = S(t)\theta(t) \tag{5.16} $$
+\begin{equation}
+S(t)\theta(t+1) = S(t)\theta(t) \tag{5.16}
+\end{equation}
   *Intuition:* The value of the new portfolio $\theta(t+1)$ purchased at time $t$ exactly equals the liquidated value of the old portfolio $\theta(t)$. No outside capital is added or removed!
 #+end_quote
 
 *** Wealth Increments under Self-Financing
 $$ \Delta V(t) = V(t) - V(t-1) = \theta(t) \cdot \Delta S(t) $$
 In discounted terms:
-$$ V^*(t) = V^*(0) + \sum_{k=1}^t \theta(k) \cdot \Delta S^*(k) \tag{5.17} $$
+\begin{equation}
+V^*(t) = V^*(0) + \sum_{k=1}^t \theta(k) \cdot \Delta S^*(k) \tag{5.17}
+\end{equation}
 
 ** Multi-Period Fundamental Theorems of Asset Pricing
 
@@ -601,7 +623,9 @@ $$ V(0) \le 0, \quad V(T) \ge 0 \text{ a.s.}, \quad \text{and } \mathbb{P}(V(T) 
 #+begin_quote
   *Theorem 5.10:*
 The multi-period market is *arbitrage-free* if and only if there exists a probability measure $\mathbb{Q} \sim \mathbb{P}$ (equivalent martingale measure) such that all discounted asset price processes $S^*(t)$ are \((\mathbb{Q}, \mathbb{F})\)-*martingales*:
-$$ \mathbb{E}_\mathbb{Q}[S^*(t+1) \mid \mathcal{F}_t] = S^*(t) \quad \forall t = 0, 1, \dots, T-1 \tag{5.18} $$
+\begin{equation}
+\mathbb{E}_\mathbb{Q}[S^*(t+1) \mid \mathcal{F}_t] = S^*(t) \quad \forall t = 0, 1, \dots, T-1 \tag{5.18}
+\end{equation}
 #+end_quote
 /(Proof and Lemma 5.12 omitted per exam syllabus instructions)./
 
@@ -644,33 +668,33 @@ Thus, $S_{N+1}^*$ is automatically a martingale, proving the extended market is 
 ** Decision Trees for Typical Exam Questions
 #+begin_example
                     HOW TO SOLVE EXAM PROBLEMS
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. "Check if the market is arbitrage-free"                                   │
-│    • Deterministic rates / Term structure: Check if all forward rates       │
-│      f_j >= 0 (or (1+s_k)^k >= (1+s_j)^j).                                  │
-│    • 1-Period Bond + 1 Share: Check if p in (alpha_1/(1+i), alpha_M/(1+i)). │
-│    • General 1-Period: Solve S(0) = S(1)^T psi with psi_m > 0 for all m.    │
-│    • Multi-Period Tree: Check if at each node d < 1+r < u.                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 2. "Replicate a derivative / Find arbitrage-free price"                     │
-│    • Set up replication system: S(1) theta = X.                             │
-│    • If theta exists, unique price is V(0) = S(0) theta.                    │
-│    • Alternatively, compute V(0) = 1/(1+i) E_Q[X] = sum psi_m X(omega_m).   │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 3. "Incomplete Market: Find arbitrage-free price interval (V_, V-bar)"       │
-│    • Parametrize all valid state price vectors psi(t) or measures Q(p).     │
-│    • V_ = inf E_Q[X],  V-bar = sup E_Q[X].                                  │
-│    • Arbitrage-free interval is the open set (V_, V-bar).                   │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 4. "Mean-Square Error Hedging" (Exercise 5.4 style)                         │
-│    • theta_2* = Cov(X, S_2(1)) / Var(S_2(1))                                │
-│    • theta_1* = E[X] - theta_2* E[S_2(1)]                                   │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 5. "Multi-Period Binomial Tree Pricing"                                     │
-│    • Risk-neutral probability: q = (1 + r - d) / (u - d)                    │
-│    • Roll backward: V_node = 1/(1+r) [ q V_up + (1-q) V_down ]              │
-│    • Delta hedge: theta_stock = (V_up - V_down) / (S_node * (u - d))        │
-└─────────────────────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------------------+
+| 1. "Check if the market is arbitrage-free"                                   |
+|    * Deterministic rates / Term structure: Check if all forward rates       |
+|      f_j >= 0 (or (1+s_k)^k >= (1+s_j)^j).                                  |
+|    * 1-Period Bond + 1 Share: Check if p in (alpha_1/(1+i), alpha_M/(1+i)). |
+|    * General 1-Period: Solve S(0) = S(1)^T psi with psi_m > 0 for all m.    |
+|    * Multi-Period Tree: Check if at each node d < 1+r < u.                  |
++-----------------------------------------------------------------------------+
+| 2. "Replicate a derivative / Find arbitrage-free price"                     |
+|    * Set up replication system: S(1) theta = X.                             |
+|    * If theta exists, unique price is V(0) = S(0) theta.                    |
+|    * Alternatively, compute V(0) = 1/(1+i) E_Q[X] = sum psi_m X(omega_m).   |
++-----------------------------------------------------------------------------+
+| 3. "Incomplete Market: Find arbitrage-free price interval (V_, V-bar)"       |
+|    * Parametrize all valid state price vectors psi(t) or measures Q(p).     |
+|    * V_ = inf E_Q[X],  V-bar = sup E_Q[X].                                  |
+|    * Arbitrage-free interval is the open set (V_, V-bar).                   |
++-----------------------------------------------------------------------------+
+| 4. "Mean-Square Error Hedging" (Exercise 5.4 style)                         |
+|    * theta_2* = Cov(X, S_2(1)) / Var(S_2(1))                                |
+|    * theta_1* = E[X] - theta_2* E[S_2(1)]                                   |
++-----------------------------------------------------------------------------+
+| 5. "Multi-Period Binomial Tree Pricing"                                     |
+|    * Risk-neutral probability: q = (1 + r - d) / (u - d)                    |
+|    * Roll backward: V_node = 1/(1+r) [ q V_up + (1-q) V_down ]              |
+|    * Delta hedge: theta_stock = (V_up - V_down) / (S_node * (u - d))        |
++-----------------------------------------------------------------------------+
 #+end_example
 
 ** Quick-Reference Formula Summary
@@ -718,13 +742,21 @@ There are three securities traded at time $0$:
 
 *Part 1: The Linear System for State Prices*
 By Theorem 5.3 (FTAP 1), the market is arbitrage-free if and only if there exists a vector $\psi = (\psi_1, \psi_2, \psi_3)^T$ with $\psi_1 > 0, \psi_2 > 0, \psi_3 > 0$ such that $S(0) = S(1)^T \psi$:
-$$ 1 = \psi_1 + \psi_2 + \psi_3 \tag{1} $$
-$$ 6 = 3\psi_1 + 6\psi_2 + 9\psi_3 \tag{2} $$
-$$ p = 9\psi_1 + 6\psi_2 + 3\psi_3 \tag{3} $$
+\begin{equation}
+1 = \psi_1 + \psi_2 + \psi_3 \tag{1}
+\end{equation}
+\begin{equation}
+6 = 3\psi_1 + 6\psi_2 + 9\psi_3 \tag{2}
+\end{equation}
+\begin{equation}
+p = 9\psi_1 + 6\psi_2 + 3\psi_3 \tag{3}
+\end{equation}
 
 *Part 2: Solving for $\psi$*
 Divide Equation (2) by 3:
-$$ 2 = \psi_1 + 2\psi_2 + 3\psi_3 \tag{2'} $$
+\begin{equation}
+2 = \psi_1 + 2\psi_2 + 3\psi_3 \tag{2'}
+\end{equation}
 Subtract Equation (1) from (2'):
 $$ 2 - 1 = (\psi_1 - \psi_1) + (2\psi_2 - \psi_2) + (3\psi_3 - \psi_3) \implies 1 = \psi_2 + 2\psi_3 \implies \psi_2 = 1 - 2\psi_3 $$
 Substitute $\psi_2 = 1 - 2\psi_3$ into Equation (1):
@@ -917,8 +949,12 @@ Since $N = 2 < M = 3$, the market is incomplete.
 
 *Part 1: Parametrizing State Prices*
 The state price vector $\psi = (\psi_1, \psi_2, \psi_3)^T$ must satisfy:
-$$ 1 = \psi_1 + \psi_2 + \psi_3 \tag{1} $$
-$$ 5 = 2\psi_1 + 6\psi_2 + 8\psi_3 \tag{2} $$
+\begin{equation}
+1 = \psi_1 + \psi_2 + \psi_3 \tag{1}
+\end{equation}
+\begin{equation}
+5 = 2\psi_1 + 6\psi_2 + 8\psi_3 \tag{2}
+\end{equation}
 From (1), $\psi_1 = 1 - \psi_2 - \psi_3$. Substitute into (2):
 $$ 5 = 2(1 - \psi_2 - \psi_3) + 6\psi_2 + 8\psi_3 = 2 + 4\psi_2 + 6\psi_3 \implies 4\psi_2 + 6\psi_3 = 3 \implies \psi_2 = \frac{3 - 6\psi_3}{4} $$
 Then:
