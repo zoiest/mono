@@ -110,6 +110,90 @@ In a multi-period model ($t = 0, 1, \dots, T$), information is revealed graduall
   $$ \mathbb{E}[X \mid A] = \sum_{\omega \in A} X(\omega) \mathbb{P}(\{\omega\} \mid A) = \sum_{\omega \in A} X(\omega) \frac{\mathbb{P}(\{\omega\})}{\mathbb{P}(A)} $$
   *Intuition:* $\mathbb{E}[X \mid \mathcal{F}_t]$ is simply the expected value calculated over the remaining possible future branches emanating from your current node at time $t$!
 
+** Martingales: The Mathematical Formalization of a Fair Game
+
+*** Intuition: The "Fair Game"
+In economics and probability, a stochastic process models a "fair game" if an investor's expected future wealth—given everything known up to today—is exactly equal to their current wealth. There is neither an expected upward drift (free money) nor an expected downward drift (house edge).
+
+*** Formal Mathematical Definition
+Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space equipped with a filtration $\mathbb{F} = (\mathcal{F}_t)_{t=0}^T$.
+A real-valued stochastic process $M = (M_t)_{t=0}^T$ is an \((\mathbb{F}, \mathbb{P})\)-*martingale* if it satisfies three axioms:
+1. *Adapted:* $M_t$ is \(\mathcal{F}_t\)-measurable for every $t \in \{0, \dots, T\}$. (At time $t$, the value of $M_t$ is fully determined by the information available up to time $t$; no peering into the future).
+2. *Integrable:* $\mathbb{E}[|M_t|] < \infty$ for all $t \in \{0, \dots, T\}$ (no infinite payoffs or undefined expectations).
+3. *Martingale Property:*
+   \begin{equation}
+   \mathbb{E}[M_{t+1} \mid \mathcal{F}_t] = M_t \quad \text{for all } t = 0, \dots, T-1
+   \end{equation}
+   By induction, this implies $\mathbb{E}[M_u \mid \mathcal{F}_t] = M_t$ for any future horizon $u \ge t$.
+
+*** Submartingales and Supermartingales (The "Drift" Conditions)
+When a process exhibits an upward or downward bias, it is classified as a sub- or supermartingale:
+#+caption: Classification of Martingale Types
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l p{0.32\textwidth} p{0.25\textwidth} X
+| Process Type | Defining Mathematical Condition | Expected Drift | Intuitive Analogy |
+|--------------+---------------------------------+----------------+-------------------|
+| *Martingale* | $\mathbb{E}[M_{t+1} \mid \mathcal{F}_t] = M_t$ | Zero drift | Fair coin toss / No-arbitrage pricing |
+| *Submartingale* | $\mathbb{E}[M_{t+1} \mid \mathcal{F}_t] \ge M_t$ | Upward ($\ge 0$) | Stock portfolio earning a positive risk premium |
+| *Supermartingale* | $\mathbb{E}[M_{t+1} \mid \mathcal{F}_t] \le M_t$ | Downward ($\le 0$) | Casino gambler's wealth facing a house edge |
+
+#+begin_quote
+*Memory Aid for Exams:*
+- *Submartingale:* "Sub" rises from the floor $\implies$ drifts *upward* ($\mathbb{E}[M_{t+1}\mid\mathcal{F}_t] \ge M_t$).
+- *Supermartingale:* "Super" falls from above $\implies$ drifts *downward* ($\mathbb{E}[M_{t+1}\mid\mathcal{F}_t] \le M_t$).
+#+end_quote
+
+*** Three Crucial Martingale Properties for Exam Calculations
+
+1. *Constant Unconditional Expectation:*
+   By the Law of Total Expectation (taking the expectation of both sides conditioning on $\mathcal{F}_0$):
+   \begin{equation}
+   \mathbb{E}[M_t] = \mathbb{E}[M_0] \quad \text{for all } t \in \{0, \dots, T\}
+   \end{equation}
+   If a process starts at $M_0$, its expected value at *any* future time $t$ remains $M_0$.
+
+2. *The Tower Property (Law of Iterated Conditional Expectations):*
+   For any two information levels $\mathcal{F}_s \subseteq \mathcal{F}_t$ (with $s \le t$):
+   \begin{equation}
+   \mathbb{E}[\mathbb{E}[X \mid \mathcal{F}_t] \mid \mathcal{F}_s] = \mathbb{E}[X \mid \mathcal{F}_s]
+   \end{equation}
+   *Golden Rule:* When conditioning successively on nested information sets, the *smaller information set always dominates*! (Coarsening finer information back down to $s$ discards the intermediate updates).
+
+3. *Uncorrelated / Unforecastable Increments:*
+   Define the one-step martingale increment $\Delta M_{t+1} = M_{t+1} - M_t$. The martingale property is equivalent to:
+   \begin{equation}
+   \mathbb{E}[\Delta M_{t+1} \mid \mathcal{F}_t] = 0
+   \end{equation}
+   Future changes have conditional expectation zero. Furthermore, martingale increments across non-overlapping intervals are uncorrelated: $\operatorname{Cov}(\Delta M_{t+1}, \Delta M_{s+1}) = 0$ for $s < t$.
+
+*** Calculating Conditional Expectations and Martingale Verification on Trees
+In discrete binomial trees, verifying the martingale property at any node $A \in \mathcal{F}_t$ reduces to a simple weighted sum across outgoing branches:
+- Let the node at time $t$ have current value $M_t(A)$.
+- Let the two successor branches at time $t+1$ be "Up" (payoff $M_{t+1}^u$) and "Down" (payoff $M_{t+1}^d$), with branch probabilities $q$ and $1-q$.
+- The conditional expectation is simply:
+  \begin{equation}
+  \mathbb{E}[M_{t+1} \mid \mathcal{F}_t](A) = q M_{t+1}^u + (1-q) M_{t+1}^d
+  \end{equation}
+  The process is a martingale at node $A$ if and only if $q M_{t+1}^u + (1-q) M_{t+1}^d = M_t(A)$.
+
+*** Why Martingales are the Foundation of Financial Economics
+Why does financial economics care so deeply about martingales?
+- *Physical Reality ($\mathbb{P}$):* Real-world stock prices are *not* martingales. Risk-averse investors demand a positive risk premium, so $\mathbb{E}_\mathbb{P}[S(t+1) \mid \mathcal{F}_t] > (1+i) S(t)$. The stock price has a positive drift (a submartingale).
+- *Risk-Neutral World ($\mathbb{Q}$):* The First Fundamental Theorem of Asset Pricing (FTAP) guarantees that absence of arbitrage is equivalent to the existence of an *Equivalent Martingale Measure* $\mathbb{Q}$.
+  Under $\mathbb{Q}$, when asset prices are *discounted* by the risk-free rate, all risk premia vanish:
+  \begin{equation}
+  S_n^*(t) := \frac{S_n(t)}{(1+i)^t} \implies \mathbb{E}_\mathbb{Q}\left[ S_n^*(t+1) \;\middle|\; \mathcal{F}_t \right] = S_n^*(t)
+  \end{equation}
+  Equivalently:
+  \begin{equation}
+  S_n(t) = \frac{1}{1+i} \mathbb{E}_\mathbb{Q}[S_n(t+1) \mid \mathcal{F}_t]
+  \end{equation}
+- *General Asset Pricing & Replicating Wealth:*
+  The discounted wealth $V^*(t) = \frac{V(t)}{(1+i)^t}$ of *any* self-financing trading strategy is an \((\mathbb{F}, \mathbb{Q})\)-martingale. This means pricing any derivative payoff $X$ at maturity $T$ is mathematically effortless:
+  \begin{equation}
+  \frac{V(t)}{(1+i)^t} = \mathbb{E}_\mathbb{Q}\left[ \frac{X}{(1+i)^T} \;\middle|\; \mathcal{F}_t \right] \implies V(t) = (1+i)^{-(T-t)} \mathbb{E}_\mathbb{Q}[X \mid \mathcal{F}_t]
+  \end{equation}
+  At $t=0$, this gives the universal pricing formula: $V(0) = (1+i)^{-T} \mathbb{E}_\mathbb{Q}[X]$.
+
 ** The "Grand Dictionary" of Asset Pricing Variables
 #+caption: Universal Translation Dictionary of Pricing Variables
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align p{0.18\textwidth} l p{0.33\textwidth} X
@@ -287,61 +371,141 @@ $$ S_n(0) = \mathbb{E}[\varphi S_n(1)] \quad \text{for all } n = 1, \dots, N $$
 ** The First Fundamental Theorem of Asset Pricing (FTAP 1)
 
 #+begin_quote
-  *Theorem 5.3 (First Fundamental Theorem of Asset Pricing):*
+*Theorem 5.3 (First Fundamental Theorem of Asset Pricing):*
 The one-period market model is *arbitrage-free* if and only if there exists at least one strictly positive state price vector $\psi \gg 0$ (or equivalently, a strictly positive deflator $\varphi > 0$, or an equivalent martingale measure $\mathbb{Q} \sim \mathbb{P}$).
 #+end_quote
 
-*** Separation Machinery: Hahn-Banach and Farkas' Lemma
-The proof of Theorem 5.3 rests on two geometric pillars of convex analysis:
+*** Mathematical Separation Tools: Lemma 5.4 & Corollary 5.5
+The proof of Theorem 5.3 relies on two classical results in convex analysis:
 
 #+begin_quote
-  *Lemma 5.4 (Hahn-Banach Separation Theorem for $\mathbb{R}^n$):*
+*Lemma 5.4 (Hahn-Banach Separation Theorem for $\mathbb{R}^n$):*
 Let $A, B \subset \mathbb{R}^n$ be non-empty, disjoint convex sets. If $A$ is compact and $B$ is closed, there exists a linear functional $f(x) = z^T x$ and a constant $\gamma \in \mathbb{R}$ such that:
-$$ f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \; y \in B $$
+\begin{equation}
+f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \; y \in B
+\end{equation}
 #+end_quote
 
 #+begin_quote
-  *Corollary 5.5 (Variant of Farkas' Lemma for Linear Subspaces):*
-Let $V \subseteq \mathbb{R}^K$ be a linear subspace. Denote the non-negative orthant by $\mathbb{R}_+^K = \{x \in \mathbb{R}^K \mid x_j \ge 0 \; \forall j\}$.
+*Corollary 5.5 (Variant of Farkas' Lemma for Linear Subspaces):*
+Let $V \subseteq \mathbb{R}^K$ be a linear subspace, and let $\mathbb{R}_+^K = \{x \in \mathbb{R}^K \mid x_j \ge 0 \; \forall j\}$ denote the non-negative orthant.
 Then exactly one of the following two statements holds:
-1. $V$ contains a non-zero non-negative vector: $V \cap (\mathbb{R}_+^K \setminus \{0\}) \ne \emptyset$.
+1. $V \cap (\mathbb{R}_+^K \setminus \{0\}) \ne \emptyset$ (i.e., $V$ contains a non-zero non-negative vector).
 2. There exists a strictly positive vector $z \gg 0$ ($z_j > 0$ for all $j = 1, \dots, K$) orthogonal to $V$:
-   $$ z^T y = 0 \quad \text{for all } y \in V $$
+   \begin{equation}
+   z^T y = 0 \quad \text{for all } y \in V
+   \end{equation}
 #+end_quote
 
-*** Complete Mathematical Proof of Theorem 5.3
+*** How to Prove Theorem 5.3 on the Exam (Complete Step-by-Step Proof)
 
-*Step 1: ($\implies$) Absence of Arbitrage Implies Existence of $\psi \gg 0$*
-1. Set dimension $K = M + 1$.
-2. Define the linear net payoff mapping $L: \mathbb{R}^N \to \mathbb{R}^{M+1}$ for any portfolio $\theta \in \mathbb{R}^N$:
-   $$ L(\theta) = \begin{pmatrix} -S(0)\theta \\ S(1, \omega_1)\theta \\ \vdots \\ S(1, \omega_M)\theta \end{pmatrix} \in \mathbb{R}^{M+1} $$
-3. The image $V := L(\mathbb{R}^N) = \{L(\theta) \mid \theta \in \mathbb{R}^N\}$ is a linear subspace of $\mathbb{R}^{M+1}$.
-4. By Definition 5.1, an arbitrage opportunity is a portfolio $\theta$ where:
-   $$ -S(0)\theta \ge 0, \quad (S(1)\theta)_m \ge 0 \; \forall m, \quad \text{with at least one strict inequality.} $$
-   This is exactly the statement that $L(\theta) \in \mathbb{R}_+^{M+1} \setminus \{0\}$.
-5. Therefore:
-   $$ \text{The market is arbitrage-free} \iff V \cap (\mathbb{R}_+^{M+1} \setminus \{0\}) = \emptyset \iff V \cap \mathbb{R}_+^{M+1} = \{0\} $$
-6. Applying Corollary 5.5, there exists a strictly positive vector $z = (z_0, z_1, \dots, z_M)^T \in \mathbb{R}^{M+1}$ ($z_0 > 0$ and $z_m > 0$ for all $m = 1, \dots, M$) orthogonal to $V$:
-   $$ z^T L(\theta) = 0 \quad \text{for all } \theta \in \mathbb{R}^N $$
-7. Expanding the dot product:
-   $$ -z_0 (S(0)\theta) + \sum_{m=1}^M z_m (S(1, \omega_m)\theta) = 0 \implies z_0 S(0)\theta = \left(\sum_{m=1}^M z_m S(1, \omega_m)\right)\theta \quad \forall \theta $$
-8. Since this holds for every portfolio $\theta \in \mathbb{R}^N$, the coefficient vectors must be identical:
-   $$ z_0 S(0) = \sum_{m=1}^M z_m S(1, \omega_m) = S(1)^T \begin{pmatrix} z_1 \\ \vdots \\ z_M \end{pmatrix} $$
-9. Since $z_0 > 0$, divide both sides by $z_0$:
-   $$ S(0) = \sum_{m=1}^M \frac{z_m}{z_0} S(1, \omega_m) $$
-10. Setting $\psi_m = \frac{z_m}{z_0} > 0$ defines a strictly positive state price vector $\psi = (\psi_1, \dots, \psi_M)^T \gg 0$ such that $S(0) = S(1)^T \psi$.
-    Setting $\varphi(\omega_m) = \frac{\psi_m}{\mathbb{P}(\{\omega_m\})} > 0$ defines the strictly positive pricing kernel $\varphi$.
+#+begin_quote
+*Exam Strategy:*
+The proof requires demonstrating two directions:
+1. $\implies$ (*Absence of Arbitrage $\implies$ Existence of $\psi \gg 0$*): Set up the payoff subspace $V$ in dimension $K = M + 1$, equate no-arbitrage with $V \cap \mathbb{R}_+^{M+1} = \{0\}$, apply Corollary 5.5 to get orthogonal vector $z \gg 0$, and normalize by $z_0 > 0$ to define $\psi_m = z_m / z_0 > 0$.
+2. $\impliedby$ (*Existence of $\psi \gg 0 \implies$ Absence of Arbitrage*): Assume an arbitrage portfolio $\theta$ exists, evaluate $S(0)\theta = \psi^T (S(1)\theta) > 0$, and derive an immediate contradiction with $S(0)\theta \le 0$.
+#+end_quote
 
-*Step 2: ($\impliedby$) Existence of $\psi \gg 0$ Implies Absence of Arbitrage*
-1. Suppose there exists a state price vector $\psi \gg 0$ satisfying $S(0) = S(1)^T \psi$.
-2. Let $\theta \in \mathbb{R}^N$ be any portfolio that generates no losses: $(S(1)\theta)_m \ge 0$ for all $m = 1, \dots, M$, and has a strictly positive probability of gain: $(S(1)\theta)_{m^*} > 0$ for at least one state $\omega_{m^*}$.
-3. Calculate the initial price $S(0)\theta$ of this portfolio using the state price vector:
-   $$ S(0)\theta = (S(1)^T \psi)^T \theta = \psi^T (S(1)\theta) = \sum_{m=1}^M \psi_m (S(1)\theta)_m $$
-4. Since every $\psi_m > 0$ and every $(S(1)\theta)_m \ge 0$, with $\psi_{m^*} (S(1)\theta)_{m^*} > 0$:
-   $$ S(0)\theta \ge \psi_{m^*} (S(1)\theta)_{m^*} > 0 $$
-5. Therefore, $S(0)\theta$ is strictly positive: $S(0)\theta > 0$.
-6. It is impossible to achieve $S(0)\theta \le 0$. Hence, no portfolio can satisfy Definition 5.1.
-7. The market is strictly arbitrage-free! $\blacksquare$
+*Part 1: ($\implies$) Absence of Arbitrage Implies Existence of $\psi \gg 0$*
+
+1. *Define the Dimension and Net Payoff Mapping:*
+   Set dimension $K = M + 1$.
+   Define the linear mapping $L: \mathbb{R}^N \to \mathbb{R}^{M+1}$ for any portfolio $\theta \in \mathbb{R}^N$:
+   \begin{equation}
+   L(\theta) = \begin{pmatrix} -S(0)\theta \\ S(1, \omega_1)\theta \\ \vdots \\ S(1, \omega_M)\theta \end{pmatrix} \in \mathbb{R}^{M+1}
+   \end{equation}
+   Because $L$ is a linear map, its image $V := L(\mathbb{R}^N) = \{L(\theta) \mid \theta \in \mathbb{R}^N\}$ is a *linear subspace* of $\mathbb{R}^{M+1}$.
+
+2. *Geometric Characterization of Arbitrage:*
+   Recall Definition 5.1: A portfolio $\theta$ is an arbitrage opportunity if:
+   - $S(0)\theta \le 0 \iff -S(0)\theta \ge 0$,
+   - $S(1, \omega_m)\theta \ge 0$ for all $m = 1, \dots, M$,
+   - With at least one strict inequality: $-S(0)\theta > 0$ or $S(1, \omega_m)\theta > 0$ for some $m$.
+   This is mathematically identical to stating that the vector $L(\theta)$ lies in $\mathbb{R}_+^{M+1} \setminus \{0\}$.
+   Therefore:
+   \begin{equation}
+   \text{The market is arbitrage-free} \iff V \cap (\mathbb{R}_+^{M+1} \setminus \{0\}) = \emptyset \iff V \cap \mathbb{R}_+^{M+1} = \{0\}
+   \end{equation}
+
+3. *Apply Corollary 5.5 (Separation):*
+   Because $V$ is a linear subspace and $V \cap \mathbb{R}_+^{M+1} = \{0\}$, statement (1) of Corollary 5.5 fails.
+   Therefore, statement (2) must hold: there exists a strictly positive vector:
+   \begin{equation}
+   z = (z_0, z_1, \dots, z_M)^T \in \mathbb{R}^{M+1}, \quad z_j > 0 \quad \forall j = 0, 1, \dots, M
+   \end{equation}
+   such that $z$ is orthogonal to the entire subspace $V$:
+   \begin{equation}
+   z^T L(\theta) = 0 \quad \text{for all } \theta \in \mathbb{R}^N
+   \end{equation}
+
+4. *Expand the Orthogonality Condition:*
+   Evaluating the dot product $z^T L(\theta) = 0$:
+   \begin{equation}
+   -z_0 (S(0)\theta) + \sum_{m=1}^M z_m (S(1, \omega_m)\theta) = 0
+   \end{equation}
+   Rearranging gives:
+   \begin{equation}
+   z_0 S(0)\theta = \left(\sum_{m=1}^M z_m S(1, \omega_m)\right)\theta \quad \text{for all } \theta \in \mathbb{R}^N
+   \end{equation}
+
+5. *Equate Coefficients and Normalize by $z_0$:*
+   Because this identity holds for *all* choices of $\theta \in \mathbb{R}^N$, the coefficient vectors must be identical:
+   \begin{equation}
+   z_0 S(0) = \sum_{m=1}^M z_m S(1, \omega_m) = S(1)^T \begin{pmatrix} z_1 \\ \vdots \\ z_M \end{pmatrix}
+   \end{equation}
+   Since $z \gg 0$, we know $z_0 > 0$. Dividing both sides by $z_0$:
+   \begin{equation}
+   S(0) = \sum_{m=1}^M \frac{z_m}{z_0} S(1, \omega_m)
+   \end{equation}
+   Define the state prices:
+   \begin{equation}
+   \psi_m := \frac{z_m}{z_0} \quad \text{for } m = 1, \dots, M
+   \end{equation}
+   Since $z_m > 0$ and $z_0 > 0$, we have $\psi_m > 0$ strictly for all $m$.
+   Thus, $\psi = (\psi_1, \dots, \psi_M)^T \gg 0$ is a strictly positive state price vector satisfying $S(0) = S(1)^T \psi$.
+   Furthermore, defining $\varphi(\omega_m) = \frac{\psi_m}{\mathbb{P}(\{\omega_m\})} > 0$ gives $S(0) = \mathbb{E}[\varphi S(1)]$.
+
+*Part 2: ($\impliedby$) Existence of $\psi \gg 0$ Implies Absence of Arbitrage*
+
+1. *Assume Existence of $\psi \gg 0$:*
+   Suppose there exists a strictly positive state price vector $\psi = (\psi_1, \dots, \psi_M)^T \gg 0$ such that $S(0) = S(1)^T \psi$.
+
+2. *Proof by Contradiction:*
+   Suppose for contradiction that an arbitrage opportunity $\theta \in \mathbb{R}^N$ exists.
+   By Definition 5.1:
+   - $S(0)\theta \le 0$,
+   - $(S(1)\theta)_m \ge 0$ for all $m = 1, \dots, M$,
+   - $(S(1)\theta)_{m^*} > 0$ for at least one state $\omega_{m^*}$ (since $\mathbb{P}(S(1)\theta > 0) > 0$).
+
+3. *Evaluate Portfolio Cost via State Prices:*
+   Substitute the pricing formula $S(0) = S(1)^T \psi$ into the cost $S(0)\theta$:
+   \begin{equation}
+   S(0)\theta = (S(1)^T \psi)^T \theta = \psi^T (S(1)\theta) = \sum_{m=1}^M \psi_m (S(1)\theta)_m
+   \end{equation}
+   Examine each term in this sum:
+   - For all $m$: $\psi_m > 0$ and $(S(1)\theta)_m \ge 0$, so $\psi_m (S(1)\theta)_m \ge 0$.
+   - For state $m^*$: $\psi_{m^*} > 0$ and $(S(1)\theta)_{m^*} > 0$, so $\psi_{m^*} (S(1)\theta)_{m^*} > 0$.
+   Therefore, the total sum is strictly positive:
+   \begin{equation}
+   S(0)\theta = \sum_{m=1}^M \psi_m (S(1)\theta)_m \ge \psi_{m^*} (S(1)\theta)_{m^*} > 0
+   \end{equation}
+
+4. *Contradiction and Conclusion:*
+   We have deduced $S(0)\theta > 0$. But an arbitrage opportunity requires $S(0)\theta \le 0$.
+   A real number cannot be both strictly positive and non-positive:
+   \begin{equation}
+   0 < S(0)\theta \le 0 \quad \implies \text{Contradiction!}
+   \end{equation}
+   Hence, no arbitrage opportunity can exist. The market is strictly arbitrage-free! $\blacksquare$
+
+#+begin_quote
+*Exam Grader's Checklist (Do Not Miss These!):*
+- [X] State $K = M + 1$ explicitly (1 entry for time 0, $M$ entries for time 1).
+- [X] Write $-S(0)\theta$ as the first component of $L(\theta)$ so non-positive cost $S(0)\theta \le 0$ maps to non-negative $-S(0)\theta \ge 0$.
+- [X] State that $V = L(\mathbb{R}^N)$ is a *linear subspace* (Farkas' Lemma requires a subspace).
+- [X] Emphasize that $z_0 > 0$ is strictly positive, justifying the division $\psi_m = z_m / z_0$.
+- [X] State clearly that $z^T L(\theta) = 0$ holds *for all* $\theta \in \mathbb{R}^N$, which allows equating the coefficient vectors $z_0 S(0) = \sum z_m S(1, \omega_m)$.
+#+end_quote
 
 ** Practical Arbitrage Detection & Problem Set 4 Walkthrough
 
@@ -406,110 +570,6 @@ Suppose for contradiction that $S_N(0) \ne \sum_{n=1}^{N-1} \theta_n S_n(0)$:
    Take the opposite portfolio $-\hat{\theta} = (-\theta_1, \dots, -\theta_{N-1}, +1)^T$ (buy Security $N$, short the replica).
    Initial cash flow is negative (money pocketed), and terminal liability is identically zero. Again, this violates Definition 5.1!
 Therefore, absence of arbitrage *strictly forces* $S_N(0) = \sum_{n=1}^{N-1} \theta_n S_n(0)$. $\blacksquare$
-
----
-
-** Deep Focus: Lemma 5.4 and Corollary 5.5 (The Separation Engine of FTAP 1)
-/(Lecture Notes Section 5.1.1, pages 34–35)/
-
-#+begin_quote
-  *Why Convex Separation is Fundamental to Financial Economics:*
-The First Fundamental Theorem of Asset Pricing (Theorem 5.3) is the foundational theorem of mathematical finance. Its proof does not rely on calculus or matrix inverses, but on *convex analysis*. Specifically, it uses the geometry of convex sets to prove that absence of arbitrage is mathematically identical to the existence of a strictly positive hyperplane separating the portfolio payoff space from the non-negative cone.
-#+end_quote
-
-*** Lemma 5.4: The Hahn-Banach Separation Theorem for $\mathbb{R}^n$
-#+begin_quote
-  *Lemma 5.4 (Hahn-Banach Separation Theorem in Euclidean Space):*
-Let $\mathbb{R}^n$ be Euclidean space and suppose $A$ and $B$ are disjoint, non-empty, and convex subsets of $\mathbb{R}^n$. Assume further that $A$ is *compact* (closed and bounded) and $B$ is *closed*.
-Then there exists a linear mapping $f: \mathbb{R}^n \to \mathbb{R}$ (represented by vector $z' \in \mathbb{R}^n$, $f(x) = z'^T x$) and a real number $\gamma \in \mathbb{R}$ such that:
-\begin{equation}
-f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \; y \in B
-\end{equation}
-#+end_quote
-
-- *Geometric Meaning:* The sets $A$ and $B$ lie entirely on opposite sides of the affine hyperplane $H = \{w \in \mathbb{R}^n \mid f(w) = \gamma\}$.
-- *Why is Compactness of $A$ Required?*
-  If both $A$ and $B$ were merely closed but neither was compact, they could approach each other asymptotically at infinity without intersecting, making strict separation impossible!
-  /(Classic counterexample: $A = \{(x, y) \in \mathbb{R}^2 \mid x > 0, y \ge 1/x\}$ and $B = \{(x, y) \in \mathbb{R}^2 \mid y \le 0\}$. Both are closed, convex, and disjoint, but they cannot be strictly separated by any straight line)./
-  In Lemma 5.4, compactness of $A$ guarantees a strictly positive distance $\operatorname{dist}(A, B) > 0$.
-
-*** Corollary 5.5: Variant of Farkas' Lemma for Linear Subspaces
-#+begin_quote
-  *Corollary 5.5 (Alternative Theorem for Linear Subspaces):*
-Let $V \subseteq \mathbb{R}^K$ be a linear vector subspace. Denote the non-negative orthant by:
-$$ \mathbb{R}_+^K = \{x = (x_1, \dots, x_K) \in \mathbb{R}^K \mid x_j \ge 0 \text{ for all } j = 1, \dots, K\} $$
-Suppose $V \cap \mathbb{R}_+^K = \{0\}$.
-Then there exists a strictly positive vector $z = (z_1, \dots, z_K)^T \in \mathbb{R}^K$ ($z_j > 0$ for all $j = 1, \dots, K$) such that:
-\begin{equation}
-z \cdot y = \sum_{j=1}^K z_j y_j = 0 \quad \text{for all } y \in V
-\end{equation}
-#+end_quote
-
-- *The Two Incompatible Realities (Theorem of the Alternative):*
-  Corollary 5.5 establishes that for any subspace $V \subseteq \mathbb{R}^K$, *exactly one* of the following two statements holds:
-  1. *Either* $V$ contains a non-zero non-negative vector ($V \cap (\mathbb{R}_+^K \setminus \{0\}) \ne \emptyset$) $\implies$ *Arbitrage exists!*
-  2. *Or* there exists a strictly positive normal vector $z \gg 0$ orthogonal to $V$ ($z^T y = 0 \; \forall y \in V$) $\implies$ *A positive state price vector / deflator exists!*
-  They can *never* both occur, and at least one *must* occur.
-
-*** Complete Mathematical Proof of Corollary 5.5 from Lemma 5.4
-/(Crucial for exams: You may be asked to prove Corollary 5.5 directly using Lemma 5.4!)/
-
-*Step 1: Set Up the Sets $A$ and $B$*
-- We may assume $V \ne \{0\}$ (if $V = \{0\}$, any $z = (1, 1, \dots, 1)^T \gg 0$ trivially satisfies $z \cdot 0 = 0$).
-- Let $e_j = (0, \dots, 0, 1, 0, \dots, 0)^T \in \mathbb{R}^K$ be the $j$-th standard unit basis vector ($j = 1, \dots, K$).
-- Define set $A$ as the standard unit simplex:
-  $$ A = \left\{ \sum_{j=1}^K \lambda_j e_j \;\middle|\; \lambda_j \ge 0 \; \forall j, \; \sum_{j=1}^K \lambda_j = 1 \right\} $$
-  - $A$ is the convex hull of the standard basis vectors $\{e_1, \dots, e_K\} \subset A$.
-  - $A$ is *convex*, *closed*, and *bounded* (hence *compact* by Heine-Borel).
-  - Every vector $x \in A$ satisfies $x_j \ge 0$ and $\sum x_j = 1$, so $x \in \mathbb{R}_+^K \setminus \{0\}$.
-- Define $B = V$. Since $V$ is a linear subspace of $\mathbb{R}^K$, $B$ is *convex* and *closed*.
-- *Disjointness:* By hypothesis, $V \cap \mathbb{R}_+^K = \{0\}$. Since $0 \notin A$, we have:
-  $$ A \cap B = A \cap V = \emptyset $$
-
-*Step 2: Apply the Hahn-Banach Separation Theorem (Lemma 5.4)*
-Because $A$ is compact, $B = V$ is closed, and $A \cap B = \emptyset$, Lemma 5.4 guarantees the existence of a linear functional $f: \mathbb{R}^K \to \mathbb{R}$ and a constant $\gamma \in \mathbb{R}$ such that:
-$$ f(x) < \gamma \le f(y) \quad \text{for all } x \in A, \; y \in V $$
-Since $f$ is a linear functional on $\mathbb{R}^K$, it is represented by a dot product with some vector $z' = (z'_1, \dots, z'_K)^T \in \mathbb{R}^K$:
-$$ f(w) = \sum_{j=1}^K z'_j w_j = z'^T w \quad \text{for all } w \in \mathbb{R}^K $$
-
-*Step 3: Show that $f(y) = 0$ for all $y \in V$ and $\gamma \le 0$*
-- Let $y \in V$ be arbitrary. Because $V$ is a linear subspace, for any scalar $\alpha \in \mathbb{R}$, the scaled vector $\alpha y$ also belongs to $V$.
-- Therefore, by the separation inequality:
-  $$ f(\alpha y) = \alpha f(y) \ge \gamma \quad \text{for all } \alpha \in \mathbb{R} $$
-- If $f(y) \ne 0$:
-  - If $f(y) > 0$, taking $\alpha \to -\infty$ gives $\alpha f(y) \to -\infty < \gamma$, a contradiction!
-  - If $f(y) < 0$, taking $\alpha \to +\infty$ gives $\alpha f(y) \to -\infty < \gamma$, a contradiction!
-- Thus, we must have:
-  $$ f(y) = 0 \quad \text{for all } y \in V $$
-- Since $0 \in V$, evaluating at $y = 0$ yields:
-  $$ \gamma \le f(0) = 0 \implies \gamma \le 0 $$
-
-*Step 4: Show that $z'_j < 0$ strictly for all $j$*
-- Since $f(x) < \gamma \le 0$ for all $x \in A$, we have $f(x) < 0$ for every vector in the simplex $A$.
-- In particular, each standard unit basis vector $e_j$ belongs to $A$ (set $\lambda_j = 1$ and all other $\lambda_k = 0$).
-- Evaluating $f$ on $e_j$:
-  $$ f(e_j) = z'^T e_j = z'_j < \gamma \le 0 \implies z'_j < 0 \quad \text{for all } j = 1, \dots, K $$
-
-*Step 5: Define the Strictly Positive Vector $z$*
-- Define $z_j := -z'_j$.
-- Since $z'_j < 0$, we have:
-  $$ z_j > 0 \quad \text{for all } j = 1, \dots, K \implies z \gg 0 $$
-- For any $y \in V$:
-  $$ z \cdot y = \sum_{j=1}^K z_j y_j = -\sum_{j=1}^K z'_j y_j = -f(y) = -0 = 0 $$
-Thus, $z \gg 0$ is strictly positive and orthogonal to $V$. $\blacksquare$
-
-*** How Lemma 5.4 & Corollary 5.5 Prove FTAP 1 (Theorem 5.3)
-To see the full power of this machinery, observe how directly it proves Theorem 5.3:
-1. In a one-period market with $N$ assets and $M$ states, set $K = M + 1$.
-2. Define the subspace of all possible portfolio outcomes:
-   $$ V = \left\{ \begin{pmatrix} -S(0)\theta \\ S(1, \omega_1)\theta \\ \vdots \\ S(1, \omega_M)\theta \end{pmatrix} \in \mathbb{R}^{M+1} \;\middle|\; \theta \in \mathbb{R}^N \right\} $$
-3. By Definition 5.1, an arbitrage opportunity is a non-zero vector in $V \cap \mathbb{R}_+^{M+1}$.
-4. Thus, *absence of arbitrage means $V \cap \mathbb{R}_+^{M+1} = \{0\}$*.
-5. Corollary 5.5 instantly gives a vector $z = (z_0, z_1, \dots, z_M)^T \gg 0$ orthogonal to $V$:
-   $$ -z_0 (S(0)\theta) + \sum_{m=1}^M z_m (S(1, \omega_m)\theta) = 0 \quad \forall \theta $$
-6. Dividing by $z_0 > 0$ yields the strictly positive state price vector:
-   $$ \psi_m = \frac{z_m}{z_0} > 0 \implies S(0) = S(1)^T \psi $$
-Without Lemma 5.4 and Corollary 5.5, proving FTAP 1 would be impossible. They are the core mathematical engine of asset pricing!
 
 ---
 
@@ -784,7 +844,410 @@ Thus, $S_{N+1}^*$ is automatically a martingale, proving the extended market is 
 
 * Practice Exam Exercises and Detailed Solutions
 
-** Practice Exercise 1: Arbitrage Detection, State Price Vectors, and Constructing Arbitrage Portfolios
+** Practice Exercise 1: Fixed-Income Valuation, Cash Flow Replication, and Arbitrage Construction
+*Setting (Style of Problem Set 1, Exercises 1.2, 1.3, 1.4):*
+Consider a deterministic interest rate market where cash payments occur at discrete time intervals $t = 1, 2, \dots$ (with unit time step $\Delta = 1$).
+Two benchmark cash flows, Cash Flow I and Cash Flow II, trade actively in the market:
+- Cash Flow I: Pays $B_I(1) = 6$ at $t = 1$ and $B_I(2) = 6$ at $t = 2$. Its current market price is $p = 10$.
+- Cash Flow II: Pays $B_{II}(1) = 5$ at $t = 1$ and $B_{II}(2) = 8$ at $t = 2$. Its current market price is $q = 11$.
+The market is assumed to be strictly arbitrage-free.
+
+*Questions:*
+1. (PS1 Exercise 1.2)
+   Show that a target Cash Flow III with payments $B_{III}(1) = 0$ and $B_{III}(2) = 14$ can be replicated using a static portfolio $\theta = (\theta_1, \theta_2)^T$ of Cash Flows I and II.
+   Determine the exact portfolio weights $\theta_1, \theta_2$ and the unique arbitrage-free price of Cash Flow III at time $0$.
+2. (PS1 Exercise 1.3)
+   Suppose deterministic annual spot interest rates are $i_1 = 20\%$ ($0.20$) for year 1 and $i_2 = 25\%$ ($0.25$) for year 2. Future cash flows are valued according to:
+   $$ V(0) = \sum_{j=1}^T \left(\prod_{k=1}^j (1+i_k)\right)^{-1} B(j) $$
+   Consider a financial contract IV paying $B_{IV}(1) = 12$ and $B_{IV}(2) = 15$.
+   a) Compute the theoretical arbitrage-free present value $V_{IV}(0)$.
+   b) Suppose contract IV is currently trading in the market at price $P_{IV} = 18$. Does this market admit an arbitrage opportunity? Construct an explicit arbitrage portfolio combining contract IV and the money market (borrowing/lending at rates $i_1, i_2$) that generates immediate cash profit today with zero future net liabilities.
+3. (PS1 Exercise 1.4)
+   Let $V(0) > 0$ be the initial price of a contract with strictly positive future payments $B(1), \dots, B(T) > 0$. The *internal interest rate* (or yield to maturity) $r$ is defined as the solution to:
+   $$ \sum_{j=1}^T (1+r)^{-j} B(j) = V(0) $$
+   a) Prove that the internal interest rate $r$ exists and is strictly unique in the interval $(-1, \infty)$.
+   b) Prove that $\min(i_1, \dots, i_T) \le r \le \max(i_1, \dots, i_T)$, where $i_j$ are the spot rates used to determine $V(0)$.
+
+*** Solution to Practice Exercise 1
+
+*Part 1: Replication of Cash Flow III*
+To replicate Cash Flow III, the portfolio $(\theta_1, \theta_2)$ of Cash Flows I and II must match the payments of Cash Flow III at every date $t = 1$ and $t = 2$:
+\begin{equation}
+6\theta_1 + 5\theta_2 = 0 \tag{1}
+\end{equation}
+\begin{equation}
+6\theta_1 + 8\theta_2 = 14 \tag{2}
+\end{equation}
+From Equation (1):
+$$ 6\theta_1 = -5\theta_2 \implies \theta_1 = -\frac{5}{6}\theta_2 $$
+Substitute into Equation (2):
+$$ 6\left(-\frac{5}{6}\theta_2\right) + 8\theta_2 = 14 \implies -5\theta_2 + 8\theta_2 = 14 \implies 3\theta_2 = 14 \implies \theta_2 = \frac{14}{3} $$
+Then compute $\theta_1$:
+$$ \theta_1 = -\frac{5}{6}\left(\frac{14}{3}\right) = -\frac{70}{18} = -\frac{35}{9} $$
+*Arbitrage-Free Price at Time 0:*
+By the Law of One Price (Theorem 2.1 / FTAP 1), because Cash Flow III is identical in all future payouts to holding $-\frac{35}{9}$ units of Cash Flow I and $\frac{14}{3}$ units of Cash Flow II, its time-$0$ price $P_{III}$ must equal the portfolio cost:
+$$ P_{III} = \theta_1 p + \theta_2 q = -\frac{35}{9}(10) + \frac{14}{3}(11) = -\frac{350}{9} + \frac{462}{9} = \frac{112}{9} \approx 12.44 \text{ euros} $$
+
+*Part 2: Valuation and Arbitrage Construction*
+a) *Theoretical Present Value:*
+The discount factors are:
+- Year 1 discount factor:
+  $$ d_1 = \frac{1}{1+i_1} = \frac{1}{1 + 0.20} = \frac{1}{1.20} = \frac{5}{6} $$
+- Year 2 discount factor:
+  $$ d_2 = \frac{1}{(1+i_1)(1+i_2)} = \frac{1}{(1.20)(1.25)} = \frac{1}{1.50} = \frac{2}{3} $$
+The theoretical present value is:
+$$ V_{IV}(0) = B_{IV}(1) d_1 + B_{IV}(2) d_2 = 12\left(\frac{5}{6}\right) + 15\left(\frac{2}{3}\right) = 10 + 10 = 20 \text{ euros} $$
+
+b) *Arbitrage Execution when Market Price $P_{IV} = 18$:*
+Since the market price $P_{IV} = 18 < 20 = V_{IV}(0)$, contract IV is underpriced relative to the interest rate market.
+*Arbitrage Strategy:*
+1. Buy $1$ unit of contract IV at time $0$, requiring an initial outlay of $-18$ euros.
+2. Borrow against the future cash flows in the money market:
+   - Borrow $10$ euros for 1 year at interest rate $i_1 = 20\%$. Repayment due at $t = 1$: $10 \times (1 + 0.20) = 12$ euros.
+   - Borrow $10$ euros for 2 years at compounded rates $i_1, i_2$. Repayment due at $t = 2$: $10 \times (1.20)(1.25) = 15$ euros.
+3. *Cash Flow Balance Sheet:*
+   - *Time $0$:* Loan proceeds $+10 + 10 = +20$ euros. Purchase contract IV for $-18$ euros. Net cash pocketed:
+     $$ +20 - 18 = +2 \text{ euros} > 0 $$
+   - *Time $1$:* Receive $+12$ euros from contract IV; repay $-12$ euros on 1-year loan. Net cash:
+     $$ +12 - 12 = 0 $$
+   - *Time $2$:* Receive $+15$ euros from contract IV; repay $-15$ euros on 2-year loan. Net cash:
+     $$ +15 - 15 = 0 $$
+The investor pockets $+2$ euros upfront with strictly zero net liabilities at all future dates. This is a pure arbitrage opportunity!
+
+*Part 3: Existence, Uniqueness, and Bounds for the Internal Interest Rate*
+a) *Existence and Uniqueness:*
+Define the function $g(r)$ on the domain $(-1, \infty)$ by:
+$$ g(r) = \sum_{j=1}^T (1+r)^{-j} B(j) - V(0) $$
+- *Continuity:* $g(r)$ is a finite sum of continuous rational functions on $(-1, \infty)$, hence $g$ is continuous.
+- *Strict Monotonicity:* Because all payments $B(j) > 0$ are strictly positive:
+  $$ g\prime(r) = \sum_{j=1}^T (-j)(1+r)^{-j-1} B(j) < 0 \quad \text{for all } r \in (-1, \infty) $$
+  Because $g\prime(r) < 0$ strictly, $g(r)$ is strictly decreasing. A strictly decreasing function can have at most one root (proving *uniqueness*).
+- *Limiting Boundary Values:*
+  $$ \lim_{r \to -1^+} g(r) = \lim_{r \to -1^+} \left( \sum_{j=1}^T (1+r)^{-j} B(j) - V(0) \right) = +\infty $$
+  $$ \lim_{r \to +\infty} g(r) = \lim_{r \to +\infty} \left( \sum_{j=1}^T (1+r)^{-j} B(j) - V(0) \right) = 0 - V(0) = -V(0) < 0 $$
+  By the Intermediate Value Theorem, there exists at least one $r^* \in (-1, \infty)$ such that $g(r^*) = 0$ (proving *existence*). Combined with strict monotonicity, $r^*$ is unique.
+
+b) *Bounds $\min(i_j) \le r^* \le \max(i_j)$:*
+Let $m = \min(i_1, \dots, i_T)$ and $M = \max(i_1, \dots, i_T)$.
+For each $j \in \{1, \dots, T\}$, the product of spot rates satisfies:
+$$ (1+m)^j \le \prod_{k=1}^j (1+i_k) \le (1+M)^j $$
+Inverting these inequalities:
+$$ (1+M)^{-j} \le \left(\prod_{k=1}^j (1+i_k)\right)^{-1} \le (1+m)^{-j} $$
+Multiplying by $B(j) > 0$ and summing over $j = 1, \dots, T$:
+$$ \sum_{j=1}^T (1+M)^{-j} B(j) \le \sum_{j=1}^T \left(\prod_{k=1}^j (1+i_k)\right)^{-1} B(j) \le \sum_{j=1}^T (1+m)^{-j} B(j) $$
+By Theorem 2.1, the center term is precisely $V(0) = \sum_{j=1}^T (1+r^*)^{-j} B(j)$. Therefore:
+$$ \sum_{j=1}^T (1+M)^{-j} B(j) \le \sum_{j=1}^T (1+r^*)^{-j} B(j) \le \sum_{j=1}^T (1+m)^{-j} B(j) $$
+Define $f(r) = \sum_{j=1}^T (1+r)^{-j} B(j)$. Because $f(r)$ is strictly decreasing, $f(M) \le f(r^*) \le f(m)$ immediately implies:
+$$ m \le r^* \le M \iff \min(i_1, \dots, i_T) \le r^* \le \max(i_1, \dots, i_T) \quad \blacksquare $$
+
+---
+
+** Practice Exercise 2: Term Structure, Forward Interest Rates, and Negative Forward Rate Arbitrage
+*Setting (Style of Problem Set 2, Exercises 2.1 & 2.2):*
+Consider a market with a term structure of spot interest rates $s_j$ defined over discrete compounding intervals of length $\Delta > 0$, where maturity is $j\Delta$ for $j = 1, 2, \dots$.
+Recall the definition of the forward interest rate $f_j$ for the period $[(j-1)\Delta, j\Delta)$ agreed upon at time $0$:
+$$ (1+f_j)^\Delta = \frac{(1+s_j)^{j\Delta}}{(1+s_{j-1})^{(j-1)\Delta}} \quad \text{for } j \ge 1, \quad \text{with } s_0 = 0. $$
+Using the annual standard indexing of Section 3 (where $(1+s_j)^j = \prod_{k=1}^j (1+f_k)$):
+$$ f_j = \frac{(1+s_j)^j}{(1+s_{j-1})^{j-1}} - 1 $$
+
+*Questions:*
+1. (PS2 Exercise 2.1)
+   a) Prove that the following two conditions are mathematically equivalent:
+      - *Condition A:* $(1+s_k)^k \ge (1+s_j)^j$ for all integers $k \ge j \ge 1$.
+      - *Condition B:* $f_j \ge 0$ for all integers $j \ge 1$.
+   b) Explain why an arbitrage opportunity must exist in the financial market if $f_j < 0$ for some $j > 1$.
+2. (PS2 Exercise 2.2)
+   Suppose the market spot rate term structure is given by the table (with $\Delta = 1/2$ year):
+#+caption: Spot Rate Term Structure (Semi-Annual Steps $\Delta = 1/2$)
+#+ATTR_LATEX: :align l c c c c
+| Maturity (Years) | $1/2$ ($j=1$) | $1$ ($j=2$) | $3/2$ ($j=3$) | $2$ ($j=4$) |
+| Spot Rate $s_j$ | $0.05$ | $0.04$ | $0.02$ | $0.02$ |
+   a) Calculate the exact forward interest rates $f_1, f_2, f_3, f_4$ using Equation (3.4) of the lecture notes.
+   b) Is this market arbitrage-free?
+3. (Arbitrage Construction)
+   Based on your calculation in Part 2, construct an explicit arbitrage trading strategy starting with zero capital at time $0$, showing the balance sheet and exact cash flows at each relevant date for an initial principal of $C = 10{,}000$ euros.
+
+*** Solution to Practice Exercise 2
+
+*Part 1: Equivalence of Monotonic Compounding and Non-Negative Forward Rates*
+a) *Proof of Equivalence (Condition A $\iff$ Condition B):*
+Recall from Equation (3.5) of the lecture notes that the compounding factor for any maturity $j$ can be telescoped as a product of forward rates:
+\begin{equation}
+(1+s_j)^j = (1+f_1)(1+f_2)\cdots(1+f_j) = \prod_{m=1}^j (1+f_m) \tag{3}
+\end{equation}
+- *($\implies$) Condition A implies Condition B:*
+  Suppose $(1+s_k)^k \ge (1+s_j)^j$ for all $k \ge j \ge 1$.
+  For $j = 1$, by definition $f_1 = s_1 \ge 0$.
+  For any $j > 1$, set $k = j$ and compare with $j - 1$:
+  $$ (1+s_j)^j \ge (1+s_{j-1})^{j-1} $$
+  Dividing both sides by the strictly positive quantity $(1+s_{j-1})^{j-1} > 0$:
+  $$ 1 + f_j = \frac{(1+s_j)^j}{(1+s_{j-1})^{j-1}} \ge 1 \implies f_j \ge 0 $$
+  Because $j > 1$ was arbitrary, $f_j \ge 0$ for all $j \ge 1$. Thus Condition B holds.
+
+- *($\impliedby$) Condition B implies Condition A:*
+  Suppose $f_m \ge 0$ for all $m \ge 1$. Then $1+f_m \ge 1$ for all $m$.
+  Let $k \ge j \ge 1$ be arbitrary integers. Using identity (3):
+  $$ (1+s_k)^k = \prod_{m=1}^k (1+f_m) = \left(\prod_{m=1}^j (1+f_m)\right) \left(\prod_{m=j+1}^k (1+f_m)\right) = (1+s_j)^j \prod_{m=j+1}^k (1+f_m) $$
+  Because each factor in the second product satisfies $1+f_m \ge 1$, their finite product satisfies:
+  $$ \prod_{m=j+1}^k (1+f_m) \ge 1 $$
+  Multiplying both sides by $(1+s_j)^j > 0$ yields:
+  $$ (1+s_k)^k \ge (1+s_j)^j \quad \text{for all } k \ge j \ge 1 $$
+  Thus Condition A holds. The two conditions are mathematically equivalent. $\blacksquare$
+
+b) *Why $f_j < 0$ Implies an Arbitrage Opportunity:*
+If $f_j < 0$ for some $j > 1$, then by Part 1:
+$$ 1 + f_j = \frac{(1+s_j)^j}{(1+s_{j-1})^{j-1}} < 1 \implies (1+s_j)^j < (1+s_{j-1})^{j-1} $$
+This condition states that borrowing for $j$ periods requires repaying *less* total compounded interest than borrowing for $j-1$ periods!
+*Economic Money Pump:*
+An investor can borrow capital $C > 0$ at time $0$ for $j$ periods at spot rate $s_j$, and simultaneously deposit the same capital $C$ for $j-1$ periods at spot rate $s_{j-1}$.
+At time $(j-1)\Delta$, the deposit matures and returns $C(1+s_{j-1})^{j-1}$. The investor withdraws this money and simply holds it as risk-free cash until time $j\Delta$ (earning at least $0\%$ interest, or depositing in a bank at the prevailing positive short rate).
+At time $j\Delta$, the loan of $C(1+s_j)^j$ is due. The investor pays off the loan using the cash in hand.
+The net wealth remaining at time $j\Delta$ is:
+$$ C(1+s_{j-1})^{j-1} - C(1+s_j)^j = C \left[ (1+s_{j-1})^{j-1} - (1+s_j)^j \right] > 0 $$
+Because this profit is strictly positive with zero initial capital and zero risk of loss, an arbitrage opportunity exists!
+
+*Part 2: Calculation of Forward Interest Rates*
+Using the discrete formula $f_j = \frac{(1+s_j)^j}{(1+s_{j-1})^{j-1}} - 1$:
+- For $j = 1$ (maturity $1/2$ year):
+  $$ f_1 = s_1 = 0.05 \quad (5.00\%) $$
+- For $j = 2$ (maturity $1$ year):
+  $$ f_2 = \frac{(1+s_2)^2}{1+s_1} - 1 = \frac{(1+0.04)^2}{1+0.05} - 1 = \frac{1.0816}{1.05} - 1 \approx 0.030095 \quad (\approx 3.01\%) $$
+- For $j = 3$ (maturity $3/2$ years):
+  $$ f_3 = \frac{(1+s_3)^3}{(1+s_2)^2} - 1 = \frac{(1+0.02)^3}{(1+0.04)^2} - 1 = \frac{1.061208}{1.0816} - 1 \approx -0.018854 \quad (\approx -1.89\%) $$
+- For $j = 4$ (maturity $2$ years):
+  $$ f_4 = \frac{(1+s_4)^4}{(1+s_3)^3} - 1 = \frac{(1+0.02)^4}{(1+0.02)^3} - 1 = 1+0.02 - 1 = 0.02 \quad (2.00\%) $$
+
+*Conclusion:*
+Because $f_3 \approx -1.89\% < 0$, the market violates the fundamental no-arbitrage condition. The market is **not arbitrage-free**!
+
+*Part 3: Arbitrage Trade Execution ($C = 10{,}000$ euros)*
+Because $f_3 < 0$, we have $(1+s_3)^3 < (1+s_2)^2$:
+- $(1+s_2)^2 = (1.04)^2 = 1.081600$
+- $(1+s_3)^3 = (1.02)^3 = 1.061208$
+
+*Step-by-Step Arbitrage Execution:*
+1. *At Time $t = 0$:*
+   - Take a loan of $C = 10{,}000$ euros with maturity $j = 3$ ($1.5$ years) at spot rate $s_3 = 2\%$. (Cash inflow: $+10{,}000$).
+   - Deposit $C = 10{,}000$ euros for $j = 2$ ($1.0$ year) at spot rate $s_2 = 4\%$. (Cash outflow: $-10{,}000$).
+   - *Net cash flow at $t = 0$:*
+     $$ +10{,}000 - 10{,}000 = 0 \text{ euros} $$
+2. *At Time $t = 1.0$ year ($j = 2$):*
+   - The deposit matures and pays:
+     $$ C(1+s_2)^2 = 10{,}000 \times 1.0816 = 10{,}816.00 \text{ euros} $$
+   - Hold this amount in cash (earning $0\%$) until $t = 1.5$ years.
+3. *At Time $t = 1.5$ years ($j = 3$):*
+   - The 3-period loan is due for repayment:
+     $$ C(1+s_3)^3 = 10{,}000 \times 1.061208 = 10{,}612.08 \text{ euros} $$
+   - Use the cash in hand ($10{,}816.00$ euros) to repay the loan ($-10{,}612.08$ euros).
+   - *Net profit pocketed at $t = 1.5$ years:*
+     $$ 10{,}816.00 - 10{,}612.08 = +203.92 \text{ euros} > 0 $$
+
+#+caption: Balance Sheet of the Forward Rate Arbitrage Strategy
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l p{0.32\textwidth} p{0.32\textwidth} X
+| Date | Action | Cash Inflow / (Outflow) | Net Position |
+|------+--------+-------------------------+--------------|
+| $t = 0$ | Borrow 3-period loan, deposit 2-period note | $+10{,}000 - 10{,}000$ | $0.00$ euros |
+| $t = 1.0$ yr | Deposit matures | $+10{,}816.00$ | Hold as cash |
+| $t = 1.5$ yr | Repay 3-period loan | $-10{,}612.08$ | *+$203.92$ euros guaranteed profit!* |
+
+The investor commits zero upfront capital, faces zero risk of loss, and pockets a guaranteed riskless profit of $+203.92$ euros. This completes the arbitrage proof! $\blacksquare$
+
+---
+
+** Practice Exercise 3: Macaulay Duration, Convexity, and Redington Immunization
+*Setting (Style of Problem Set 3, Exercises 3.1 & 3.2, and Section 3.2):*
+Let $A_1, \dots, A_T > 0$ be a deterministic stream of strictly positive cash payments received at dates $t = 1, \dots, T$.
+Under a flat yield curve with interest rate $s > 0$:
+- The present value of the cash stream is:
+  $$ V(s) = \sum_{j=1}^T (1+s)^{-j} A_j $$
+- The Macaulay duration is:
+  $$ D(s) = \frac{\sum_{j=1}^T j (1+s)^{-j} A_j}{V(s)} $$
+- The normalized second moment of payment timing is:
+  $$ M(s) = \frac{\sum_{j=1}^T j^2 (1+s)^{-j} A_j}{V(s)} $$
+- The convexity is:
+  $$ C(s) = \frac{V^{\prime\prime}(s)}{V(s)} = \frac{\sum_{j=1}^T j(j+1)(1+s)^{-j-2} A_j}{V(s)} = \frac{M(s) + D(s)}{(1+s)^2} $$
+
+*Questions:*
+1. (PS3 Exercise 3.1)
+   Consider a level annuity paying a constant amount $A_1 = \dots = A_T = A > 0$ at each date $t = 1, \dots, T$.
+   Show analytically that its Macaulay duration is given by:
+   $$ D(s) = \frac{1+s}{s} - \frac{T}{(1+s)^T - 1} $$
+2. (PS3 Exercise 3.2)
+   a) Define the random variable $\tau \in \{1, \dots, T\}$ with probability mass function:
+      $$ \mathbb{P}(\tau = k) = \frac{(1+s)^{-k} A_k}{V(s)}, \quad k = 1, \dots, T $$
+      Using Jensen\prime s inequality, prove that $M(s) \ge D(s)^2$.
+   b) Compute the derivative $D\prime(s) = \frac{dD}{ds}$ and prove that $D\prime(s) \le 0$ for all $s > 0$.
+3. (Redington Immunization Asset-Liability Management)
+   A life insurance company owes a single fixed liability payment of $L = 1{,}000{,}000$ euros in $T_L = 5$ years. The flat market interest rate is $s = 5\%$.
+   The fund manager wishes to immunize this liability using two zero-coupon bonds:
+   - Bond 1: Maturity $T_1 = 1$ year (price $P_1 = (1+s)^{-1}$).
+   - Bond 2: Maturity $T_2 = 10$ years (price $P_2 = (1+s)^{-10}$).
+   a) Compute the present value $V_L$ and duration $D_L$ of the liability.
+   b) Find the portfolio weights $w_1$ and $w_2$ ($w_1 + w_2 = 1$) invested in Bond 1 and Bond 2 to satisfy Redington\prime s first two immunization conditions:
+      $$ V_A = V_L \quad \text{and} \quad D_A = D_L $$
+   c) Verify Redington\prime s third condition: Compute the convexity of the asset portfolio $C_A$ and the convexity of the liability $C_L$. Verify that $C_A > C_L$, and explain why this protects the surplus against interest rate shifts $\Delta s \ne 0$.
+
+*** Solution to Practice Exercise 3
+
+*Part 1: Macaulay Duration of a Level Annuity*
+Define the annuity present value function for unit payment:
+$$ f(s) = \sum_{j=1}^T (1+s)^{-j} $$
+This is a geometric series with initial term $(1+s)^{-1}$ and common ratio $(1+s)^{-1}$. Using the geometric sum formula:
+$$ f(s) = (1+s)^{-1} \frac{1 - (1+s)^{-T}}{1 - (1+s)^{-1}} = \frac{1 - (1+s)^{-T}}{(1+s)[1 - (1+s)^{-1}]} = \frac{1 - (1+s)^{-T}}{s} $$
+Differentiate $f(s)$ with respect to $s$:
+$$ f\prime(s) = \sum_{j=1}^T (-j)(1+s)^{-j-1} = -(1+s)^{-1} \sum_{j=1}^T j(1+s)^{-j} $$
+Rearranging gives:
+$$ \sum_{j=1}^T j(1+s)^{-j} = -(1+s) f\prime(s) $$
+Because the payments $A_j = A$ are constant, $A$ cancels from both numerator and denominator of $D(s)$:
+$$ D(s) = \frac{A \sum_{j=1}^T j(1+s)^{-j}}{A f(s)} = -(1+s) \frac{f\prime(s)}{f(s)} $$
+Now compute $f\prime(s)$ by the quotient rule on $f(s) = \frac{1 - (1+s)^{-T}}{s}$:
+$$ f\prime(s) = \frac{\frac{d}{ds}[1 - (1+s)^{-T}] \cdot s - [1 - (1+s)^{-T}] \cdot 1}{s^2} = \frac{T(1+s)^{-T-1} s - (1 - (1+s)^{-T})}{s^2} $$
+Substituting $f\prime(s)$ and $f(s)$ into the duration formula:
+$$ D(s) = -(1+s) \frac{\frac{T(1+s)^{-T-1} s - (1 - (1+s)^{-T})}{s^2}}{\frac{1 - (1+s)^{-T}}{s}} = -(1+s) \left[ \frac{T(1+s)^{-T-1}}{1 - (1+s)^{-T}} - \frac{1}{s} \right] $$
+$$ = \frac{1+s}{s} - \frac{T(1+s)^{-T}}{1 - (1+s)^{-T}} = \frac{1+s}{s} - \frac{T}{(1+s)^T - 1} \quad \blacksquare $$
+
+*Part 2: Jensen\prime s Inequality and Duration Derivative*
+a) *Proof that $M(s) \ge D(s)^2$:*
+Because $(1+s)^{-k} A_k > 0$ and $\sum_{k=1}^T (1+s)^{-k} A_k = V(s)$, the probabilities $p_k = \mathbb{P}(\tau = k) = \frac{(1+s)^{-k} A_k}{V(s)}$ satisfy $p_k > 0$ and $\sum_{k=1}^T p_k = 1$.
+Thus, $\tau$ is a well-defined discrete random variable with:
+- Expected value:
+  $$ \mathbb{E}[\tau] = \sum_{k=1}^T k p_k = \frac{\sum_{k=1}^T k(1+s)^{-k} A_k}{V(s)} = D(s) $$
+- Second moment:
+  $$ \mathbb{E}[\tau^2] = \sum_{k=1}^T k^2 p_k = \frac{\sum_{k=1}^T k^2(1+s)^{-k} A_k}{V(s)} = M(s) $$
+The function $g(x) = x^2$ is strictly convex on $\mathbb{R}$. By Jensen\prime s inequality:
+$$ \mathbb{E}[g(\tau)] \ge g(\mathbb{E}[\tau]) \iff \mathbb{E}[\tau^2] \ge (\mathbb{E}[\tau])^2 \iff M(s) \ge D(s)^2 \quad \blacksquare $$
+(Equivalently: $\operatorname{Var}(\tau) = M(s) - D(s)^2 \ge 0$).
+
+b) *Derivative $D\prime(s) \le 0$:*
+Write $D(s) = \frac{N(s)}{V(s)}$, where $N(s) = \sum_{j=1}^T j(1+s)^{-j} A_j$ and $V(s) = \sum_{j=1}^T (1+s)^{-j} A_j$.
+Their derivatives are:
+$$ N\prime(s) = -(1+s)^{-1} \sum_{j=1}^T j^2 (1+s)^{-j} A_j = -(1+s)^{-1} V(s) M(s) $$
+$$ V\prime(s) = -(1+s)^{-1} \sum_{j=1}^T j (1+s)^{-j} A_j = -(1+s)^{-1} V(s) D(s) $$
+Applying the quotient rule:
+$$ D\prime(s) = \frac{N\prime(s) V(s) - N(s) V\prime(s)}{[V(s)]^2} = \frac{-(1+s)^{-1} [V(s)]^2 M(s) - V(s) D(s) [-(1+s)^{-1} V(s) D(s)]}{[V(s)]^2} $$
+$$ = \frac{1}{1+s} \left[ -M(s) + D(s)^2 \right] = -\frac{M(s) - D(s)^2}{1+s} = -\frac{\operatorname{Var}(\tau)}{1+s} $$
+Because $\operatorname{Var}(\tau) \ge 0$ and $1+s > 0$, we have:
+$$ D\prime(s) = -\frac{\operatorname{Var}(\tau)}{1+s} \le 0 \quad \text{for all } s > 0 \quad \blacksquare $$
+Duration is a non-increasing function of the interest rate (and strictly decreasing whenever payments occur at more than one date).
+
+*Part 3: Redington Immunization Asset-Liability Matching*
+a) *Liability Present Value and Duration:*
+Since the liability is a single zero-coupon payout of $L = 1{,}000{,}000$ euros at $T_L = 5$ years with $s = 0.05$:
+$$ V_L = \frac{1{,}000{,}000}{(1.05)^5} = \frac{1{,}000{,}000}{1.27628156} \approx 783{,}526.17 \text{ euros} $$
+The Macaulay duration of any single cash flow is simply its maturity:
+$$ D_L = 5.00 \text{ years} $$
+
+b) *First Two Redington Conditions ($V_A = V_L$ and $D_A = D_L$):*
+For zero-coupon bonds, durations are $D_1 = 1$ year and $D_2 = 10$ years.
+Let $w_1$ be the fraction of total asset wealth invested in Bond 1, and $w_2 = 1 - w_1$ in Bond 2.
+The portfolio duration is:
+$$ D_A = w_1 D_1 + w_2 D_2 = w_1(1) + (1 - w_1)(10) = 10 - 9w_1 $$
+Equating $D_A = D_L = 5$:
+$$ 10 - 9w_1 = 5 \implies 9w_1 = 5 \implies w_1 = \frac{5}{9} \approx 55.56\% $$
+$$ w_2 = 1 - w_1 = \frac{4}{9} \approx 44.44\% $$
+Total capital invested in assets is $V_A = V_L = 783{,}526.17$ euros.
+The monetary allocations are:
+- Invest in Bond 1: $w_1 V_A = \frac{5}{9} \times 783{,}526.17 \approx 435{,}292.32$ euros.
+- Invest in Bond 2: $w_2 V_A = \frac{4}{9} \times 783{,}526.17 \approx 348{,}233.85$ euros.
+
+c) *Convexity Verification ($C_A > C_L$):*
+The convexity of a zero-coupon bond of maturity $T$ under yield $s = 0.05$ is:
+$$ C(T) = \frac{T(T+1)}{(1+s)^2} = \frac{T(T+1)}{(1.05)^2} = \frac{T(T+1)}{1.1025} $$
+- Liability convexity ($T_L = 5$):
+  $$ C_L = \frac{5 \times 6}{1.1025} = \frac{30}{1.1025} \approx 27.21 $$
+- Bond 1 convexity ($T_1 = 1$):
+  $$ C_1 = \frac{1 \times 2}{1.1025} = \frac{2}{1.1025} \approx 1.814 $$
+- Bond 2 convexity ($T_2 = 10$):
+  $$ C_2 = \frac{10 \times 11}{1.1025} = \frac{110}{1.1025} \approx 99.773 $$
+- Portfolio convexity:
+  $$ C_A = w_1 C_1 + w_2 C_2 = \frac{5}{9}(1.814) + \frac{4}{9}(99.773) = 1.008 + 44.344 = 45.35 $$
+Comparing convexities:
+$$ C_A = 45.35 > 27.21 = C_L $$
+*Economic Guarantee of Redington Immunization:*
+By the second-order Taylor expansion of net portfolio surplus $S(s) = V_A(s) - V_L(s)$:
+$$ \Delta S \approx -(V_A D_A - V_L D_L) \Delta s + \frac{1}{2} [V_A C_A - V_L C_L] (\Delta s)^2 $$
+Because $V_A = V_L = V$ and $D_A = D_L$, the linear first-order term is exactly zero.
+The surplus change simplifies to:
+$$ \Delta S \approx \frac{1}{2} V (C_A - C_L) (\Delta s)^2 = \frac{1}{2}(783{,}526)(45.35 - 27.21)(\Delta s)^2 = +7{,}106{,}582 (\Delta s)^2 \ge 0 $$
+Because $(\Delta s)^2 > 0$ for *any* shift $\Delta s \ne 0$ (whether rates rise or fall), the assets gain more value than liabilities when rates drop, and lose less value than liabilities when rates rise. The insurer is protected against any small parallel shift in yield! $\blacksquare$
+
+---
+
+** Practice Exercise 4: Definition 5.1 — Arbitrage Opportunity, Reinvestment Equivalence, and Portfolio Construction
+*Setting (Direct Application of Definition 5.1 & Remark 5.2):*
+Consider a one-period financial market ($t = 0, 1$) with three possible future states of nature $\Omega = \{\omega_1, \omega_2, \omega_3\}$, occurring with physical probabilities $\mathbb{P}(\{\omega_1\}) = 0.20$, $\mathbb{P}(\{\omega_2\}) = 0.50$, $\mathbb{P}(\{\omega_3\}) = 0.30$.
+There are three securities traded at time $0$:
+- Security 1 (Risk-free Bond): Initial price $S_1(0) = 1$, terminal payoff $S_1(1) = (1.10, 1.10, 1.10)^T$ (interest rate $i = 10\%$).
+- Security 2 (Stock): Initial price $S_2(0) = 50$, terminal payoff $S_2(1) = (40, 60, 80)^T$.
+- Security 3 (A derivative contract): Initial price $S_3(0) = p$, terminal payoff $S_3(1) = (20, 30, 40)^T$.
+
+*Questions:*
+1. State the formal mathematical definition of an *arbitrage opportunity* (Definition 5.1) for a portfolio $\theta = (\theta_1, \theta_2, \theta_3)^T$. Explain what each of the three conditions ($S(0)\theta \le 0$, $S(1)\theta \ge 0$ a.s., $\mathbb{P}(S(1)\theta > 0) > 0$) means in plain language.
+2. Suppose the derivative contract trades at market price $p = 20$.
+   Notice that $S_3(1) = 0.5 S_2(1)$ in all states of nature.
+   Construct an explicit arbitrage portfolio $\theta = (\theta_1, \theta_2, \theta_3)^T$ that costs strictly negative capital upfront ($S(0)\theta < 0$) and has identically zero future liabilities ($S(1)\theta = 0$ a.s.).
+3. Using the logic of *Remark 5.2*, demonstrate how the upfront cash profit pocketed from $\theta$ in Part 2 can be reinvested into Security 1 to construct an equivalent portfolio $\tilde{\theta}$ satisfying:
+   $$ S(0)\tilde{\theta} = 0 \quad \text{and} \quad S(1)\tilde{\theta} > 0 \text{ strictly in every state of nature}. $$
+4. An investor considers a different portfolio $\eta = (10, -1, 1)^T$.
+   Calculate its initial cost $S(0)\eta$ and its terminal payoffs in each state. Does $\eta$ constitute an arbitrage opportunity under Definition 5.1? Carefully justify your answer.
+
+*** Solution to Practice Exercise 4
+
+*Part 1: Formal Definition & Interpretation*
+By Definition 5.1 of the lecture notes:
+A portfolio $\theta \in \mathbb{R}^N$ is an arbitrage opportunity if:
+1. $S(0)\theta \le 0$: The strategy requires no net investment upfront ($S(0)\theta = 0$), or it generates immediate cash in hand today ($S(0)\theta < 0$).
+2. $S(1)\theta \ge 0$ a.s.: In every state $\omega_m \in \Omega$ (since $\mathbb{P}(\{\omega_m\}) > 0$), $(S(1)\theta)_m \ge 0$. The investor is completely protected against any loss at time $1$.
+3. $\mathbb{P}(S(1)\theta > 0) > 0$: There is at least one state with positive probability where $(S(1)\theta)_m > 0$. The investor has a positive chance of making a gain.
+*Economic meaning:* An arbitrage opportunity is a self-financing money pump — guaranteed non-negative wealth with zero risk and a positive probability of profit.
+
+*Part 2: Constructing Arbitrage Portfolio when $p = 20$*
+Notice the terminal payoff relation:
+$$ S_3(1) = \begin{pmatrix} 20 \\ 30 \\ 40 \end{pmatrix} = 0.5 \begin{pmatrix} 40 \\ 60 \\ 80 \end{pmatrix} = 0.5 S_2(1) $$
+Under no arbitrage (Law of One Price / FTAP 1), their initial prices must satisfy:
+$$ S_3(0) = 0.5 S_2(0) = 0.5(50) = 25 $$
+When $p = 20$, the derivative is strictly underpriced relative to the stock ($20 < 25$).
+*Strategy:* Buy 1 unit of Security 3 (cost: $-20$) and sell short $0.5$ units of Security 2 (inflow: $+0.5 \times 50 = +25$).
+Portfolio: $\theta = (\theta_1, \theta_2, \theta_3)^T = (0, -0.5, 1)^T$.
+1. Initial cash flow:
+   $$ S(0)\theta = 0(1) - 0.5(50) + 1(20) = -25 + 20 = -5 < 0 $$
+   The investor pockets $+5$ euros cash immediately at time $0$!
+2. Terminal payoff in every state $\omega_m$:
+   - State $\omega_1$: $-0.5(40) + 1(20) = 0$.
+   - State $\omega_2$: $-0.5(60) + 1(30) = 0$.
+   - State $\omega_3$: $-0.5(80) + 1(40) = 0$.
+Here $S(0)\theta = -5 < 0$ and $S(1)\theta = 0$ a.s., so $\theta$ is a pure arbitrage opportunity under Definition 5.1!
+
+*Part 3: Reinvestment via Remark 5.2*
+Pocket the $+5$ euros cash upfront at time $0$ and invest all of it into Security 1 (the bond with rate $i = 10\%$):
+$$ \tilde{\theta} = \theta + 5 e_1 = \begin{pmatrix} 0 \\ -0.5 \\ 1 \end{pmatrix} + \begin{pmatrix} 5 \\ 0 \\ 0 \end{pmatrix} = \begin{pmatrix} 5 \\ -0.5 \\ 1 \end{pmatrix} $$
+1. Initial cost:
+   $$ S(0)\tilde{\theta} = 5 S_1(0) - 0.5 S_2(0) + 1 S_3(0) = 5(1) - 25 + 20 = 0 $$
+   The strategy requires exactly zero capital today!
+2. Terminal payoff at time $1$:
+   $$ S(1)\tilde{\theta} = 5 S_1(1) + S(1)\theta = 5(1.10) + \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix} = \begin{pmatrix} 5.50 \\ 5.50 \\ 5.50 \end{pmatrix} > 0 $$
+   In every state $\omega_m$, the portfolio pays $+5.50$ euros of risk-free cash.
+Thus: $S(0)\tilde{\theta} = 0$, $S(1)\tilde{\theta} \ge 0$ a.s., and $\mathbb{P}(S(1)\tilde{\theta} > 0) = 1 > 0$.
+This confirms Remark 5.2: an upfront arbitrage with $S(0)\theta < 0$ is completely equivalent to a zero-cost arbitrage with $S(0)\tilde{\theta} = 0$!
+
+*Part 4: Evaluating Portfolio $\eta = (10, -1, 1)^T$*
+- Initial cost:
+  $$ S(0)\eta = 10(1) - 1(50) + 1(20) = 10 - 50 + 20 = -20 < 0 $$
+  (Immediate cash inflow $+20$).
+- Terminal payoff at time $1$:
+  - State $\omega_1$: $10(1.10) - 1(40) + 1(20) = 11 - 40 + 20 = -9 < 0$.
+  - State $\omega_2$: $10(1.10) - 1(60) + 1(30) = 11 - 60 + 30 = -19 < 0$.
+  - State $\omega_3$: $10(1.10) - 1(80) + 1(40) = 11 - 80 + 40 = -29 < 0$.
+In every state of nature, $S(1)\eta < 0$.
+Even though the investor received cash upfront, they face a guaranteed loss at time $1$.
+Condition 2 of Definition 5.1 requires $S(1)\theta \ge 0$ a.s., which fails completely here.
+Therefore, $\eta$ is NOT an arbitrage opportunity! $\blacksquare$
+
+---
+
+---
+
+** Practice Exercise 5: Arbitrage Detection, State Price Vectors, and Constructing Arbitrage Portfolios
 *Setting (Style of Problem Set 4, Exercises 4.1, 4.2, 4.4):*
 Consider a one-period market with three states of nature: $\Omega = \{\omega_1, \omega_2, \omega_3\}$.
 There are three securities traded at time $0$:
@@ -798,7 +1261,7 @@ There are three securities traded at time $0$:
 3. Determine the exact price $p$ for which the market is arbitrage-free.
 4. Suppose $p = 10$. Show that the market admits an arbitrage opportunity and construct an explicit portfolio $\theta = (\theta_1, \theta_2, \theta_3)^T$ that achieves an arbitrage.
 
-*** Solution to Practice Exercise 1
+*** Solution to Practice Exercise 5
 
 *Part 1: The Linear System for State Prices*
 By Theorem 5.3 (FTAP 1), the market is arbitrage-free if and only if there exists a vector $\psi = (\psi_1, \psi_2, \psi_3)^T$ with $\psi_1 > 0, \psi_2 > 0, \psi_3 > 0$ such that $S(0) = S(1)^T \psi$:
@@ -857,79 +1320,9 @@ The portfolio $\theta = (12, -1, -1)^T$ yields $+4$ riskless cash upfront with i
 
 ---
 
-** Practice Exercise 2: Definition 5.1 — Arbitrage Opportunity, Reinvestment Equivalence, and Portfolio Construction
-*Setting (Direct Application of Definition 5.1 & Remark 5.2):*
-Consider a one-period financial market ($t = 0, 1$) with three possible future states of nature $\Omega = \{\omega_1, \omega_2, \omega_3\}$, occurring with physical probabilities $\mathbb{P}(\{\omega_1\}) = 0.20$, $\mathbb{P}(\{\omega_2\}) = 0.50$, $\mathbb{P}(\{\omega_3\}) = 0.30$.
-There are three securities traded at time $0$:
-- Security 1 (Risk-free Bond): Initial price $S_1(0) = 1$, terminal payoff $S_1(1) = (1.10, 1.10, 1.10)^T$ (interest rate $i = 10\%$).
-- Security 2 (Stock): Initial price $S_2(0) = 50$, terminal payoff $S_2(1) = (40, 60, 80)^T$.
-- Security 3 (A derivative contract): Initial price $S_3(0) = p$, terminal payoff $S_3(1) = (20, 30, 40)^T$.
-
-*Questions:*
-1. State the formal mathematical definition of an *arbitrage opportunity* (Definition 5.1) for a portfolio $\theta = (\theta_1, \theta_2, \theta_3)^T$. Explain what each of the three conditions ($S(0)\theta \le 0$, $S(1)\theta \ge 0$ a.s., $\mathbb{P}(S(1)\theta > 0) > 0$) means in plain language.
-2. Suppose the derivative contract trades at market price $p = 20$.
-   Notice that $S_3(1) = 0.5 S_2(1)$ in all states of nature.
-   Construct an explicit arbitrage portfolio $\theta = (\theta_1, \theta_2, \theta_3)^T$ that costs strictly negative capital upfront ($S(0)\theta < 0$) and has identically zero future liabilities ($S(1)\theta = 0$ a.s.).
-3. Using the logic of *Remark 5.2*, demonstrate how the upfront cash profit pocketed from $\theta$ in Part 2 can be reinvested into Security 1 to construct an equivalent portfolio $\tilde{\theta}$ satisfying:
-   $$ S(0)\tilde{\theta} = 0 \quad \text{and} \quad S(1)\tilde{\theta} > 0 \text{ strictly in every state of nature}. $$
-4. An investor considers a different portfolio $\eta = (10, -1, 1)^T$.
-   Calculate its initial cost $S(0)\eta$ and its terminal payoffs in each state. Does $\eta$ constitute an arbitrage opportunity under Definition 5.1? Carefully justify your answer.
-
-*** Solution to Practice Exercise 2
-
-*Part 1: Formal Definition & Interpretation*
-By Definition 5.1 of the lecture notes:
-A portfolio $\theta \in \mathbb{R}^N$ is an arbitrage opportunity if:
-1. $S(0)\theta \le 0$: The strategy requires no net investment upfront ($S(0)\theta = 0$), or it generates immediate cash in hand today ($S(0)\theta < 0$).
-2. $S(1)\theta \ge 0$ a.s.: In every state $\omega_m \in \Omega$ (since $\mathbb{P}(\{\omega_m\}) > 0$), $(S(1)\theta)_m \ge 0$. The investor is completely protected against any loss at time $1$.
-3. $\mathbb{P}(S(1)\theta > 0) > 0$: There is at least one state with positive probability where $(S(1)\theta)_m > 0$. The investor has a positive chance of making a gain.
-*Economic meaning:* An arbitrage opportunity is a self-financing money pump — guaranteed non-negative wealth with zero risk and a positive probability of profit.
-
-*Part 2: Constructing Arbitrage Portfolio when $p = 20$*
-Notice the terminal payoff relation:
-$$ S_3(1) = \begin{pmatrix} 20 \\ 30 \\ 40 \end{pmatrix} = 0.5 \begin{pmatrix} 40 \\ 60 \\ 80 \end{pmatrix} = 0.5 S_2(1) $$
-Under no arbitrage (Law of One Price / FTAP 1), their initial prices must satisfy:
-$$ S_3(0) = 0.5 S_2(0) = 0.5(50) = 25 $$
-When $p = 20$, the derivative is strictly underpriced relative to the stock ($20 < 25$).
-*Strategy:* Buy 1 unit of Security 3 (cost: $-20$) and sell short $0.5$ units of Security 2 (inflow: $+0.5 \times 50 = +25$).
-Portfolio: $\theta = (\theta_1, \theta_2, \theta_3)^T = (0, -0.5, 1)^T$.
-1. Initial cash flow:
-   $$ S(0)\theta = 0(1) - 0.5(50) + 1(20) = -25 + 20 = -5 < 0 $$
-   The investor pockets $+5$ euros cash immediately at time $0$!
-2. Terminal payoff in every state $\omega_m$:
-   - State $\omega_1$: $-0.5(40) + 1(20) = 0$.
-   - State $\omega_2$: $-0.5(60) + 1(30) = 0$.
-   - State $\omega_3$: $-0.5(80) + 1(40) = 0$.
-Here $S(0)\theta = -5 < 0$ and $S(1)\theta = 0$ a.s., so $\theta$ is a pure arbitrage opportunity under Definition 5.1!
-
-*Part 3: Reinvestment via Remark 5.2*
-Pocket the $+5$ euros cash upfront at time $0$ and invest all of it into Security 1 (the bond with rate $i = 10\%$):
-$$ \tilde{\theta} = \theta + 5 e_1 = \begin{pmatrix} 0 \\ -0.5 \\ 1 \end{pmatrix} + \begin{pmatrix} 5 \\ 0 \\ 0 \end{pmatrix} = \begin{pmatrix} 5 \\ -0.5 \\ 1 \end{pmatrix} $$
-1. Initial cost:
-   $$ S(0)\tilde{\theta} = 5 S_1(0) - 0.5 S_2(0) + 1 S_3(0) = 5(1) - 25 + 20 = 0 $$
-   The strategy requires exactly zero capital today!
-2. Terminal payoff at time $1$:
-   $$ S(1)\tilde{\theta} = 5 S_1(1) + S(1)\theta = 5(1.10) + \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix} = \begin{pmatrix} 5.50 \\ 5.50 \\ 5.50 \end{pmatrix} > 0 $$
-   In every state $\omega_m$, the portfolio pays $+5.50$ euros of risk-free cash.
-Thus: $S(0)\tilde{\theta} = 0$, $S(1)\tilde{\theta} \ge 0$ a.s., and $\mathbb{P}(S(1)\tilde{\theta} > 0) = 1 > 0$.
-This confirms Remark 5.2: an upfront arbitrage with $S(0)\theta < 0$ is completely equivalent to a zero-cost arbitrage with $S(0)\tilde{\theta} = 0$!
-
-*Part 4: Evaluating Portfolio $\eta = (10, -1, 1)^T$*
-- Initial cost:
-  $$ S(0)\eta = 10(1) - 1(50) + 1(20) = 10 - 50 + 20 = -20 < 0 $$
-  (Immediate cash inflow $+20$).
-- Terminal payoff at time $1$:
-  - State $\omega_1$: $10(1.10) - 1(40) + 1(20) = 11 - 40 + 20 = -9 < 0$.
-  - State $\omega_2$: $10(1.10) - 1(60) + 1(30) = 11 - 60 + 30 = -19 < 0$.
-  - State $\omega_3$: $10(1.10) - 1(80) + 1(40) = 11 - 80 + 40 = -29 < 0$.
-In every state of nature, $S(1)\eta < 0$.
-Even though the investor received cash upfront, they face a guaranteed loss at time $1$.
-Condition 2 of Definition 5.1 requires $S(1)\theta \ge 0$ a.s., which fails completely here.
-Therefore, $\eta$ is NOT an arbitrage opportunity! $\blacksquare$
-
 ---
 
-** Practice Exercise 3: Full Mathematical Proof of Theorem 5.3 (FTAP 1)
+** Practice Exercise 6: Full Mathematical Proof of Theorem 5.3 (FTAP 1)
 *Setting (Core Theoretical Proof in Section 5.1.1):*
 Consider a one-period market with $N$ traded securities and a finite sample space $\Omega = \{\omega_1, \dots, \omega_M\}$, with $\mathbb{P}(\{\omega_m\}) > 0$ for all $m = 1, \dots, M$.
 The price vector at time $0$ is $S(0) \in \mathbb{R}^N$ and the payoff in state $\omega_m$ is $S(1, \omega_m) \in \mathbb{R}^N$.
@@ -943,7 +1336,7 @@ The price vector at time $0$ is $S(0) \in \mathbb{R}^N$ and the payoff in state 
    Apply it to $V$ to prove that absence of arbitrage implies the existence of a strictly positive state price vector $\psi \gg 0$ such that $S(0) = S(1)^T \psi$.
 4. Prove the converse direction: If there exists a state price vector $\psi \gg 0$ such that $S(0) = S(1)^T \psi$, then the market is arbitrage-free.
 
-*** Solution to Practice Exercise 3
+*** Solution to Practice Exercise 6
 
 *Part 1: Statement of Theorem 5.3*
 #+begin_quote
@@ -1014,7 +1407,9 @@ Hence, no such portfolio $\theta$ can exist, and the market is strictly arbitrag
 
 ---
 
-** Practice Exercise 4: Two-Period Binomial Tree, Delta-Hedging, and Self-Financing Verification
+---
+
+** Practice Exercise 7: Two-Period Binomial Tree, Delta-Hedging, and Self-Financing Verification
 *Setting (Style of Problem Set 6, Exercises 6.1–6.4):*
 Consider a two-period binomial market ($t = 0, 1, 2$).
 - Interest rate: $r = 10\%$ per period ($S_1(0) = 1, S_1(1) = 1.10, S_1(2) = 1.21$).
@@ -1032,7 +1427,7 @@ Consider a two-period binomial market ($t = 0, 1, 2$).
 6. *Verify explicitly that the self-financing condition holds at $t = 1$ at node $u$:*
    $$ S(1)\theta(2) = S(1)\theta(1) $$
 
-*** Solution to Practice Exercise 4
+*** Solution to Practice Exercise 7
 
 *Part 1: Risk-Neutral Probability*
 By the martingale condition $1+r = q u + (1-q) d$:
