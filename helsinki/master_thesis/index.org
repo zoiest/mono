@@ -1,123 +1,156 @@
 :PROPERTIES:
 :ID:       d54f7621-c124-419b-b0b2-3e4bfa56a120
-:ROAM_ALIASES: "Master Thesis Topic" "Quantum Option Pricing Thesis" "Helsinki Master Thesis"
+:ROAM_ALIASES: "Master Thesis Topic" "Modified Greeks & Market Simulation Thesis" "Helsinki Master Thesis" "Option Pricing Feedback Simulation"
 :END:
-#+title: Master's Thesis: Quantum Amplitude Estimation for Exotic Option Pricing & Greeks
-#+subtitle: Benchmarking Quantum Algorithms against Classical Monte Carlo from Black-Scholes to Stochastic Volatility
+#+title: Master's Thesis: Nonlinear Option Pricing, Modified Greeks, and Dynamic Hedging in Market Simulation
+#+subtitle: Feedback-Adjusted Sensitivities, Transaction Costs, and Agent-Based Microstructure Modeling
 #+author: Antigravity Notes
-#+date: [2026-10-07]
-#+filetags: :helsinki:master-thesis:quantitative-finance:option-pricing:quantum-computing:qae:heston:stochastic-calculus:
+#+date: [2026-10-31]
+#+filetags: :helsinki:master-thesis:quantitative-finance:option-pricing:modified-greeks:market-simulation:market-microstructure:stochastic-calculus:liquidity-risk:
 
-[[file:../index.org][← Helsinki Courses Master Index]] | [[file:writings/supervisors_notes.org][Supervisors Research & Outreach Guide →]]
+[[file:../index.org][← Helsinki Courses Master Index]] | [[file:writings/supervisors_notes.org][Supervisors Research & Transition Guide →]]
 
 * Thesis Proposal & Strategic Learning Philosophy
 
 ** Working Title
 #+begin_quote
-*Benchmarking Quantum Amplitude Estimation against Classical Monte Carlo for Exotic Option Pricing and Greeks: From Black-Scholes to Stochastic Volatility*
+*Nonlinear Option Pricing, Feedback-Adjusted Greeks, and Dynamic Hedging in an Agent-Based Market Simulation*
 #+end_quote
 
-** Core Motivation: A Deep-Learning Vehicle for Quantitative Finance
-The primary objective of this Master's thesis is to serve as an *exhaustive educational engine* for mastering quantitative finance, derivatives engineering, and modern computational methods.
+** Core Motivation: Moving Beyond the Frictionless Paradigm
+The classical Black-Scholes-Merton and continuous-time arbitrage theory (covered in /Financial Economics I/) rest on three idealized assumptions:
+1. *Zero Market Impact (Price-Taking):* Individual hedging transactions do not perturb the underlying asset price ($dS_t$ is purely exogenous).
+2. *Frictionless Trading:* Portfolios can be continuously rebalanced without bid-ask spreads, transaction costs, or market delay.
+3. *Model Consistency:* The underlying volatility is constant or exogenous, independent of the dynamic positions of market participants.
 
-By building an end-to-end derivative pricing framework that bridges classical stochastic calculus with quantum algorithms, this project achieves two vital goals:
-1. *Deep Mathematical & Computational Grounding in Option Pricing:* Mastering stochastic differential equations (SDEs), Itô's lemma, Girsanov change of measure, risk-neutral martingale valuation, stochastic volatility dynamics (Heston), path-dependent payoffs, and sensitivity risk analysis (the Greeks via pathwise differentiation and Malliavin weights).
-2. *Hands-On Mastery of Applied Quantum Computing:* Implementing state preparation, quantum arithmetic, payoff rotation oracles, Iterative Quantum Amplitude Estimation (IQAE), and realistic resource estimation (gate depth, CNOT count, T-depth, and noise susceptibility) using modern frameworks (`Qiskit`, `PennyLane`).
+In modern derivatives markets, these assumptions fail catastrophically:
+- *Positive Feedback & Gamma Squeezes:* Option market makers and institutional hedgers hold massive concentrated gamma. When the underlying moves, mechanical delta-hedging trades push the asset *further in the direction of the trend*, driving extreme price surges (gamma squeezes) or sharp liquidity crashes (such as portfolio insurance during the 1987 crash or the March 2020 dislocations).
+- *Hedging Frictions & Rebalancing Bands:* Proportional transaction costs render continuous replication impossible, requiring modified volatility regimes and asymptotic no-transaction bands.
+- *Implied Volatility Dynamics:* Implied volatility curves shift as spot prices move (sticky strike vs. sticky delta), requiring the Delta Greek to be modified with a smile-skew adjustment (Minimum Variance Delta).
+
+** Primary Objective of the Thesis
+This Master's thesis investigates the theory, formulation, and empirical performance of **Modified Greeks** under realistic market conditions:
+1. *Mathematical Formulation:* Derive and analyze nonlinear pricing PDEs (Frey-Stremme, Schönbucher-Wilmott, Leland, Whalley-Wilmott) that internalize market feedback, liquidity illiquidity, and transaction costs.
+2. *Greeks Modification:* Systematically construct and contrast:
+   - *Feedback-Adjusted Greeks* ($\Delta^*, \Gamma^*$) incorporating endogenous price impact.
+   - *Friction-Adjusted Greeks* (Leland modified volatility and Whalley-Wilmott asymptotic hedging bands).
+   - *Minimum-Variance Greeks* ($\Delta_{\text{MV}}$) accounting for local/implied volatility surface deformation.
+3. *Agent-Based Market Microstructure Simulator:* Implement an event-driven order-book simulation populated by noise traders, fundamental investors, and dynamic option hedgers. Prove how modified Greeks mitigate hedging tracking error, prevent liquidity death spirals, and alter market stability.
 
 ---
 
 * The Theoretical Pillars
 
 #+caption: Three-Phase Architectural Blueprint
-| Pillar | Domain | Core Concepts & Techniques | Computational Deliverables |
-|--------+--------+----------------------------+----------------------------|
-| *Pillar 1* | Classical Quantitative Finance | Geometric Brownian Motion, Heston stochastic volatility, CIR variance, Feller condition, risk-neutral pricing ($\mathbb{Q}$-measure) | Monte Carlo simulator (Euler-Maruyama, Milstein, QE scheme for Heston) |
-| *Pillar 2* | Sensitivities & Risk (Greeks) | Functional derivatives, Delta ($\Delta$), Gamma ($\Gamma$), Vega ($\mathcal{V}$), finite differences, pathwise derivative method, Malliavin calculus weights | Pathwise and Malliavin Greeks evaluation engine |
-| *Pillar 3* | Quantum Amplitude Estimation | Qubit register discretization, quantum state loading, controlled $Y$-rotations for payoffs, Grover diffusion operator, Iterative QAE (IQAE) | Quantum circuit pipeline benchmarking pricing & Greeks vs classical MC |
+| Pillar | Domain | Core Concepts & Analytical Techniques | Computational Deliverables |
+|--------+--------+---------------------------------------+----------------------------|
+| *Pillar 1* | Nonlinear PDEs & SDEs with Impact | Stochastic asset dynamics with endogenous demand, Itô calculus with jumps/impact, Frey-Stremme non-linear PDE, effective volatility $\sigma_{\text{eff}}(S, t, \Gamma)$ | Numerical PDE solver (Crank-Nicolson / finite differences) for nonlinear Black-Scholes |
+| *Pillar 2* | Modified Greeks Formulation | Functional sensitivities, feedback-adjusted Delta ($\Delta^*$) and Gamma ($\Gamma^*$), Leland transaction-cost volatility, Whalley-Wilmott no-trade bands, Minimum Variance Delta ($\Delta_{\text{MV}}$) | Analytical & algorithmic Greeks engine comparing standard vs modified sensitivities |
+| *Pillar 3* | Agent-Based Market Simulation | Limit Order Book (LOB) dynamics, Kyle's $\lambda$ price impact, multi-agent order flow (noise, fundamental, hedgers), gamma squeeze, flash crashes, strike pinning | Event-driven Python/Numba market microstructure simulator with full PnL & tracking analytics |
 
 ---
 
 * Mathematical Framework
 
-** 1. Classical Asset Dynamics & Pricing PDE
+** 1. Endogenous Asset Dynamics and the Nonlinear Black-Scholes PDE
 
-*** The Black-Scholes-Merton Benchmark
-Under the risk-neutral measure $\mathbb{Q}$, the asset price $S_t$ satisfies:
-$$ dS_t = r S_t \, dt + \sigma S_t \, dW_t^\mathbb{Q}, $$
-where $r$ is the risk-free rate, $\sigma > 0$ is constant volatility, and $W_t^\mathbb{Q}$ is a standard Brownian motion.
+Let $S_t$ denote the spot price of the underlying asset. In the presence of a large option market maker holding an aggregate delta-hedging position $\alpha \Delta(S_t, t)$ (where $\alpha > 0$ represents the scale of the hedged book), the price dynamics incorporate an endogenous market impact term:
+$$ dS_t = \mu S_t \, dt + \sigma S_t \, dW_t + \lambda(S_t) \, d\big(\alpha \Delta(S_t, t)\big), $$
+where:
+- $\mu$ is the drift, $\sigma > 0$ is the unperturbed reference volatility,
+- $W_t$ is a standard Brownian motion under $\mathbb{P}$,
+- $\lambda(S_t)$ is the market illiquidity parameter (price impact per share traded).
 
-*** The Heston Stochastic Volatility Model
-To capture market volatility smiles and skews, the asset variance $v_t = \sigma_t^2$ is modeled as a mean-reverting Cox-Ingersoll-Ross (CIR) square-root diffusion:
-$$ dS_t = r S_t \, dt + \sqrt{v_t} S_t \, dW_{1, t}^\mathbb{Q}, $$
-$$ dv_t = \kappa (\theta - v_t) \, dt + \xi \sqrt{v_t} \, dW_{2, t}^\mathbb{Q}, $$
-with correlated Brownian motions $d\langle W_1^\mathbb{Q}, W_2^\mathbb{Q} \rangle_t = \rho \, dt$, where:
-- $\kappa > 0$ is the mean-reversion speed,
-- $\theta > 0$ is the long-term variance,
-- $\xi > 0$ is the volatility of variance (vol-of-vol),
-- $\rho \in [-1, 1]$ is the asset-volatility correlation (typically $\rho < 0$ for equity leverage effects),
-- The Feller condition $2\kappa\theta > \xi^2$ guarantees that the variance process $v_t$ remains strictly positive almost surely.
+Applying Itô's Lemma to the hedge ratio $\Delta(S_t, t) = \frac{\partial V}{\partial S}(S_t, t)$:
+$$ d\Delta(S_t, t) = \frac{\partial \Delta}{\partial t} \, dt + \frac{\partial \Delta}{\partial S} \, dS_t + \frac{1}{2} \frac{\partial^2 \Delta}{\partial S^2} \, d\langle S \rangle_t = \frac{\partial \Delta}{\partial t} \, dt + \Gamma(S_t, t) \, dS_t + \frac{1}{2} \frac{\partial \Gamma}{\partial S} \, d\langle S \rangle_t. $$
 
-** 2. Target Derivative Contracts & Payoffs
+Collecting the $dS_t$ terms on the left-hand side:
+$$ \Big(1 - \alpha \lambda(S_t) \Gamma(S_t, t)\Big) \, dS_t = \left(\mu S_t + \alpha \lambda(S_t) \frac{\partial \Delta}{\partial t}\right) dt + \sigma S_t \, dW_t + \mathcal{O}(dt). $$
 
-The thesis systematically investigates three classes of European-style contingent claims:
-1. *Vanilla European Call/Put:*
-   $$ \Phi_{\text{vanilla}}(S_T) = \max(S_T - K, 0). $$
-2. *Path-Dependent Asian Option (Arithmetic Average):*
-   $$ \Phi_{\text{Asian}}\left(\{S_{t_k}\}_{k=1}^M\right) = \max\left( \frac{1}{M}\sum_{k=1}^M S_{t_k} - K, \, 0 \right). $$
-3. *Up-and-Out Barrier Option (Discontinuous Payoff):*
-   $$ \Phi_{\text{barrier}}\left(\{S_{t_k}\}_{k=1}^M\right) = \max(S_T - K, 0) \cdot \mathbf{1}_{\{\max_{k} S_{t_k} < B\}}. $$
+Defining the dimensionless *feedback factor* $\rho(S_t) = \frac{\alpha \lambda(S_t)}{S_t}$, the effective continuous diffusion of the stock becomes:
+$$ dS_t = \tilde{\mu}_t S_t \, dt + \sigma_{\text{eff}}\big(S_t, t, \Gamma\big) S_t \, dW_t, $$
+where the **effective volatility** is nonlinearly coupled to the option's Gamma:
+$$ \sigma_{\text{eff}}(S, t, \Gamma) = \frac{\sigma}{1 - \rho(S) S \Gamma(S, t)}. $$
 
-** 3. Sensitivity Risk Management (The Greeks)
+*** The Nonlinear Pricing PDE
+Under risk-neutral pricing arguments (Frey & Stremme, Schönbucher & Wilmott), the option value function $V(S, t)$ satisfies:
+$$ \frac{\partial V}{\partial t} + \frac{1}{2} \left( \frac{\sigma}{1 - \rho(S) S \frac{\partial^2 V}{\partial S^2}} \right)^2 S^2 \frac{\partial^2 V}{\partial S^2} + r S \frac{\partial V}{\partial S} - r V = 0, $$
+subject to terminal payoff condition $V(S, T) = \Phi(S)$.
 
-Hedging requires computing functional derivatives of the discounted price $V_0 = e^{-rT}\mathbb{E}^\mathbb{Q}[\Phi(S)]$:
-- *Delta:* $\Delta = \frac{\partial V_0}{\partial S_0}$
-- *Gamma:* $\Gamma = \frac{\partial^2 V_0}{\partial S_0^2}$
-- *Vega:* $\mathcal{V} = \frac{\partial V_0}{\partial \sigma}$ (or $\frac{\partial V_0}{\partial v_0}$)
-
-*Methodological Comparison:*
-1. *Finite Differences:* $\Delta \approx \frac{V(S_0 + \delta) - V(S_0 - \delta)}{2\delta}$. (Simple, but introduces high variance and step-size bias).
-2. *Pathwise Derivative Method (Broadie & Glasserman):* Differentiating inside the expectation when the payoff is Lipschitz continuous:
-   $$ \frac{\partial}{\partial S_0} \mathbb{E}^\mathbb{Q}[\Phi(S_T)] = \mathbb{E}^\mathbb{Q}\left[ \Phi'(S_T) \frac{\partial S_T}{\partial S_0} \right]. $$
-3. *Malliavin Calculus Weights:* Differentiating via integration by parts on Wiener space, transforming derivatives of discontinuous payoffs (e.g. barrier options) into expectations with stochastic weights $\pi$:
-   $$ \Delta = e^{-rT} \mathbb{E}^\mathbb{Q}[\Phi(S_T) \cdot \pi_\Delta], \quad \pi_\Delta = \frac{W_T^\mathbb{Q}}{S_0 \sigma T}. $$
+*Critical Mathematical Phenomenon:*
+When $1 - \rho(S) S \Gamma \to 0$, the effective volatility explodes ($\sigma_{\text{eff}} \to \infty$). This represents a **liquidity breakdown** or **gamma singularity**, where the market lacks sufficient depth to absorb the hedger's mandatory rebalancing orders.
 
 ---
 
-* The Quantum Computing Pipeline
+** 2. The Family of Modified Greeks
+
+Hedging using standard Black-Scholes sensitivities under endogenous feedback or friction creates systematic mishedging and severe PnL drag. The thesis focuses on deriving and implementing three distinct classes of modified Greeks:
+
+*** A. Feedback-Adjusted Greeks
+Accounting for the fact that buying/selling shares moves the underlying price:
+1. *Feedback-Adjusted Delta ($\Delta^*$):*
+   $$ \Delta^*(S, t) = \frac{\Delta_{\text{BS}}(S, t)}{1 - \rho(S) S \, \Gamma_{\text{BS}}(S, t)}. $$
+   - If the hedger is *short gamma* ($\Gamma > 0$), $\Delta^* > \Delta_{\text{BS}}$: the hedger must trade *more aggressively* to compensate for their own adverse price impact.
+   - If the hedger is *long gamma* ($\Gamma < 0$), $\Delta^* < \Delta_{\text{BS}}$: price impact works in the hedger's favor, dampening required order volume.
+2. *Feedback-Adjusted Gamma ($\Gamma^*$):*
+   $$ \Gamma^*(S, t) = \frac{\Gamma_{\text{BS}}(S, t)}{\left(1 - \rho(S) S \, \Gamma_{\text{BS}}(S, t)\right)^3}. $$
+3. *Liquidity Vega ($\mathcal{V}^*$):*
+   Measures sensitivity of the portfolio not only to fundamental volatility $\sigma$, but to shifts in market depth $\lambda$.
+
+*** B. Friction-Adjusted Greeks & No-Transaction Bands (Leland / Whalley-Wilmott)
+Under proportional transaction costs $c > 0$ per share traded and discrete rebalancing interval $\delta t$:
+1. *Leland Modified Volatility:*
+   $$ \hat{\sigma}^2 = \sigma^2 \left( 1 + \sqrt{\frac{2}{\pi}} \frac{c}{\sigma \sqrt{\delta t}} \operatorname{sgn}(\Gamma) \right). $$
+2. *Whalley-Wilmott Asymptotic Hedging Band:*
+   Instead of continuously trading to exact $\Delta$, the hedger only trades when their current stock holding $\Delta_{\text{actual}}$ drifts outside an optimal band $[\Delta - h, \Delta + h]$:
+   $$ h(S, t) = \left( \frac{3 \, e^{-r(T-t)} \, c \, S \, \Gamma^2}{2 \, \gamma} \right)^{1/3}, $$
+   where $\gamma > 0$ is the agent's absolute risk aversion parameter.
+
+*** C. Minimum-Variance Delta ($\Delta_{\text{MV}}$) under Smile Dynamics
+When market volatility smiles move with spot (e.g. sticky-strike vs. sticky-delta):
+$$ \Delta_{\text{MV}} = \frac{\operatorname{Cov}(dV, dS)}{\operatorname{Var}(dS)} = \Delta_{\text{BS}} + \mathcal{V}_{\text{BS}} \frac{\partial \sigma_{\text{impl}}}{\partial S}. $$
+This modification captures the correlation between underlying returns and volatility shifts, minimizing hedging variance.
+
+---
+
+* The Agent-Based Market Simulation Architecture
 
 #+begin_src
   ┌────────────────────────────────────────────────────────────────────────┐
-  │ 1. State Preparation: P_X |0...0> = \sum \sqrt{p_i} |i>               │
-  │    Discretize continuous terminal asset price S_T into 2^n bins.       │
-  └───────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │ 2. Payoff Encoding: R_y(\theta_i) on ancilla qubit                     │
-  │    |i>|0> -> |i> ( \sqrt{1 - \tilde{f}(S_i)} |0> + \sqrt{\tilde{f}(S_i)} |1> )│
-  │    where \tilde{f}(S) is the normalized option payoff \in [0, 1].      │
-  └───────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │ 3. Quantum Amplitude Estimation: Grover Iterator \mathcal{Q}           │
-  │    \mathcal{Q} = -\mathcal{A} \mathcal{S}_0 \mathcal{A}^\dagger \mathcal{S}_\chi     │
-  │    Extracts amplitude a = \mathbb{E}[\tilde{f}(S_T)] with O(1/\epsilon) samples. │
-  └───────────────────────────────────┬────────────────────────────────────┘
-                                      │
-                                      ▼
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │ 4. Rescaling & Pricing: V_0 = e^{-rT} ( (f_max - f_min) a + f_min )     │
-  └────────────────────────────────────────────────────────────────────────┘
+  │                           CENTRAL EXCHANGE                             │
+  │   - Limit Order Book (LOB) or Continuous Clearing Engine               │
+  │   - Price Formation: S_{t+dt} = S_t * exp( drift + sigma*dW + \lambda*Q_net ) │
+  └──────────────────▲────────────────────────▲───────────────────▲────────┘
+                     │                        │                   │
+      Orders         │         Orders         │    Hedging Orders │
+      Flow           │         Flow           │    (Δ or Δ*)      │
+  ┌──────────────────┴──┐  ┌──────────────────┴──┐  ┌─────────────┴────────┐
+  │    Noise Traders    │  │ Fundamental Traders │  │ Option Market Maker  │
+  │ - Poisson arrivals  │  │ - Value estimation  │  │ - Sells Call/Puts    │
+  │ - Random liquidity  │  │ - Mean-reverting    │  │ - Quotes spreads     │
+  │   demanders         │  │   stabilizing flow  │  │ - Rebalances hedge   │
+  └─────────────────────┘  └─────────────────────┘  └──────────────────────┘
 #+end_src
 
-** Quantum Advantage & Resource Profiling
-- *Classical Monte Carlo Complexity:* To achieve precision $\varepsilon$, classical Monte Carlo requires $N = O(\varepsilon^{-2})$ sample trajectories (standard central limit theorem rate).
-- *Quantum Amplitude Estimation Complexity:* IQAE achieves precision $\varepsilon$ using $M = O(\varepsilon^{-1})$ quantum oracle calls—a *quadratic speedup*.
-- *The Practical Reality Check:*
-  - Circuit depth grows proportionally to $O(\varepsilon^{-1})$.
-  - Under NISQ decoherence and gate noise, deep Grover iterations accumulate error.
-  - The thesis will establish the exact crossover point where quantum gate count surpasses classical GPU throughput under simulated device noise models.
+** Simulation Engine Specifications
+1. *Time Discretization:* High-frequency sub-steps $\Delta t$ (e.g., tick level or 1-second intervals) combined with option rebalancing intervals $\delta t \ge \Delta t$.
+2. *Agent Behaviors:*
+   - *Noise / Retail Traders:* Generate stochastic order flow modeled as an inhomogeneous Poisson or Hawkes process, purchasing out-of-the-money calls or executing liquidity shocks.
+   - *Fundamental Traders:* Provide resting liquidity around an unobserved fundamental asset value $V_t$, dampening extreme price deviations.
+   - *Option Market Maker (OMM):* Maintains an inventory of short/long vanilla and barrier options across multiple strikes $K \in \{K_1, \dots, K_M\}$. Rebalances spot hedge according to:
+     - Strategy 0: Naive unhedged.
+     - Strategy 1: Classical Black-Scholes Delta ($\Delta_{\text{BS}}$).
+     - Strategy 2: Feedback-Adjusted Delta ($\Delta^*$).
+     - Strategy 3: Whalley-Wilmott Band Hedging.
+     - Strategy 4: Minimum-Variance Delta ($\Delta_{\text{MV}}$).
+
+** Four High-Yield Stress Experiments
+1. *The Gamma Squeeze Experiment:* Inject a surge of retail call purchases on near-the-money options. Measure how standard $\Delta_{\text{BS}}$ causes explosive price cascades vs how $\Delta^*$ moderates order execution or warns of liquidity collapse.
+2. *The Flash Crash & Cascade:* Trigger an exogenous price decline. Track whether rapid delta liquidation by short-gamma hedgers causes endogenous crash amplification.
+3. *Strike Pinning at Expiration:* Test whether delta rebalancing forces the underlying asset to converge toward the strike $K$ as $t \to T$, quantifying pinning probability as a function of market depth $\lambda$.
+4. *Hedging PnL & Cost-Variance Frontier:* For $10^5$ Monte Carlo simulated market histories, plot the empirical distribution of hedger PnL:
+   $$ \Pi_T = V_0 - \Phi(S_T) + \sum_{k=0}^{N-1} \Delta_{t_k} (S_{t_{k+1}} - S_{t_k}) - \text{Transaction Costs} - \text{Slippage}. $$
+   Benchmark standard Greeks vs modified Greeks across mean PnL, Value-at-Risk (VaR), and tracking error variance.
 
 ---
 
@@ -126,25 +159,26 @@ Hedging requires computing functional derivatives of the discounted price $V_0 =
 #+caption: 6-Stage Master's Thesis Execution Timeline
 | Stage | Weeks | Primary Objective | Key Milestones & Outputs |
 |-------+-------+-------------------+--------------------------|
-| *Stage 1* | 1–4 | Mathematical Grounding & SDE Formulation | Formalize Itô calculus, Girsanov theorem, Heston PDE/SDE, and Malliavin weight derivations in thesis Chapter 2. |
-| *Stage 2* | 5–8 | Classical Monte Carlo Engine | Build vectorized Python/C++ engine for Black-Scholes and Heston; benchmark European, Asian, and barrier payoffs with finite difference and pathwise Greeks. |
-| *Stage 3* | 9–12 | Quantum Circuit Design & State Loading | Implement Grover-Rudolph and affine discretization in `Qiskit Finance` / `PennyLane`; construct controlled rotation payoff oracles for each contract. |
-| *Stage 4* | 13–16 | Iterative QAE Implementation & Pricing | Run IQAE and MLQAE; verify the $O(1/\varepsilon)$ scaling rate on statevector simulators; price vanillas, Asians, and barriers. |
-| *Stage 5* | 17–20 | Quantum Greeks & Noise Profiling | Formulate quantum circuits for Greeks via Malliavin weights; inject depolarizing/dephasing noise models to determine noise thresholds. |
-| *Stage 6* | 21–24 | Thesis Synthesis & Defense Preparation | Write up empirical comparisons, complexity plots, and conclusions; finalize master's thesis dissertation. |
+| *Stage 1* | 1–4 | Mathematical Derivations & SDE/PDE Formulation | Derive the nonlinear Black-Scholes PDE with market impact; formalize the asymptotic expansions for $\Delta^*$ and $\Gamma^*$; write thesis Chapter 2. |
+| *Stage 2* | 5–8 | Numerical PDE Solver | Implement Crank-Nicolson finite-difference solver with Picard/Newton iteration for the nonlinear PDE; benchmark solutions against closed-form Black-Scholes in zero-impact limit ($\rho \to 0$). |
+| *Stage 3* | 9–12 | Market Microstructure Simulator Core | Build the event-driven simulation engine in Python (`NumPy`, `Numba`); implement order clearing, Kyle's lambda impact, and agent interfaces (Noise, Fundamental, OMM). |
+| *Stage 4* | 13–16 | Modified Greeks Hedging Engine | Code the full suite of hedging algorithms: Black-Scholes, Feedback-Adjusted $\Delta^*$, Leland volatility adjustment, Whalley-Wilmott bands, and Minimum Variance Delta. |
+| *Stage 5* | 17–20 | Stress Scenarios & Empirical Benchmarking | Run large-scale Monte Carlo experiments ($N \ge 50,000$ simulation paths): execute Gamma Squeeze, Flash Crash, and Strike Pinning runs; compute PnL distributions, tracking error, and slippage metrics. |
+| *Stage 6* | 21–24 | Thesis Synthesis & Defense Preparation | Compile all figures, phase-transition plots, and mathematical proofs; complete dissertation chapters; finalize Master's thesis presentation. |
 
 ---
 
 * Software Stack & Reproducibility Tools
 
-- *Stochastic Simulation & Classical Pricing:* Python (`NumPy`, `SciPy`, `Numba`), `QuantLib-Python` for Black-Scholes analytic formulas and Dupire local volatility benchmarks.
-- *Quantum Algorithm Simulation:* `Qiskit` (`qiskit-finance`, `qiskit-aer`), `PennyLane` (for variational and parameter-shift comparisons).
-- *High-Performance Computing:* CSC / LUMI or local multi-core workstations for large-sample Monte Carlo benchmarks ($N \ge 10^7$ paths).
+- *Core Computational Language:* Python 3.11+ with `NumPy`, `SciPy`, and JIT-compiled kernels via `Numba` for high-throughput order book and path simulation.
+- *Benchmark Analytics:* `QuantLib-Python` for baseline analytic Black-Scholes formulas, Dupire local volatility calibration, and standard Greeks verification.
+- *Visualization & Reporting:* `Matplotlib`, `Seaborn`, and interactive simulation dashboards (e.g. `Plotly`).
+- *Build System & Version Control:* Bazel (`BUILD.bazel`) with `org2html` for compiling Org-mode documentation into web-viewable formats; Git for reproducible version tracking.
 
 ---
 
-* Next Steps & Supervision
+* Next Steps & Supervision Strategy
 
-Detailed profiles of prospective supervisors at the University of Helsinki (Kumpula Campus), departmental co-supervision strategies, and outreach email drafts are documented in:
+For detailed guidance on approaching interim faculty at the University of Helsinki (Exactum) and positioning this thesis for the incoming Professor in Stochastics/Financial Mathematics:
 
-[[file:writings/supervisors_notes.org][→ Read the Detailed University of Helsinki Supervisors Notes & Outreach Guide]]
+[[file:writings/supervisors_notes.org][→ Read the University of Helsinki Supervisors Transition & Outreach Guide]]

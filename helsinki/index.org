@@ -26,7 +26,7 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 | *Measure and Integral* | MAT21007 / MAST30101 | 5 cr | [[file:measure_integral/index.org][Measure and Integral]] | Outer measure, Carathéodory criterion, measurable functions, Lebesgue integration (MCT, Fatou, DCT), Fubini-Tonelli, $L^p$ spaces, worked exercises |
 | *Introduction to Real and Fourier Analysis* | MAT21008 / BSMA2004 | 5 cr | [[file:intro_fourier/index.org][Intro Real & Fourier]] | Fourier series on $\mathbb{T}$, summation kernels (Dirichlet, Fejér, Poisson), FFT, Fourier transform on $\mathbb{R}$, Schwartz space, $L^2$ Plancherel isometry, heat equation |
 | *Measure, Probability, and Real Analysis* | MAST31001 / MAST31002 | 5 cr | [[file:measure_probability_analysis/index.org][Measure, Probability & Real]] | Abstract measure spaces $(X, \mathcal{F}, \mu)$, CDFs & Lebesgue-Stieltjes, Dynkin \(\pi\)-\(\lambda\) lemma, abstract limits, Carathéodory extension, product measures, Kolmogorov extension |
-| *Master's Thesis Project* | Master's Thesis | 30 cr | [[file:master_thesis/index.org][Master's Thesis]] | Quantum Amplitude Estimation vs. Monte Carlo for exotic option pricing & Greeks (Black-Scholes & Heston), supervisor notes & outreach guide |
+| *Master's Thesis Project* | Master's Thesis | 30 cr | [[file:master_thesis/index.org][Master's Thesis]] | Nonlinear option pricing, feedback-adjusted Greeks ($\Delta^*, \Gamma^*$), transaction-cost bands, and agent-based market simulation |
 
 ---
 
@@ -79,11 +79,11 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 - *Primary References:* Ash & Doléans-Dade (/Probability & Measure Theory/); Shiryaev; Billingsley; Folland; Schilling.
 - *Core Guides:*
   - [[file:measure_probability_analysis/prepare.org][Strategic Preparation Guide]]: 3-session onboarding sequence, Dynkin \(\pi\)-\(\lambda\) lemma preview, analysis $\longleftrightarrow$ probability master dictionary.
-** 6. Master's Thesis Project: Quantum Option Pricing & Greeks
+** 6. Master's Thesis Project: Nonlinear Option Pricing, Modified Greeks, & Market Simulation
 - *Primary Index:* [[file:master_thesis/index.org][master_thesis/index.org]]
 - *Supervisors & Outreach Guide:* [[file:master_thesis/writings/supervisors_notes.org][master_thesis/writings/supervisors_notes.org]]
-- *Working Title:* /Benchmarking Quantum Amplitude Estimation against Classical Monte Carlo for Exotic Option Pricing and Greeks: From Black-Scholes to Stochastic Volatility/
-- *Theoretical Pillars:* Continuous-time asset dynamics (Black-Scholes & Heston SDEs), exotic payoffs (vanilla, Asian, barrier), sensitivity analysis (the Greeks via pathwise derivatives & Malliavin weights), quantum state loading, Iterative QAE (IQAE), and NISQ noise benchmarking.
+- *Working Title:* /Nonlinear Option Pricing, Feedback-Adjusted Greeks, and Dynamic Hedging in an Agent-Based Market Simulation/
+- *Theoretical Pillars:* Endogenous asset dynamics and nonlinear Black-Scholes PDE (Frey-Stremme / Schönbucher), modified Greeks ($\Delta^*, \Gamma^*$, Leland volatility, Whalley-Wilmott bands, Minimum Variance Delta), and agent-based market microstructure simulation (Limit Order Book, gamma squeezes, flash crashes, hedger tracking error).
 
 ---
 
