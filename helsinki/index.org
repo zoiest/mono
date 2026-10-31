@@ -22,7 +22,6 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 | Course Name | Course Code | Credits | Subdirectory Index | Core Theoretical Pillars |
 |-------------+-------------+---------+--------------------+--------------------------|
 | *Financial Economics I* | MAST31807 | 5 cr | [[file:financial_economics_1/index.org][Financial Economics I]] | Arbitrage pricing, term structure, duration & immunization, FTAP 1 & 2, martingale pricing, portfolio optimization, local risk minimization |
-| *Mathematical Methods for Physics IIIa* | Mat. men. fysiikassa IIIa | 5 cr | [[file:maths_physics_3a/index.org][Maths Physics IIIa]] | Discrete and continuous group theory, Lie groups, representations, quantum mechanical symmetries |
 | *Measure and Integral* | MAT21007 / MAST30101 | 5 cr | [[file:measure_integral/index.org][Measure and Integral]] | Outer measure, Carathéodory criterion, measurable functions, Lebesgue integration (MCT, Fatou, DCT), Fubini-Tonelli, $L^p$ spaces, worked exercises |
 | *Introduction to Real and Fourier Analysis* | MAT21008 / BSMA2004 | 5 cr | [[file:intro_fourier/index.org][Intro Real & Fourier]] | Fourier series on $\mathbb{T}$, summation kernels (Dirichlet, Fejér, Poisson), FFT, Fourier transform on $\mathbb{R}$, Schwartz space, $L^2$ Plancherel isometry, heat equation |
 | *Measure, Probability, and Real Analysis* | MAST31001 / MAST31002 | 5 cr | [[file:measure_probability_analysis/index.org][Measure, Probability & Real]] | Abstract measure spaces $(X, \mathcal{F}, \mu)$, CDFs & Lebesgue-Stieltjes, Dynkin \(\pi\)-\(\lambda\) lemma, abstract limits, Carathéodory extension, product measures, Kolmogorov extension |
@@ -47,15 +46,7 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
   9. [[file:financial_economics_1/05_05_multi_period_market_model.org][Multi-Period Market Model & Martingale Pricing]]
   10. [[file:financial_economics_1/05_06_local_risk_minimization.org][Local Risk Minimization & Föllmer-Schweizer Decomposition]]
 
-** 2. Mathematical Methods for Physics IIIa
-- *Primary Index:* [[file:maths_physics_3a/index.org][maths_physics_3a/index.org]]
-- *Primary Reference:* Keski-Vakkuri, Montonen, & Panero (/Mathematical Methods for Physics/, Cambridge Univ. Press, 2022).
-- *Core Modules:*
-  - Chapter 2: [[file:maths_physics_3a/02_01_groups_and_elementary_properties.org][Groups & Elementary Properties]], [[file:maths_physics_3a/02_02_subgroups_and_cosets.org][Subgroups & Cosets]], [[file:maths_physics_3a/02_03_homomorphisms_isomorphisms_and_quotients.org][Homomorphisms & Quotients]], [[file:maths_physics_3a/02_04_smallest_finite_groups.org][Smallest Finite Groups]], [[file:maths_physics_3a/02_05_permutations_symmetric_group_and_cayley_theorem.org][Permutations & Cayley's Theorem]], [[file:maths_physics_3a/02_06_partitions_young_diagrams_and_multisets.org][Young Diagrams]], [[file:maths_physics_3a/02_07_free_groups_presentations_and_braid_groups.org][Braid Groups]], [[file:maths_physics_3a/02_08_continuous_groups_and_lie_groups.org][Lie Groups]], [[file:maths_physics_3a/02_09_groups_acting_on_a_set.org][Group Actions]], [[file:maths_physics_3a/02_10_chapter_2_problems_and_exercises.org][Exercises]].
-  - Chapter 3: [[file:maths_physics_3a/03_01_complex_vector_spaces_and_representations.org][Complex Vector Spaces & Representation Theory]], [[file:maths_physics_3a/03_01_01_symmetries_in_quantum_mechanics.org][Symmetries in Quantum Mechanics]].
-  - Weekly problem sets & guidance: [[file:maths_physics_3a/week01.org][Week 1]], [[file:maths_physics_3a/week02.org][Week 2]], [[file:maths_physics_3a/week03.org][Week 3]], [[file:maths_physics_3a/week04.org][Week 4]].
-
-** 3. Measure and Integral (Mitta ja integraali)
+** 2. Measure and Integral (Mitta ja integraali)
 - *Primary Index:* [[file:measure_integral/index.org][measure_integral/index.org]]
 - *Primary Reference:* Ilkka Holopainen (/Mitta ja integraali/, Lecture Notes, 2017).
 - *Core Modules:*
@@ -67,19 +58,19 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
   6. [[file:measure_integral/writings/generated_exercises.org][Generated Exercises & Worked Solutions]] (10 high-yield calculation & proof problems)
 - *Notational Conventions:* Notational dictionary in [[file:measure_integral/index.org][measure_integral/index.org]] bridging Holopainen's notes (=MeasInt17.pdf=) with modern analysis (reversed interval brackets $]a, b[$ vs $(a, b)$, $\nearrow/\searrow$ monotone limits, $\dot{\mathbb{R}}$ vs $\overline{\mathbb{R}}$, $\Gamma$ vs $\mathrm{Leb}(\mathbb{R}^n)$, $\chi_A$ vs $\mathbf{1}_A$).
 
-** 4. Introduction to Real and Fourier Analysis (MAT21008)
+** 3. Introduction to Real and Fourier Analysis (MAT21008)
 - *Primary Index:* [[file:intro_fourier/index.org][intro_fourier/index.org]]
 - *Primary References:* Stein & Shakarchi (/Fourier Analysis/); Katznelson (/Harmonic Analysis/); Folland.
 - *Core Guides:*
   - [[file:intro_fourier/prepare.org][Strategic Preparation Guide]]: background assessment, 4 essential measure theory pillars, Gaussian differentiation ODE.
   - Topics: Fourier series on $\mathbb{T}$, summation kernels (Dirichlet, Fejér, Poisson), FFT divide-and-conquer, continuous Fourier transform on $\mathbb{R}$, Schwartz space $\mathcal{S}(\mathbb{R})$, $L^2$ Plancherel isometry, heat equation & PDE applications.
 
-** 5. Measure, Probability, and Real Analysis (MAST31001)
+** 4. Measure, Probability, and Real Analysis (MAST31001)
 - *Primary Index:* [[file:measure_probability_analysis/index.org][measure_probability_analysis/index.org]]
 - *Primary References:* Ash & Doléans-Dade (/Probability & Measure Theory/); Shiryaev; Billingsley; Folland; Schilling.
 - *Core Guides:*
   - [[file:measure_probability_analysis/prepare.org][Strategic Preparation Guide]]: 3-session onboarding sequence, Dynkin \(\pi\)-\(\lambda\) lemma preview, analysis $\longleftrightarrow$ probability master dictionary.
-** 6. Master's Thesis Project: Nonlinear Option Pricing, Modified Greeks, & Market Simulation
+** 5. Master's Thesis Project: Nonlinear Option Pricing, Modified Greeks, & Market Simulation
 - *Primary Index:* [[file:master_thesis/index.org][master_thesis/index.org]]
 - *Supervisors & Outreach Guide:* [[file:master_thesis/writings/supervisors_notes.org][master_thesis/writings/supervisors_notes.org]]
 - *Working Title:* /Nonlinear Option Pricing, Feedback-Adjusted Greeks, and Dynamic Hedging in an Agent-Based Market Simulation/
@@ -93,7 +84,7 @@ All course directories contain exhaustive lecture notes, formal proofs, step-by-
 | Foundational Engine | How It Manifests in Each Course |
 |---------------------+---------------------------------|
 | *Lebesgue Measure & Integration* | - *Real Analysis:* Abstract measure spaces $(X, \mathcal{F}, \mu)$ and $L^p$ spaces.<br>- *Fourier Analysis:* Justifying differentiation under the integral (DCT) and convolutions (Fubini-Tonelli).<br>- *Financial Economics & Thesis:* Probability spaces $(\Omega, \mathcal{F}, \mathbb{P})$, expectation of payoffs, equivalent martingale measures $\mathbb{Q} \sim \mathbb{P}$, and Itô integration. |
-| *\(L^2\) Hilbert Spaces & Orthogonality* | - *Fourier Analysis:* Plancherel theorem, Parseval identity, orthogonal projection onto Fourier basis $\{e^{inx}\}$.<br>- *Quantum Mechanics & QC:* State spaces $\mathcal{H}$, unitary operators, qubit registers, and quantum state loading.<br>- *Financial Economics:* Mean-Square Error Hedging as orthogonal projection $\operatorname{proj}_{\operatorname{Im}(S(1))}(X)$. |
+| *\(L^2\) Hilbert Spaces & Orthogonality* | - *Fourier Analysis:* Plancherel theorem, Parseval identity, orthogonal projection onto Fourier basis $\{e^{inx}\}$.<br>- *Financial Economics:* Mean-Square Error Hedging as orthogonal projection $\operatorname{proj}_{\operatorname{Im}(S(1))}(X)$. |
 | *Monotone Classes & Dynkin's \(\pi\)-\(\lambda\)* | - *Probability & Real Analysis:* Proving uniqueness of probability distributions from CDFs.<br>- *Financial Economics:* Generating market filtrations $(\mathcal{F}_t)$ and proving uniqueness of martingale measures. |
 
 ---
@@ -108,15 +99,23 @@ All courses utilize Bazel rules defined at the monorepo root:
    #+end_src
    Or compile a single course / project:
    #+begin_src bash
-   bazel run //helsinki/measure_integral:org2html
-   bazel run //helsinki/intro_fourier:org2html
-   bazel run //helsinki/measure_probability_analysis:org2html
    bazel run //helsinki/financial_economics_1:org2html
-   bazel run //helsinki/maths_physics_3a:org2html
+   bazel run //helsinki/intro_fourier:org2html
    bazel run //helsinki/master_thesis:org2html
+   bazel run //helsinki/measure_integral:org2html
+   bazel run //helsinki/measure_probability_analysis:org2html
    #+end_src
 
-2. *Google Drive Synchronization:*
+2. *Compile All Helsinki Org Files to PDF:*
+   #+begin_src bash
+   bazel run //helsinki:org2pdf
+   #+end_src
+   Or compile a single course / project:
+   #+begin_src bash
+   bazel run //helsinki/measure_probability_analysis:org2pdf
+   #+end_src
+
+3. *Google Drive Synchronization:*
    #+begin_src bash
    bazel run //helsinki:sync
    #+end_src
