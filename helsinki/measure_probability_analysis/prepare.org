@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:helsinki:measure-theory:probability:real-analysis:sigma-algebra:martingales:preparation:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 * Course Information and Overview
 
@@ -57,7 +64,8 @@ Ensure you have these four foundational concepts solid before stepping into your
 
 ** 2. Preimages: The Engine of Measurable Functions (Random Variables)
 - [ ] *Why preimages preserve all set operations:*
-  $$ f^{-1}(B^c) = (f^{-1}(B))^c, \qquad f^{-1}\left(\bigcup_{n=1}^\infty B_n\right) = \bigcup_{n=1}^\infty f^{-1}(B_n), \qquad f^{-1}\left(\bigcap_{n=1}^\infty B_n\right) = \bigcap_{n=1}^\infty f^{-1}(B_n). $$
+  $$ f^{-1}(B^c) = (f^{-1}(B))^c, $$
+  $$ f^{-1}\left(\bigcup_{n=1}^\infty B_n\right) = \bigcup_{n=1}^\infty f^{-1}(B_n), \qquad f^{-1}\left(\bigcap_{n=1}^\infty B_n\right) = \bigcap_{n=1}^\infty f^{-1}(B_n). $$
 - [ ] *Random Variable as a Measurable Function:*
   A mapping $X : \Omega \to \mathbb{R}$ is a random variable $\iff X^{-1}(B) \in \mathcal{F}$ for all $B \in \mathcal{B}(\mathbb{R})$.
 - [ ] *The Sublevel Shortcut:* Because rays $]-\infty, t]$ generate $\mathcal{B}(\mathbb{R})$, to verify that $X$ is a random variable, you only ever need to check:
@@ -69,7 +77,7 @@ Ensure you have these four foundational concepts solid before stepping into your
 - [ ] *Continuity from above:* If $A_1 \supseteq A_2 \supseteq A_3 \supseteq \dots$, then $\mathbb{P}\left(\bigcap_{n=1}^\infty A_n\right) = \lim_{n\to\infty} \mathbb{P}(A_n)$.
   *(Essential for tail events and the Borel-Cantelli lemma).*
 
-** 4. Sets of Measure Zero & "Almost Surely" ($a.s.$)
+** 4. Sets of Measure Zero & "Almost Surely" (a.s.)
 - [ ] Understand that if an event $N$ has $\mathbb{P}(N) = 0$, what happens inside $N$ can be completely ignored.
 - [ ] $X = Y \text{ a.s.} \iff \mathbb{P}(\{\omega : X(\omega) \ne Y(\omega)\}) = 0$.
 
@@ -88,6 +96,7 @@ You do **not** need to study these before Week 1; the course will develop them s
 
 Spend three focused 90-minute study sessions completing this exact sequence before your first lecture:
 
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l c l >{\RaggedRight}X :booktabs t
 | Session | Time | Focus | Concrete Reading & Practice |
 |---------+------+-------+-----------------------------|
 | *Session 1* | 1.5h | Measure Spaces & \(\sigma\)-Algebras | Read Section 5 & 6 of [[file:../measure_integral/01_outer_measure_and_caratheodory.org][Module 1]] (abstract measure spaces, continuity from below/above). |
@@ -99,6 +108,7 @@ Spend three focused 90-minute study sessions completing this exact sequence befo
 * Master Dictionary: Measure Theory $\longleftrightarrow$ Probability Theory
 
 #+caption: Complete Dictionary between Real Analysis and Probability Theory
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}X c >{\RaggedRight}X c :booktabs t
 | Real Analysis / Measure Theory | Symbol | Probability Theory | Symbol |
 |--------------------------------+--------+--------------------+--------|
 | Base space | $X$ | Sample space | $\Omega$ |
@@ -108,7 +118,7 @@ Spend three focused 90-minute study sessions completing this exact sequence befo
 | Measurable function | $f : X \to \mathbb{R}$ | Random variable | $X : \Omega \to \mathbb{R}$ |
 | Non-negative simple function | $\sum a_i \chi_{A_i}$ | Discrete random variable | $\sum a_i \mathbf{1}_{A_i}$ |
 | Lebesgue integral $\int f \, d\mu$ | $\int_X f \, d\mu$ | Mathematical Expectation | $\mathbb{E}[X]$ |
-| Almost everywhere ($a.e.$) | a.e. | Almost surely ($a.s.$) | a.s. |
+| Almost everywhere (a.e.) | a.e. | Almost surely (a.s.) | a.s. |
 | Convergence in measure | $f_n \xrightarrow{\mu} f$ | Convergence in probability | $X_n \xrightarrow{\mathbb{P}} X$ |
 | \(L^1\)-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lVert X_n - X \rVert] \to 0$ |
 | Product measure | $\mu \otimes \nu$ | Joint distribution of independent variables | $\mathbb{P}_X \otimes \mathbb{P}_Y$ |

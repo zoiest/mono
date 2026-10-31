@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-07]
 #+filetags: :math:helsinki:measure-theory:probability:real-analysis:index:sigma-algebra:martingales:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[file:../index.org][← Helsinki Courses Master Index]] | [[file:prepare.org][Strategic Preparation Guide →]]
 
@@ -24,6 +31,7 @@
 * Study Guides & Course Modules
 
 #+caption: Course Map & Navigation
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.25\textwidth} >{\RaggedRight}p{0.34\textwidth} >{\RaggedRight}X :booktabs t
 | Document | Focus & Content | Key Highlights |
 |----------+-----------------+----------------|
 | [[file:prepare.org][Strategic Preparation Guide]] | 3-session pre-course onboarding plan | Readiness assessment, \(\pi\)-\(\lambda\) lemma preview, master dictionary |
@@ -36,7 +44,7 @@
 * Core Syllabus Breakdown
 
 ** 1. Abstract Measure Spaces and \(\sigma\)-Algebras
-- Definitions: measurable space $(X, \mathcal{F})$, measure space $(X, \mathcal{F}, \mu)$, finite, $\sigma$-finite, and probability measures ($\mathbb{P}(X) = 1$).
+- Definitions: measurable space $(X, \mathcal{F})$, measure space $(X, \mathcal{F}, \mu)$, finite, \(\sigma\)-finite, and probability measures ($\mathbb{P}(X) = 1$).
 - Generated \(\sigma\)-algebras $\sigma(\mathcal{E})$ and the Borel \(\sigma\)-algebra $\mathcal{B}(X)$ on topological spaces.
 - Continuity of measure: continuity from below ($\mu(A_n) \nearrow \mu(\bigcup A_n)$ for $A_n \nearrow A$) and continuity from above ($\mu(B_n) \searrow \mu(\bigcap B_n)$ for $B_n \searrow B$ with $\mu(B_1) < \infty$).
 
@@ -46,9 +54,9 @@
 - The Lebesgue-Stieltjes measure $\mu_F$ associated with $F$, integrating expectations: $\mathbb{E}[g(X)] = \int_{\mathbb{R}} g(t) \, dF(t)$.
 
 ** 3. Monotone Class Arguments & Dynkin's \(\pi\)-\(\lambda\) Lemma
-- Definition: $\pi$-systems (closed under finite intersections) and $\lambda$-systems (monotone classes closed under complements and disjoint countable unions).
-- *Dynkin's \(\pi\)-\(\lambda\) Theorem:* If $\mathcal{P}$ is a $\pi$-system and $\mathcal{L}$ is a $\lambda$-system with $\mathcal{P} \subseteq \mathcal{L}$, then $\sigma(\mathcal{P}) \subseteq \mathcal{L}$.
-- Uniqueness of measures: if two probability measures agree on a $\pi$-system that generates the \(\sigma\)-algebra, they are identical everywhere.
+- Definition: \(\pi\)-systems (closed under finite intersections) and \(\lambda\)-systems (monotone classes closed under complements and disjoint countable unions).
+- *Dynkin's \(\pi\)-\(\lambda\) Theorem:* If $\mathcal{P}$ is a \(\pi\)-system and $\mathcal{L}$ is a \(\lambda\)-system with $\mathcal{P} \subseteq \mathcal{L}$, then $\sigma(\mathcal{P}) \subseteq \mathcal{L}$.
+- Uniqueness of measures: if two probability measures agree on a \(\pi\)-system that generates the \(\sigma\)-algebra, they are identical everywhere.
 
 ** 4. Abstract Integration and Passage to the Limit
 - The Standard Machine: indicator functions $\mathbf{1}_E \longrightarrow$ simple functions $\sum a_i \mathbf{1}_{E_i} \longrightarrow$ non-negative functions $\sup \int \phi \longrightarrow$ integrable functions $f = f^+ - f^-$.
@@ -71,8 +79,8 @@
 - Definition of \(L^p(X, \mu)\), Hölder's inequality, and Minkowski's inequality.
 - Completeness: the Riesz-Fischer theorem (\(L^p\) is a Banach space for $1 \le p \le \infty$).
 - Hierarchy of convergence:
-  $$\text{Almost Sure (a.s.)} \quad \implies \quad \text{Convergence in Probability } (X_n \xrightarrow{\mathbb{P}} X) \quad \implies \quad \text{Convergence in Distribution } (X_n \xrightarrow{d} X)$$
-  $$L^p \text{ Convergence } (X_n \xrightarrow{L^p} X) \quad \implies \quad \text{Convergence in Probability } (X_n \xrightarrow{\mathbb{P}} X)$$
+  $$ \text{Almost Sure (a.s.)} \implies X_n \xrightarrow{\mathbb{P}} X \implies X_n \xrightarrow{d} X $$
+  $$ L^p \text{ Convergence } (X_n \xrightarrow{L^p} X) \implies X_n \xrightarrow{\mathbb{P}} X $$
 
 ** 8. Borel-Cantelli Lemmas and Laws of Large Numbers
 - *First Borel-Cantelli Lemma:* $\sum \mathbb{P}(A_n) < \infty \implies \mathbb{P}(\limsup A_n) = 0$.
@@ -85,6 +93,8 @@
 
 * Master Dictionary: Measure Theory $\longleftrightarrow$ Probability Theory
 
+#+caption: Complete Dictionary between Real Analysis and Probability Theory
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}X c >{\RaggedRight}X c :booktabs t
 | Real Analysis / Measure Theory | Symbol | Probability Theory | Symbol |
 |--------------------------------+--------+--------------------+--------|
 | Measure space | $(X, \mathcal{F}, \mu)$ | Probability space | $(\Omega, \mathcal{F}, \mathbb{P})$ |
@@ -92,7 +102,7 @@
 | Measurable function | $f: X \to \mathbb{R}$ | Random variable | $X: \Omega \to \mathbb{R}$ |
 | Characteristic function $\mathbf{1}_E$ | $\mathbf{1}_E$ | Indicator variable $\mathbf{1}_A$ | $\mathbf{1}_A$ |
 | Lebesgue integral $\int f \, d\mu$ | $\int_X f \, d\mu$ | Mathematical Expectation | $\mathbb{E}[X]$ |
-| Almost everywhere ($a.e.$) | a.e. | Almost surely ($a.s.$) | a.s. |
+| Almost everywhere (a.e.) | a.e. | Almost surely (a.s.) | a.s. |
 | Convergence in measure | $f_n \xrightarrow{\mu} f$ | Convergence in probability | $X_n \xrightarrow{\mathbb{P}} X$ |
 | \(L^1\)-norm convergence | $\lVert f_n - f \rVert_1 \to 0$ | Convergence in mean | $\mathbb{E}[\lvert X_n - X \rvert] \to 0$ |
 | Product measure | $\mu \otimes \nu$ | Joint distribution of independent variables | $\mathbb{P}_X \otimes \mathbb{P}_Y$ |
