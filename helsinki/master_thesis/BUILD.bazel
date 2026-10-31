@@ -1,5 +1,6 @@
 load("//:sync.bzl", "sync")
 load("//:org2html.bzl", "org2html")
+load("//:org2pdf.bzl", "org2pdf")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -10,4 +11,8 @@ sync(
 
 org2html(
     name = "org2html",
+)
+
+org2pdf(
+    name = "org2pdf",
 )
