@@ -16,3 +16,25 @@ __pycache__/
 # Google Drive credentials
 .google_drive_token*
 **/.google_drive_token*
+
+# TeX export and compiled PDF files
+*.tex
+*.pdf
+**/*.tex
+**/*.pdf
+
+# TeX auxiliary build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+**/*.aux
+**/*.log
+**/*.out
+**/*.toc
+**/*.fls
+**/*.fdb_latexmk
+**/*.synctex.gz
