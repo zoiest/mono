@@ -16,6 +16,7 @@ bazel-*
 # Python & compiler caches
 __pycache__/
 **/.org2html_cache.json
+**/.org2pdf_cache.json
 
 # emacs latex images
 **/ltximg/

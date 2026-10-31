@@ -5,6 +5,10 @@
 .org2html_cache.json
 **/.org2html_cache.json
 
+# Org2pdf cache file
+.org2pdf_cache.json
+**/.org2pdf_cache.json
+
 # Bazel symlinks and outputs
 bazel-*
 .bazelrc.user
