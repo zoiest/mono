@@ -88,7 +88,7 @@ class TestSyncDrive(unittest.TestCase):
 
     def test_sync_single_course_writings_upload(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            course_dir = Path(tmpdir) / "maths_physics_3a"
+            course_dir = Path(tmpdir) / "measure_probability_analysis"
             course_dir.mkdir()
             local_writings = course_dir / "writings"
             local_writings.mkdir()
@@ -109,7 +109,7 @@ class TestSyncDrive(unittest.TestCase):
 
             client.upload_file = MagicMock(side_effect=fake_upload)
 
-            sync_single_course(client, "course_remote_id", "maths_physics_3a", course_dir)
+            sync_single_course(client, "course_remote_id", "measure_probability_analysis", course_dir)
 
             self.assertEqual(len(uploaded), 1)
             self.assertEqual(uploaded[0][0].name, "exercise.org")
@@ -130,13 +130,13 @@ class TestSyncDrive(unittest.TestCase):
         mock_auth.access_token = "dummy_token"
         client = GoogleDriveClient(mock_auth)
         client.find_root_folder = MagicMock(return_value=("helsinki_root_id", "helsinki"))
-        client.get_child_folder = MagicMock(return_value={"id": "mp3a_id", "name": "maths_physics_3a"})
+        client.get_child_folder = MagicMock(return_value={"id": "mpa_id", "name": "measure_probability_analysis"})
 
-        folder_id, resolved_path = resolve_remote_path(client, "helsinki/maths_physics_3a")
-        self.assertEqual(folder_id, "mp3a_id")
-        self.assertEqual(resolved_path, "helsinki/maths_physics_3a")
+        folder_id, resolved_path = resolve_remote_path(client, "helsinki/measure_probability_analysis")
+        self.assertEqual(folder_id, "mpa_id")
+        self.assertEqual(resolved_path, "helsinki/measure_probability_analysis")
         client.find_root_folder.assert_called_once_with(folder_name="helsinki")
-        client.get_child_folder.assert_called_once_with("helsinki_root_id", ["maths_physics_3a"])
+        client.get_child_folder.assert_called_once_with("helsinki_root_id", ["measure_probability_analysis"])
 
 
 if __name__ == "__main__":

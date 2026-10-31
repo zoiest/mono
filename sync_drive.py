@@ -5,25 +5,37 @@ Google Drive Sync Tool for Bazel rule `sync`.
 Synchronizes files between Google Drive and local courses:
 Remote structure:
   helsinki/
-    8.01/
-      downloads/
-      writings/
     financial_economics_1/
       downloads/
       writings/
-    maths_physics_3a/
+    intro_fourier/
+      downloads/
+      writings/
+    master_thesis/
+      downloads/
+      writings/
+    measure_integral/
+      downloads/
+      writings/
+    measure_probability_analysis/
       downloads/
       writings/
 
 Local structure:
   helsinki/
-    8.01/
-      downloads/
-      writings/
     financial_economics_1/
       downloads/
       writings/
-    maths_physics_3a/
+    intro_fourier/
+      downloads/
+      writings/
+    master_thesis/
+      downloads/
+      writings/
+    measure_integral/
+      downloads/
+      writings/
+    measure_probability_analysis/
       downloads/
       writings/
 """
@@ -317,7 +329,13 @@ class GoogleDriveClient:
             return folders[0]["id"], folders[0]["name"]
         elif len(folders) > 1:
             # Score folders by whether they have known course folders inside
-            known_courses = {"financial_economics_1", "maths_physics_3a", "8.01"}
+            known_courses = {
+                "financial_economics_1",
+                "intro_fourier",
+                "master_thesis",
+                "measure_integral",
+                "measure_probability_analysis",
+            }
             scored = []
             for f in folders:
                 children = self.list_files(
@@ -609,7 +627,7 @@ def find_token_file(candidates: list[Path]) -> Path | None:
 
 def resolve_remote_path(client: GoogleDriveClient, remote_path: str) -> tuple[str, str]:
     """
-    Resolves a slash-delimited remote path (e.g. 'helsinki/maths_physics_3a' or 'gostock')
+    Resolves a slash-delimited remote path (e.g. 'helsinki/financial_economics_1' or 'gostock')
     to (folder_id, resolved_path_str).
     """
     parts = [p for p in remote_path.strip("/\\").split("/") if p and p != "."]
@@ -643,8 +661,8 @@ def main():
     parser = argparse.ArgumentParser(description="Sync workspace courses and projects with Google Drive.")
     parser.add_argument("--workspace-dir", default=".", help="Workspace root directory")
     parser.add_argument("--target-dir", default=".", help="Directory where bazel run was invoked")
-    parser.add_argument("--remote-path", default="", help="Configured remote path in Google Drive (e.g. helsinki/maths_physics_3a, gostock)")
-    parser.add_argument("--course-name", default="", help="Subfolder/course name (e.g. 8.01, financial_economics_1, maths_physics_3a)")
+    parser.add_argument("--remote-path", default="", help="Configured remote path in Google Drive (e.g. helsinki/measure_probability_analysis, gostock)")
+    parser.add_argument("--course-name", default="", help="Subfolder/course name (e.g. financial_economics_1, measure_integral, intro_fourier)")
     parser.add_argument("--root-folder-id", default="", help="Google Drive root folder ID")
     parser.add_argument("--root-folder-name", default="", help="Google Drive root folder name")
     parser.add_argument("--token-file", default="", help="Path to token file")
