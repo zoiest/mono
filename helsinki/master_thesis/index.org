@@ -7,6 +7,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-31]
 #+filetags: :helsinki:master-thesis:quantitative-finance:option-pricing:modified-greeks:market-simulation:market-microstructure:stochastic-calculus:liquidity-risk:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[file:../index.org][← Helsinki Courses Master Index]] | [[file:writings/supervisors_notes.org][Supervisors Research & Transition Guide →]]
 
@@ -42,6 +49,7 @@ This Master's thesis investigates the theory, formulation, and empirical perform
 * The Theoretical Pillars
 
 #+caption: Three-Phase Architectural Blueprint
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.22\textwidth} >{\RaggedRight}X >{\RaggedRight}p{0.26\textwidth} :booktabs t
 | Pillar | Domain | Core Concepts & Analytical Techniques | Computational Deliverables |
 |--------+--------+---------------------------------------+----------------------------|
 | *Pillar 1* | Nonlinear PDEs & SDEs with Impact | Stochastic asset dynamics with endogenous demand, Itô calculus with jumps/impact, Frey-Stremme non-linear PDE, effective volatility $\sigma_{\text{eff}}(S, t, \Gamma)$ | Numerical PDE solver (Crank-Nicolson / finite differences) for nonlinear Black-Scholes |
@@ -116,20 +124,20 @@ This modification captures the correlation between underlying returns and volati
 * The Agent-Based Market Simulation Architecture
 
 #+begin_src
-  ┌────────────────────────────────────────────────────────────────────────┐
-  │                           CENTRAL EXCHANGE                             │
-  │   - Limit Order Book (LOB) or Continuous Clearing Engine               │
-  │   - Price Formation: S_{t+dt} = S_t * exp( drift + sigma*dW + \lambda*Q_net ) │
-  └──────────────────▲────────────────────────▲───────────────────▲────────┘
-                     │                        │                   │
-      Orders         │         Orders         │    Hedging Orders │
-      Flow           │         Flow           │    (Δ or Δ*)      │
-  ┌──────────────────┴──┐  ┌──────────────────┴──┐  ┌─────────────┴────────┐
-  │    Noise Traders    │  │ Fundamental Traders │  │ Option Market Maker  │
-  │ - Poisson arrivals  │  │ - Value estimation  │  │ - Sells Call/Puts    │
-  │ - Random liquidity  │  │ - Mean-reverting    │  │ - Quotes spreads     │
-  │   demanders         │  │   stabilizing flow  │  │ - Rebalances hedge   │
-  └─────────────────────┘  └─────────────────────┘  └──────────────────────┘
+  +------------------------------------------------------------------------+
+  |                           CENTRAL EXCHANGE                             |
+  |   - Limit Order Book (LOB) or Continuous Clearing Engine               |
+  |   - Price Formation: S_{t+dt} = S_t * exp( drift + sigma*dW + \lambda*Q ) |
+  +------------------^------------------------^-------------------^--------+
+                     |                        |                   |
+      Orders         |         Orders         |    Hedging Orders |
+      Flow           |         Flow           |    (Delta or Delta*)
+  +------------------v--+  +------------------v--+  +-------------v--------+
+  |    Noise Traders    |  | Fundamental Traders |  | Option Market Maker  |
+  | - Poisson arrivals  |  | - Value estimation  |  | - Sells Call/Puts    |
+  | - Random liquidity  |  | - Mean-reverting    |  | - Quotes spreads     |
+  |   demanders         |  |   stabilizing flow  |  | - Rebalances hedge   |
+  +---------------------+  +---------------------+  +----------------------+
 #+end_src
 
 ** Simulation Engine Specifications
@@ -157,6 +165,7 @@ This modification captures the correlation between underlying returns and volati
 * Phased Research & Implementation Roadmap
 
 #+caption: 6-Stage Master's Thesis Execution Timeline
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l c >{\RaggedRight}p{0.28\textwidth} >{\RaggedRight}X :booktabs t
 | Stage | Weeks | Primary Objective | Key Milestones & Outputs |
 |-------+-------+-------------------+--------------------------|
 | *Stage 1* | 1–4 | Mathematical Derivations & SDE/PDE Formulation | Derive the nonlinear Black-Scholes PDE with market impact; formalize the asymptotic expansions for $\Delta^*$ and $\Gamma^*$; write thesis Chapter 2. |
