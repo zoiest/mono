@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:probability:measure-theory:random-variables:lp-spaces:borel-cantelli:course-bridge:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][← Previous: Fubini-Tonelli & Product Measures]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Next: Generated Exercises & Worked Solutions →]]
 
@@ -35,6 +42,7 @@
 The most important barrier when entering measure-theoretic probability is terminology. Kolmogorov's great insight (1933) was that *probability theory is simply measure theory on a measure space with total measure $1$*.
 
 #+caption: Complete Dictionary between Real Analysis / Measure Theory and Modern Probability Theory
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.30\textwidth} c >{\RaggedRight}X >{\RaggedRight}p{0.25\textwidth} :booktabs t
 | Concept in Real Analysis / Measure Theory | Symbol | Concept in Probability Theory | Symbol |
 |-------------------------------------------+--------+-------------------------------+--------|
 | Base set / Space | $X$ | Sample space | $\Omega$ |
@@ -128,6 +136,7 @@ Here is how every single topic in the upcoming course *Measure, probability, and
 To comfortably bridge the gap while succeeding in your current 5-credit course, follow this weekly synchronization plan:
 
 #+caption: 6-Week Parallel Study Schedule
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.26\textwidth} >{\RaggedRight}p{0.34\textwidth} >{\RaggedRight}X :booktabs t
 | Week | Advanced Course Topic | Your Prerequisite Focus (`MeasInt17.pdf`) | Core Skill to Master |
 |------+-----------------------+------------------------------------------+----------------------|
 | *Week 1* | General \(\sigma\)-algebras, Measurable Spaces | Read `01_outer_measure_and_caratheodory.org` | \(\varepsilon\)-coverings, null sets, Carathéodory criterion |

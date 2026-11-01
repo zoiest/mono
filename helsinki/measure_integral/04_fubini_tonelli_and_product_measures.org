@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:measure-theory:fubini:tonelli:product-measures:cavalieri:iterated-integrals:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[id:580b3400-63c6-4473-8873-ebdb54755ef8][← Previous: Lebesgue Integration & Convergence Theorems]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:5ae24537-fefa-46a9-97c4-df7d5dbb2f1d][Next: The Bridge to Probability & Real Analysis →]]
 
