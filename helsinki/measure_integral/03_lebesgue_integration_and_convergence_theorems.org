@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:measure-theory:lebesgue-integral:mct:fatou:dct:convergence-theorems:riemann-vs-lebesgue:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][← Previous: Measurable Mappings & Functions]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:4c99f3d6-fa85-444f-ae96-055c56a09370][Next: Fubini-Tonelli & Product Measures →]]
 
@@ -269,6 +276,7 @@ Apply DCT directly to $h_j$! $\blacksquare$
 * Comparison with the Riemann Integral
 
 #+caption: Comparison between Riemann and Lebesgue Integrals
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X >{\RaggedRight}X :booktabs t
 | Feature | Riemann Integral $\int_a^b f(x)\,dx$ | Lebesgue Integral $\int_{[a, b]} f\,dm$ |
 |---------+--------------------------------------+------------------------------------------|
 | *Domain Partition* | \(x\)-axis (horizontal slices $\Delta x_k$) | \(y\)-axis (vertical slices of range) |

@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:measure-theory:measurable-functions:simple-functions:pointwise-limits:almost-everywhere:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][← Previous: Lebesgue Outer Measure & Carathéodory]] | [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][Course Index]] | [[id:580b3400-63c6-4473-8873-ebdb54755ef8][Next: Lebesgue Integration & Convergence Theorems →]]
 
@@ -238,6 +245,7 @@ Now define $\phi_k : \mathbb{R}^n \to [0, \infty)$ by:
 $$ \phi_k(x) = \sum_{j=1}^{k 2^k} \frac{j-1}{2^k} \chi_{E_{k, j}}(x) + k \chi_{F_k}(x). $$
 
 #+caption: Structure of the Dyadic Approximation Sequence $\phi_k$
+#+ATTR_LATEX: :environment tabularx :width 0.85\textwidth :align c c c c :booktabs t
 | Level $k$ | Truncation Height | Resolution (Step Size) | Number of Levels |
 |-----------+-------------------+------------------------+------------------|
 | $k = 1$   | $1$               | $1/2 = 0.5$            | $2$ steps        |

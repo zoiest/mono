@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:helsinki:measure-theory:lebesgue:integration:probability:real-analysis:index:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[file:../index.org][← Helsinki Courses Master Index]]
 
@@ -30,6 +37,7 @@
 The knowledge base is organized into five core theoretical modules and one exhaustive problem set:
 
 #+caption: Course Map & Navigation
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.32\textwidth} >{\RaggedRight}X :booktabs t
 | Module | File | Key Topics Covered |
 |--------+------+--------------------|
 | *Module 1* | [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][Lebesgue Outer Measure & Carathéodory]] | \(n\)-intervals, volume $\ell(I)$, outer measure $m^*$, subadditivity, Carathéodory splitting criterion, \(\sigma\)-algebra $\mathrm{Leb}(\mathbb{R}^n)$, null sets, Borel sets $\mathcal{B}(\mathbb{R}^n)$, continuity from below/above, Vitali non-measurable set |
@@ -44,6 +52,7 @@ The knowledge base is organized into five core theoretical modules and one exhau
 When reading the official lecture notes (=MeasInt17.pdf= by Ilkka Holopainen) alongside these synthesized notes and graduate textbooks (e.g. Schilling, Folland, Billingsley), be aware of the following notational conventions:
 
 #+caption: Notational Translation: Holopainen (MeasInt17.pdf) vs. Modern Standards
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.24\textwidth} >{\RaggedRight}p{0.24\textwidth} >{\RaggedRight}p{0.22\textwidth} >{\RaggedRight}X :booktabs t
 | Concept / Object | Holopainen (=MeasInt17.pdf=) | Modern / Shorthand (Used in Notes) | Meaning & Context |
 |------------------+------------------------------+------------------------------------+-------------------|
 | *Increasing sets limit* | $A_1 \subset A_2 \subset \dots$, $A = \bigcup_{j=1}^\infty A_j$ | $A_j \nearrow A$ | Sets expand monotonically into $A$ (Thm 1.32, p. 23). |
@@ -85,6 +94,7 @@ When reading the official lecture notes (=MeasInt17.pdf= by Ilkka Holopainen) al
 
 Keep this translation matrix in mind throughout your concurrent study:
 
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.32\textwidth} c >{\RaggedRight}p{0.32\textwidth} c :booktabs t
 | Real Analysis / Measure Theory | Symbol | Probability Theory | Symbol |
 |--------------------------------+--------+--------------------+--------|
 | Base space | $X$ | Sample space | $\Omega$ |
@@ -104,6 +114,7 @@ Keep this translation matrix in mind throughout your concurrent study:
 * 6-Week Concurrent Self-Study Roadmap
 
 #+caption: Weekly Synchronization Schedule
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.30\textwidth} >{\RaggedRight}p{0.30\textwidth} >{\RaggedRight}X :booktabs t
 | Week | Advanced Course (Lectures & Problem Sets) | Your Self-Study Milestone (`measure_integral`) | Practice Exercise to Solve |
 |------+-------------------------------------------+------------------------------------------------+----------------------------|
 | *W1* | General measure spaces, \(\sigma\)-algebras | Read [[id:9af58b48-3891-498a-a1a4-eea01e5cf0ba][Module 1]]: $m^*$, Carathéodory, null sets | [[id:72f26915-dcd8-4927-925c-2911830c5f81][Problems 1, 2, 11, 12]] |

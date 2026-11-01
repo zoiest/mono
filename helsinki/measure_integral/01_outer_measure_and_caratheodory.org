@@ -8,6 +8,13 @@
 #+author: Antigravity Notes
 #+date: [2026-10-06]
 #+filetags: :math:measure-theory:outer-measure:caratheodory:borel:vitali:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
 
 [[id:9ef01c3f-7d56-4b88-a26a-b20fd7a360c4][← Course Index & Self-Study Bridge]] | [[id:5c9f4daa-e553-48a1-b57f-a5acaebd0041][Next: Measurable Mappings & Functions →]]
 
@@ -144,6 +151,7 @@ $$ m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E) \quad \text{for all } A \subset
 (If $m^*(A) = +\infty$, the inequality is trivially satisfied).
 
 #+caption: Geometric intuition of Carathéodory's splitting criterion
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align c c c c >{\RaggedRight}X :booktabs t
 | Test Set $A$ | $\longrightarrow$ Split by $E$ into | $A \cap E$ (inside $E$) | and $A \setminus E$ (outside $E$) | Additivity holds: $m^*(A) = m^*(A \cap E) + m^*(A \setminus E)$ |
 
 ---
