@@ -1,21 +1,30 @@
-\documentclass[border=4pt]{standalone}
+\documentclass[border=8pt]{standalone}
 \usepackage{amsmath,amssymb}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta}
+\usetikzlibrary{arrows.meta, positioning}
 \begin{document}
 \begin{tikzpicture}[font=\small, >=Stealth]
-  \node[draw, thick, fill=blue!10, rounded corners=4pt] (Bits) at (0, 2.0) 
-    {Master Fair Bits $B_1, B_2, B_3, B_4, B_5, B_6, \dots$};
+  \node[draw=blue!80!black, thick, fill=blue!10, rounded corners=6pt, align=center, inner sep=9pt] (Bits) at (0, 0) 
+    {\textbf{Master Fair Bit Stream}\\[4pt]
+     $(B_k)_{k \ge 1}$ i.i.d.\ $\mathrm{Bernoulli}(1/2)$};
 
-  \node[draw, rounded corners, fill=teal!15] (S1) at (5.0, 3.0) 
-    {Stream 1 (odd): $B_1, B_3, B_5, \dots \longrightarrow U_1 \sim \mathrm{Uniform}(0,1)$};
-  \node[draw, rounded corners, fill=teal!15] (S2) at (5.0, 2.0) 
-    {Stream 2 ($2\times\text{odd}$): $B_2, B_6, B_{10}, \dots \longrightarrow U_2 \sim \mathrm{Uniform}(0,1)$};
-  \node[draw, rounded corners, fill=teal!15] (S3) at (5.0, 1.0) 
-    {Stream 3 ($4\times\text{odd}$): $B_4, B_{12}, B_{20}, \dots \longrightarrow U_3 \sim \mathrm{Uniform}(0,1)$};
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!15, align=left, inner sep=8pt] (S1) at (7.0, 2.0) 
+    {\textbf{Stream 1} (odd indices $2k-1$):\\[2pt]
+     $B_1, B_3, B_5, B_7, \dots \implies U_1 \sim \mathrm{Uniform}(0,1)$};
 
-  \draw[->, thick] (Bits.east) -- (S1.west);
-  \draw[->, thick] (Bits.east) -- (S2.west);
-  \draw[->, thick] (Bits.east) -- (S3.west);
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!15, align=left, inner sep=8pt] (S2) at (7.0, 0.0) 
+    {\textbf{Stream 2} ($2 \times \text{odd}$ indices):\\[2pt]
+     $B_2, B_6, B_{10}, B_{14}, \dots \implies U_2 \sim \mathrm{Uniform}(0,1)$};
+
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!15, align=left, inner sep=8pt] (S3) at (7.0, -2.0) 
+    {\textbf{Stream 3} ($4 \times \text{odd}$ indices):\\[2pt]
+     $B_4, B_{12}, B_{20}, B_{28}, \dots \implies U_3 \sim \mathrm{Uniform}(0,1)$};
+
+  \draw[->, line width=1.6pt, blue!80!black] (Bits.east) -- (S1.west);
+  \draw[->, line width=1.6pt, blue!80!black] (Bits.east) -- (S2.west);
+  \draw[->, line width=1.6pt, blue!80!black] (Bits.east) -- (S3.west);
+
+  \node[font=\footnotesize, fill=gray!5, draw=gray!30, rounded corners=4pt, inner sep=5pt] at (3.5, -3.2)
+    {Disjoint index partitions $\implies$ $(U_1, U_2, U_3, \dots)$ are mutually \textbf{independent}!};
 \end{tikzpicture}
 \end{document}
