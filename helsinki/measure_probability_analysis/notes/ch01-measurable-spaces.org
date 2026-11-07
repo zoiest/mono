@@ -1,0 +1,833 @@
+:PROPERTIES:
+:ID:       a1b2c3d4-0001-4000-8000-000000000001
+:ROAM_ALIASES: "MAST31051 Chapter 1" "Measurable Spaces Notes"
+:END:
+#+title: Chapter 1: Measurable Spaces
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch01:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch00-toolkit.org][← Chapter 0]] | [[file:ch02-measures.org][Chapter 2 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+Suppose we want to measure the "size" of subsets of a set \(\Omega\) — whether that size is length on
+the real line \(\mathbb{R}\), area in the plane \(\mathbb{R}^2\), or the probability of an event in a
+random experiment. A natural first guess is to assign a size to *every* subset of \(\Omega\). For a
+finite set like the outcomes of rolling a single die, \(\Omega = \{1, 2, 3, 4, 5, 6\}\), this works
+perfectly. However, there are two fundamental reasons why we must specify a dedicated collection
+\(\mathcal{F}\) of "measurable" subsets of \(\Omega\) rather than always using all subsets:
+
+1. *Technical obstruction on uncountable spaces:* As we will see in Chapter 11, on \(\mathbb{R}\) it
+   is mathematically impossible to assign a translation-invariant length to *every* subset of
+   \(\mathbb{R}\) while keeping length countably additive. Certain pathological subsets (constructed
+   using the Axiom of Choice) refuse to have a consistent length. Restricting our domain to a sticky,
+   well-behaved collection of subsets — the *Borel sets* or *Lebesgue measurable sets* — avoids these
+   paradoxes completely.
+2. *Modelling information in probability:* Even on a tiny finite set like \(\Omega = \{1,2,3,4,5,6\}\),
+   a collection of measurable sets \(\mathcal{F}\) records *which questions can be answered from a
+   given partial observation*. For instance, if an observer is only told whether the die roll was even
+   or odd, the subset \(\{2, 4, 6\}\) is observable ("measurable" relative to that information),
+   whereas \(\{6\}\) is not.
+
+Before we introduce any numbers or probabilities (which happens in Chapter 2), this chapter defines
+the *stage* on which measure and probability take place: a *measurable space* \((\Omega, \mathcal{F})\),
+consisting of an underlying set \(\Omega\) and a collection \(\mathcal{F}\) of subsets closed under
+the logical operations of negation (complements) and countable "or" / "and" (countable unions and
+intersections). Such a collection \(\mathcal{F}\) is called a *\(\sigma\)-algebra* (read
+"sigma-algebra").
+
+** Probability motivation
+
+When we throw a die once, the outcome \(\omega\) belongs to the sample space
+\(\Omega = \{1, 2, 3, 4, 5, 6\}\). A subset such as \(\{2, 4, 6\}\) represents the statement "the
+outcome is even," while \(\{6\}\) represents "the outcome is six." To build a probability model, we
+first choose which subsets of \(\Omega\) count as valid *events* (the \(\sigma\)-algebra \(\mathcal{F}\)),
+and then assign probabilities to those events (a probability measure \(\mathbb{P}\) with total size
+\(1\)).
+
+A crucial conceptual point from the lecture notes: *an event is simply a measurable set in a
+probability space; it is not a different kind of mathematical object.* Moreover, the underlying set
+\(\Omega\) does not have to be a subset of Euclidean space \(\mathbb{R}^d\): its elements can be die
+outcomes, infinite sequences of coin tosses, or continuous functions (paths) on a time interval.
+
+** Roadmap
+
+- *1.1 Sets, subsets, and the power set:* Distinguishing elements (\(\omega \in A\)), subsets
+  (\(A \subseteq \Omega\)), and collections of subsets (\(\mathcal{F} \subseteq 2^\Omega\)).
+- *1.2 Set operations and sequences:* Unions, intersections, set differences, complements, pairwise
+  disjoint sequences, and the convention that "countable" includes finite.
+- *1.3 Which sets are measurable?:* Definition of a \(\sigma\)-algebra (Definition 1.1), closure
+  under countable intersections via De Morgan's laws, and the parity \(\sigma\)-algebra for a die
+  (Example 1.2).
+- *1.4 Generated \(\sigma\)-algebras:* The smallest \(\sigma\)-algebra \(\sigma(\mathcal{A})\)
+  containing a starter family \(\mathcal{A}\) (Definition 1.3), the Borel \(\sigma\)-algebra
+  \(\mathcal{B}(\mathbb{R})\), and why rational half-lines \((-\infty, a]\) (\(a \in \mathbb{Q}\))
+  generate \(\mathcal{B}(\mathbb{R})\).
+
+** What you need from earlier chapters
+
+- This is the first chapter of the main text. If you want a refresher on basic set notation,
+  countability of \(\mathbb{Q}\), or open sets in \(\mathbb{R}\), see [[file:ch00-toolkit.org][Chapter 0 (Toolkit)]].
+
+* 1.1 Sets, subsets, and the power set
+
+** Intuition
+
+In measure theory we work on three levels of hierarchy at the same time:
+1. *Level 0 (Points / Outcomes):* Individual elements \(\omega\) of the underlying set \(\Omega\).
+2. *Level 1 (Subsets / Events):* Subsets \(A \subseteq \Omega\), which group points together.
+3. *Level 2 (Collections / Families of subsets):* Sets whose elements are themselves subsets of
+   \(\Omega\), such as the power set \(2^\Omega\) or a \(\sigma\)-algebra \(\mathcal{F} \subseteq 2^\Omega\).
+
+Keeping these three levels straight prevents almost all beginner confusion. Think of \(\Omega\) as a
+box of marbles, a subset \(A \subseteq \Omega\) as a small bag containing some of those marbles, and
+a collection \(\mathcal{F} \subseteq 2^\Omega\) as a catalogue of permissible bags.
+
+#+begin_example
+Level 0 (point):         w  (a single outcome, e.g. H)
+                         |  is an element of (in)
+                         v
+Level 1 (subset):       {w} (a set of outcomes, e.g. {H} subseteq Omega)
+                         |  is an element of (in)
+                         v
+Level 2 (collection):   2^Omega = { emptyset, {H}, {T}, {H,T} }
+#+end_example
+
+** Definitions and notation
+
+Let \(\Omega\) be an arbitrary set. Its elements need not be numbers, and no notion of distance or
+open set is assumed on \(\Omega\). In a probability model, \(\Omega\) is called the *sample space*,
+and its elements are called *outcomes* or *sample points*.
+
+We carefully distinguish *membership* (\(\in\)) from *inclusion* (\(\subseteq\)):
+- \(\omega \in A\) means that \(\omega\) is an *element* of \(A\) (\(\omega \notin A\) means it is not).
+- \(A \subseteq B\) means that \(A\) is a *subset* of \(B\): every element of \(A\) also belongs to
+  \(B\). Note that equality \(A = B\) is allowed in the notation \(A \subseteq B\).
+- The *empty set*, denoted by \(\emptyset\), has no elements and is a subset of every set
+  (\(\emptyset \subseteq A\) for all \(A\)).
+- A set containing exactly one element, such as \(\{\omega\}\), is called a *singleton*. The curly
+  braces matter: \(\omega\) is an element (Level 0), whereas \(\{\omega\}\) is the set containing
+  that single element (Level 1).
+
+#+begin_quote
+*Definition (Power set).* The *power set* of \(\Omega\), denoted by \(2^\Omega\), is the collection
+of all subsets of \(\Omega\):
+\[
+2^\Omega := \{A : A \subseteq \Omega\}.
+\]
+(Here the colon \(:\) is read as "such that," and \(:=\) means "is defined by.")
+#+end_quote
+
+By the power-set axiom of set theory, \(2^\Omega\) is a legitimate set (we are collecting subsets of
+a fixed set \(\Omega\), not forming a contradictory "set of all sets"). In particular, since
+\(\emptyset \subseteq \Omega\) and \(\Omega \subseteq \Omega\), both \(\emptyset\) and \(\Omega\) are
+*elements* of \(2^\Omega\):
+\[
+\emptyset \in 2^\Omega \quad \text{and} \quad \Omega \in 2^\Omega.
+\]
+
+Why the notation \(2^\Omega\)? If \(\Omega\) is a finite set with \(n\) elements, then building a
+subset \(A \subseteq \Omega\) requires making \(n\) independent binary choices: for each of the \(n\)
+elements, we either *include* it in \(A\) or *omit* it. This yields \(2 \times 2 \times \cdots \times 2 = 2^n\)
+possible subsets. For an infinite set \(\Omega\), the notation \(2^\Omega\) is kept by analogy to
+mean the collection of all subsets of \(\Omega\).
+
+We use the words *collection* or *family* for a "set of sets." Thus writing
+\(\mathcal{F} \subseteq 2^\Omega\) means that \(\mathcal{F}\) is a collection of subsets of \(\Omega\):
+every member \(A \in \mathcal{F}\) is a subset \(A \subseteq \Omega\).
+
+** Examples and non-examples
+
+*Example (A single coin toss).* Take \(\Omega = \{\mathrm{H}, \mathrm{T}\}\), where \(\mathrm{H}\) and
+\(\mathrm{T}\) stand for heads and tails. There are \(n = 2\) outcomes, so the power set has
+\(2^2 = 4\) elements:
+\[
+2^\Omega = \bigl\{\emptyset,\, \{\mathrm{H}\},\, \{\mathrm{T}\},\, \{\mathrm{H}, \mathrm{T}\}\bigr\}.
+\]
+Compare the three statements:
+\[
+\mathrm{H} \in \Omega, \qquad \{\mathrm{H}\} \subseteq \Omega, \qquad \{\mathrm{H}\} \in 2^\Omega.
+\]
+All three are true! The same object \(\{\mathrm{H}\}\) is viewed as a *subset* of \(\Omega\) when we
+write \(\{\mathrm{H}\} \subseteq \Omega\), and as a single *element* of the collection \(2^\Omega\)
+when we write \(\{\mathrm{H}\} \in 2^\Omega\).
+
+Now consider the smaller collection \(\mathcal{F} = \{\emptyset, \Omega\} \subseteq 2^\Omega\), which
+contains only two of the four subsets of \(\Omega\). Notice that
+\[
+\{\mathrm{H}\} \subseteq \Omega \quad \text{but} \quad \{\mathrm{H}\} \notin \mathcal{F}.
+\]
+Being a subset of \(\Omega\) and belonging to a chosen collection \(\mathcal{F}\) are completely
+different requirements.
+
+*Additional worked check (Common brace traps).* Let \(\Omega = \{1, 2\}\).
+- Is \(1 \subseteq \Omega\)? *No:* \(1\) is an element of \(\Omega\), not a subset. We write
+  \(1 \in \Omega\) or \(\{1\} \subseteq \Omega\).
+- Is \(\emptyset \subseteq 2^\Omega\)? *Yes!* The empty set is a subset of *every* set, so
+  \(\emptyset \subseteq 2^\Omega\) (this represents the empty collection of subsets, containing no
+  subsets at all). At the same time, \(\emptyset \in 2^\Omega\) is *also* true, because \(\emptyset\)
+  is a subset of \(\Omega\) and therefore one of the members of \(2^\Omega\).
+- Is \(\{\emptyset\} = \emptyset\)? *No:* \(\emptyset\) has \(0\) elements, while \(\{\emptyset\}\)
+  is a collection containing \(1\) element (namely, the empty set).
+
+* 1.2 Set operations and sequences
+
+** Intuition
+
+Set operations are the exact translation of logical connectives ("or", "and", "not") into the
+language of subsets. If \(A\) and \(B\) are events in a sample space \(\Omega\), then:
+- "at least one of \(A\) or \(B\) occurs" corresponds to the *union* \(A \cup B\);
+- "both \(A\) and \(B\) occur" corresponds to the *intersection* \(A \cap B\);
+- "\(A\) occurs, but \(B\) does not" corresponds to the *difference* \(A \setminus B\);
+- "\(A\) does not occur" corresponds to the *complement* \(A^c = \Omega \setminus A\).
+
+When we pass from finitely many operations to infinitely many (sequences of sets \(A_1, A_2, \dots\)),
+"exists \(n\) such that \(A_n\) occurs" becomes the countable union \(\bigcup_{n=1}^\infty A_n\), and
+"for all \(n\), \(A_n\) occurs" becomes the countable intersection \(\bigcap_{n=1}^\infty A_n\).
+
+#+begin_example
++------------------------+   +------------------------+
+| Omega                  |   | Omega                  |
+|   +-------+            |   |   +-------+            |
+|   | A   +-+-----+      |   |   | A   +-+-----+      |
+|   |#####|#|#####|      |   |   |     |#|     |      |
+|   +-----+-+   B |      |   |   +-----+-+   B |      |
+|         +-------+      |   |         +-------+      |
++------------------------+   +------------------------+
+   Union: A \cup B              Intersection: A \cap B
+
++------------------------+   +------------------------+
+| Omega                  |   | Omega##################|
+|   +-------+            |   |###+-------+############|
+|   | A   +-+-----+      |   |###| A     |############|
+|   |#####| |     |      |   |###|       |############|
+|   +-----+-+   B |      |   |###+-------+############|
+|         +-------+      |   |########################|
++------------------------+   +------------------------+
+  Difference: A \setminus B     Complement: A^c = \Omega \setminus A
+#+end_example
+
+As Figure 1.1 in the lecture notes emphasises, these Venn diagrams are *schematic pictures of
+membership*: the sets \(A, B\) need not be geometric regions in the plane, and the drawn areas on the
+page do not specify measures or probabilities.
+
+** Definitions
+
+For sets \(A, B \subseteq \Omega\):
+- The *union* \(A \cup B := \{\omega \in \Omega : \omega \in A \text{ or } \omega \in B\}\) consists
+  of the elements belonging to at least one of them (inclusive "or").
+- The *intersection* \(A \cap B := \{\omega \in \Omega : \omega \in A \text{ and } \omega \in B\}\)
+  consists of the elements belonging to both.
+- The *difference* \(A \setminus B := \{\omega \in A : \omega \notin B\}\) consists of the elements
+  of \(A\) that do not belong to \(B\).
+- The *complement* of \(A\) is \(A^c := \Omega \setminus A = \{\omega \in \Omega : \omega \notin A\}\).
+  A complement is *always* taken relative to the specified underlying set \(\Omega\).
+
+*Sequences of sets.* Throughout these notes, \(\mathbb{N} = \{1, 2, 3, \dots\}\) denotes the positive
+integers. A *sequence of sets* is a list \(A_1, A_2, \dots\) indexed by \(\mathbb{N}\); repetitions
+(such as \(A_1 = A_2\)) are completely allowed.
+- Its *countable union* is
+  \[
+  \bigcup_{n=1}^\infty A_n := \{\omega \in \Omega : \omega \in A_n \text{ for at least one } n \in \mathbb{N}\}.
+  \]
+- Its *countable intersection* is
+  \[
+  \bigcap_{n=1}^\infty A_n := \{\omega \in \Omega : \omega \in A_n \text{ for every } n \in \mathbb{N}\}.
+  \]
+- *Convention:* A union over an empty index set is understood to be \(\emptyset\).
+
+*Disjointness.*
+- Two sets \(A\) and \(B\) are *disjoint* if their intersection is empty: \(A \cap B = \emptyset\).
+- A sequence of sets \(A_1, A_2, \dots\) is *pairwise disjoint* if
+  \[
+  A_m \cap A_n = \emptyset \quad \text{whenever } m \ne n.
+  \]
+  (Warning: "pairwise disjoint" is much stronger than saying \(\bigcap_{n=1}^\infty A_n = \emptyset\)!
+  Pairwise disjoint means *no two* sets in the list share any element.)
+
+*Countability convention.*
+#+begin_quote
+*Definition (Countable and uncountable sets).* A set is called *countable* if it is finite or its
+elements can be listed in a sequence indexed by \(\mathbb{N}\). A set that is not countable is
+*uncountable*.
+#+end_quote
+In particular, *countable includes finite* throughout the entire course. (Some authors say "at most
+countable" for this and reserve "countable" for countably infinite; Kuusi's lecture notes use
+"countable" to mean finite or countably infinite.)
+
+** Examples and non-examples
+
+*Example (Basic operations).* Take \(\Omega = \{1, 2, 3\}\), \(A = \{1, 2\}\), and \(B = \{2, 3\}\).
+Then:
+\[
+A \cup B = \{1, 2, 3\}, \qquad A \cap B = \{2\}, \qquad A \setminus B = \{1\}, \qquad A^c = \{3\}.
+\]
+Notice that set difference need not be symmetric: here \(B \setminus A = \{3\}\), which is different
+from \(A \setminus B = \{1\}\). Also notice the useful identity
+\[
+A \setminus B = A \cap B^c,
+\]
+since an element of \(\Omega\) is in \(A\) and not in \(B\) if and only if it belongs to both \(A\)
+and \(\Omega \setminus B = B^c\).
+
+*Example (Pairwise disjoint vs. overlapping sequences).* In \(\Omega = \mathbb{N}\):
+- The singletons \(A_n = \{n\}\) (\(\{1\}, \{2\}, \{3\}, \dots\)) are *pairwise disjoint* (since
+  \(\{m\} \cap \{n\} = \emptyset\) for \(m \ne n\)) and have union \(\bigcup_{n=1}^\infty \{n\} = \mathbb{N}\).
+- The initial segments \(B_n = \{1, \dots, n\}\) have the exact same union
+  \(\bigcup_{n=1}^\infty B_n = \mathbb{N}\), but they are *not* pairwise disjoint (in fact,
+  \(B_1 \subseteq B_2 \subseteq B_3 \subseteq \cdots\), so \(B_m \cap B_n = B_{\min(m,n)} \ne \emptyset\)).
+
+* 1.3 Which sets are measurable?
+
+** Intuition
+
+Which subsets of \(\Omega\) should belong to our collection \(\mathcal{F}\) of measurable sets (events)?
+Think about what we naturally do with events in probability and analysis:
+1. The whole sample space \(\Omega\) ("something happens") must be a valid event.
+2. If \(A\) is a valid event, we must be able to ask whether \(A\) did *not* happen — so the
+   complement \(A^c = \Omega \setminus A\) must also be in \(\mathcal{F}\).
+3. In analysis and probability we constantly take limits (e.g., "does the random walk ever return to
+   \(0\)?", which is the union over \(n = 1, 2, \dots\) of the event "returns at step \(n\)"). Thus,
+   if \(A_1, A_2, \dots\) are valid events, their countable union \(\bigcup_{n=1}^\infty A_n\) must
+   also be in \(\mathcal{F}\).
+
+A collection \(\mathcal{F} \subseteq 2^\Omega\) satisfying these three closure properties is called a
+*\(\sigma\)-algebra*. The letter \(\sigma\) (Greek \(s\), for German *Summe* / union) reminds us that
+\(\mathcal{F}\) is closed under *countable* unions, not merely finite unions.
+
+** Definition of a \(\sigma\)-algebra and basic consequences
+
+#+begin_quote
+*Definition 1.1 (\(\sigma\)-algebra and measurable space).* Let \(\Omega\) be a set. A collection
+\(\mathcal{F} \subseteq 2^\Omega\) is a *\(\sigma\)-algebra* (or *sigma-algebra*) if it satisfies the
+following conditions:
+- (i) The set \(\Omega\) belongs to \(\mathcal{F}\).
+- (ii) If \(A \in \mathcal{F}\), then \(\Omega \setminus A\) belongs to \(\mathcal{F}\).
+- (iii) If \(A_n \in \mathcal{F}\) for every \(n \in \mathbb{N}\), then \(\bigcup_{n=1}^\infty A_n \in \mathcal{F}\).
+
+The pair \((\Omega, \mathcal{F})\) is a *measurable space*, and the members of \(\mathcal{F}\) are its
+*measurable sets*.
+#+end_quote
+
+Let us unpack several immediate consequences of Definition 1.1 that we use constantly without
+having to build them into the axioms:
+
+1. *The empty set belongs to \(\mathcal{F}\):* By (i), \(\Omega \in \mathcal{F}\). Applying (ii) to
+   \(A = \Omega\) gives \(\emptyset = \Omega \setminus \Omega \in \mathcal{F}\).
+2. *Closure under finite unions:* Suppose \(A_1, \dots, A_k \in \mathcal{F}\). Definition 1.1(iii)
+   asks for an infinite sequence indexed by \(\mathbb{N}\), not a finite list! How do we bridge this?
+   Since we already know \(\emptyset \in \mathcal{F}\), we simply pad the finite list with empty sets:
+   define \(A_n := \emptyset\) for all \(n > k\). Then \(A_n \in \mathcal{F}\) for every \(n \in \mathbb{N}\),
+   and (iii) tells us that
+   \[
+   A_1 \cup \cdots \cup A_k = A_1 \cup \cdots \cup A_k \cup \emptyset \cup \emptyset \cup \cdots = \bigcup_{n=1}^\infty A_n \in \mathcal{F}.
+   \]
+3. *Closure under countable (and finite) intersections:* Suppose \(A_n \in \mathcal{F}\) for every
+   \(n \in \mathbb{N}\). Why is \(\bigcap_{n=1}^\infty A_n \in \mathcal{F}\)? This follows from
+   *De Morgan's identity*:
+   \[
+   \bigcap_{n=1}^\infty A_n = \left(\bigcup_{n=1}^\infty A_n^c\right)^c.
+   \]
+   *Proof of De Morgan's identity:* Let \(\omega \in \Omega\). By definition, \(\omega \in \bigcap_{n=1}^\infty A_n\)
+   if and only if \(\omega\) belongs to *every* \(A_n\); this holds if and only if \(\omega\) belongs
+   to *none* of their complements \(A_n^c\), i.e., \(\omega \notin \bigcup_{n=1}^\infty A_n^c\), which
+   means \(\omega \in \bigl(\bigcup_{n=1}^\infty A_n^c\bigr)^c\). \(\square\)
+
+   Now check measurability on the right-hand side of De Morgan's identity: since each
+   \(A_n \in \mathcal{F}\), property (ii) gives \(A_n^c \in \mathcal{F}\) for every \(n \in \mathbb{N}\).
+   Property (iii) then gives \(\bigcup_{n=1}^\infty A_n^c \in \mathcal{F}\). Finally, applying
+   property (ii) one more time gives \(\bigl(\bigcup_{n=1}^\infty A_n^c\bigr)^c \in \mathcal{F}\).
+   (Finite intersections follow too, either by De Morgan or by padding with \(A_n = \Omega\) for
+   \(n > k\).)
+4. *Closure under set differences:* If \(A, B \in \mathcal{F}\), then \(B^c \in \mathcal{F}\) by (ii),
+   and hence the difference
+   \[
+   A \setminus B = A \cap B^c
+   \]
+   belongs to \(\mathcal{F}\) as the intersection of two measurable sets.
+
+** Two extreme \(\sigma\)-algebras on any set \(\Omega\)
+
+On *any* set \(\Omega\), there are always two extreme examples of \(\sigma\)-algebras:
+- *The largest \(\sigma\)-algebra (the power set):* \(\mathcal{F} = 2^\Omega\). It contains \(\Omega\),
+  and complements and countable unions of subsets of \(\Omega\) are still subsets of \(\Omega\). Every
+  subset of \(\Omega\) is measurable with respect to \(2^\Omega\).
+- *The smallest \(\sigma\)-algebra (the trivial \(\sigma\)-algebra):* \(\mathcal{F} = \{\emptyset, \Omega\}\).
+  It contains \(\Omega\), the complements are \(\Omega^c = \emptyset\) and \(\emptyset^c = \Omega\),
+  and any union of \(\emptyset\)'s and \(\Omega\)'s is either \(\emptyset\) or \(\Omega\).
+
+This immediately highlights a central lesson: *measurability is a condition relative to a chosen
+\(\sigma\)-algebra \(\mathcal{F}\), not an intrinsic property of a subset \(A \subseteq \Omega\).*
+
+** Examples from the notes and additional worked examples
+
+#+begin_quote
+*Example 1.2 (Two \(\sigma\)-algebras for a die).* For a single die roll, take
+\(\Omega = \{1, 2, 3, 4, 5, 6\}\) and let \(D = \{2, 4, 6\}\) be the set of even outcomes (so
+\(D^c = \{1, 3, 5\}\) is the set of odd outcomes). Consider the four-element collection
+\begin{equation}
+\mathcal{F} = \{\emptyset, D, D^c, \Omega\}. \tag{1.1}
+\end{equation}
+Then \(\mathcal{F}\) is a \(\sigma\)-algebra on \(\Omega\). With respect to \(\mathcal{F}\), the set
+\(D = \{2, 4, 6\}\) is measurable, whereas \(\{6\}\) is *not* measurable. With the larger
+\(\sigma\)-algebra \(2^\Omega\) (which has \(2^6 = 64\) sets), every subset — including \(\{6\}\) — is
+measurable.
+#+end_quote
+
+*Step-by-step verification of Example 1.2:*
+- Condition (i): \(\Omega \in \mathcal{F}\) by inspection.
+- Condition (ii): The complements of the four members \(\emptyset, D, D^c, \Omega\) are
+  \(\Omega, D^c, D, \emptyset\), all of which belong to \(\mathcal{F}\).
+- Condition (iii): Why is \(\mathcal{F}\) closed under countable unions \(\bigcup_{n=1}^\infty A_n\)?
+  Notice that \(\Omega\) is partitioned into two non-overlapping "blocks" (atoms), \(D = \{2, 4, 6\}\)
+  and \(D^c = \{1, 3, 5\}\). Every member of \(\mathcal{F}\) is built by taking none, one, or both of
+  these two blocks. Therefore, taking the union of any sequence of sets from \(\mathcal{F}\) simply
+  combines whichever of the two blocks \(D\) and \(D^c\) appear in the sequence, producing again one
+  of the four sets \(\emptyset, D, D^c, \Omega \in \mathcal{F}\).
+
+#+begin_example
+   Only parity recorded: F = {emptyset, D, D^c, Omega}         Exact outcome recorded: 2^Omega
+   +-----------------------+ +-----------------------+         +---+ +---+ +---+ +---+ +---+ +---+
+   |   1       3       5   | |   2       4       6   |         | 1 | | 2 | | 3 | | 4 | | 5 | | 6 |
+   |       odd (D^c)       | |       even (D)        |         +---+ +---+ +---+ +---+ +---+ +---+
+   +-----------------------+ +-----------------------+         Each outcome can be distinguished
+   A measurable set must contain ALL or NONE of each block.    from the others (64 subsets).
+#+end_example
+
+As the lecture notes point out, \(\{6\} \notin \mathcal{F}\) is already a genuine example of a
+*nonmeasurable set* (relative to the \(\sigma\)-algebra (1.1)). It does not require the Axiom of
+Choice or any exotic construction! Nor does it mean that \(\{6\}\) can never be measured — it is
+measurable in the richer model \((\Omega, 2^\Omega)\). Later (in Chapter 11) we will encounter
+failures of measurability on \(\mathbb{R}\) that cannot be fixed merely by enlarging the
+\(\sigma\)-algebra while keeping a translation-invariant measure.
+
+*Additional Example A (The countable-cocountable \(\sigma\)-algebra).* Let \(\Omega\) be an uncountable
+set (for instance, \(\Omega = \mathbb{R}\)), and define
+\[
+\mathcal{F} := \{A \subseteq \Omega : A \text{ is countable or } A^c \text{ is countable}\}.
+\]
+(A set whose complement \(A^c\) is countable is often called *cocountable*.) Let us check that
+\(\mathcal{F}\) is a \(\sigma\)-algebra:
+- (i) \(\Omega^c = \emptyset\) is finite, hence countable, so \(\Omega \in \mathcal{F}\).
+- (ii) If \(A \in \mathcal{F}\), then either \(A = (A^c)^c\) is countable or \(A^c\) is countable; in
+  either case \(A^c \in \mathcal{F}\).
+- (iii) Let \(A_n \in \mathcal{F}\) for \(n \in \mathbb{N}\), and set \(U = \bigcup_{n=1}^\infty A_n\).
+  - *Case 1:* Every \(A_n\) is countable. Since a countable union of countable sets is countable
+    (Chapter 0), \(U\) is countable, so \(U \in \mathcal{F}\).
+  - *Case 2:* At least one set, say \(A_{n_0}\), has a countable complement \(A_{n_0}^c\). Since
+    \(A_{n_0} \subseteq U\), taking complements reverses the inclusion:
+    \(U^c \subseteq A_{n_0}^c\). A subset of a countable set is countable, so \(U^c\) is countable,
+    and again \(U \in \mathcal{F}\).
+Thus \(\mathcal{F}\) is a \(\sigma\)-algebra! Note that on \(\Omega = \mathbb{R}\), the interval
+\([0, 1]\) is uncountable and its complement \((-\infty, 0) \cup (1, \infty)\) is also uncountable,
+so \([0, 1] \notin \mathcal{F}\).
+
+*Non-example B (Closed under finite unions, but NOT countable unions).* Let \(\Omega = \mathbb{N}\)
+and consider the *finite-cofinite collection*
+\[
+\mathcal{A} := \{A \subseteq \mathbb{N} : A \text{ is finite or } A^c \text{ is finite}\}.
+\]
+Here \(\mathbb{N} \in \mathcal{A}\), \(\mathcal{A}\) is closed under complements, and \(\mathcal{A}\)
+is closed under *finite* unions (such a collection is called an *algebra* of sets; see Chapter 5).
+However, \(\mathcal{A}\) is *not* a \(\sigma\)-algebra! Indeed, for each \(n \in \mathbb{N}\), the
+singleton \(A_n = \{2n\}\) is finite, so \(A_n \in \mathcal{A}\). Yet their countable union is the set
+of all even positive integers:
+\[
+E = \bigcup_{n=1}^\infty \{2n\} = \{2, 4, 6, 8, \dots\}.
+\]
+Both \(E\) and \(E^c = \{1, 3, 5, 7, \dots\}\) are infinite, so \(E \notin \mathcal{A}\).
+
+* 1.4 Generated sigma-algebras
+
+** Intuition
+
+In almost every problem on an infinite space like \(\mathbb{R}\), it is impossible to write down an
+explicit list of all measurable sets one by one. Instead, we start with a simple collection
+\(\mathcal{A}\) of basic sets that we *definitely want* to be measurable — for instance, all open sets
+in \(\mathbb{R}\), or all open intervals \((a, b)\), or all half-lines \((-\infty, a]\). We then throw
+in everything else that is forced upon us by taking complements and countable unions over and over
+again.
+
+The result is the *smallest \(\sigma\)-algebra containing \(\mathcal{A}\)*, denoted by
+\(\sigma(\mathcal{A})\) and called the *\(\sigma\)-algebra generated by \(\mathcal{A}\)*. How do we
+know there is a single "smallest" one, rather than several incomparable minimal ones? By a classic
+"top-down" trick that appears throughout mathematics (for span in linear algebra, convex hull in
+geometry, or subgroup generated by a set): we take the *intersection of all \(\sigma\)-algebras on
+\(\Omega\) that contain \(\mathcal{A}\)*.
+
+** Definition and existence of \(\sigma(\mathcal{A})\)
+
+#+begin_quote
+*Definition 1.3 (Generated \(\sigma\)-algebra).* For a collection \(\mathcal{A} \subseteq 2^\Omega\),
+the *\(\sigma\)-algebra generated by \(\mathcal{A}\)*, denoted by \(\sigma(\mathcal{A})\), is the
+smallest \(\sigma\)-algebra containing \(\mathcal{A}\).
+#+end_quote
+
+Let us be crystal clear about the words in Definition 1.3:
+- "containing \(\mathcal{A}\)" means \(\mathcal{A} \subseteq \sigma(\mathcal{A})\) (every set
+  \(A \in \mathcal{A}\) belongs to \(\sigma(\mathcal{A})\));
+- "smallest" refers to inclusion of collections: if \(\mathcal{G}\) is *any* \(\sigma\)-algebra on
+  \(\Omega\) with \(\mathcal{A} \subseteq \mathcal{G}\), then \(\sigma(\mathcal{A}) \subseteq \mathcal{G}\).
+
+*Proof that \(\sigma(\mathcal{A})\) always exists and is unique.*
+Consider the family of all candidate \(\sigma\)-algebras on \(\Omega\) that contain \(\mathcal{A}\):
+\[
+\mathfrak{S} := \{\mathcal{G} \subseteq 2^\Omega : \mathcal{G} \text{ is a } \sigma\text{-algebra on } \Omega \text{ and } \mathcal{A} \subseteq \mathcal{G}\}.
+\]
+1. *Non-emptiness:* There is at least one such candidate in \(\mathfrak{S}\), namely the power set
+   \(\mathcal{G} = 2^\Omega\) (since \(2^\Omega\) is a \(\sigma\)-algebra and \(\mathcal{A} \subseteq 2^\Omega\)).
+2. *Intersection:* Define a collection of subsets of \(\Omega\) by keeping a subset \(E \subseteq \Omega\)
+   precisely when \(E\) belongs to *every* candidate \(\mathcal{G} \in \mathfrak{S}\):
+   \[
+   \sigma(\mathcal{A}) := \bigcap_{\mathcal{G} \in \mathfrak{S}} \mathcal{G} = \{E \subseteq \Omega : E \in \mathcal{G} \text{ for all } \mathcal{G} \in \mathfrak{S}\}.
+   \]
+3. *Verify the \(\sigma\)-algebra axioms for \(\sigma(\mathcal{A})\):*
+   - *Contains \(\Omega\):* Every candidate \(\mathcal{G} \in \mathfrak{S}\) is a \(\sigma\)-algebra,
+     so \(\Omega \in \mathcal{G}\) for all \(\mathcal{G} \in \mathfrak{S}\). Hence \(\Omega \in \sigma(\mathcal{A})\).
+   - *Closed under complements:* If \(E \in \sigma(\mathcal{A})\), then for every candidate
+     \(\mathcal{G} \in \mathfrak{S}\) we have \(E \in \mathcal{G}\), and since \(\mathcal{G}\) is a
+     \(\sigma\)-algebra, \(E^c \in \mathcal{G}\). Because this holds for every \(\mathcal{G} \in \mathfrak{S}\),
+     we have \(E^c \in \sigma(\mathcal{A})\).
+   - *Closed under countable unions:* If \(E_n \in \sigma(\mathcal{A})\) for every \(n \in \mathbb{N}\),
+     then for each candidate \(\mathcal{G} \in \mathfrak{S}\), every \(E_n\) belongs to \(\mathcal{G}\),
+     and since \(\mathcal{G}\) is a \(\sigma\)-algebra, \(\bigcup_{n=1}^\infty E_n \in \mathcal{G}\).
+     Because this holds for every candidate \(\mathcal{G} \in \mathfrak{S}\), we have
+     \(\bigcup_{n=1}^\infty E_n \in \sigma(\mathcal{A})\).
+4. *Verify containment and minimality:* Since every \(\mathcal{G} \in \mathfrak{S}\) contains
+   \(\mathcal{A}\), their intersection \(\sigma(\mathcal{A})\) contains \(\mathcal{A}\). And if
+   \(\mathcal{G}_0\) is any \(\sigma\)-algebra containing \(\mathcal{A}\), then \(\mathcal{G}_0\) is
+   one of the members of \(\mathfrak{S}\), so the intersection over all \(\mathcal{G} \in \mathfrak{S}\)
+   is automatically a subcollection of \(\mathcal{G}_0\): \(\sigma(\mathcal{A}) \subseteq \mathcal{G}_0\). \(\square\)
+
+*Example (Generating the parity \(\sigma\)-algebra).* In the die example (\(\Omega = \{1,\dots,6\}\),
+\(D = \{2, 4, 6\}\)), what is \(\sigma(\{D\})\)? Any \(\sigma\)-algebra containing \(D\) must contain
+\(D^c\), \(\emptyset\), and \(\Omega\), so \(\{\emptyset, D, D^c, \Omega\} \subseteq \sigma(\{D\})\).
+On the other hand, Example 1.2 already showed that \(\mathcal{F} = \{\emptyset, D, D^c, \Omega\}\) *is*
+a \(\sigma\)-algebra containing \(\{D\}\). Hence \(\sigma(\{D\}) = \{\emptyset, D, D^c, \Omega\}\):
+requiring \(D\) to be measurable forces \(D^c, \emptyset, \Omega\) and nothing further.
+
+** The Borel \(\sigma\)-algebra on \(\mathbb{R}\)
+
+The most important generated \(\sigma\)-algebra in analysis and probability is the Borel
+\(\sigma\)-algebra on the real line.
+
+#+begin_quote
+*Definition (Borel \(\sigma\)-algebra on \(\mathbb{R}\) and on subspaces).*
+- On \(\mathbb{R}\), the \(\sigma\)-algebra generated by the collection of all open subsets of
+  \(\mathbb{R}\) is called the *Borel \(\sigma\)-algebra* and is denoted by \(\mathcal{B}(\mathbb{R})\):
+  \[
+  \mathcal{B}(\mathbb{R}) := \sigma(\{U \subseteq \mathbb{R} : U \text{ is open}\}).
+  \]
+  Its members are called *Borel sets*.
+- For any subset \(S \subseteq \mathbb{R}\), we define
+  \[
+  \mathcal{B}(S) := \{S \cap B : B \in \mathcal{B}(\mathbb{R})\};
+  \]
+  these are the *Borel sets of the subspace \(S\)* (often called the *trace \(\sigma\)-algebra* on \(S\)).
+#+end_quote
+
+What sets belong to \(\mathcal{B}(\mathbb{R})\)?
+- Every *open set* \(U \subseteq \mathbb{R}\) belongs to \(\mathcal{B}(\mathbb{R})\) by definition.
+- Every *closed set* \(F \subseteq \mathbb{R}\) belongs to \(\mathcal{B}(\mathbb{R})\), because a set
+  is closed if and only if its complement \(F^c\) is open. In particular, every closed interval
+  \([a, b]\), every closed half-line \((-\infty, a]\) or \([a, \infty)\), and every singleton
+  \(\{x\} = [x, x]\) is a Borel set.
+- Every *half-open interval* \((a, b] = (-\infty, b] \setminus (-\infty, a]\) or
+  \([a, b) = [a, \infty) \cap (-\infty, b)\) is a Borel set.
+- Every *countable set* (such as \(\mathbb{Z}\) or \(\mathbb{Q} = \bigcup_{q \in \mathbb{Q}} \{q\}\)) is
+  a Borel set, being a countable union of singletons; its complement \(\mathbb{R} \setminus \mathbb{Q}\)
+  (the irrationals) is therefore also a Borel set.
+
+** Generating \(\mathcal{B}(\mathbb{R})\) from countably many rational half-lines
+
+The collection of all open subsets of \(\mathbb{R}\) is huge (uncountable). Yet in probability theory
+we describe a random variable \(X\) via its cumulative distribution function \(F(a) = \mathbb{P}(X \le a)\),
+which only probes half-lines \((-\infty, a]\). Even better, the lecture notes establish a fundamental
+structural fact: *a countable collection of rational half-lines already generates \(\mathcal{B}(\mathbb{R})\).*
+
+#+begin_quote
+*Proposition (Rational half-lines generate \(\mathcal{B}(\mathbb{R})\)).* Let \(\mathbb{Q}\) denote
+the set of rational numbers, and let
+\[
+\mathcal{A}_{\mathbb{Q}} := \{(-\infty, a] : a \in \mathbb{Q}\}.
+\]
+Then \(\sigma(\mathcal{A}_{\mathbb{Q}}) = \mathcal{B}(\mathbb{R})\).
+#+end_quote
+
+Let us unpack the lecture notes' proof step by step. Notice the standard *two-inclusion strategy* for
+proving that two generated \(\sigma\)-algebras \(\sigma(\mathcal{A}_1)\) and \(\sigma(\mathcal{A}_2)\)
+are equal:
+- To show \(\sigma(\mathcal{A}_1) \subseteq \sigma(\mathcal{A}_2)\), it suffices to check that every
+  generator in \(\mathcal{A}_1\) belongs to \(\sigma(\mathcal{A}_2)\) (then minimality of
+  \(\sigma(\mathcal{A}_1)\) gives the inclusion!).
+- Conversely, to show \(\sigma(\mathcal{A}_2) \subseteq \sigma(\mathcal{A}_1)\), check that every
+  generator in \(\mathcal{A}_2\) belongs to \(\sigma(\mathcal{A}_1)\).
+
+#+begin_example
+Roadmap of the reverse inclusion:
+   Rational half-lines (-\infty, q]   (q \in \mathbb{Q})
+        |
+        |  Step 1: Countable intersection over rational q > t
+        v
+   Real half-lines     (-\infty, t]   (t \in \mathbb{R})
+        |
+        |  Step 2: Complement + countable union of (-\infty, b - 1/n]
+        v
+   Open intervals      (a, b)         (a < b in \mathbb{R}, in particular p < q in \mathbb{Q})
+        |
+        |  Step 3: Countable union of rational intervals (p, q) \subseteq U
+        v
+   Arbitrary open set  U \subseteq \mathbb{R}
+#+end_example
+
+*Unpacked Proof:*
+
+*Direction 1: \(\sigma(\mathcal{A}_{\mathbb{Q}}) \subseteq \mathcal{B}(\mathbb{R})\).*
+For every \(a \in \mathbb{Q}\), the half-line \((-\infty, a]\) is the complement of the open set
+\((a, \infty)\), so \((-\infty, a] \in \mathcal{B}(\mathbb{R})\). Thus
+\(\mathcal{A}_{\mathbb{Q}} \subseteq \mathcal{B}(\mathbb{R})\). Since \(\mathcal{B}(\mathbb{R})\) is a
+\(\sigma\)-algebra containing \(\mathcal{A}_{\mathbb{Q}}\), the minimality of
+\(\sigma(\mathcal{A}_{\mathbb{Q}})\) immediately yields
+\(\sigma(\mathcal{A}_{\mathbb{Q}}) \subseteq \mathcal{B}(\mathbb{R})\).
+
+*Direction 2: \(\mathcal{B}(\mathbb{R}) \subseteq \sigma(\mathcal{A}_{\mathbb{Q}})\).*
+To prove this, we must show that every open set \(U \subseteq \mathbb{R}\) belongs to
+\(\sigma(\mathcal{A}_{\mathbb{Q}})\). We climb the ladder in three steps:
+
+- *Step 1 (From rational half-lines to real half-lines):* Fix any real number \(t \in \mathbb{R}\). We
+  claim that
+  \[
+  (-\infty, t] = \bigcap_{q \in \mathbb{Q},\, q > t} (-\infty, q].
+  \]
+  *Why does this set equality hold?*
+  - (\(\subseteq\)): If \(x \le t\), then for every rational \(q > t\) we have \(x \le t < q\), so
+    \(x \in (-\infty, q]\). Thus \(x\) belongs to the intersection on the right.
+  - (\(\supseteq\)): Suppose \(x \notin (-\infty, t]\), which means \(x > t\). By the *density of the
+    rationals* in \(\mathbb{R}\), there exists a rational number \(q_0 \in \mathbb{Q}\) strictly
+    between \(t\) and \(x\): \(t < q_0 < x\). Then \(x \notin (-\infty, q_0]\), so \(x\) is excluded
+    from the intersection on the right.
+  Since \(\mathbb{Q}\) is countable, the index set \(\{q \in \mathbb{Q} : q > t\}\) is countable. Each
+  set \((-\infty, q]\) in the intersection belongs to \(\mathcal{A}_{\mathbb{Q}} \subseteq \sigma(\mathcal{A}_{\mathbb{Q}})\),
+  and \(\sigma(\mathcal{A}_{\mathbb{Q}})\) is closed under countable intersections, so
+  \((-\infty, t] \in \sigma(\mathcal{A}_{\mathbb{Q}})\) for *every* \(t \in \mathbb{R}\).
+
+- *Step 2 (From real half-lines to open intervals):* Fix any real numbers \(a < b\). We can write the
+  open interval \((a, b)\) using real-endpoint half-lines as
+  \[
+  (a, b) = (-\infty, a]^c \cap \bigcup_{n=1}^\infty (-\infty, b - 1/n].
+  \]
+  *Why does this set equality hold?* First, \((-\infty, a]^c = (a, \infty)\) consists of all points
+  \(x > a\). Second, a point \(x\) satisfies \(x < b\) if and only if \(b - x > 0\), which by the
+  Archimedean property holds if and only if there exists \(n \in \mathbb{N}\) with \(1/n \le b - x\),
+  i.e., \(x \le b - 1/n\). Thus \(\bigcup_{n=1}^\infty (-\infty, b - 1/n] = (-\infty, b)\).
+  Intersecting \((a, \infty)\) with \((-\infty, b)\) gives \((a, b)\).
+
+  Since \((-\infty, a]\) and every \((-\infty, b - 1/n]\) belong to \(\sigma(\mathcal{A}_{\mathbb{Q}})\)
+  by Step 1, closure under complements, countable unions, and intersections shows that
+  \((a, b) \in \sigma(\mathcal{A}_{\mathbb{Q}})\) for all \(a < b\).
+
+- *Step 3 (From open intervals to arbitrary open sets):* Let \(U \subseteq \mathbb{R}\) be any open
+  set. We claim that \(U\) is the union of all open intervals with *rational* endpoints that are
+  contained in \(U\):
+  \[
+  U = \bigcup_{p, q \in \mathbb{Q},\, p < q,\, (p, q) \subseteq U} (p, q).
+  \]
+  *Why does this set equality hold?*
+  - (\(\supseteq\)): Every interval \((p, q)\) participating in the union is explicitly required to
+    satisfy \((p, q) \subseteq U\), so their union is contained in \(U\).
+  - (\(\subseteq\)): Conversely, take any point \(x \in U\). Because \(U\) is open, there is some
+    open interval \((x - \delta, x + \delta) \subseteq U\) around \(x\) (with \(\delta > 0\)). By the
+    density of \(\mathbb{Q}\), we can pick rational numbers \(p \in (x - \delta, x)\) and
+    \(q \in (x, x + \delta)\). Then \(p, q \in \mathbb{Q}\), \(p < x < q\), and
+    \((p, q) \subseteq (x - \delta, x + \delta) \subseteq U\). Thus \(x \in (p, q)\) for one of the
+    intervals in the union, so \(x\) belongs to the right-hand side!
+
+  *Why is this union countable?* Because \(\mathbb{Q}\) is countable, we can list all rationals as
+  \(r_1, r_2, r_3, \dots\), and then list all pairs of indices \((i, j)\) in order of increasing sum
+  \(i + j\). Therefore there are only countably many rational pairs \((p, q)\), and the subcollection
+  of pairs with \(p < q\) and \((p, q) \subseteq U\) is countable. Since each \((p, q) \in \sigma(\mathcal{A}_{\mathbb{Q}})\)
+  by Step 2, this countable union belongs to \(\sigma(\mathcal{A}_{\mathbb{Q}})\). Hence
+  \(U \in \sigma(\mathcal{A}_{\mathbb{Q}})\) for every open set \(U\), which proves
+  \(\mathcal{B}(\mathbb{R}) \subseteq \sigma(\mathcal{A}_{\mathbb{Q}})\). \(\square\)
+
+*(Remark on Step 3:* If we had tried to write \(U = \bigcup_{a,b \in \mathbb{R},\, (a,b) \subseteq U} (a,b)\)
+using *all* real endpoints \(a, b \in \mathbb{R}\), the set equality would still be true, but the
+union would be over an *uncountable* index set, and a \(\sigma\)-algebra is only guaranteed to be
+closed under *countable* unions! Restricting to rational endpoints \(p, q \in \mathbb{Q}\) is the key
+manoeuvre that makes the union countable.)
+
+* Worked Exercises
+
+** Exercise 1 (A union of \(\sigma\)-algebras need not be a \(\sigma\)-algebra)
+Let \(\Omega = \{1, 2, 3\}\), and consider the two \(\sigma\)-algebras
+\[
+\mathcal{F}_1 = \bigl\{\emptyset, \{1\}, \{2, 3\}, \Omega\bigr\} \quad \text{and} \quad
+\mathcal{F}_2 = \bigl\{\emptyset, \{2\}, \{1, 3\}, \Omega\bigr\}.
+\]
+1. Verify that \(\mathcal{F}_1 \cap \mathcal{F}_2\) is a \(\sigma\)-algebra.
+2. Show that \(\mathcal{F}_1 \cup \mathcal{F}_2\) is *not* a \(\sigma\)-algebra, and find
+   \(\sigma(\mathcal{F}_1 \cup \mathcal{F}_2)\).
+
+** Solution
+1. The common elements of \(\mathcal{F}_1\) and \(\mathcal{F}_2\) are only \(\emptyset\) and
+   \(\Omega\), so \(\mathcal{F}_1 \cap \mathcal{F}_2 = \{\emptyset, \Omega\}\), which is the trivial
+   \(\sigma\)-algebra on \(\Omega\). (Indeed, our existence proof for \(\sigma(\mathcal{A})\) showed
+   that the intersection of *any* collection of \(\sigma\)-algebras on \(\Omega\) is always a
+   \(\sigma\)-algebra.)
+2. Listing the elements of the union gives
+   \[
+   \mathcal{F}_1 \cup \mathcal{F}_2 = \bigl\{\emptyset, \{1\}, \{2\}, \{1, 3\}, \{2, 3\}, \Omega\bigr\}.
+   \]
+   Both \(\{1\}\) and \(\{2\}\) belong to \(\mathcal{F}_1 \cup \mathcal{F}_2\), yet their union
+   \(\{1\} \cup \{2\} = \{1, 2\}\) does *not* belong to \(\mathcal{F}_1 \cup \mathcal{F}_2\) (nor does
+   its complement \(\{3\}\)). Therefore \(\mathcal{F}_1 \cup \mathcal{F}_2\) is not closed under
+   unions and is not a \(\sigma\)-algebra.
+
+   To find \(\sigma(\mathcal{F}_1 \cup \mathcal{F}_2)\), note that any \(\sigma\)-algebra containing
+   \(\mathcal{F}_1 \cup \mathcal{F}_2\) contains \(\{1\}\), \(\{2\}\), and
+   \(\{3\} = (\{1\} \cup \{2\})^c\), hence contains all singletons of \(\Omega = \{1,2,3\}\), and by
+   taking unions contains all \(2^3 = 8\) subsets of \(\Omega\). Thus
+   \(\sigma(\mathcal{F}_1 \cup \mathcal{F}_2) = 2^\Omega\).
+
+** Exercise 2 (\(\sigma\)-algebra generated by a finite partition)
+Let \(\Omega = \{1, 2, 3, 4, 5, 6\}\) and let \(\mathcal{A} = \bigl\{\{1, 2\}, \{3, 4\}\bigr\}\).
+Describe all sets in \(\sigma(\mathcal{A})\) explicitly, and state how many sets \(\sigma(\mathcal{A})\)
+contains.
+
+** Solution
+Notice that \(B_1 := \{1, 2\}\) and \(B_2 := \{3, 4\}\) are disjoint subsets of \(\Omega\). Any
+\(\sigma\)-algebra containing \(B_1\) and \(B_2\) must also contain the remaining piece
+\[
+B_3 := \Omega \setminus (B_1 \cup B_2) = \{5, 6\}.
+\]
+The three nonempty sets \(B_1, B_2, B_3\) are pairwise disjoint and partition \(\Omega\) into \(3\)
+blocks: \(\Omega = B_1 \cup B_2 \cup B_3\). Taking unions of any subcollection of these \(3\) blocks
+produces \(2^3 = 8\) subsets of \(\Omega\):
+\[
+\mathcal{G} = \bigl\{\emptyset,\, \{1,2\},\, \{3,4\},\, \{5,6\},\, \{1,2,3,4\},\, \{1,2,5,6\},\, \{3,4,5,6\},\, \Omega\bigr\}.
+\]
+Just as in Example 1.2, \(\mathcal{G}\) contains \(\Omega\), is closed under complements (the
+complement of a union of blocks is the union of the remaining blocks), and is closed under countable
+unions (any union of unions of blocks is still a union of blocks). Since \(\mathcal{A} \subseteq \mathcal{G}\)
+and every set in \(\mathcal{G}\) was forced by \(\sigma\)-algebra operations on \(\mathcal{A}\), we
+conclude that \(\sigma(\mathcal{A}) = \mathcal{G}\), which has \(8\) elements.
+
+** Exercise 3 (\(\sigma\)-algebra generated by singletons on an uncountable space)
+Let \(\Omega\) be an uncountable set (e.g., \(\Omega = \mathbb{R}\)), and let
+\(\mathcal{A} = \bigl\{\{\omega\} : \omega \in \Omega\bigr\}\) be the collection of all singletons.
+Prove that \(\sigma(\mathcal{A})\) is the countable-cocountable \(\sigma\)-algebra from Additional
+Example A:
+\[
+\sigma(\mathcal{A}) = \mathcal{F} := \{A \subseteq \Omega : A \text{ is countable or } A^c \text{ is countable}\}.
+\]
+
+** Solution
+We use the standard two-inclusion method:
+- *Step 1 (\(\sigma(\mathcal{A}) \subseteq \mathcal{F}\)):* In Additional Example A we proved that
+  \(\mathcal{F}\) is a \(\sigma\)-algebra on \(\Omega\). Every singleton \(\{\omega\} \in \mathcal{A}\)
+  has \(1\) element, so it is finite and hence countable, which means \(\{\omega\} \in \mathcal{F}\).
+  Thus \(\mathcal{A} \subseteq \mathcal{F}\). Since \(\mathcal{F}\) is a \(\sigma\)-algebra
+  containing \(\mathcal{A}\), minimality of \(\sigma(\mathcal{A})\) gives
+  \(\sigma(\mathcal{A}) \subseteq \mathcal{F}\).
+- *Step 2 (\(\mathcal{F} \subseteq \sigma(\mathcal{A})\)):* Take any \(A \in \mathcal{F}\).
+  - If \(A = \emptyset\), then \(A \in \sigma(\mathcal{A})\) automatically.
+  - If \(A\) is nonempty and countable, we can list its elements as \(\omega_1, \omega_2, \dots\) (a
+    finite or infinite sequence). Then \(A = \bigcup_{n} \{\omega_n\}\) is a countable union of
+    singletons from \(\mathcal{A}\), so \(A \in \sigma(\mathcal{A})\).
+  - If \(A^c\) is countable, then by the previous bullet \(A^c \in \sigma(\mathcal{A})\), and taking
+    the complement gives \(A = (A^c)^c \in \sigma(\mathcal{A})\).
+  Thus every member of \(\mathcal{F}\) belongs to \(\sigma(\mathcal{A})\), so
+  \(\mathcal{F} \subseteq \sigma(\mathcal{A})\). Combining Steps 1 and 2 gives
+  \(\sigma(\mathcal{A}) = \mathcal{F}\).
+
+** Exercise 4 (Alternative generators for \(\mathcal{B}(\mathbb{R})\))
+Prove that the Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R})\) is also generated by:
+1. the collection \(\mathcal{C}_1 = \{[a, b] : a < b,\, a, b \in \mathbb{R}\}\) of all closed intervals;
+2. the collection \(\mathcal{C}_2 = \{(a, \infty) : a \in \mathbb{Q}\}\) of open right half-lines with
+   rational endpoints.
+
+** Solution
+1. *For \(\mathcal{C}_1\):* Every closed interval \([a, b]\) is closed in \(\mathbb{R}\) (its
+   complement \((-\infty, a) \cup (b, \infty)\) is open), so \([a, b] \in \mathcal{B}(\mathbb{R})\).
+   Thus \(\mathcal{C}_1 \subseteq \mathcal{B}(\mathbb{R})\), which implies
+   \(\sigma(\mathcal{C}_1) \subseteq \mathcal{B}(\mathbb{R})\).
+   Conversely, for any open interval \((a, b)\) with \(a < b\), choose \(N \in \mathbb{N}\) large
+   enough that \(a + 1/N < b - 1/N\). Then
+   \[
+   (a, b) = \bigcup_{n=N}^\infty \left[a + \frac{1}{n},\, b - \frac{1}{n}\right] \in \sigma(\mathcal{C}_1).
+   \]
+   Since every open set \(U \subseteq \mathbb{R}\) is a countable union of open intervals \((p, q)\)
+   with rational endpoints (Section 1.4, Step 3), every open set belongs to \(\sigma(\mathcal{C}_1)\),
+   so \(\mathcal{B}(\mathbb{R}) \subseteq \sigma(\mathcal{C}_1)\).
+2. *For \(\mathcal{C}_2\):* For every \(a \in \mathbb{Q}\), we have
+   \((a, \infty) = (-\infty, a]^c\). Therefore a \(\sigma\)-algebra on \(\mathbb{R}\) contains
+   \((a, \infty)\) if and only if it contains its complement \((-\infty, a]\). It follows immediately
+   that \(\sigma(\mathcal{C}_2) = \sigma(\{(-\infty, a] : a \in \mathbb{Q}\}) = \mathcal{B}(\mathbb{R})\).
+
+** Exercise 5 (Verifying that the subspace Borel sets \(\mathcal{B}(S)\) form a \(\sigma\)-algebra)
+Let \(S \subseteq \mathbb{R}\) be an arbitrary subset of \(\mathbb{R}\) (note that \(S\) itself does
+*not* even have to be a Borel set!). Show that
+\[
+\mathcal{B}(S) := \{S \cap B : B \in \mathcal{B}(\mathbb{R})\}
+\]
+is a \(\sigma\)-algebra on the underlying set \(S\).
+
+** Solution
+We check the three conditions of Definition 1.1 on the underlying space \(S\):
+- (i) Since \(\mathbb{R} \in \mathcal{B}(\mathbb{R})\), we have
+  \(S = S \cap \mathbb{R} \in \mathcal{B}(S)\).
+- (ii) Suppose \(E \in \mathcal{B}(S)\). By definition, \(E = S \cap B\) for some
+  \(B \in \mathcal{B}(\mathbb{R})\). The complement of \(E\) *relative to \(S\)* is
+  \[
+  S \setminus E = S \setminus (S \cap B) = S \cap (\mathbb{R} \setminus B).
+  \]
+  Since \(\mathcal{B}(\mathbb{R})\) is a \(\sigma\)-algebra on \(\mathbb{R}\), we have
+  \(\mathbb{R} \setminus B \in \mathcal{B}(\mathbb{R})\), and hence
+  \(S \setminus E \in \mathcal{B}(S)\).
+- (iii) Suppose \(E_n \in \mathcal{B}(S)\) for every \(n \in \mathbb{N}\). For each \(n\), pick a set
+  \(B_n \in \mathcal{B}(\mathbb{R})\) such that \(E_n = S \cap B_n\). Then by the distributive law for
+  intersections over unions,
+  \[
+  \bigcup_{n=1}^\infty E_n = \bigcup_{n=1}^\infty (S \cap B_n) = S \cap \left(\bigcup_{n=1}^\infty B_n\right).
+  \]
+  Since \(\bigcup_{n=1}^\infty B_n \in \mathcal{B}(\mathbb{R})\), it follows that
+  \(\bigcup_{n=1}^\infty E_n \in \mathcal{B}(S)\). Thus \((S, \mathcal{B}(S))\) is a measurable space.
+
+* Summary
+
+#+caption: Chapter 1 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept | Definition / Formula | Why it matters |
+|---------+----------------------+----------------|
+| Power set \(2^\Omega\) | \(\{A : A \subseteq \Omega\}\) | Collection of *all* subsets of \(\Omega\); largest \(\sigma\)-algebra on \(\Omega\) |
+| Countable | Finite or listable as \(a_1, a_2, \dots\) (\(n \in \mathbb{N}\)) | Convention in these notes: *countable includes finite* |
+| Definition 1.1 (\(\sigma\)-algebra \(\mathcal{F}\)) | (i) \(\Omega \in \mathcal{F}\); (ii) \(A \in \mathcal{F} \Rightarrow \Omega \setminus A \in \mathcal{F}\); (iii) \(A_n \in \mathcal{F} \Rightarrow \bigcup_{n=1}^\infty A_n \in \mathcal{F}\) | Defines which subsets of \(\Omega\) are *measurable* (or *events* in probability) |
+| De Morgan's identity | \(\bigcap_{n=1}^\infty A_n = \bigl(\bigcup_{n=1}^\infty A_n^c\bigr)^c\) | Gives closure of any \(\sigma\)-algebra under countable intersections and set differences \(A \setminus B = A \cap B^c\) |
+| Example 1.2 (Parity \(\sigma\)-algebra) | \(\mathcal{F} = \{\emptyset, D, D^c, \Omega\}\) on \(\Omega = \{1,\dots,6\}\), \(D = \{2,4,6\}\) | Shows measurability is relative to \(\mathcal{F}\): \(D \in \mathcal{F}\) is measurable, \(\{6\} \notin \mathcal{F}\) is not |
+| Definition 1.3 (\(\sigma(\mathcal{A})\)) | Smallest \(\sigma\)-algebra containing \(\mathcal{A}\); equals \(\bigcap_{\mathcal{G} \supseteq \mathcal{A}} \mathcal{G}\) | Lets us build rich \(\sigma\)-algebras from simple starter collections \(\mathcal{A}\) |
+| Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R})\) | \(\sigma(\text{open sets in }\mathbb{R}) = \sigma(\{(-\infty, a] : a \in \mathbb{Q}\})\) | Standard \(\sigma\)-algebra on \(\mathbb{R}\); generated by countably many rational half-lines |
+
+*Key takeaways*
+
+- Keep the three levels distinct: outcomes \(\omega \in \Omega\), subsets \(A \subseteq \Omega\) (i.e.
+  \(A \in 2^\Omega\)), and collections of subsets \(\mathcal{F} \subseteq 2^\Omega\).
+- "Measurable set" always means \(A \in \mathcal{F}\) for a specified \(\sigma\)-algebra
+  \(\mathcal{F}\). In a probability space, measurable sets are called *events*.
+- To prove \(\sigma(\mathcal{A}_1) \subseteq \sigma(\mathcal{A}_2)\), you never need to construct sets
+  by transfinite induction: simply verify that every generator \(A \in \mathcal{A}_1\) belongs to the
+  \(\sigma\)-algebra \(\sigma(\mathcal{A}_2)\).
+- On \(\mathbb{R}\), the density and countability of \(\mathbb{Q}\) allow us to pass from rational
+  half-lines \((-\infty, q]\) to real half-lines \((-\infty, t]\), then to open intervals \((a, b)\),
+  and finally to all open sets \(U \subseteq \mathbb{R}\) using only countable set operations.

@@ -1,0 +1,772 @@
+:PROPERTIES:
+:ID:       a1b2c3d4-0003-4000-8000-000000000003
+:ROAM_ALIASES: "MAST31051 Chapter 3" "Measurable Functions and Random Variables Notes"
+:END:
+#+title: Chapter 3: Measurable Functions are Random Variables
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch03:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch02-measures.org][← Chapter 2]] | [[file:ch04-uniqueness.org][Chapter 4 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In Chapters 1 and 2 we learned how to measure *subsets* \(A \in \mathcal{F}\) of a sample space
+\(\Omega\). In practice, however, we rarely care only about raw outcomes \(\omega \in \Omega\); we
+care about *numerical quantities attached to outcomes* — the sum of two dice, the temperature at
+noon, the price of a stock at time \(t\), or a function \(f(x)\) that we want to integrate.
+
+Mathematically, such a quantity is a function \(X : \Omega \to S\) from the domain \(\Omega\) into a
+target space \(S\) (most often \(S = \mathbb{R}\)). When can we meaningfully ask for the measure or
+probability that the value \(X(\omega)\) falls inside a target set \(B \subseteq S\)? In symbols, we
+are asking for the measure of the *preimage*
+\[
+X^{-1}(B) = \{\omega \in \Omega : X(\omega) \in B\}.
+\]
+Since our measure \(\mu\) (or probability \(\mathbb{P}\)) is only defined on the \(\sigma\)-algebra
+\(\mathcal{F}\) of measurable subsets of \(\Omega\), we need \(X^{-1}(B)\) to belong to \(\mathcal{F}\)
+for every measurable target set \(B \in \mathcal{S}\). Functions with this property are called
+*measurable functions* — and on a probability space, they are called *random variables*.
+
+At first sight, checking that \(X^{-1}(B) \in \mathcal{F}\) for *every* Borel set
+\(B \in \mathcal{B}(\mathbb{R})\) looks impossible, because \(\mathcal{B}(\mathbb{R})\) is enormous.
+This chapter solves that practical problem cleanly (Lemma 3.2): because preimages commute with all
+set operations, it is enough to check preimages of a simple *generating collection* — such as half-lines
+\((-\infty, a]\) — and the rest of \(\mathcal{B}(\mathbb{R})\) follows automatically!
+
+** Probability motivation
+
+For a student meeting rigorous probability for the first time, the title of this chapter —
+*Measurable functions are random variables* — is one of the biggest conceptual revelations of the
+course:
+- A "random variable" \(X\) is *neither random nor a variable*! It is a completely deterministic
+  function \(X : \Omega \to \mathbb{R}\) that is measurable with respect to \(\mathcal{F}\) and
+  \(\mathcal{B}(\mathbb{R})\). The randomness comes entirely from the probability measure
+  \(\mathbb{P}\) on the domain \(\Omega\), which selects an outcome \(\omega \in \Omega\); once
+  \(\omega\) is selected, the observed number is simply the function value \(X(\omega)\).
+- Furthermore, a measurable function \(X : (\Omega, \mathcal{F}, \mathbb{P}) \to (S, \mathcal{S})\)
+  pushes the probability measure \(\mathbb{P}\) forward from the abstract sample space \(\Omega\) onto
+  the target space \(S\) via the formula
+  \[
+  (X_\# \mathbb{P})(B) := \mathbb{P}(X^{-1}(B)) = \mathbb{P}(X \in B), \qquad B \in \mathcal{S}.
+  \]
+  This *image measure* \(X_\# \mathbb{P}\) is what probabilists call the *law* or *distribution* of
+  \(X\) (Proposition 3.4).
+
+** Roadmap
+
+- *3.0 Preimages, measurable functions, and indicators:* Definition of preimages \(X^{-1}(B)\), why
+  preimages behave better than forward images, Definition 3.1 (measurable maps and random variables),
+  probabilistic shorthand \(\{X \in B\}\), and indicator functions \(\mathbf{1}_A\).
+- *3.1 Checking measurability:* The generator test for measurability (Lemma 3.2) proved via the "good
+  sets form a \(\sigma\)-algebra" method, the half-line criterion \(\{X \le a\} \in \mathcal{F}\),
+  characterizing all parity-measurable functions on a die (Example 3.3), and why continuous functions
+  \(\mathbb{R} \to \mathbb{R}\) are Borel measurable.
+- *3.2 Image measures and the language of distributions:* Pushforward / image measure \(X_\# \mu\) and
+  the law \(X_\# \mathbb{P}\) of a random variable (Proposition 3.4), preview of expectation
+  \(\mathbb{E}[X]\) on finite spaces, the measure-probability dictionary, and historical notes.
+
+** What you need from earlier chapters
+
+- \(\sigma\)-algebras, the parity \(\sigma\)-algebra (Example 1.2), generated \(\sigma\)-algebras
+  \(\sigma(\mathcal{A})\), and \(\mathcal{B}(\mathbb{R}) = \sigma(\{(-\infty, a] : a \in \mathbb{Q}\})\):
+  [[file:ch01-measurable-spaces.org][Chapter 1]].
+- Measures, probability measures, Dirac measure \(\delta_x\), and almost everywhere / almost surely:
+  [[file:ch02-measures.org][Chapter 2]].
+
+* 3.0 Preimages, measurable functions, and indicators
+
+** Intuition
+
+Suppose \(X : \Omega \to S\) is a function. Given a subset \(B \subseteq S\) of the target space, we
+pull \(B\) back along the arrows of \(X\) to ask: *which domain points \(\omega \in \Omega\) land
+inside \(B\)?*
+
+#+begin_example
+       Domain \Omega                   X : \Omega \to S                Target S
+   +-------------------+                                         +-------------------+
+   |   (w_1) ----------+---------------------------------------->|---> (s_1)         |
+   |                   |                                         |               B   |
+   |  +-------------+  |                                         |  +-------------+  |
+   |  | (w_2) ------+--+---------------------------------------->|->|-> (s_2)     |  |
+   |  |             |  |                                         |  |     ^       |  |
+   |  | (w_3) ------+--+-----------------------------------------+--+-----+       |  |
+   |  |             |  |                                         |  |   (s_3)     |  |
+   |  +-------------+  |                                         |  +-------------+  |
+   |    X^{-1}(B)      |                                         |                   |
+   +-------------------+                                         +-------------------+
+#+end_example
+
+As Figure 3.1 in the lecture notes illustrates, notice two crucial features of the preimage
+\(X^{-1}(B)\):
+1. Several points in \(\Omega\) (like \(\omega_2\) and \(\omega_3\) above) can have the same image
+   \(s_2 \in B\); both belong to \(X^{-1}(B)\).
+2. A point in \(B\) (like \(s_3\) above) need not be hit by *any* arrow from \(\Omega\).
+Neither possibility causes any trouble! The notation \(X^{-1}(B)\) is a set-level operation and *does
+not assert that an inverse function \(X^{-1}\) exists* (\(X\) does not need to be one-to-one or onto).
+
+** Preimages and Definition 3.1
+
+Let \(X : \Omega \to S\) be any function between two sets \(\Omega\) and \(S\). For any subset
+\(B \subseteq S\) of the target space, the *preimage* (or *inverse image*) of \(B\) under \(X\) is
+the subset of the domain \(\Omega\) defined by
+\begin{equation}
+X^{-1}(B) := \{\omega \in \Omega : X(\omega) \in B\}. \tag{3.1}
+\end{equation}
+
+Let us test this on the die roll \(\Omega = \{1, 2, 3, 4, 5, 6\}\) with the face-value function
+\(X(\omega) = \omega\) into the target space \(S = \mathbb{R}\). If \(B = (4, \infty) \subseteq \mathbb{R}\),
+then
+\[
+X^{-1}((4, \infty)) = \{\omega \in \{1,\dots,6\} : \omega > 4\} = \{5, 6\}.
+\]
+In words, \(X^{-1}((4, \infty))\) is the set of outcomes where the roll exceeds \(4\). Notice how its
+measurability depends on the \(\sigma\)-algebra we put on \(\Omega\):
+- On \((\Omega, 2^\Omega)\), the set \(\{5, 6\} \in 2^\Omega\) is measurable.
+- On the parity measurable space \((\Omega, \mathcal{F})\) from (1.1), where
+  \(\mathcal{F} = \{\emptyset, \{2,4,6\}, \{1,3,5\}, \Omega\}\), the set \(\{5, 6\} \notin \mathcal{F}\)
+  is *not* measurable!
+
+Thus, to ask whether a function \(X : \Omega \to S\) is measurable, we must first specify
+\(\sigma\)-algebras on *both* the domain \(\Omega\) and the target \(S\).
+
+#+begin_quote
+*Definition 3.1 (Measurable function and random variable).* Let \((\Omega, \mathcal{F})\) and
+\((S, \mathcal{S})\) be measurable spaces. A map \(X : \Omega \to S\) is *measurable* if
+\[
+X^{-1}(B) \in \mathcal{F} \quad \text{for every } B \in \mathcal{S}.
+\]
+Unless specified otherwise, the target \(\sigma\)-algebra for a real-valued function
+\(X : \Omega \to \mathbb{R}\) is the Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R})\).
+
+On a probability space \((\Omega, \mathcal{F}, \mathbb{P})\), a measurable real-valued function
+\(X : \Omega \to \mathbb{R}\) is called a *random variable*. Measurable maps into more general target
+spaces \((S, \mathcal{S})\) are also called *random variables*, or *random elements*.
+#+end_quote
+
+*Probabilistic notation and conventions.* When \(X : \Omega \to \mathbb{R}\) is a random variable and
+\(B \in \mathcal{B}(\mathbb{R})\) is a Borel set, the preimage \(X^{-1}(B)\) belongs to \(\mathcal{F}\),
+so it is an *event*. In probability we almost always suppress the parameter \(\omega\) and write:
+\[
+\{X \in B\} := X^{-1}(B) = \{\omega \in \Omega : X(\omega) \in B\}, \qquad
+\mathbb{P}(X \in B) := \mathbb{P}\bigl(X^{-1}(B)\bigr).
+\]
+For example, for \(B = (-\infty, a]\), we write
+\[
+\{X \le a\} := X^{-1}((-\infty, a]) = \{\omega \in \Omega : X(\omega) \le a\} \quad \text{and} \quad
+\mathbb{P}(X \le a) := \mathbb{P}(\{X \le a\}).
+\]
+
+As the lecture notes emphasize: *the word "random" does not change the mathematical nature of \(X\).*
+It is a fixed, deterministic function that is part of the probability model. Once the outcome
+\(\omega \in \Omega\) is selected according to \(\mathbb{P}\), the observed numerical value is simply
+\(X(\omega)\).
+
+** Indicator functions
+
+The simplest — and most fundamental — building block for measurable functions is the *indicator
+function* of a subset.
+
+#+begin_quote
+*Definition (Indicator function).* For any subset \(A \subseteq \Omega\), its *indicator function*
+(or *characteristic function*) \(\mathbf{1}_A : \Omega \to \mathbb{R}\) is defined by
+\[
+\mathbf{1}_A(\omega) := \begin{cases} 1 & \text{if } \omega \in A, \\ 0 & \text{if } \omega \in \Omega \setminus A. \end{cases}
+\]
+#+end_quote
+
+#+begin_quote
+*Fact (Measurability of indicators).* Let \((\Omega, \mathcal{F})\) be a measurable space and
+\(A \subseteq \Omega\). The indicator function \(\mathbf{1}_A : \Omega \to \mathbb{R}\) is measurable
+if and only if \(A \in \mathcal{F}\).
+#+end_quote
+
+*Proof:* Since \(\mathbf{1}_A(\omega)\) only ever takes the two values \(0\) and \(1\), for *any* set
+\(B \subseteq \mathbb{R}\) the preimage \(\mathbf{1}_A^{-1}(B) = \{\omega \in \Omega : \mathbf{1}_A(\omega) \in B\}\)
+depends only on whether \(0 \in B\) and whether \(1 \in B\). There are four cases:
+\[
+\mathbf{1}_A^{-1}(B) = \begin{cases}
+\emptyset & \text{if } 0 \notin B \text{ and } 1 \notin B, \\
+A & \text{if } 0 \notin B \text{ and } 1 \in B, \\
+A^c & \text{if } 0 \in B \text{ and } 1 \notin B, \\
+\Omega & \text{if } 0 \in B \text{ and } 1 \in B.
+\end{cases}
+\]
+- *(\(\Rightarrow\)):* Suppose \(\mathbf{1}_A\) is measurable. Since the singleton \(\{1\}\) is a
+  closed subset of \(\mathbb{R}\), it is a Borel set: \(\{1\} \in \mathcal{B}(\mathbb{R})\). Therefore
+  \(A = \mathbf{1}_A^{-1}(\{1\}) \in \mathcal{F}\).
+- *(\(\Leftarrow\)):* Suppose \(A \in \mathcal{F}\). Since \(\mathcal{F}\) is a \(\sigma\)-algebra, it
+  contains \(\emptyset, A, A^c\), and \(\Omega\). Thus \(\mathbf{1}_A^{-1}(B) \in \mathcal{F}\) for
+  every \(B \in \mathcal{B}(\mathbb{R})\) (in fact, for every \(B \subseteq \mathbb{R}\)). \(\square\)
+
+In probability language: an event \(A \in \mathcal{F}\) gives a binary random variable \(\mathbf{1}_A\)
+that equals \(1\) when \(A\) occurs and \(0\) when \(A\) does not occur.
+
+* 3.1 Checking measurability
+
+** Intuition
+
+Definition 3.1 requires \(X^{-1}(B) \in \mathcal{F}\) for *every* \(B \in \mathcal{S}\). Why don't we
+have to test all Borel sets \(B \in \mathcal{B}(\mathbb{R})\) one by one?
+
+Because *preimages commute with every set operation*:
+- \(X^{-1}(S) = \Omega\) and \(X^{-1}(\emptyset) = \emptyset\);
+- \(X^{-1}(S \setminus B) = \Omega \setminus X^{-1}(B)\);
+- \(X^{-1}\bigl(\bigcup_{n=1}^\infty B_n\bigr) = \bigcup_{n=1}^\infty X^{-1}(B_n)\);
+- \(X^{-1}\bigl(\bigcap_{n=1}^\infty B_n\bigr) = \bigcap_{n=1}^\infty X^{-1}(B_n)\).
+
+(Remarkably, forward images \(X(A) = \{X(\omega) : \omega \in A\}\) fail to preserve intersections or
+complements when \(X\) is not one-to-one! That is the exact reason measurability is defined via
+preimages \(X^{-1}(B)\) rather than forward images.)
+
+Because preimages preserve \(\sigma\)-algebra operations, if we collect all target subsets
+\(B \subseteq S\) whose preimage \(X^{-1}(B)\) is measurable in \(\Omega\), that collection of "good"
+target sets is *itself a \(\sigma\)-algebra on \(S\)*! Therefore, if \(\mathcal{S} = \sigma(\mathcal{A})\)
+is generated by a small starter collection \(\mathcal{A}\), checking \(X^{-1}(B) \in \mathcal{F}\) for
+generators \(B \in \mathcal{A}\) forces the "good" \(\sigma\)-algebra to contain all of
+\(\sigma(\mathcal{A}) = \mathcal{S}\).
+
+This proof technique — *"collect the sets with the desired property and show they form a
+\(\sigma\)-algebra containing the generators"* — is one of the master keys of measure theory. Pay
+close attention to how it works in Lemma 3.2!
+
+** The generator test for measurability (Lemma 3.2)
+
+#+begin_quote
+*Lemma 3.2 (Checking measurability on a generating collection).* Let \((\Omega, \mathcal{F})\) and
+\((S, \mathcal{S})\) be measurable spaces, and suppose that \(\mathcal{S} = \sigma(\mathcal{A})\) for
+a collection \(\mathcal{A} \subseteq 2^S\). A map \(X : \Omega \to S\) is measurable if and only if
+\(X^{-1}(B) \in \mathcal{F}\) for every \(B \in \mathcal{A}\).
+#+end_quote
+
+** Unpacked proof of Lemma 3.2
+
+- *Necessity (\(\Rightarrow\)):* Suppose \(X\) is measurable, so \(X^{-1}(B) \in \mathcal{F}\) for
+  every \(B \in \mathcal{S}\). Since \(\mathcal{A} \subseteq \sigma(\mathcal{A}) = \mathcal{S}\),
+  this automatically holds for every \(B \in \mathcal{A}\).
+
+- *Sufficiency (\(\Leftarrow\)):* Assume that \(X^{-1}(B) \in \mathcal{F}\) for every generator
+  \(B \in \mathcal{A}\). We want to prove that \(X^{-1}(B) \in \mathcal{F}\) for *every*
+  \(B \in \mathcal{S} = \sigma(\mathcal{A})\).
+
+  *Step 1. Form the collection of "good" target sets and check \(\Omega\) and complements.*
+  Define the collection of subsets of \(S\) whose preimages are measurable in \(\Omega\):
+  \[
+  \mathcal{G} := \{B \subseteq S : X^{-1}(B) \in \mathcal{F}\}.
+  \]
+  Let us check conditions (i) and (ii) of a \(\sigma\)-algebra on \(S\) for \(\mathcal{G}\):
+  - Since every \(\omega \in \Omega\) maps to some \(X(\omega) \in S\), we have
+    \(X^{-1}(S) = \{\omega \in \Omega : X(\omega) \in S\} = \Omega \in \mathcal{F}\). Thus
+    \(S \in \mathcal{G}\).
+  - Suppose \(B \in \mathcal{G}\), which means \(X^{-1}(B) \in \mathcal{F}\). For the complement
+    \(S \setminus B\), a point \(\omega \in \Omega\) satisfies \(X(\omega) \in S \setminus B\) if and
+    only if \(X(\omega) \notin B\), i.e. \(\omega \in \Omega \setminus X^{-1}(B)\). Thus
+    \[
+    X^{-1}(S \setminus B) = \Omega \setminus X^{-1}(B).
+    \]
+    Because \(\mathcal{F}\) is closed under complements, \(\Omega \setminus X^{-1}(B) \in \mathcal{F}\),
+    which means \(S \setminus B \in \mathcal{G}\).
+
+  *Step 2. Check countable unions and apply minimality of \(\sigma(\mathcal{A})\).*
+  Suppose \(B_n \in \mathcal{G}\) for every \(n \in \mathbb{N}\), so each
+  \(X^{-1}(B_n) \in \mathcal{F}\). A point \(\omega \in \Omega\) satisfies
+  \(X(\omega) \in \bigcup_{n=1}^\infty B_n\) if and only if \(X(\omega) \in B_n\) for at least one
+  \(n \in \mathbb{N}\), i.e., \(\omega \in \bigcup_{n=1}^\infty X^{-1}(B_n)\). Thus
+  \[
+  X^{-1}\left(\bigcup_{n=1}^\infty B_n\right) = \bigcup_{n=1}^\infty X^{-1}(B_n).
+  \]
+  Because \(\mathcal{F}\) is closed under countable unions, the right-hand side belongs to
+  \(\mathcal{F}\), so \(\bigcup_{n=1}^\infty B_n \in \mathcal{G}\).
+
+  We have proved that \(\mathcal{G}\) is a \(\sigma\)-algebra on \(S\). By our hypothesis that
+  \(X^{-1}(B) \in \mathcal{F}\) for all \(B \in \mathcal{A}\), we have
+  \(\mathcal{A} \subseteq \mathcal{G}\). By Definition 1.3, \(\sigma(\mathcal{A})\) is the *smallest*
+  \(\sigma\)-algebra on \(S\) containing \(\mathcal{A}\), so
+  \[
+  \mathcal{S} = \sigma(\mathcal{A}) \subseteq \mathcal{G}.
+  \]
+  Saying \(\mathcal{S} \subseteq \mathcal{G}\) means precisely that \(X^{-1}(B) \in \mathcal{F}\) for
+  every \(B \in \mathcal{S}\), so \(X\) is measurable! \(\square\)
+
+** The half-line criterion for real-valued functions
+
+In Chapter 1 (Section 1.4) we proved that the Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R})\) is
+generated by the half-lines \((-\infty, a]\) (with \(a \in \mathbb{R}\), or even just
+\(a \in \mathbb{Q}\)). Combining this with Lemma 3.2 gives the single most-used measurability test in
+the course:
+
+#+begin_quote
+*Half-line criterion for measurability.* For any measurable space \((\Omega, \mathcal{F})\),
+\begin{equation}
+X : \Omega \to \mathbb{R} \text{ is measurable} \quad \Longleftrightarrow \quad
+\{X \le a\} \in \mathcal{F} \text{ for every } a \in \mathbb{R}. \tag{3.2}
+\end{equation}
+(By Section 1.4, it is even enough to check \(\{X \le a\} \in \mathcal{F}\) for every rational
+\(a \in \mathbb{Q}\), or using any other generating family for \(\mathcal{B}(\mathbb{R})\) such as
+\(\{X < a\}\), \(\{X \ge a\}\), \(\{X > a\}\), or open sets.)
+#+end_quote
+
+On a probability space \((\Omega, \mathcal{F}, \mathbb{P})\), criterion (3.2) says that \(X\) is a
+random variable if and only if \(\{X \le a\}\) is an event for every \(a \in \mathbb{R}\). Their
+probabilities \(F_X(a) := \mathbb{P}(X \le a)\) define the *cumulative distribution function* (CDF) of
+\(X\), which we will study in detail in Chapter 12.
+
+** Examples from the notes: Parity measurability and continuous functions
+
+#+begin_quote
+*Example 3.3 (What can be measured from parity?).* Return to the die space
+\(\Omega = \{1, 2, 3, 4, 5, 6\}\) equipped with the parity \(\sigma\)-algebra from (1.1):
+\[
+\mathcal{F} = \{\emptyset, D, D^c, \Omega\}, \qquad D = \{2, 4, 6\}, \quad D^c = \{1, 3, 5\}.
+\]
+1. The indicator \(\mathbf{1}_D\) is measurable with respect to \(\mathcal{F}\): for any Borel set
+   \(B \in \mathcal{B}(\mathbb{R})\), the preimage \(\mathbf{1}_D^{-1}(B)\) is one of
+   \(\emptyset, D, D^c, \Omega\) according to whether \(B\) contains neither, one, or both of the
+   values \(0\) and \(1\).
+2. The face-value function \(X(\omega) = \omega\) is *not* measurable for \(\mathcal{F}\), because
+   for \(a = 1\) the half-line test (3.2) gives
+   \[
+   \{X \le 1\} = \{1\} \notin \mathcal{F}.
+   \]
+   (By contrast, the same function \(X(\omega) = \omega\) *is* measurable on \((\Omega, 2^\Omega)\).)
+3. *General characterization:* A real-valued function \(f : \Omega \to \mathbb{R}\) is measurable with
+   respect to the parity \(\sigma\)-algebra \(\mathcal{F} = \{\emptyset, D, D^c, \Omega\}\) *if and
+   only if* \(f\) is constant on each of the two blocks \(D = \{2, 4, 6\}\) and \(D^c = \{1, 3, 5\}\)
+   (i.e. \(f(2) = f(4) = f(6) = c_{\text{even}}\) and \(f(1) = f(3) = f(5) = c_{\text{odd}}\)).
+#+end_quote
+
+Let us unpack the two-step proof of this general characterization from the lecture notes:
+
+*Proof of the characterization in Example 3.3:*
+- *Step 1 (Necessity: A measurable function cannot distinguish points inside the same block).*
+  Suppose \(f : \Omega \to \mathbb{R}\) is measurable with respect to \(\mathcal{F}\), and suppose for
+  contradiction that \(f\) takes two different values on the same block \(B_0 \in \{D, D^c\}\) — say
+  \(\omega_1, \omega_2 \in B_0\) with \(f(\omega_1) < f(\omega_2)\). Choose a real threshold \(a\)
+  strictly between those two values:
+  \[
+  f(\omega_1) < a < f(\omega_2) \quad \text{(for instance, } a = \tfrac{1}{2}(f(\omega_1) + f(\omega_2))\text{)}.
+  \]
+  Consider the preimage \(\{f \le a\} = \{\omega \in \Omega : f(\omega) \le a\}\). By choice of \(a\),
+  we have \(\omega_1 \in \{f \le a\}\) and \(\omega_2 \notin \{f \le a\}\). Thus the set
+  \(\{f \le a\}\) contains *some* point of the block \(B_0\) (\(\omega_1\)) without containing *all* of
+  \(B_0\) (it misses \(\omega_2\)). Looking at \(\mathcal{F} = \{\emptyset, D, D^c, \Omega\}\), every
+  set in \(\mathcal{F}\) contains either all or none of each block \(D, D^c\). Hence
+  \(\{f \le a\} \notin \mathcal{F}\), contradicting the measurability criterion (3.2)!
+- *Step 2 (Sufficiency: Constancy on blocks implies measurability).*
+  Conversely, suppose \(f\) is constant on \(D\) (with value \(c_{\text{even}}\)) and constant on
+  \(D^c\) (with value \(c_{\text{odd}}\)). Then for any Borel set \(B \in \mathcal{B}(\mathbb{R})\),
+  either \(c_{\text{even}} \in B\) (so all of \(D\) lies in \(f^{-1}(B)\)) or
+  \(c_{\text{even}} \notin B\) (so none of \(D\) lies in \(f^{-1}(B)\)), and similarly for \(D^c\).
+  Thus \(f^{-1}(B)\) is a union of whole blocks from \(\{D, D^c\}\), so
+  \(f^{-1}(B) \in \{\emptyset, D, D^c, \Omega\} = \mathcal{F}\). Hence \(f\) is measurable. \(\square\)
+
+*(Key probability intuition from Example 3.3:* In probability theory, when we say "a random variable
+\(Y\) is measurable with respect to a \(\sigma\)-algebra \(\mathcal{F}\)," it literally means that
+*the value of \(Y\) is completely determined by the information in \(\mathcal{F}\)*! If \(\mathcal{F}\)
+only knows whether the die roll is even or odd, then a function \(f(\omega)\) can be computed from
+that information if and only if \(f(\omega)\) depends only on whether \(\omega\) is even or odd.)
+
+*Continuous functions vs. Borel measurable functions:*
+- *Every continuous function \(f : \mathbb{R} \to \mathbb{R}\) is Borel measurable* (i.e., measurable
+  from \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\) to \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\)).
+  *Why?* By the topological characterization of continuity (Chapter 0), \(f : \mathbb{R} \to \mathbb{R}\)
+  is continuous if and only if \(f^{-1}(U)\) is open in \(\mathbb{R}\) for every open set
+  \(U \subseteq \mathbb{R}\). Since open sets belong to \(\mathcal{B}(\mathbb{R})\) and generate
+  \(\mathcal{B}(\mathbb{R})\), Lemma 3.2 immediately implies that \(f^{-1}(B) \in \mathcal{B}(\mathbb{R})\)
+  for every Borel set \(B \in \mathcal{B}(\mathbb{R})\).
+- *The converse fails:* A Borel measurable function does *not* have to be continuous! For example, the
+  indicator of the half-line \(A = [0, \infty)\),
+  \[
+  \mathbf{1}_{[0, \infty)}(x) = \begin{cases} 1 & \text{if } x \ge 0, \\ 0 & \text{if } x < 0, \end{cases}
+  \]
+  is Borel measurable because \([0, \infty) \in \mathcal{B}(\mathbb{R})\), even though it has a jump
+  discontinuity at \(x = 0\). Even more strikingly, \(\mathbf{1}_{\mathbb{Q}}(x)\) (Dirichlet's
+  function) is Borel measurable because \(\mathbb{Q} \in \mathcal{B}(\mathbb{R})\), yet it is
+  discontinuous at *every* point \(x \in \mathbb{R}\)!
+- Finally, remember that on a general measurable space \((\Omega, \mathcal{F})\) (such as the die
+  space or infinite coin-tossing space), no topology or notion of "open set" may even be given;
+  measurability uses only the \(\sigma\)-algebras \(\mathcal{F}\) and \(\mathcal{S}\), not continuity.
+
+* 3.2 Image measures and the language of distributions
+
+** Intuition
+
+Suppose we have a measure space \((\Omega, \mathcal{F}, \mu)\) and a measurable map
+\(X : (\Omega, \mathcal{F}) \to (S, \mathcal{S})\). How can we use \(X\) to transport the measure
+\(\mu\) from the domain \(\Omega\) to the target space \(S\)?
+
+Think of \(\mu\) as a distribution of mass on \(\Omega\). For each point \(\omega \in \Omega\), the map
+\(X\) picks up the mass at \(\omega\) and moves it to the point \(X(\omega) \in S\). How much mass ends
+up inside a measurable region \(B \in \mathcal{S}\) of the target space? Precisely the mass of all
+domain points \(\omega \in \Omega\) that landed inside \(B\) — namely \(\mu(X^{-1}(B))\)!
+
+#+begin_example
+   Domain (\Omega, \mathcal{F}, \mu)             X               Target (S, \mathcal{S}, X_# \mu)
+   +-------------------------------+                           +-------------------------------+
+   |    +---------------------+    |                           |         +-----------+         |
+   |    |      X^{-1}(B)      |----+----- pushes mass -------->|-------->|     B     |         |
+   |    |  mass = \mu(X^{-1}B)|    |      forward via X        |         | (X_#\mu)B |         |
+   |    +---------------------+    |                           |         +-----------+         |
+   +-------------------------------+                           +-------------------------------+
+                               (X_# \mu)(B) := \mu(X^{-1}(B))
+#+end_example
+
+In probability, when \(\mu = \mathbb{P}\) is a probability measure on \(\Omega\), this pushed-forward
+measure \(X_\# \mathbb{P}\) on the target space \((S, \mathcal{S})\) is called the *law* or
+*distribution* of the random variable \(X\). It tells us the probabilities \(\mathbb{P}(X \in B)\) of
+all events concerning the value of \(X\), allowing us to work directly on the target space (like
+\(\mathbb{R}\)) without having to carry the underlying sample space \(\Omega\) around in every
+calculation.
+
+** Image measures and distributions (Proposition 3.4)
+
+#+begin_quote
+*Proposition 3.4 (Image measure and distribution of a random variable).* Let
+\(X : (\Omega, \mathcal{F}) \to (S, \mathcal{S})\) be measurable and let \(\mu\) be a measure on
+\((\Omega, \mathcal{F})\). The formula
+\begin{equation}
+(X_\# \mu)(B) := \mu\bigl(X^{-1}(B)\bigr), \qquad B \in \mathcal{S}, \tag{3.3}
+\end{equation}
+defines a measure on \((S, \mathcal{S})\), called the *image measure* (or *pushforward measure*) of
+\(\mu\) under \(X\). If \(\mu = \mathbb{P}\) is a probability measure, then \(X_\# \mathbb{P}\) is a
+probability measure on \((S, \mathcal{S})\), called the *law* or *distribution* of \(X\).
+#+end_quote
+
+** Unpacked proof of Proposition 3.4
+
+We must check every requirement in Definition 2.1 for the set function
+\(X_\# \mu : \mathcal{S} \to [0, \infty]\):
+1. *Well-defined on \(\mathcal{S}\):* Because \(X : (\Omega, \mathcal{F}) \to (S, \mathcal{S})\) is
+   measurable, for every \(B \in \mathcal{S}\) we have \(X^{-1}(B) \in \mathcal{F}\), which lies in
+   the domain of \(\mu\). Thus \(\mu(X^{-1}(B)) \in [0, \infty]\) is well-defined.
+2. *Empty set has measure zero:* Since \(X^{-1}(\emptyset) = \{\omega \in \Omega : X(\omega) \in \emptyset\} = \emptyset\),
+   we have
+   \[
+   (X_\# \mu)(\emptyset) = \mu(X^{-1}(\emptyset)) = \mu(\emptyset) = 0.
+   \]
+3. *Countable additivity:* Let \(B_1, B_2, \dots \in \mathcal{S}\) be a sequence of *pairwise
+   disjoint* measurable sets in \(S\).
+   - First, why are their preimages \(X^{-1}(B_1), X^{-1}(B_2), \dots \in \mathcal{F}\) also pairwise
+     disjoint in \(\Omega\)? Suppose \(m \ne n\). A point \(\omega \in \Omega\) cannot belong to both
+     \(X^{-1}(B_m)\) and \(X^{-1}(B_n)\), because that would mean the single element \(X(\omega) \in S\)
+     belongs to both \(B_m\) and \(B_n\), contradicting \(B_m \cap B_n = \emptyset\)!
+   - Second, preimages commute with countable unions:
+     \(X^{-1}\bigl(\bigcup_{n=1}^\infty B_n\bigr) = \bigcup_{n=1}^\infty X^{-1}(B_n)\).
+   Therefore, applying countable additivity of \(\mu\) on \((\Omega, \mathcal{F})\) to the pairwise
+   disjoint sequence \(X^{-1}(B_n)\) gives
+   \[
+   (X_\# \mu)\left(\bigcup_{n=1}^\infty B_n\right)
+   = \mu\left(X^{-1}\left(\bigcup_{n=1}^\infty B_n\right)\right)
+   = \mu\left(\bigcup_{n=1}^\infty X^{-1}(B_n)\right)
+   = \sum_{n=1}^\infty \mu\bigl(X^{-1}(B_n)\bigr)
+   = \sum_{n=1}^\infty (X_\# \mu)(B_n).
+   \]
+4. *Total mass:* Since \(X^{-1}(S) = \Omega\), the total mass of the image measure is
+   \[
+   (X_\# \mu)(S) = \mu\bigl(X^{-1}(S)\bigr) = \mu(\Omega).
+   \]
+   In particular, when \(\mu = \mathbb{P}\) is a probability measure (\(\mathbb{P}(\Omega) = 1\)), we
+   have \((X_\# \mathbb{P})(S) = 1\), so \(X_\# \mathbb{P}\) is a probability measure on
+   \((S, \mathcal{S})\). \(\square\)
+
+** Examples, expectation preview, and the Measure–Probability dictionary
+
+*Example (Law of the parity indicator of a fair die).* Let \(\Omega = \{1, \dots, 6\}\) with the fair-die
+probability measure \(\mathbb{P}(\{\omega\}) = \frac{1}{6}\), and let \(X = \mathbf{1}_D : \Omega \to \mathbb{R}\)
+be the indicator of the even outcomes \(D = \{2, 4, 6\}\). What is the image measure (law)
+\(X_\# \mathbb{P}\) on \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\)?
+For any Borel set \(B \in \mathcal{B}(\mathbb{R})\),
+- \(X(\omega) = 0\) for \(\omega \in D^c = \{1, 3, 5\}\), which has probability \(\mathbb{P}(D^c) = \frac{1}{2}\);
+- \(X(\omega) = 1\) for \(\omega \in D = \{2, 4, 6\}\), which has probability \(\mathbb{P}(D) = \frac{1}{2}\).
+Thus
+\[
+(X_\# \mathbb{P})(B) = \mathbb{P}(X \in B) = \frac{1}{2} \delta_0(B) + \frac{1}{2} \delta_1(B),
+\]
+a discrete probability measure on \(\mathbb{R}\) that places mass \(\frac{1}{2}\) at \(0\) and mass
+\(\frac{1}{2}\) at \(1\) (a Bernoulli(\(1/2\)) distribution). Notice that the underlying experiment
+\(\Omega\) still has six outcomes; the image measure \(X_\# \mathbb{P}\) on \(\mathbb{R}\) records
+only the probabilities of the two possible values \(0\) and \(1\) of the indicator \(X\).
+
+*Preview of Expectation (Integration).* The exact same translation between measure theory and
+probability applies to integration (which we will develop in full generality in Chapter 6). On a
+probability space \((\Omega, \mathcal{F}, \mathbb{P})\), the integral of a random variable \(X\), when
+defined, is called its *expectation* (or *expected value*) and is denoted by \(\mathbb{E}[X]\).
+On a finite sample space \(\Omega\) with \(\sigma\)-algebra \(2^\Omega\) and probability weights
+\(p_\omega = \mathbb{P}(\{\omega\})\), any real-valued function \(X : \Omega \to \mathbb{R}\) has
+expectation
+\[
+\mathbb{E}[X] = \int_\Omega X \, d\mathbb{P} = \sum_{\omega \in \Omega} X(\omega) p_\omega.
+\]
+In particular, for an event \(A \in \mathcal{F}\), its indicator \(\mathbf{1}_A\) equals \(1\) on
+\(A\) and \(0\) outside \(A\), so
+\[
+\mathbb{E}[\mathbf{1}_A] = \sum_{\omega \in A} 1 \cdot p_\omega + \sum_{\omega \notin A} 0 \cdot p_\omega = \mathbb{P}(A).
+\]
+This simple identity \(\mathbb{E}[\mathbf{1}_A] = \mathbb{P}(A)\) bridges probabilities of events and
+expectations of random variables across the entire course.
+
+#+caption: The Measure Theory – Probability Theory Dictionary
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.45\textwidth} >{\RaggedRight}X :booktabs t
+| Measure theory | Probability, when \(\mathbb{P}(\Omega) = 1\) |
+|----------------+----------------------------------------------|
+| Measure space \((\Omega, \mathcal{F}, \mu)\) | Probability space \((\Omega, \mathcal{F}, \mathbb{P})\) |
+| Measurable set \(A \in \mathcal{F}\) | Event \(A \in \mathcal{F}\) |
+| Measurable real-valued function \(X : \Omega \to \mathbb{R}\) | Random variable \(X : \Omega \to \mathbb{R}\) |
+| Image measure \(X_\# \mu\) | Law or distribution \(X_\# \mathbb{P}\) of \(X\) |
+| Integral \(\int_\Omega X \, d\mu\), when defined | Expectation \(\mathbb{E}[X]\) |
+| Almost everywhere (\(\mu\)-a.e.) | Almost surely (\(\mathbb{P}\)-a.s.) |
+
+** Where we go next & Historical remark
+
+*Where we go next (Chapters 4 and 5).* In Chapters 1–3 we have defined the objects of measure and
+probability theory, and on a *finite* or *countable* space we already know how to construct measures
+by assigning weights \(p_\omega\) to individual outcomes (Example 2.3). On an uncountable space like
+\(\mathbb{R}\) or the space \(\{0, 1\}^{\mathbb{N}}\) of infinite coin tosses, however, every
+individual outcome typically has measure zero (Example 2.8)! Instead, we want to prescribe the measure
+on simple sets — such as intervals \((a, b] \subseteq \mathbb{R}\) or finite strings of coin tosses —
+without having to list every Borel set by hand. Two fundamental questions then arise:
+1. *Uniqueness (Chapter 4):* Do prescriptions on simple sets determine a measure on the generated
+   \(\sigma\)-algebra *uniquely*? (Answered by *Dynkin's \(\pi\)-\(\lambda\) lemma*.)
+2. *Existence (Chapter 5):* Does such a countably additive measure on the generated \(\sigma\)-algebra
+   *exist*? (Answered by *Carathéodory's extension theorem*.)
+Keeping uniqueness and existence separate makes both arguments much cleaner to understand.
+
+*Historical remark (Probability, measure, and the coin toss that named "random variables").*
+- *Early probability (1654–1657):* Probability began with finite games of chance. In their famous 1654
+  correspondence, Blaise Pascal and Pierre de Fermat analyzed how to divide the stakes fairly when a
+  game is interrupted before completion. In 1657, Christiaan Huygens published the first treatise on
+  probability, studying the fair value of uncertain payoffs (for example, equal chances of winning
+  \(3\) or \(7\) have a fair value of \(5\) — an *expectation*, not a prediction that the player will
+  actually receive \(5\)).
+- *Birth of measure theory (1898–1902):* Measure theory grew out of real analysis and questions about
+  length and integration. Émile Borel (1898) extended the notion of length from intervals to wider
+  classes of sets using countable set operations, and Henri Lebesgue's 1902 doctoral thesis used
+  countably additive measure to integrate rough functions and pass to limits far beyond the reach of
+  Riemann integration.
+- *Unification of measure and probability (1923–1933):* In 1923, Hugo Steinhaus used Lebesgue measure
+  on \([0, 1]\) (via binary expansions) to model infinite sequences of fair coin tosses. Finally, in
+  1933, Andrey Kolmogorov's monograph *Grundbegriffe der Wahrscheinlichkeitsrechnung* (*Foundations of
+  the Theory of Probability*) established the modern axiomatic framework that we use today:
+  probabilities are measures of total mass \(1\), random variables are measurable functions, and
+  expectations are Lebesgue integrals.
+- *Why do we say "random variable"?* Even the terminology has a probabilistic origin story! In a 1997
+  interview, Joseph Doob recalled that while he and William Feller were writing their landmark
+  textbooks in the late 1940s, they disagreed on what to call measurable functions on a probability
+  space: Doob preferred *"chance variable"*, while Feller preferred *"random variable"*. Wanting to
+  use a consistent term, they settled the debate the only appropriate way — by tossing a coin. As
+  Doob put it: *"That is, we tossed for it and he won."*
+
+* Worked Exercises
+
+** Exercise 1 (Why preimages beat forward images)
+Let \(X : \Omega \to S\) be any function, and let \(B, B_1, B_2 \subseteq S\) be subsets of the target
+space and \(A_1, A_2 \subseteq \Omega\) be subsets of the domain.
+1. Verify carefully that \(X^{-1}(B_1 \cap B_2) = X^{-1}(B_1) \cap X^{-1}(B_2)\) and
+   \(X^{-1}(S \setminus B) = \Omega \setminus X^{-1}(B)\).
+2. Give a concrete two-point example showing that for *forward images*
+   \(X(A) := \{X(\omega) : \omega \in A\}\), the equalities
+   \(X(A_1 \cap A_2) = X(A_1) \cap X(A_2)\) and \(X(\Omega \setminus A_1) = S \setminus X(A_1)\) can
+   both fail!
+
+** Solution
+1. For any \(\omega \in \Omega\),
+   \[
+   \omega \in X^{-1}(B_1 \cap B_2) \iff X(\omega) \in B_1 \cap B_2
+   \iff \bigl(X(\omega) \in B_1 \text{ and } X(\omega) \in B_2\bigr)
+   \iff \omega \in X^{-1}(B_1) \cap X^{-1}(B_2).
+   \]
+   Similarly,
+   \[
+   \omega \in X^{-1}(S \setminus B) \iff X(\omega) \in S \setminus B
+   \iff X(\omega) \notin B \iff \omega \notin X^{-1}(B) \iff \omega \in \Omega \setminus X^{-1}(B).
+   \]
+2. Take \(\Omega = \{1, 2\}\), \(S = \{0, 1\}\), and the constant function \(X(1) = X(2) = 0\). Let
+   \(A_1 = \{1\}\) and \(A_2 = \{2\}\).
+   - *Intersection failure:* \(A_1 \cap A_2 = \emptyset\), so \(X(A_1 \cap A_2) = \emptyset\), whereas
+     \(X(A_1) \cap X(A_2) = \{0\} \cap \{0\} = \{0\} \ne \emptyset\).
+   - *Complement failure:* \(\Omega \setminus A_1 = \{2\}\), so
+     \(X(\Omega \setminus A_1) = \{0\}\), whereas \(S \setminus X(A_1) = \{0, 1\} \setminus \{0\} = \{1\}\).
+
+** Exercise 2 (Composition of measurable maps is measurable)
+Let \((\Omega, \mathcal{F})\), \((S, \mathcal{S})\), and \((T, \mathcal{T})\) be measurable spaces.
+Suppose \(X : \Omega \to S\) is measurable and \(f : S \to T\) is measurable.
+1. Prove that the composition \(f \circ X : \Omega \to T\), defined by \((f \circ X)(\omega) := f(X(\omega))\),
+   is measurable.
+2. Deduce that if \(X : (\Omega, \mathcal{F}) \to (\mathbb{R}, \mathcal{B}(\mathbb{R}))\) is a
+   measurable function, then \(X^2\), \(|X|\), \(e^X\), and \(\sin(X)\) are all measurable functions
+   on \((\Omega, \mathcal{F})\).
+
+** Solution
+1. Take any measurable set \(C \in \mathcal{T}\) in the final target space. First, what is the
+   preimage \((f \circ X)^{-1}(C)\)? For any \(\omega \in \Omega\),
+   \[
+   \omega \in (f \circ X)^{-1}(C) \iff f(X(\omega)) \in C \iff X(\omega) \in f^{-1}(C) \iff \omega \in X^{-1}\bigl(f^{-1}(C)\bigr).
+   \]
+   Thus \((f \circ X)^{-1}(C) = X^{-1}(f^{-1}(C))\). Now apply measurability in two steps:
+   - Since \(f : (S, \mathcal{S}) \to (T, \mathcal{T})\) is measurable and \(C \in \mathcal{T}\), we
+     have \(B := f^{-1}(C) \in \mathcal{S}\).
+   - Since \(X : (\Omega, \mathcal{F}) \to (S, \mathcal{S})\) is measurable and \(B \in \mathcal{S}\),
+     we have \((f \circ X)^{-1}(C) = X^{-1}(B) \in \mathcal{F}\).
+   Hence \(f \circ X\) is measurable.
+2. The functions \(f_1(x) = x^2\), \(f_2(x) = |x|\), \(f_3(x) = e^x\), and \(f_4(x) = \sin(x)\) are all
+   continuous from \(\mathbb{R}\) to \(\mathbb{R}\), and therefore Borel measurable (Section 3.1). By
+   part 1, composing any of them with a measurable function \(X : \Omega \to \mathbb{R}\) produces a
+   measurable function \(f_i \circ X : \Omega \to \mathbb{R}\).
+
+** Exercise 3 (A piecewise function and the generator test)
+Let \((\Omega, \mathcal{F}) = (\mathbb{R}, \mathcal{B}(\mathbb{R}))\), and define \(X : \mathbb{R} \to \mathbb{R}\) by
+\[
+X(\omega) = \begin{cases}
+\omega^2 & \text{if } \omega \in \mathbb{Q}, \\
+-\omega & \text{if } \omega \in \mathbb{R} \setminus \mathbb{Q}.
+\end{cases}
+\]
+Even though \(X\) is discontinuous at every nonzero point, prove that \(X\) is Borel measurable by
+explicitly checking \(\{X \le a\} \in \mathcal{B}(\mathbb{R})\) for every \(a \in \mathbb{R}\).
+
+** Solution
+Fix \(a \in \mathbb{R}\). A point \(\omega \in \mathbb{R}\) satisfies \(X(\omega) \le a\) either by
+being rational with \(\omega^2 \le a\), or by being irrational with \(-\omega \le a\). Thus we can
+split the preimage into two pieces:
+\[
+\{X \le a\} = \bigl(\mathbb{Q} \cap \{\omega \in \mathbb{R} : \omega^2 \le a\}\bigr)
+\cup \bigl((\mathbb{R} \setminus \mathbb{Q}) \cap \{\omega \in \mathbb{R} : -\omega \le a\}\bigr).
+\]
+Let us check that every piece on the right is a Borel set:
+- \(\mathbb{Q} \in \mathcal{B}(\mathbb{R})\) (as a countable union of singletons), and hence its
+  complement \(\mathbb{R} \setminus \mathbb{Q} \in \mathcal{B}(\mathbb{R})\).
+- \(\{\omega \in \mathbb{R} : \omega^2 \le a\}\) is \(\emptyset\) if \(a < 0\) and the closed interval
+  \([-\sqrt{a}, \sqrt{a}]\) if \(a \ge 0\); in both cases it belongs to \(\mathcal{B}(\mathbb{R})\).
+- \(\{\omega \in \mathbb{R} : -\omega \le a\} = [-a, \infty)\) is a closed half-line, so it belongs to
+  \(\mathcal{B}(\mathbb{R})\).
+Since \(\mathcal{B}(\mathbb{R})\) is closed under intersections and unions, \(\{X \le a\} \in \mathcal{B}(\mathbb{R})\)
+for every \(a \in \mathbb{R}\). By the half-line criterion (3.2), \(X\) is Borel measurable.
+
+** Exercise 4 (Computing an image measure / distribution explicitly)
+Let \(\Omega = \{1, 2, 3, 4, 5, 6\}\) be equipped with \(\mathcal{F} = 2^\Omega\) and the fair-die
+probability measure \(\mathbb{P}(\{\omega\}) = \frac{1}{6}\). Define the random variable
+\(X : \Omega \to \mathbb{R}\) by
+\[
+X(\omega) := (\omega - 3)^2.
+\]
+1. Find the possible values of \(X(\omega)\) and express the law (image measure) \(X_\# \mathbb{P}\)
+   on \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\) as a weighted sum of Dirac measures \(\delta_y\).
+2. Compute \((X_\# \mathbb{P})([1, 5])\) and \(\mathbb{E}[X]\).
+
+** Solution
+1. Let us evaluate \(X(\omega) = (\omega - 3)^2\) at each of the six outcomes:
+   - \(X(3) = (3 - 3)^2 = 0\), so \(X^{-1}(\{0\}) = \{3\}\) has probability \(\mathbb{P}(X = 0) = \frac{1}{6}\).
+   - \(X(2) = (-1)^2 = 1\) and \(X(4) = 1^2 = 1\), so \(X^{-1}(\{1\}) = \{2, 4\}\) has probability
+     \(\mathbb{P}(X = 1) = \frac{2}{6} = \frac{1}{3}\).
+   - \(X(1) = (-2)^2 = 4\) and \(X(5) = 2^2 = 4\), so \(X^{-1}(\{4\}) = \{1, 5\}\) has probability
+     \(\mathbb{P}(X = 4) = \frac{2}{6} = \frac{1}{3}\).
+   - \(X(6) = (6 - 3)^2 = 9\), so \(X^{-1}(\{9\}) = \{6\}\) has probability \(\mathbb{P}(X = 9) = \frac{1}{6}\).
+   For any Borel set \(B \in \mathcal{B}(\mathbb{R})\), the preimage \(X^{-1}(B)\) is the union of the
+   preimages of whichever of the four values \(\{0, 1, 4, 9\}\) belong to \(B\). Therefore,
+   \[
+   X_\# \mathbb{P} = \frac{1}{6} \delta_0 + \frac{1}{3} \delta_1 + \frac{1}{3} \delta_4 + \frac{1}{6} \delta_9.
+   \]
+2. For \(B = [1, 5]\), the values from \(\{0, 1, 4, 9\}\) that lie inside \([1, 5]\) are \(1\) and
+   \(4\), so
+   \[
+   (X_\# \mathbb{P})([1, 5]) = \mathbb{P}(X \in [1, 5]) = \frac{1}{3} + \frac{1}{3} = \frac{2}{3}.
+   \]
+   The expectation is
+   \[
+   \mathbb{E}[X] = \sum_{\omega=1}^6 X(\omega) \mathbb{P}(\{\omega\})
+   = \frac{4 + 1 + 0 + 1 + 4 + 9}{6} = \frac{19}{6}.
+   \]
+   (Notice that we get the exact same answer by summing \(y \cdot (X_\# \mathbb{P})(\{y\})\) over the
+   possible values \(y \in \{0, 1, 4, 9\}\): \(0 \cdot \frac{1}{6} + 1 \cdot \frac{1}{3} + 4 \cdot \frac{1}{3} + 9 \cdot \frac{1}{6} = \frac{19}{6}\)!)
+
+** Exercise 5 (Pushforward of a continuous uniform measure)
+Let \(\Omega = [0, 1]\) with \(\mathcal{F} = \mathcal{B}([0, 1])\) and Lebesgue probability measure
+\(\mathbb{P} = \lambda|_{[0,1]}\). Let \(X : [0, 1] \to \mathbb{R}\) be the affine function
+\(X(\omega) = 2\omega + 3\). For any interval \([a, b] \subseteq [3, 5]\), compute
+\((X_\# \mathbb{P})([a, b])\). What familiar measure is \(X_\# \mathbb{P}\)?
+
+** Solution
+For \([a, b] \subseteq [3, 5]\), let us find the preimage \(X^{-1}([a, b])\):
+\[
+\omega \in X^{-1}([a, b]) \iff a \le 2\omega + 3 \le b \iff \frac{a - 3}{2} \le \omega \le \frac{b - 3}{2}.
+\]
+Since \(3 \le a \le b \le 5\), the interval \(\bigl[\frac{a-3}{2}, \frac{b-3}{2}\bigr]\) lies inside
+\([0, 1]\). Thus
+\[
+(X_\# \mathbb{P})([a, b]) = \lambda\left(\left[\frac{a - 3}{2},\, \frac{b - 3}{2}\right]\right)
+= \frac{b - 3}{2} - \frac{a - 3}{2} = \frac{b - a}{2}.
+\]
+The image measure \(X_\# \mathbb{P}\) assigns to every subinterval of \([3, 5]\) half of its length
+(and \(0\) to sets outside \([3, 5]\)): it is the continuous *Uniform\(([3, 5])\)* probability
+distribution \(\frac{1}{2} \lambda|_{[3, 5]}\).
+
+** Exercise 6 (\(\sigma\)-algebra generated by a function)
+Let \(X : \Omega \to S\) be a map from a set \(\Omega\) (with no \(\sigma\)-algebra specified yet) into
+a measurable space \((S, \mathcal{S})\).
+1. Prove that the collection of all preimages of measurable target sets,
+   \[
+   \sigma(X) := \{X^{-1}(B) : B \in \mathcal{S}\} \subseteq 2^\Omega,
+   \]
+   is a \(\sigma\)-algebra on \(\Omega\), and is in fact the *smallest* \(\sigma\)-algebra \(\mathcal{F}\)
+   on \(\Omega\) that makes \(X : (\Omega, \mathcal{F}) \to (S, \mathcal{S})\) measurable.
+2. For \(\Omega = \{1, \dots, 6\}\) and \(S = \mathbb{R}\), compute \(\sigma(\mathbf{1}_D)\) where
+   \(D = \{2, 4, 6\}\).
+
+** Solution
+1. We verify the three conditions of Definition 1.1 for \(\sigma(X)\):
+   - (i) Since \(S \in \mathcal{S}\), we have \(\Omega = X^{-1}(S) \in \sigma(X)\).
+   - (ii) If \(A \in \sigma(X)\), then \(A = X^{-1}(B)\) for some \(B \in \mathcal{S}\). Then
+     \(\Omega \setminus A = \Omega \setminus X^{-1}(B) = X^{-1}(S \setminus B) \in \sigma(X)\) because
+     \(S \setminus B \in \mathcal{S}\).
+   - (iii) If \(A_n \in \sigma(X)\) for \(n \in \mathbb{N}\), choose \(B_n \in \mathcal{S}\) with
+     \(A_n = X^{-1}(B_n)\). Then
+     \(\bigcup_{n=1}^\infty A_n = \bigcup_{n=1}^\infty X^{-1}(B_n) = X^{-1}\bigl(\bigcup_{n=1}^\infty B_n\bigr) \in \sigma(X)\)
+     because \(\bigcup_{n=1}^\infty B_n \in \mathcal{S}\).
+   Thus \(\sigma(X)\) is a \(\sigma\)-algebra on \(\Omega\). By definition of measurability, *any*
+   \(\sigma\)-algebra \(\mathcal{F}\) on \(\Omega\) that makes \(X\) measurable must contain
+   \(X^{-1}(B)\) for every \(B \in \mathcal{S}\), so \(\sigma(X) \subseteq \mathcal{F}\). And
+   \(X\) is clearly measurable when \(\Omega\) is equipped with \(\sigma(X)\).
+2. As we saw in Section 3.0, as \(B\) ranges over \(\mathcal{B}(\mathbb{R})\), the possible preimages
+   \(\mathbf{1}_D^{-1}(B)\) are \(\emptyset\) (when \(0, 1 \notin B\)), \(D\) (when \(1 \in B, 0 \notin B\)),
+   \(D^c\) (when \(0 \in B, 1 \notin B\)), and \(\Omega\) (when \(0, 1 \in B\)). Thus
+   \[
+   \sigma(\mathbf{1}_D) = \{\emptyset, D, D^c, \Omega\},
+   \]
+   which is precisely the parity \(\sigma\)-algebra (1.1)!
+
+* Summary
+
+#+caption: Chapter 3 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept | Definition / Formula | Why it matters |
+|---------+----------------------+----------------|
+| Preimage \(X^{-1}(B)\) | \(\{\omega \in \Omega : X(\omega) \in B\}\) (3.1) | Commutes with all set operations (\(\cup, \cap, \setminus, (\cdot)^c\)); requires no inverse function |
+| Definition 3.1 (Measurable map / Random variable) | \(X^{-1}(B) \in \mathcal{F}\) for all \(B \in \mathcal{S}\) (default \(\mathcal{S} = \mathcal{B}(\mathbb{R})\)) | Ensures events \(\{X \in B\} = X^{-1}(B)\) belong to \(\mathcal{F}\) so \(\mathbb{P}(X \in B)\) is defined |
+| Indicator \(\mathbf{1}_A\) | \(1\) on \(A\), \(0\) on \(\Omega \setminus A\) | Measurable iff \(A \in \mathcal{F}\); satisfies \(\mathbb{E}[\mathbf{1}_A] = \mathbb{P}(A)\) |
+| Lemma 3.2 (Generator test) | If \(\mathcal{S} = \sigma(\mathcal{A})\), then \(X\) is measurable \(\iff X^{-1}(B) \in \mathcal{F}\) for all \(B \in \mathcal{A}\) | Proved by showing \(\mathcal{G} = \{B \subseteq S : X^{-1}(B) \in \mathcal{F}\}\) is a \(\sigma\)-algebra |
+| Half-line criterion (3.2) | \(X : \Omega \to \mathbb{R}\) measurable \(\iff \{X \le a\} \in \mathcal{F}\ \forall a \in \mathbb{R}\) (or \(\mathbb{Q}\)) | Reduces checking all Borel sets to checking half-lines; leads to CDFs |
+| Example 3.3 (Parity measurability) | \(f\) measurable w.r.t. \(\{\emptyset, D, D^c, \Omega\} \iff f\) constant on \(D\) and on \(D^c\) | Shows that \(\mathcal{F}\)-measurability of \(f\) means \(f(\omega)\) depends only on the information in \(\mathcal{F}\) |
+| Proposition 3.4 (Image measure / Law) | \((X_\# \mu)(B) := \mu(X^{-1}(B))\); law of \(X\) is \(X_\# \mathbb{P}\) | Pushes a measure from \(\Omega\) onto the target space \(S\) |
+
+*Key takeaways*
+
+- A *random variable* is simply a measurable function \(X : (\Omega, \mathcal{F}, \mathbb{P}) \to (\mathbb{R}, \mathcal{B}(\mathbb{R}))\).
+- Never check \(X^{-1}(B) \in \mathcal{F}\) for arbitrary Borel sets \(B\) by hand: use Lemma 3.2 to
+  check a generating collection \(\mathcal{A}\) (such as half-lines \((-\infty, a]\) via (3.2), or
+  open sets when showing continuous functions are Borel measurable).
+- Remember the proof template of Lemma 3.2: define the collection \(\mathcal{G}\) of target sets for
+  which the desired property holds, verify that \(\mathcal{G}\) is a \(\sigma\)-algebra containing the
+  generators \(\mathcal{A}\), and conclude \(\sigma(\mathcal{A}) \subseteq \mathcal{G}\).
+- The image measure \(X_\# \mathbb{P}(B) = \mathbb{P}(X \in B)\) is a genuine probability measure on
+  the target space \((S, \mathcal{S})\), called the *law* or *distribution* of \(X\).

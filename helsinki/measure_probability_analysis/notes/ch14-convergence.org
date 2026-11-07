@@ -1,0 +1,970 @@
+:PROPERTIES:
+:ID:       14a8c3d1-7b2e-4f9a-8c1d-5e6f7a8b9c0d
+:ROAM_ALIASES: "MAST31051 Chapter 14" "Convergence of Random Variables Notes"
+:END:
+#+title: Chapter 14: Convergence of Random Variables
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch14:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch13-independence.org][← Chapter 13]] | [[file:ch15-weak-law.org][Chapter 15 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+For a sequence of ordinary real numbers \((a_n)\), there is only one natural notion of convergence:
+\(a_n \to a\) means \(|a_n - a|\) eventually stays smaller than any tolerance \(\varepsilon > 0\).
+For a sequence of random variables \((X_n)\) on a probability space \((\Omega, \mathcal F, \mathbb P)\),
+there is *both* an index \(n\) *and* a random outcome \(\omega \in \Omega\). Because of this extra
+coordinate, "approaching a limit" splits into four genuinely different questions:
+
+1. *Trajectory by trajectory (almost surely):* If we run the infinite experiment once, fixing
+   \(\omega\), does the numerical sequence \(X_1(\omega), X_2(\omega), \dots\) converge to \(X(\omega)\)
+   with probability \(1\)?
+2. *At a single large time \(n\) (in probability):* If we inspect the experiment at a single large index
+   \(n\), is the error \(|X_n - X|\) unlikely to exceed \(\varepsilon\)?
+3. *On average (in \(L^p\)):* Does the average \(p\)-th power error \(\mathbb E[|X_n - X|^p]\) tend to
+   zero?
+4. *By histograms only (in distribution):* Do the probability laws (or CDFs) of \(X_n\) look more and
+   more like the law of \(X\), even if \(X_n\) and \(X\) have nothing to do with each other as
+   functions on \(\Omega\)?
+
+None of these four notions are equivalent!
+- An error at time \(n\) can be very unlikely (\(\mathbb P(|X_n| > \varepsilon) \to 0\)), while a moving
+  "blip" sweeps across the sample space so that *every single outcome* \(\omega\) gets hit infinitely
+  many times (the typewriter sequence, Example 14.4).
+- Conversely, \(X_n(\omega) \to 0\) can hold for every \(\omega\), while a tiny, shrinking set of
+  outcomes carries a huge spike of height \(n\) that keeps the average error \(\mathbb E|X_n| = 1\)
+  from ever tending to zero (shrinking spikes, Example 14.5).
+
+This chapter defines the four modes cleanly, proves the exact implications connecting them, exhibits
+the canonical counterexamples separating them, and proves the fundamental characterization of
+convergence in distribution via bounded continuous test functions (Theorem 14.8).
+
+** Probability motivation
+
+Every major limit theorem in probability and statistics is stated in one of these four modes:
+- The *Weak Law of Large Numbers* ([[file:ch15-weak-law.org][Chapter 15]]) states that sample averages converge to the true
+  mean *in probability* (and in \(L^2\) when variance is finite).
+- The *Strong Law of Large Numbers* ([[file:ch16-strong-law.org][Chapter 16]]) upgrades this to *almost-sure* convergence: a
+  single infinite run of simulations suffices to see the sample average settle down.
+- The *Central Limit Theorem* (and rescaled random walk approximations) is a statement of
+  *convergence in distribution*: the standardized sum does not converge to a single random variable
+  pointwise, because each new observation keeps jiggling it, yet its bell-shaped histogram stabilizes.
+
+** Roadmap
+
+- 14.1 Four definitions (almost sure, in probability, in \(L^p\), in distribution) and the
+  measure-theory/probability dictionary.
+- 14.2 Implications between the modes, the subsequence principle (Proposition 14.3), and the
+  separating counterexamples (typewriter, shrinking spikes, sign-flipping).
+- 14.3 Testing laws by bounded continuous functions (Theorem 14.8) and the continuous mapping
+  corollary (Corollary 14.9).
+
+** What you need from earlier chapters
+
+- Countable unions/intersections, continuity of measure from below and above: [[file:ch02-measures.org][Chapter 2]].
+- Random variables, image measures (laws) \(\mu_X = X_\#\mathbb P\), change-of-variables formula
+  \(\mathbb E[h(X)] = \int_{\mathbb R} h\,d\mu_X\): [[file:ch03-measurable-functions.org][Chapter 3]], [[file:ch06-integration.org][Chapter 6]].
+- Dominated convergence theorem (DCT): [[file:ch06-integration.org][Chapter 6]].
+- \(L^p\) norms \(\|X\|_p = (\mathbb E|X|^p)^{1/p}\): [[file:ch07-lp-spaces.org][Chapter 7]].
+- Approximation in measure (Subsection 8.3): [[file:ch08-regularity.org][Chapter 8]].
+- Cumulative distribution functions (CDFs) \(F_X(x) = \mathbb P(X \le x)\) and the fact that a
+  monotone function has at most countably many jumps: [[file:ch12-distributions.org][Chapter 12]].
+
+* 14.1 Four definitions
+
+** Intuition
+
+Imagine watching a sequence of random variables \(X_1, X_2, X_3, \dots\) compared against a target
+\(X\). There are two ways to slice this two-dimensional table of values \(X_n(\omega)\):
+
+#+begin_example
+                 n = 1      n = 2      n = 3     ...     n -> infinity
+              +----------+----------+----------+-----+------------------+
+  outcome w_1 | X_1(w_1) | X_2(w_1) | X_3(w_1) | ... | -> X(w_1) ?      |  <-- Horizontal slice:
+  outcome w_2 | X_1(w_2) | X_2(w_2) | X_3(w_2) | ... | -> X(w_2) ?      |      Almost-sure convergence
+  outcome w_3 | X_1(w_3) | X_2(w_3) | X_3(w_3) | ... | -> X(w_3) ?      |      tracks each row!
+              +----------+----------+----------+-----+------------------+
+                   |          |          |
+                   v          v          v
+                Vertical slices at fixed n:
+                - In probability: is P(|X_n - X| > eps) small in column n?
+                - In L^p:         is E[|X_n - X|^p] small in column n?
+                - In distribution: does the histogram of column n match that of X?
+#+end_example
+
+- *Horizontal (almost sure):* You pick \(\omega\) first, then look at the entire infinite row
+  \((X_n(\omega))_{n\ge 1}\). You ask: does the set of "good rows" that converge to \(X(\omega)\) have
+  total probability \(1\)?
+- *Vertical (in probability and \(L^p\)):* You look at column \(n\) as a whole, measure the size of the
+  discrepancy \(X_n - X\) across \(\Omega\) (either via tail probability \(\mathbb P(|X_n - X| > \varepsilon)\)
+  or via moments \(\mathbb E|X_n - X|^p\)), and let \(n \to \infty\).
+- *Histogram-only (in distribution):* You throw away the rows completely—\(X_n\) and \(X\) don't even
+  have to live on the same sample space \(\Omega\)! You only compare the CDF \(F_{X_n}\) of column \(n\)
+  to the CDF \(F_X\).
+
+** The definitions
+
+#+begin_quote
+*Definitions (Four modes of convergence).* Let \(X_n, X\) be real-valued random variables on
+\((\Omega, \mathcal F, \mathbb P)\).
+
+1. *Almost-sure convergence.* We say that \(X_n\) converges to \(X\) *almost surely*, written
+   \(X_n \to X\text{ a.s.}\), if
+   \[
+   \mathbb P(\{\omega : X_n(\omega) \to X(\omega)\}) = 1 .
+   \]
+   This convergence set is measurable, since
+   \[
+   \{\omega : X_n(\omega) \to X(\omega)\} = \bigcap_{m=1}^\infty \bigcup_{N=1}^\infty \bigcap_{n \ge N} \{|X_n - X| \le 1/m\} .
+   \]
+2. *Convergence in probability.* We say that \(X_n\) converges to \(X\) *in probability*, written
+   \(X_n \to X\text{ in probability}\), if for every \(\varepsilon > 0\),
+   \[
+   \mathbb P(|X_n - X| > \varepsilon) \longrightarrow 0 .
+   \]
+3. *Convergence in \(L^p\).* For \(1 \le p < \infty\) and \(X_n, X \in L^p(\mathbb P)\), *convergence in
+   \(L^p\)* means \(\|X_n - X\|_p \to 0\), or equivalently \(\mathbb E|X_n - X|^p \to 0\).
+4. *Convergence in distribution.* Finally, \(X_n\) converges to \(X\) *in distribution*, written
+   \(X_n \Rightarrow X\), if
+   \[
+   F_{X_n}(x) \longrightarrow F_X(x)
+   \]
+   at every continuity point \(x\) of \(F_X\). This definition uses only the laws, so the variables
+   need not be on a common probability space. The first three definitions compare values at the same
+   outcome and require such a common space.
+#+end_quote
+
+** Unpacking the definitions
+
+*** Why is the almost-sure convergence set measurable?
+
+In calculus, \(X_n(\omega) \to X(\omega)\) means:
+\[
+\forall \varepsilon > 0,\ \exists N \ge 1,\ \forall n \ge N : \quad |X_n(\omega) - X(\omega)| \le \varepsilon .
+\]
+If we wrote an intersection over *all* real \(\varepsilon > 0\), that would be an *uncountable*
+intersection, which need not preserve measurability! The trick is to replace \(\varepsilon > 0\) by the
+countable sequence of rational tolerances \(1/m\) (\(m = 1, 2, 3, \dots\)): since every \(\varepsilon > 0\)
+has some \(1/m < \varepsilon\), requiring the condition for all \(m \in \mathbb N\) is logically identical
+to requiring it for all \(\varepsilon > 0\).
+
+Now translate quantifiers into set operations from left to right:
+- "\(\forall m \ge 1\)" becomes the countable intersection \(\bigcap_{m=1}^\infty\),
+- "\(\exists N \ge 1\)" becomes the countable union \(\bigcup_{N=1}^\infty\),
+- "\(\forall n \ge N\)" becomes the countable intersection \(\bigcap_{n \ge N}\),
+- "\(|X_n(\omega) - X(\omega)| \le 1/m\)" is the measurable set \(\{|X_n - X| \le 1/m\} \in \mathcal F\)
+  (since \(X_n - X\) is a measurable function).
+
+Because \(\mathcal F\) is a \(\sigma\)-algebra, it is closed under countable unions and countable
+intersections, so \(\{\omega : X_n(\omega) \to X(\omega)\} \in \mathcal F\). Thus taking its probability
+\(\mathbb P(\{\omega : X_n(\omega) \to X(\omega)\})\) makes rigorous sense.
+
+*** Why does convergence in distribution only test continuity points of \(F_X\)?
+
+#+begin_quote
+*Example 14.1 (Why CDF continuity points are specified).* The constants \(X_n = 1/n\) converge
+pointwise to zero. Their CDFs converge to the CDF of zero at every \(x \ne 0\). At zero, however,
+\(F_{X_n}(0) = 0\) for all \(n\), whereas \(F_0(0) = 1\). The limiting CDF has a jump there. Requiring
+convergence at that point would exclude even this elementary convergent sequence.
+#+end_quote
+
+Let's visualize Example 14.1:
+- Since \(X_n = 1/n\) is deterministic, \(\mathbb P(X_n \le x)\) is \(0\) for \(x < 1/n\) and \(1\) for
+  \(x \ge 1/n\).
+- For the limit \(X = 0\), \(F_0(x) = \mathbb P(0 \le x)\) is \(0\) for \(x < 0\) and \(1\) for \(x \ge 0\).
+
+#+begin_example
+  F_{X_n}(x) (jump at x = 1/n)               F_0(x) (jump at x = 0)
+      1 |          *---------                    1 |      *-------------
+        |          |                               |      |
+      0 |----------o                             0 |------o
+        +------+---+---------> x                   +------+------------> x
+               0  1/n                                     0
+#+end_example
+
+Look at what happens at each \(x \in \mathbb R\):
+- If \(x < 0\): for all \(n\), \(x < 0 < 1/n\), so \(F_{X_n}(x) = 0 \to 0 = F_0(x)\).
+- If \(x > 0\): as soon as \(1/n \le x\) (i.e. \(n \ge 1/x\)), we have \(F_{X_n}(x) = 1 \to 1 = F_0(x)\).
+- If \(x = 0\): since \(1/n > 0\) for every finite \(n\), \(F_{X_n}(0) = \mathbb P(1/n \le 0) = 0\), which
+  converges to \(0 \ne 1 = F_0(0)\)!
+
+Why did \(x = 0\) fail? Because the point mass of size \(1\) approaches \(0\) *from the right*, whereas
+the CDF \(F(0) = \mathbb P(X \le 0)\) only counts mass at or to the *left* of \(0\). At any point \(x\)
+where \(F_X\) is continuous (\(\mathbb P(X = x) = 0\)), no mass lands right on the boundary \(x\), so
+slightly shifting mass across \(x\) cannot cause a sudden jump. That is why the definition of
+\(X_n \Rightarrow X\) only asks for \(F_{X_n}(x) \to F_X(x)\) where \(F_X\) is continuous.
+
+** Measure-theoretic vs. probabilistic terminology
+
+The following table from the lecture notes compares the two languages side by side. The first three
+rows concern convergence of *functions* on a fixed space; the last concerns convergence of their
+*image measures* (laws) on \(\mathbb R\).
+
+#+caption: Dictionary between measure theory and probability
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.48\textwidth} >{\RaggedRight}X :booktabs t
+| Measure theory                           | Probability, when \(\mathbb P(\Omega) = 1\) |
+|------------------------------------------+---------------------------------------------|
+| Almost-everywhere convergence            | Almost-sure convergence                     |
+| Convergence in measure                   | Convergence in probability                  |
+| Norm convergence in \(L^p\)              | Convergence in \(L^p\)                      |
+| Weak convergence of the image measures   | Convergence in distribution                 |
+
+Let us record the three key remarks accompanying this table in the notes:
+1. *First row (a.e. vs. a.s.):* In measure theory, \(f_n \to f\) almost everywhere means the
+   exceptional set \(\{\omega : f_n(\omega) \not\to f(\omega)\}\) has measure zero. On a probability
+   space (\(\mathbb P(\Omega) = 1\)), having exceptional set of measure \(0\) is the exact same thing as
+   the convergence set having probability \(1 - 0 = 1\) ("almost surely").Norm convergence in \(L^p\)
+   is also called *strong convergence in \(L^p\)*.
+2. *Second row (convergence in measure):* More generally, on any measure space \((\Omega, \mathcal F, \mu)\),
+   real-valued measurable functions \(f_n\) converge to a real-valued measurable function \(f\) *in
+   measure* if, for every \(\varepsilon > 0\),
+   \[
+   \mu(\{|f_n - f| > \varepsilon\}) \longrightarrow 0 .
+   \]
+   Taking \(\mu = \mathbb P\) gives precisely convergence in probability. This is the exact same notion
+   used for smooth approximation of functions without finite moments in [[file:ch08-regularity.org][Subsection 8.3]].
+3. *Fourth row (weak convergence of laws):* Here the image measures are the laws
+   \(\mu_{X_n} = (X_n)_\#\mathbb P\) and \(\mu_X = X_\#\mathbb P\) on \(\mathbb R\). In Subsection 14.3,
+   we prove that \(X_n \Rightarrow X\) is equivalent to weak convergence of \(\mu_{X_n}\) to \(\mu_X\).
+   *Terminology warning:* Here "weak convergence" refers to convergence of *measures* (tested against
+   bounded continuous functions on \(\mathbb R\)), *not* to weak convergence of the functions \(X_n\) in
+   a Banach/Hilbert space \(L^p(\mathbb P)\)!
+
+** Additional worked examples
+
+*Example A (Approximating from the left vs. from the right).* Compare \(Y_n = -1/n\) with
+\(X_n = +1/n\) from Example 14.1. Both converge deterministically to \(0\), so both converge to \(0\)
+in distribution. For \(Y_n = -1/n\), we have \(-1/n \le 0\) for all \(n\), so \(F_{Y_n}(0) = 1 = F_0(0)\):
+here the CDFs *do* happen to converge at the jump point \(x = 0\)! For \(X_n = +1/n\), \(F_{X_n}(0) = 0 \ne F_0(0)\).
+Because we want both \(+1/n\) and \(-1/n\) to converge in distribution to \(0\), we must exempt the
+discontinuity point \(x = 0\) of \(F_0\).
+
+*Example B (Uniforms on \([0, 1/n]\)).* Let \(X_n \sim \operatorname{Uniform}([0, 1/n])\). We don't even
+need to specify what probability space \(X_n\) lives on to check \(X_n \Rightarrow 0\): its CDF is
+\[
+F_{X_n}(x) = \begin{cases} 0, & x < 0, \\ nx, & 0 \le x \le 1/n, \\ 1, & x > 1/n. \end{cases}
+\]
+For every \(x < 0\), \(F_{X_n}(x) = 0 = F_0(x)\). For every \(x > 0\), once \(n > 1/x\) we have
+\(F_{X_n}(x) = 1 = F_0(x)\). Since \(x = 0\) is the sole discontinuity point of \(F_0\), we conclude
+immediately that \(X_n \Rightarrow 0\).
+
+* 14.2 Implications and a subsequence principle
+
+** Intuition
+
+How do our four modes fit together? Here is the complete map of implications on a probability space:
+
+#+begin_example
+     Almost-sure convergence  (X_n -> X a.s.)
+               |
+               |  (holds on finite measure spaces;
+               |   conversely, a subsequence X_{n_k} -> X a.s. exists!)
+               v
+     Convergence in probability  (X_n -> X in prob.)  <====  Convergence in L^p
+               |                                              (E|X_n - X|^p -> 0)
+               |  (always; converse holds ONLY
+               |   when the limit X = c is a constant!)
+               v
+     Convergence in distribution  (X_n => X)
+#+end_example
+
+Notice two hub facts:
+1. *Convergence in probability is the central crossroads:* Both almost-sure convergence and \(L^p\)
+   convergence flow *into* convergence in probability, and convergence in probability flows *into*
+   convergence in distribution.
+2. *No direct arrow between almost-sure and \(L^p\):* Neither implies the other! Almost-sure
+   convergence only cares about whether each \(\omega\) eventually settles down (ignoring how huge
+   \(X_n\) might be on a tiny set of outcomes), whereas \(L^p\) convergence cares about the global
+   integral \(\mathbb E|X_n - X|^p\) (ignoring whether errors keep moving around to hit every \(\omega\)).
+
+** The basic implications
+
+#+begin_quote
+*Proposition 14.2.* Almost-sure convergence implies convergence in probability. Convergence in \(L^p\)
+implies convergence in probability. Convergence in probability implies convergence in distribution.
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*1. Almost-sure \(\implies\) in probability.*
+Assume \(X_n \to X\) a.s., and fix \(\varepsilon > 0\). We want to show that
+\(\mathbb P(|X_n - X| > \varepsilon) = \mathbb E[\mathbf 1_{\{|X_n - X| > \varepsilon\}}] \to 0\).
+- Look at the indicator random variables \(Y_n(\omega) := \mathbf 1_{\{|X_n - X| > \varepsilon\}}(\omega)\).
+- For every "good" outcome \(\omega\) where \(X_n(\omega) \to X(\omega)\), there is an index \(N(\omega)\)
+  after which \(|X_n(\omega) - X(\omega)| \le \varepsilon\). For all \(n \ge N(\omega)\), the indicator
+  \(Y_n(\omega)\) is literally \(0\).
+- Since the set of good outcomes has probability \(1\), we have \(Y_n \to 0\) almost surely.
+- Moreover, \(0 \le Y_n \le 1\), and the constant function \(1\) is integrable on a probability space
+  (\(\mathbb E[1] = \mathbb P(\Omega) = 1 < \infty\)).
+- By the *Dominated Convergence Theorem* (Theorem 6.10), \(\mathbb P(|X_n - X| > \varepsilon) = \mathbb E[Y_n] \to \mathbb E[0] = 0\).
+
+*2. Convergence in \(L^p\) \(\implies\) in probability.*
+Assume \(\mathbb E|X_n - X|^p \to 0\), and fix \(\varepsilon > 0\).
+- Compare the two nonnegative functions \(\varepsilon^p \mathbf 1_{\{|X_n - X| > \varepsilon\}}\) and
+  \(|X_n - X|^p\) pointwise at every \(\omega\):
+  - If \(|X_n(\omega) - X(\omega)| \le \varepsilon\), the left-hand side is \(0\), which is \(\le |X_n(\omega) - X(\omega)|^p\).
+  - If \(|X_n(\omega) - X(\omega)| > \varepsilon\), the left-hand side is \(\varepsilon^p < |X_n(\omega) - X(\omega)|^p\).
+- Thus \(\varepsilon^p \mathbf 1_{\{|X_n - X| > \varepsilon\}} \le |X_n - X|^p\) everywhere on \(\Omega\).
+- Taking expectations of both sides and dividing by \(\varepsilon^p > 0\) gives Markov's/Chebyshev's bound:
+  \[
+  \mathbb P(|X_n - X| > \varepsilon) \le \varepsilon^{-p} \mathbb E|X_n - X|^p \xrightarrow[n\to\infty]{} 0 .
+  \]
+
+*3. Convergence in probability \(\implies\) in distribution.*
+Assume \(X_n \to X\) in probability. Fix a continuity point \(x\) of \(F_X\), and fix any \(\delta > 0\).
+We want to compare \(F_{X_n}(x) = \mathbb P(X_n \le x)\) with \(F_X(x) = \mathbb P(X \le x)\).
+- *Upper bound on \(F_{X_n}(x)\):* Suppose an outcome \(\omega\) satisfies \(X_n(\omega) \le x\). Either
+  \(X_n(\omega)\) is within \(\delta\) of \(X(\omega)\)—in which case
+  \(X(\omega) \le X_n(\omega) + \delta \le x + \delta\)—or else the error exceeds \(\delta\), i.e.
+  \(|X_n(\omega) - X(\omega)| > \delta\). In set notation:
+  \[
+  \{X_n \le x\} \subseteq \{X \le x + \delta\} \cup \{|X_n - X| > \delta\} .
+  \]
+  By monotonicity and subadditivity of \(\mathbb P\),
+  \[
+  F_{X_n}(x) \le F_X(x + \delta) + \mathbb P(|X_n - X| > \delta) .
+  \]
+- *Lower bound on \(F_{X_n}(x)\):* Swap the roles of \(X\) and \(X_n\) with \(x - \delta\) in place of \(x\):
+  if \(X(\omega) \le x - \delta\) and \(|X_n(\omega) - X(\omega)| \le \delta\), then
+  \(X_n(\omega) \le X(\omega) + \delta \le x\). Hence
+  \[
+  \{X \le x - \delta\} \subseteq \{X_n \le x\} \cup \{|X_n - X| > \delta\} ,
+  \]
+  which rearranges to
+  \[
+  F_X(x - \delta) - \mathbb P(|X_n - X| > \delta) \le F_{X_n}(x) .
+  \]
+- Putting both bounds together gives the sandwich inequality in the lecture notes:
+  \[
+  F_X(x - \delta) - \mathbb P(|X_n - X| > \delta) \le F_{X_n}(x) \le F_X(x + \delta) + \mathbb P(|X_n - X| > \delta) .
+  \]
+- First keep \(\delta > 0\) *fixed* and let \(n \to \infty\). Since \(\mathbb P(|X_n - X| > \delta) \to 0\),
+  taking \(\liminf_{n\to\infty}\) and \(\limsup_{n\to\infty}\) gives
+  \[
+  F_X(x - \delta) \le \liminf_{n\to\infty} F_{X_n}(x) \le \limsup_{n\to\infty} F_{X_n}(x) \le F_X(x + \delta) .
+  \]
+- Now let \(\delta \downarrow 0\). Because \(x\) is a *continuity point* of \(F_X\), both outer bounds
+  \(F_X(x - \delta)\) and \(F_X(x + \delta)\) converge to \(F_X(x)\). Thus
+  \(\lim_{n\to\infty} F_{X_n}(x) = F_X(x)\). \(\blacksquare\)
+
+*** Crucial remark: why finiteness of the measure is needed for (a.e. \(\implies\) in measure)
+
+Look back at Step 1 of the proof of Proposition 14.2: we applied the Dominated Convergence Theorem
+with dominating function \(g \equiv 1\). On a finite measure space (\(\mu(\Omega) < \infty\)), the
+constant function \(1\) is integrable, so almost-everywhere convergence *always* implies convergence in
+measure on any finite measure space.
+
+On an *infinite* measure space, \(1\) is not integrable, and the implication fails!
+- *Counterexample on \((\mathbb R, \lambda)\) (sliding box):* Let \(f_n = \mathbf 1_{[n, n+1]}\).
+  For any fixed point \(x \in \mathbb R\), as soon as \(n > x\) we have \(x \notin [n, n+1]\), so
+  \(f_n(x) = 0\). Thus \(f_n(x) \to 0\) at *every* point \(x \in \mathbb R\).
+- Yet for \(\varepsilon = 1/2\), the set \(\{|f_n - 0| > 1/2\} = [n, n+1]\) has Lebesgue measure
+  \(\lambda([n, n+1]) = 1 \not\to 0\). The bump of mass \(1\) slides off to \(+\infty\) without ever
+  shrinking in measure:
+
+#+begin_example
+  f_1 = 1_{[1,2]}        f_2 = 1_{[2,3]}        f_n = 1_{[n,n+1]}
+      +---+                  +---+                         +---+
+  ----+   +-------------- ---+   +-------------- ... ------+   +---> x
+      1   2                  2   3                         n  n+1
+  Measure of {|f_n| > 1/2} is ALWAYS 1, even though f_n(x) -> 0 for each fixed x!
+#+end_example
+
+** The subsequence principle
+
+Convergence in probability does not imply almost-sure convergence of the *whole* sequence (as we will
+see in Example 14.4). However, if we thin the sequence out so that the error probabilities decay fast
+enough to have a *convergent sum* (like \(\sum_k 2^{-k} < \infty\)), then the thinned subsequence
+*does* converge almost surely!
+
+#+begin_quote
+*Proposition 14.3 (Almost-surely convergent subsequences).* If \(X_n \to X\) in probability, there are
+increasing indices \(n_k\) such that \(X_{n_k} \to X\) almost surely.
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*Step 1. Choose the fast-decaying subsequence \(n_k\).*
+For each integer \(k \ge 1\), apply the definition of \(X_n \to X\) in probability with tolerance
+\(\varepsilon = 2^{-k}\): since \(\mathbb P(|X_n - X| > 2^{-k}) \to 0\) as \(n \to \infty\), there is a
+cutoff index \(N_k\) such that
+\[
+\mathbb P(|X_n - X| > 2^{-k}) \le 2^{-k} \quad \text{for all } n \ge N_k .
+\]
+We pick \(n_1, n_2, \dots\) inductively so that they are strictly increasing:
+- Choose \(n_1 \ge N_1\).
+- For \(k \ge 2\), choose \(n_k \ge \max(N_k, n_{k-1} + 1)\).
+Then \(n_1 < n_2 < n_3 < \dots\) and \(\mathbb P(|X_{n_k} - X| > 2^{-k}) \le 2^{-k}\) for every \(k\).
+
+*Step 2. Bound the tail unions using the geometric series.*
+Let \(E_k := \{|X_{n_k} - X| > 2^{-k}\}\) be the event that the \(k\)-th subsequence term fails its
+\(2^{-k}\) accuracy test. For any starting index \(m \ge 1\), consider the tail union
+\(U_m := \bigcup_{k \ge m} E_k\) (the event that *at least one* failure occurs at or after step \(m\)).
+By countable subadditivity (the union bound),
+\[
+\mathbb P\Big(\bigcup_{k \ge m} \{|X_{n_k} - X| > 2^{-k}\}\Big)
+  \le \sum_{k \ge m} 2^{-k} = 2^{1-m} \xrightarrow[m\to\infty]{} 0 .
+\]
+
+*Step 3. Intersect the tail unions and verify convergence outside the null set.*
+The events \(U_m = \bigcup_{k \ge m} E_k\) decrease as \(m\) increases (\(U_1 \supseteq U_2 \supseteq \dots\)),
+and \(\mathbb P(U_1) \le 1 < \infty\). By *continuity of measure from above* (Proposition 2.3),
+\[
+\mathbb P\Big(\bigcap_{m=1}^\infty \bigcup_{k \ge m} \{|X_{n_k} - X| > 2^{-k}\}\Big)
+  = \lim_{m\to\infty} \mathbb P(U_m) = 0 .
+\]
+Now pick any outcome \(\omega\) *outside* this probability-zero intersection.
+- Because \(\omega \notin \bigcap_{m=1}^\infty U_m\), there is some integer \(m(\omega) \ge 1\) such that
+  \(\omega \notin U_{m(\omega)} = \bigcup_{k \ge m(\omega)} E_k\).
+- That means for *every* \(k \ge m(\omega)\), \(\omega \notin E_k\), i.e.
+  \[
+  |X_{n_k}(\omega) - X(\omega)| \le 2^{-k} \quad \text{for all } k \ge m(\omega) .
+  \]
+- Since \(2^{-k} \to 0\) as \(k \to \infty\), the squeeze theorem gives \(X_{n_k}(\omega) \to X(\omega)\).
+Because the exceptional intersection has probability \(0\), \(X_{n_k} \to X\) almost surely. \(\blacksquare\)
+
+(We will meet this exact tail-union argument again in [[file:ch15-weak-law.org][Chapter 15]] as the *First Borel–Cantelli Lemma*!)
+
+** Counterexamples separating the modes
+
+Now we look at the three classic counterexamples from the lecture notes showing which arrows in our
+implication diagram *cannot* be reversed.
+
+*** 1. In probability and \(L^p\), but NOT almost surely
+
+#+begin_quote
+*Example 14.4 (The typewriter sequence).* On \([0,1)\) with uniform measure, for \(k \ge 0\) and
+\(0 \le j < 2^k\) define
+\[
+X_{2^k + j} = \mathbf 1_{[j 2^{-k},\, (j+1) 2^{-k})} .
+\]
+The intervals sweep the space one dyadic level at a time. Every fixed outcome lies in exactly one
+interval in each level, so it sees infinitely many ones. It also sees infinitely many zeros. Thus the
+sequence converges at no outcome. Nevertheless, at level \(k\) the probability of a one is \(2^{-k}\),
+so \(X_n \to 0\) in probability and in every finite \(L^p\). The sequence separates almost-sure
+convergence from both of those notions.
+#+end_quote
+
+*Visualizing the typewriter carriage:*
+Why is it called the "typewriter sequence"? Think of an old mechanical typewriter carriage moving across
+\([0,1)\) from left to right, then snapping back to \(0\) and sweeping across again with half the width:
+- *Level \(k=0\) (\(n=1\)):* \([0, 1)\) (width \(1\))
+- *Level \(k=1\) (\(n=2, 3\)):* \([0, 1/2)\), then \([1/2, 1)\) (width \(1/2\))
+- *Level \(k=2\) (\(n=4, 5, 6, 7\)):* \([0, 1/4)\), \([1/4, 1/2)\), \([1/2, 3/4)\), \([3/4, 1)\) (width \(1/4\))
+
+#+begin_example
+  k=0, n=1:  [=================== 1 ===================)          width = 1
+  k=1, n=2:  [======== 1 ========)
+       n=3:                      [======== 1 ========)          width = 1/2
+  k=2, n=4:  [=== 1 ===)
+       n=5:            [=== 1 ===)
+       n=6:                      [=== 1 ===)
+       n=7:                                [=== 1 ===)          width = 1/4
+             0                  1/2                    1
+#+end_example
+
+Let us check all four modes for \(X_n\) on \(\Omega = [0,1)\) with \(\mathbb P = \lambda|_{[0,1)}\):
+- *Almost sure:* Fix *any* \(\omega \in [0,1)\). During level \(k\) (\(2^k \le n < 2^{k+1}\)), the \(2^k\)
+  intervals partition \([0,1)\), so \(\omega\) belongs to *exactly one* of them (giving \(X_n(\omega) = 1\))
+  and misses the other \(2^k - 1\) of them (giving \(X_n(\omega) = 0\) for \(k \ge 1\)). Thus the sequence
+  \((X_n(\omega))_{n\ge 1}\) consists of infinitely many \(1\)s and infinitely many \(0\)s:
+  \(\liminf_n X_n(\omega) = 0 < 1 = \limsup_n X_n(\omega)\) for *every* \(\omega \in [0,1)\)! So
+  \(\mathbb P(X_n \to 0) = 0\).
+- *In probability and \(L^p\):* At index \(n = 2^k + j\), the interval has length \(2^{-k} \le 2/n\).
+  Hence for \(0 < \varepsilon < 1\) and \(1 \le p < \infty\),
+  \[
+  \mathbb P(|X_n - 0| > \varepsilon) = \mathbb E|X_n|^p = 2^{-k} \xrightarrow[n\to\infty]{} 0 .
+  \]
+- *What is the a.s. convergent subsequence promised by Proposition 14.3?* Take the left-most interval at
+  each level: \(n_k = 2^k\), so \(X_{n_k} = \mathbf 1_{[0, 2^{-k})}\). Then for every \(\omega > 0\),
+  once \(2^{-k} \le \omega\) we have \(X_{n_k}(\omega) = 0 \to 0\)!
+
+*** 2. Almost surely (and in probability/distribution), but NOT in \(L^1\)
+
+#+begin_quote
+*Example 14.5 (Shrinking spikes).* On \((0,1)\) with uniform measure, let \(X_n = n \mathbf 1_{(0, 1/n)}\).
+At every outcome \(\omega > 0\), the variable is eventually zero, so \(X_n \to 0\) almost surely. But
+\(\mathbb E|X_n| = 1\). Thus almost-sure convergence does not imply \(L^1\) convergence or convergence
+of expectations. The heights compensate exactly for the shrinking exceptional sets.
+#+end_quote
+
+#+begin_example
+   height n  |   +--+
+             |   |  |     Area = height * width = n * (1/n) = 1
+   height 2  |   |  +---+
+   height 1  |   |  |   +-------+
+           0 +---+--+---+-------+-----> omega in (0,1)
+             0  1/n 1/2 1       1
+#+end_example
+
+- Fix any \(\omega \in (0,1)\). By the Archimedean property, there is an integer \(N > 1/\omega\). For all
+  \(n \ge N\), we have \(1/n < \omega\), so \(\omega \notin (0, 1/n)\) and \(X_n(\omega) = 0\). Thus
+  \(X_n(\omega) \to 0\) at *every* \(\omega \in (0,1)\) (hence almost surely, in probability, and in
+  distribution).
+- Yet for every \(n\) and every \(p \ge 1\),
+  \[
+  \mathbb E|X_n|^p = n^p \cdot \frac{1}{n} = n^{p-1} ,
+  \]
+  which equals \(1\) for \(p=1\) and explodes to \(+\infty\) for \(p > 1\)!
+
+*** 3. In distribution, but NOT in probability
+
+#+begin_quote
+*Example 14.6 (The same laws, different values).* Let \(X\) take the values \(-1\) and \(1\) with equal
+probability, and put \(X_n = (-1)^n X\). Every \(X_n\) has the law of \(X\), so \(X_n \Rightarrow X\). At
+odd indices, \(|X_n - X| = 2\) at every outcome, so there is no convergence to \(X\) in probability. A
+law does not specify a coupling.
+#+end_quote
+
+Let's unpack the last sentence: *"A law does not specify a coupling."*
+- Because \(\mathbb P(X = 1) = \mathbb P(X = -1) = 1/2\), flipping the sign \(-X\) produces a random
+  variable with the *exact same* probability distribution (\(\frac{1}{2}\delta_{-1} + \frac{1}{2}\delta_1\)).
+  Thus \(F_{X_n}(x) = F_X(x)\) for every \(n\) and every \(x \in \mathbb R\), so \(X_n \Rightarrow X\)
+  trivially.
+- However, at odd \(n\), \(X_n = -X\), so \(|X_n(\omega) - X(\omega)| = |-2X(\omega)| = 2\) for *every*
+  \(\omega\). Thus for \(0 < \varepsilon < 2\),
+  \[
+  \mathbb P(|X_n - X| > \varepsilon) = \begin{cases} 1, & n \text{ odd}, \\ 0, & n \text{ even}, \end{cases}
+  \]
+  which oscillates between \(0\) and \(1\) and does not converge to \(0\).
+
+** When DOES convergence in distribution imply convergence in probability?
+
+Example 14.6 worked because the limit \(X\) had two distinct values (\(-1\) and \(+1\)) that could be
+swapped without changing the law. When the limit is a *deterministic constant* \(c\), there is only one
+value in the support, so no swapping is possible!
+
+#+begin_quote
+*Proposition 14.7 (A constant limit).* If \(X_n \Rightarrow c\), where \(c\) is a constant, then
+\(X_n \to c\) in probability.
+#+end_quote
+
+** Proof (unpacked step by step)
+
+The constant random variable \(X \equiv c\) has CDF
+\[
+F_c(x) = \begin{cases} 0, & x < c, \\ 1, & x \ge c. \end{cases}
+\]
+Its *only* point of discontinuity is \(x = c\); at every \(x \ne c\), \(F_c\) is continuous.
+Fix any \(\varepsilon > 0\).
+- Notice that if \(|X_n - c| > \varepsilon\), then either \(X_n < c - \varepsilon \le c - \varepsilon/2\)
+  or \(X_n > c + \varepsilon > c + \varepsilon/2\).
+- Therefore:
+  \[
+  \mathbb P(|X_n - c| > \varepsilon)
+    \le \mathbb P(X_n \le c - \varepsilon/2) + \mathbb P(X_n > c + \varepsilon/2)
+    = F_{X_n}(c - \varepsilon/2) + 1 - F_{X_n}(c + \varepsilon/2) .
+  \]
+- Why did we use \(\varepsilon/2\) instead of \(\varepsilon\)? To guarantee strict inclusion
+  \(\{X_n - c < -\varepsilon\} \subseteq \{X_n \le c - \varepsilon/2\}\) and because both
+  \(c - \varepsilon/2 < c\) and \(c + \varepsilon/2 > c\) are *continuity points* of \(F_c\)!
+- Since \(X_n \Rightarrow c\), we have \(F_{X_n}(c - \varepsilon/2) \to F_c(c - \varepsilon/2) = 0\) and
+  \(F_{X_n}(c + \varepsilon/2) \to F_c(c + \varepsilon/2) = 1\).
+- Thus \(\mathbb P(|X_n - c| > \varepsilon) \le 0 + 1 - 1 = 0\) in the limit. \(\blacksquare\)
+
+** Additional worked examples
+
+*Example C (In \(L^1\) but not in \(L^2\)).* Modify the shrinking spikes (Example 14.5) on \((0,1)\) to
+\(X_n = n^{1/2} \mathbf 1_{(0, 1/n)}\). Then:
+- \(\mathbb E|X_n| = n^{1/2} \cdot (1/n) = n^{-1/2} \to 0\), so \(X_n \to 0\) in \(L^1\).
+- \(\mathbb E|X_n|^2 = (n^{1/2})^2 \cdot (1/n) = 1 \not\to 0\), so \(X_n \not\to 0\) in \(L^2\).
+In general, for \(1 \le q < p < \infty\) on a probability space, \(L^p\) convergence implies \(L^q\)
+convergence (by Hölder's/Lyapunov's inequality \(\|Y\|_q \le \|Y\|_p\) from [[file:ch07-lp-spaces.org][Chapter 7]]), but not
+conversely.
+
+*Example D (Converse of Proposition 14.2 via subsequences).* A sequence \(X_n\) converges to \(X\) in
+probability *if and only if* every subsequence \(X_{n_j}\) has a further subsequence \(X_{n_{j_k}}\) that
+converges to \(X\) almost surely. (The forward direction is Proposition 14.3 applied to \(X_{n_j}\); for
+the reverse direction, if \(\mathbb P(|X_n - X| > \varepsilon) \not\to 0\), extract a subsequence \(X_{n_j}\)
+with \(\mathbb P(|X_{n_j} - X| > \varepsilon) \ge \delta > 0\), which cannot have any further subsequence
+converging a.s. by Proposition 14.2.)
+
+* 14.3 Testing laws by continuous functions
+
+** Intuition
+
+Checking \(F_{X_n}(x) \to F_X(x)\) directly can be awkward when we transform random variables, such as
+passing from \(X_n\) to \(g(X_n) = X_n^2\) or \(\sin(X_n)\). Why did CDF convergence have that annoying
+"continuity points of \(F_X\)" proviso in the first place? Because \(F_X(x) = \mathbb E[\mathbf 1_{(-\infty, x]}(X)]\)
+tests the distribution of \(X\) using the *discontinuous* indicator function \(\mathbf 1_{(-\infty, x]}\),
+which jumps from \(1\) to \(0\) at \(x\)!
+
+If we replace discontinuous step indicators by *bounded continuous* test functions \(h : \mathbb R \to \mathbb R\),
+jumps disappear completely. Conversely, any step indicator \(\mathbf 1_{(-\infty, x]}\) can be sandwiched
+tightly between two continuous "ramp" functions \(h_- \le \mathbf 1_{(-\infty, x]} \le h_+\):
+
+#+begin_example
+      1 |------------*=======*
+        |             \       \
+        |     h_-(t)   \       \  h_+(t)
+      0 |               *=======*------------
+        +------------+-------+-------+------> t
+                  x-delta    x    x+delta
+#+end_example
+
+Because \(h_-\) and \(h_+\) only differ on the tiny transition window \([x-\delta, x+\delta]\), their
+expectations squeeze \(\mathbb P(X_n \le x)\) whenever \(x\) is a continuity point of \(F_X\).
+
+** Weak convergence of laws and Theorem 14.8
+
+Recall that the law \(\mu_X = X_\#\mathbb P\) is the Borel probability measure on \(\mathbb R\) defined by
+\(\mu_X(B) = \mathbb P(X \in B)\), and by the image-measure integration formula ([[file:ch06-integration.org][Chapter 6]]),
+\[
+\int_{\mathbb R} h\,d\mu_{X_n} = \mathbb E[h(X_n)], \qquad \int_{\mathbb R} h\,d\mu_X = \mathbb E[h(X)] .
+\]
+We say that the laws \(\mu_{X_n}\) *converge weakly* to \(\mu_X\) if
+\[
+\int_{\mathbb R} h\,d\mu_{X_n} \longrightarrow \int_{\mathbb R} h\,d\mu_X
+\]
+for every bounded continuous function \(h : \mathbb R \to \mathbb R\).
+
+#+begin_quote
+*Theorem 14.8.* For real-valued random variables, \(X_n \Rightarrow X\) if and only if
+\[
+\mathbb E[h(X_n)] \longrightarrow \mathbb E[h(X)]
+\]
+for every bounded continuous function \(h : \mathbb R \to \mathbb R\).
+#+end_quote
+
+** Proof (unpacked step by step)
+
+Write \(\mu_n := \mu_{X_n}\) and \(\mu := \mu_X\). There are two directions to prove:
+\((\Longrightarrow)\) in Steps 1–2, and \((\Longleftarrow)\) in Step 3.
+
+*** Step 1. Control the tails from CDF convergence (\(\Longrightarrow\), outer region)
+
+Assume \(X_n \Rightarrow X\), and fix a bounded continuous function \(h : \mathbb R \to \mathbb R\) with
+\(\|h\|_\infty := \sup_{x \in \mathbb R} |h(x)| < \infty\). Fix an arbitrary accuracy parameter \(\delta > 0\).
+- Because \(\mu(\mathbb R) = 1\) and the intervals \((-M, M]\) increase to \(\mathbb R\) as \(M \to \infty\),
+  continuity of \(\mu\) from below gives \(\mu(\mathbb R \setminus (-M, M]) \to 0\) as \(M \to \infty\).
+- Moreover, the monotone function \(F_X\) has at most *countably many* discontinuities ([[file:ch12-distributions.org][Chapter 12]]),
+  whereas there are uncountably many positive numbers \(M\). Thus we can pick \(M > 0\) large enough so
+  that:
+  1. Both \(-M\) and \(M\) are continuity points of \(F_X\), and
+  2. \(\mu(\mathbb R \setminus (-M, M]) < \delta\).
+- Now notice that \(\mu_n((-M, M]) = F_{X_n}(M) - F_{X_n}(-M)\) and
+  \(\mu((-M, M]) = F_X(M) - F_X(-M)\). Because \(-M\) and \(M\) are continuity points of \(F_X\),
+  \[
+  \mu_n(\mathbb R \setminus (-M, M]) = 1 - \big(F_{X_n}(M) - F_{X_n}(-M)\big)
+    \xrightarrow[n\to\infty]{} 1 - \big(F_X(M) - F_X(-M)\big) = \mu(\mathbb R \setminus (-M, M]) < \delta .
+  \]
+  Hence for all sufficiently large \(n\),
+  \[
+  \mu_n(\mathbb R \setminus (-M, M]) < 2\delta .
+  \]
+
+*** Step 2. Approximate \(h\) by a step function on \((-M, M]\) (\(\Longrightarrow\), inner region)
+
+On the compact interval \([-M, M]\), the continuous function \(h\) is *uniformly continuous*: there is a
+mesh size \(\eta > 0\) such that \(|x - y| \le \eta\) in \([-M, M]\) implies \(|h(x) - h(y)| < \delta\).
+- Because the discontinuity set of \(F_X\) is countable, its complement (the continuity points of \(F_X\))
+  is *dense* in \(\mathbb R\). So we can choose a finite partition
+  \[
+  -M = t_0 < t_1 < \dots < t_r = M
+  \]
+  consisting entirely of *continuity points* of \(F_X\), with mesh \(t_j - t_{j-1} \le \eta\). Then on
+  each subinterval \((t_{j-1}, t_j]\), the oscillation of \(h\) is less than \(\delta\):
+  \(|h(x) - h(t_j)| < \delta\) for all \(x \in (t_{j-1}, t_j]\).
+- Define the step function \(s : \mathbb R \to \mathbb R\) by setting \(s(x) := h(t_j)\) on \((t_{j-1}, t_j]\)
+  for \(j = 1, \dots, r\), and \(s(x) := 0\) outside \((-M, M]\):
+  \[
+  s = \sum_{j=1}^r h(t_j)\,\mathbf 1_{(t_{j-1}, t_j]} .
+  \]
+- Because every \(t_j\) is a continuity point of \(F_X\), \(\mu_n((t_{j-1}, t_j]) = F_{X_n}(t_j) - F_{X_n}(t_{j-1})\)
+  converges to \(\mu((t_{j-1}, t_j]) = F_X(t_j) - F_X(t_{j-1})\). Since \(r\) is finite,
+  \[
+  \int s\,d\mu_n = \sum_{j=1}^r h(t_j)\big(F_{X_n}(t_j) - F_{X_n}(t_{j-1})\big)
+    \xrightarrow[n\to\infty]{} \sum_{j=1}^r h(t_j)\big(F_X(t_j) - F_X(t_{j-1})\big) = \int s\,d\mu .
+  \]
+- Now apply the triangle inequality by inserting \(s\) into both integrals:
+  \[
+  \Big|\int h\,d\mu_n - \int h\,d\mu\Big|
+    \le \int |h - s|\,d\mu_n + \Big|\int s\,d\mu_n - \int s\,d\mu\Big| + \int |s - h|\,d\mu .
+  \]
+  Let's bound the first and third terms by splitting \(\mathbb R\) into \((-M, M]\) and
+  \(\mathbb R \setminus (-M, M]\):
+  - *Inside \((-M, M]\):* \(|h - s| < \delta\) everywhere, so the integral of \(|h - s|\) over \((-M, M]\)
+    with respect to any probability measure is \(\le \delta \cdot 1 = \delta\).
+  - *Outside \((-M, M]\):* \(s = 0\), so \(|h - s| = |h| \le \|h\|_\infty\). Thus for large \(n\),
+    \(\int_{\mathbb R \setminus (-M, M]} |h - s|\,d\mu_n \le \|h\|_\infty \mu_n(\mathbb R \setminus (-M, M]) < 2\delta \|h\|_\infty\),
+    and similarly \(\int_{\mathbb R \setminus (-M, M]} |s - h|\,d\mu < \delta \|h\|_\infty\).
+- Taking \(\limsup_{n\to\infty}\) (where the middle term \(\big|\int s\,d\mu_n - \int s\,d\mu\big| \to 0\)),
+  we get
+  \[
+  \limsup_{n\to\infty} \Big|\int h\,d\mu_n - \int h\,d\mu\Big|
+    \le (\delta + 2\delta\|h\|_\infty) + 0 + (\delta + \delta\|h\|_\infty) = 2\delta + 3\delta\|h\|_\infty .
+  \]
+  Since \(\delta > 0\) was arbitrary, letting \(\delta \downarrow 0\) shows
+  \(\lim_{n\to\infty} \int h\,d\mu_n = \int h\,d\mu\).
+
+*** Step 3. Recover CDF convergence from bounded continuous tests (\(\Longleftarrow\))
+
+Conversely, assume \(\mathbb E[h(X_n)] \to \mathbb E[h(X)]\) for every bounded continuous \(h\). Fix a
+continuity point \(x\) of \(F_X\) and any \(\delta > 0\).
+- Construct two continuous piecewise-linear "ramp" functions \(h_-\) and \(h_+\) (pictured in the
+  Intuition diagram above):
+  \[
+  h_-(t) := \begin{cases} 1, & t \le x - \delta, \\ \frac{x - t}{\delta}, & x - \delta \le t \le x, \\ 0, & t \ge x, \end{cases}
+  \qquad
+  h_+(t) := \begin{cases} 1, & t \le x, \\ \frac{x + \delta - t}{\delta}, & x \le t \le x + \delta, \\ 0, & t \ge x + \delta. \end{cases}
+  \]
+- Both \(h_-\) and \(h_+\) are bounded (with values in \([0,1]\)) and continuous, and they sandwich the
+  step indicator everywhere on \(\mathbb R\):
+  \[
+  \mathbf 1_{(-\infty, x - \delta]} \le h_- \le \mathbf 1_{(-\infty, x]} \le h_+ \le \mathbf 1_{(-\infty, x + \delta]} .
+  \]
+- Evaluating at \(X_n\) and taking expectations gives \(\mathbb E[h_-(X_n)] \le F_{X_n}(x) \le \mathbb E[h_+(X_n)]\).
+  Since \(h_-\) and \(h_+\) are bounded continuous test functions, their expectations converge to
+  \(\mathbb E[h_-(X)]\) and \(\mathbb E[h_+(X)]\) as \(n \to \infty\). Therefore:
+  \[
+  F_X(x - \delta) \le \mathbb E[h_-(X)]
+    \le \liminf_{n\to\infty} F_{X_n}(x)
+    \le \limsup_{n\to\infty} F_{X_n}(x)
+    \le \mathbb E[h_+(X)] \le F_X(x + \delta) .
+  \]
+- Finally, let \(\delta \downarrow 0\). Since \(x\) is a continuity point of \(F_X\), both outer ends
+  \(F_X(x - \delta)\) and \(F_X(x + \delta)\) converge to \(F_X(x)\), squeezing
+  \(\lim_{n\to\infty} F_{X_n}(x) = F_X(x)\). \(\blacksquare\)
+
+*** Why boundedness of \(h\) cannot be dropped
+
+In Theorem 14.8, the test function \(h : \mathbb R \to \mathbb R\) must be *both* continuous and
+*bounded*.
+- Look again at the shrinking spikes \(X_n = n\mathbf 1_{(0, 1/n)}\) on \((0,1)\) (Example 14.5). Since
+  \(X_n \to 0\) almost surely, Proposition 14.2 gives \(X_n \Rightarrow 0\), so \(\mathbb E[h(X_n)] \to h(0)\)
+  for every *bounded* continuous \(h\).
+- However, take the *unbounded* continuous function \(h(x) = x\): then \(\mathbb E[h(X_n)] = \mathbb E[X_n] = 1\)
+  for all \(n\), whereas \(\mathbb E[h(0)] = 0\)!
+
+** Continuous transformations (Continuous Mapping Theorem)
+
+Look how effortless Theorem 14.8 makes proving that continuous functions preserve convergence in
+distribution:
+
+#+begin_quote
+*Corollary 14.9 (Continuous transformations).* Suppose \(X_n \Rightarrow X\), and let
+\(g : \mathbb R \to \mathbb R\) be continuous. Then
+\[
+g(X_n) \Rightarrow g(X) .
+\]
+#+end_quote
+
+** Proof
+
+To check \(g(X_n) \Rightarrow g(X)\) via Theorem 14.8, let \(h : \mathbb R \to \mathbb R\) be any bounded
+continuous function. Then the composition \(h \circ g : \mathbb R \to \mathbb R\) is also bounded (since
+\(\sup_x |h(g(x))| \le \|h\|_\infty\)) and continuous (composition of continuous functions). Applying
+Theorem 14.8 to \(X_n \Rightarrow X\) with the test function \(h \circ g\) gives
+\[
+\mathbb E\big[h(g(X_n))\big] = \mathbb E\big[(h \circ g)(X_n)\big]
+  \xrightarrow[n\to\infty]{} \mathbb E\big[(h \circ g)(X)\big] = \mathbb E\big[h(g(X))\big] .
+\]
+By Theorem 14.8 in the reverse direction, \(g(X_n) \Rightarrow g(X)\). \(\blacksquare\)
+
+*Note:* Notice that \(g\) itself does *not* need to be bounded—only continuous! For example, \(g(x) = x^2\),
+\(g(x) = e^x\), and \(g(x) = |x|\) are unbounded continuous functions, and for any bounded continuous
+\(h\), the composition \(h \circ g\) is automatically bounded because \(h\) is bounded.
+
+** Additional worked examples
+
+*Example E (Squaring a sequence that converges in distribution).* If \(X_n \Rightarrow Z\) where
+\(Z \sim \mathcal N(0,1)\) is a standard normal random variable, then taking the continuous (unbounded!)
+function \(g(x) = x^2\) in Corollary 14.9 immediately gives \(X_n^2 \Rightarrow Z^2 \sim \chi^2_1\),
+without having to compute a single CDF or integral.
+
+*Example F (Discontinuous \(g\) can break Corollary 14.9).* Let \(X_n = 1/n \Rightarrow 0\) (Example 14.1),
+and let \(g(x) = \mathbf 1_{\{0\}}(x)\) (which is discontinuous at \(x = 0\)). Then \(g(X_n) = g(1/n) = 0\)
+for all \(n\), whereas \(g(0) = 1\), so \(g(X_n) \Rightarrow 0 \ne g(0)\). Continuity of \(g\) (at least on
+a set carrying probability \(1\) under \(\mu_X\)) is essential.
+
+** Historical remark (Maurice Fréchet, 1930)
+
+In his 1930 paper /Sur la convergence en probabilité/ (/Metron/ 8, no. 4, pp. 3–50), Maurice Fréchet gave
+concrete examples separating these notions of convergence:
+- He sampled uniformly in an interval and evaluated moving triangular peaks: the variables converged to
+  zero in probability and in mean square (\(L^2\)), but failed to tend to zero at every sampled point
+  (a continuous-tent cousin of Example 14.4).
+- He also compared two fair \(0/1\) variables arranged to have opposite values (\(X\) and \(1 - X\)):
+  their laws agreed completely although their distance \(|X - (1-X)| = 1\) was always one (the \(0/1\)
+  version of Example 14.6).
+- In his introduction, Fréchet explicitly described translating earlier measure-theoretic work on
+  convergence of functions (by Borel, Lebesgue, Riesz, and Lusin) into probability language—exactly the
+  dictionary in Section 14.1.
+
+** Classroom route (from the notes)
+
+Give the four definitions, prove the basic implications (Proposition 14.2), and work through the
+typewriter (Example 14.4), shrinking spikes (Example 14.5), and equal-law example (Example 14.6). Prove
+the subsequence principle (Proposition 14.3). State the bounded-continuous characterization (Theorem 14.8)
+and explain the step-function proof; its full details remain in the notes for reference.
+
+* Worked Exercises
+
+** Exercise 1
+Let \(X_n, X\) be random variables on \((\Omega, \mathcal F, \mathbb P)\) and let \(g : \mathbb R \to \mathbb R\)
+be a continuous function.
+1. Show that if \(X_n \to X\) almost surely, then \(g(X_n) \to g(X)\) almost surely.
+2. Using the subsequence principle (Proposition 14.3) and Exercise D, deduce that if \(X_n \to X\) in
+   probability, then \(g(X_n) \to g(X)\) in probability (even when \(g\) is not uniformly continuous!).
+
+** Solution
+1. Let \(A = \{\omega : X_n(\omega) \to X(\omega)\}\), so \(\mathbb P(A) = 1\). For every \(\omega \in A\),
+   continuity of \(g\) at the real number \(X(\omega)\) implies \(g(X_n(\omega)) \to g(X(\omega))\). Thus
+   \(A \subseteq \{\omega : g(X_n(\omega)) \to g(X(\omega))\}\), so \(\mathbb P(g(X_n) \to g(X)) = 1\).
+2. Suppose for contradiction that \(g(X_n)\) does *not* converge to \(g(X)\) in probability. Then there exist
+   \(\varepsilon > 0\), \(\delta > 0\), and a subsequence \(n_j\) such that
+   \(\mathbb P(|g(X_{n_j}) - g(X)| > \varepsilon) \ge \delta\) for all \(j\). Since \(X_n \to X\) in
+   probability, the subsequence \(X_{n_j}\) also converges to \(X\) in probability. By Proposition 14.3,
+   there is a further subsequence \(X_{n_{j_k}}\) that converges to \(X\) almost surely. By Part 1,
+   \(g(X_{n_{j_k}}) \to g(X)\) almost surely, hence in probability by Proposition 14.2, which contradicts
+   \(\mathbb P(|g(X_{n_{j_k}}) - g(X)| > \varepsilon) \ge \delta\).
+
+** Exercise 2
+On \(\Omega = (0,1)\) with Lebesgue measure \(\mathbb P = \lambda\), consider
+\[
+X_n(\omega) = n^\alpha \mathbf 1_{(0, 1/n)}(\omega), \qquad \alpha \in \mathbb R .
+\]
+For which values of \(\alpha\) does \(X_n \to 0\): (a) almost surely? (b) in probability? (c) in \(L^1\)?
+(d) in \(L^p\) for a given \(1 \le p < \infty\)? (e) in distribution?
+
+** Solution
+- *(a) Almost surely:* For *every* \(\alpha \in \mathbb R\)! Fix any \(\omega \in (0,1)\); as soon as
+  \(n > 1/\omega\), we have \(\omega \notin (0, 1/n)\), so \(X_n(\omega) = 0\). Thus \(X_n \to 0\) at every
+  point of \((0,1)\), regardless of how large \(n^\alpha\) is.
+- *(b) In probability:* For *every* \(\alpha \in \mathbb R\) (either by Proposition 14.2 from (a), or
+  directly since \(\mathbb P(|X_n| > \varepsilon) \le \mathbb P(\omega \in (0, 1/n)) = 1/n \to 0\)).
+- *(e) In distribution:* For *every* \(\alpha \in \mathbb R\) (by Proposition 14.2 from (b)).
+- *(d) In \(L^p\) (\(1 \le p < \infty\)):* We compute \(\mathbb E|X_n|^p = (n^\alpha)^p \cdot \frac{1}{n} = n^{p\alpha - 1}\).
+  This tends to \(0\) as \(n \to \infty\) if and only if \(p\alpha - 1 < 0\), i.e. \(\alpha < 1/p\).
+- *(c) In \(L^1\):* Taking \(p = 1\) in (d), \(X_n \to 0\) in \(L^1\) if and only if \(\alpha < 1\).
+
+** Exercise 3
+Let \(X_n \sim \mathcal N(0, 1/n)\) be normal random variables with mean \(0\) and variance \(1/n\).
+Prove that \(X_n \to 0\) in \(L^2\), in probability, and in distribution. If we do not specify how the
+\(X_n\) are coupled on a common probability space, can we decide whether \(X_n \to 0\) almost surely?
+
+** Solution
+- *In \(L^2\):* \(\mathbb E|X_n - 0|^2 = \operatorname{var}(X_n) = 1/n \to 0\).
+- *In probability and in distribution:* Both follow immediately from \(L^2\) convergence by
+  Proposition 14.2.
+- *Almost surely:* No, the marginal laws \(\mathcal N(0, 1/n)\) alone do not determine whether
+  \(X_n \to 0\) almost surely!
+  - If we couple them as \(X_n = n^{-1/2} Z\) for a single fixed \(Z \sim \mathcal N(0,1)\), then
+    \(X_n(\omega) = n^{-1/2} Z(\omega) \to 0\) for every \(\omega\), so \(X_n \to 0\) a.s.
+  - On the other hand, if \(X_n\) are *independent* \(\mathcal N(0, 1/n)\) variables, one can show using
+    the tail of the Gaussian distribution and the second Borel–Cantelli lemma ([[file:ch15-weak-law.org][Chapter 15]]) that
+    \(\limsup_{n\to\infty} X_n = +\infty\) almost surely (specifically, for \(\varepsilon = 1\),
+    \(\mathbb P(X_n > 1) = \mathbb P(Z > \sqrt{n}) \ge \frac{c}{\sqrt{n}} e^{-n/2}\) is summable, so in fact
+    \(\sum_n \mathbb P(|X_n| > \varepsilon) < \infty\) *does* hold here! Wait: let's check via Markov
+    \(\mathbb E[X_n^4] = 3/n^2\): since \(\sum_n \mathbb P(|X_n| > \varepsilon) \le \varepsilon^{-4} \sum_n 3/n^2 < \infty\),
+    \(X_n \to 0\) a.s. for *every* coupling when \(\operatorname{var}(X_n) = 1/n\)! By contrast, for
+    \(Y_n \sim \mathcal N(0, 1/\log(n+1))\), \(Y_n = (\log(n+1))^{-1/2} Z \to 0\) a.s., whereas independent
+    \(Y_n\) satisfy \(\sum_n \mathbb P(Y_n > 1) = \infty\) and do *not* converge to \(0\) a.s.).
+
+** Exercise 4 (Slutsky's theorem, additive part)
+Suppose \(X_n, Y_n\) live on the same probability space, \(X_n \Rightarrow X\), and \(Y_n \to 0\) in
+probability. Prove that \(X_n + Y_n \Rightarrow X\).
+(/Hint:/ Repeat the sandwich argument from the third part of Proposition 14.2.)
+
+** Solution
+Let \(x\) be a continuity point of \(F_X\), and fix \(\delta > 0\) such that \(x - \delta\) and
+\(x + \delta\) are also continuity points of \(F_X\) (possible for arbitrarily small \(\delta > 0\) since
+\(F_X\) has at most countably many discontinuities).
+- If \(X_n + Y_n \le x\), then either \(X_n \le x + \delta\) or \(|Y_n| > \delta\), so
+  \[
+  F_{X_n + Y_n}(x) \le F_{X_n}(x + \delta) + \mathbb P(|Y_n| > \delta) .
+  \]
+- Similarly, if \(X_n \le x - \delta\) and \(|Y_n| \le \delta\), then \(X_n + Y_n \le x\), so
+  \[
+  F_{X_n}(x - \delta) - \mathbb P(|Y_n| > \delta) \le F_{X_n + Y_n}(x) .
+  \]
+Let \(n \to \infty\): since \(Y_n \to 0\) in probability and \(x \pm \delta\) are continuity points of \(F_X\),
+\[
+F_X(x - \delta) \le \liminf_{n\to\infty} F_{X_n + Y_n}(x) \le \limsup_{n\to\infty} F_{X_n + Y_n}(x) \le F_X(x + \delta) .
+\]
+Letting \(\delta \downarrow 0\) along continuity points of \(F_X\) and using continuity of \(F_X\) at \(x\)
+gives \(F_{X_n + Y_n}(x) \to F_X(x)\).
+
+** Exercise 5
+Show that \(X_n \to X\) in probability if and only if
+\[
+d(X_n, X) := \mathbb E\big[\min(|X_n - X|, 1)\big] \longrightarrow 0 .
+\]
+
+** Solution
+- *(\(\Longrightarrow\))* Assume \(X_n \to X\) in probability, and fix \(\varepsilon \in (0,1)\). Split the
+  expectation on \(\{|X_n - X| \le \varepsilon\}\) (where \(\min(|X_n - X|, 1) \le \varepsilon\)) and
+  \(\{|X_n - X| > \varepsilon\}\) (where \(\min(|X_n - X|, 1) \le 1\)):
+  \[
+  \mathbb E\big[\min(|X_n - X|, 1)\big] \le \varepsilon + \mathbb P(|X_n - X| > \varepsilon) .
+  \]
+  Taking \(\limsup_{n\to\infty}\) gives \(\limsup_n \mathbb E[\min(|X_n - X|, 1)] \le \varepsilon\); since
+  \(\varepsilon \in (0,1)\) was arbitrary, the limit is \(0\).
+- *(\(\Longleftarrow\))* Assume \(\mathbb E[\min(|X_n - X|, 1)] \to 0\). For any \(\varepsilon > 0\), put
+  \(\eta = \min(\varepsilon, 1) > 0\). Whenever \(|X_n - X| > \varepsilon\), we have
+  \(\min(|X_n - X|, 1) \ge \eta\), so Markov's inequality gives
+  \[
+  \mathbb P(|X_n - X| > \varepsilon) \le \mathbb P\big(\min(|X_n - X|, 1) \ge \eta\big)
+    \le \frac{1}{\eta}\,\mathbb E\big[\min(|X_n - X|, 1)\big] \longrightarrow 0 .
+  \]
+
+** Exercise 6
+Let \(U \sim \operatorname{Uniform}(0,1)\), and let \(X_n = \frac{1}{n}\lfloor nU \rfloor\) (rounding \(U\)
+down to the nearest multiple of \(1/n\)). Show that \(X_n \to U\) in all four senses (a.s., in every
+\(L^p\), in probability, and in distribution).
+
+** Solution
+For every \(\omega \in \Omega\), we have \(nU(\omega) - 1 < \lfloor nU(\omega) \rfloor \le nU(\omega)\), so
+\[
+0 \le U(\omega) - X_n(\omega) < \frac{1}{n} .
+\]
+Because the error is uniformly bounded by \(1/n\) everywhere on \(\Omega\):
+- \(X_n(\omega) \to U(\omega)\) at every outcome (hence almost surely);
+- \(\mathbb E|X_n - U|^p \le n^{-p} \to 0\) for every \(1 \le p < \infty\) (hence in \(L^p\));
+- By Proposition 14.2, convergence in probability and convergence in distribution follow immediately
+  (note that each \(X_n\) is discrete uniform on \(\{0, \frac{1}{n}, \dots, \frac{n-1}{n}\}\), whose
+  step CDF converges to the continuous CDF of \(\operatorname{Uniform}(0,1)\)).
+
+* Summary
+
+#+caption: Chapter 14 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Almost-sure (\(a.s.\))  | \(\mathbb P(\{\omega : X_n(\omega)\to X(\omega)\}) = 1\)                                                     | Trajectory-level convergence (Strong Law)                  |
+| In probability          | \(\forall \varepsilon>0,\ \mathbb P(|X_n-X|>\varepsilon)\to 0\)                                              | Single-index error control (Weak Law); measure-theory "in measure" |
+| In \(L^p\) (\(p<\infty\)) | \(\mathbb E|X_n-X|^p \to 0\)                                                                               | Controls average moments; sensitive to heavy tails/spikes  |
+| In distribution (\(\Rightarrow\)) | \(F_{X_n}(x) \to F_X(x)\) at continuity points of \(F_X\)                                          | Compares laws only; no common space \(\Omega\) needed      |
+| Example 14.1            | \(X_n = 1/n \to 0\), but \(F_{X_n}(0)=0 \ne 1 = F_0(0)\)                                                     | Explains why jump points of \(F_X\) must be excluded       |
+| Proposition 14.2        | \(\text{a.s.} \implies \text{in prob.}\), \(L^p \implies \text{in prob.} \implies \text{in dist.}\)          | Master hierarchy of convergence modes                      |
+| Proposition 14.3        | \(X_n \to X\) in prob. \(\implies \exists X_{n_k} \to X\) a.s.                                               | Fast-decaying error probabilities (\(2^{-k}\)) upgrade to a.s. |
+| Example 14.4            | Typewriter sequence on \([0,1)\): \(L^p\) & in prob., not a.s.                                               | Moving blips can hit every \(\omega\) infinitely often     |
+| Example 14.5            | Shrinking spikes \(n\mathbf 1_{(0,1/n)}\): a.s., not in \(L^1\)                                              | Rare tall spikes keep \(\mathbb E|X_n|=1\)                 |
+| Example 14.6            | \(X_n = (-1)^n X\): \(X_n \Rightarrow X\), not in prob.                                                      | Equal laws do not mean close values                        |
+| Proposition 14.7        | \(X_n \Rightarrow c\) (constant) \(\implies X_n \to c\) in prob.                                             | Only case where \(\Rightarrow\) reverses to in probability |
+| Theorem 14.8            | \(X_n \Rightarrow X \iff \mathbb E[h(X_n)]\to\mathbb E[h(X)]\) \(\forall h\in C_b(\mathbb R)\)               | Identifies \(\Rightarrow\) with weak convergence of laws   |
+| Corollary 14.9          | \(X_n \Rightarrow X,\ g\) continuous \(\implies g(X_n) \Rightarrow g(X)\)                                    | Continuous mapping theorem; immediate from Theorem 14.8    |
+
+*Key takeaways*
+
+- Keep the two kinds of questions separate: *value comparisons* on a common space (a.s., in probability,
+  \(L^p\)) versus *law comparisons* (in distribution).
+- Almost-sure convergence implies convergence in probability because \(\mathbb P(\Omega) = 1 < \infty\)
+  lets us apply DCT to \(\mathbf 1_{\{|X_n - X| > \varepsilon\}}\). On infinite measure spaces, sliding
+  boxes \(\mathbf 1_{[n,n+1]}\) show that a.e. convergence need not imply convergence in measure.
+- Remember the three counterexamples by heart: *typewriter* (in prob/\(L^p\), not a.s.), *shrinking spikes*
+  (a.s., not \(L^1\)), and *sign-flipping* (in distribution, not in prob).
+- Convergence in distribution is equivalent to convergence of expectations \(\mathbb E[h(X_n)] \to \mathbb E[h(X)]\)
+  for all *bounded continuous* functions \(h : \mathbb R \to \mathbb R\).

@@ -1,0 +1,1218 @@
+:PROPERTIES:
+:ID:       c6d39e06-99a4-4baa-b236-8d420b5f1106
+:ROAM_ALIASES: "MAST31051 Chapter 6" "Integration on a General Measure Space Notes"
+:END:
+#+title: Chapter 6: Integration on a General Measure Space
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch06:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch05-construction.org][← Chapter 5]] | [[file:ch07-lp-spaces.org][Chapter 7 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In calculus, the Riemann integral \(\int_a^b f(x)\,dx\) chops the *domain* \([a, b]\) into thin vertical
+intervals and approximates \(f\) by step functions on those intervals. That requires the domain to be an
+interval in \(\mathbb R^d\) and requires \(f\) to oscillate very little on small intervals (so badly
+discontinuous functions like \(\mathbf 1_{\mathbb Q}\) are not Riemann integrable, and pointwise limits
+often destroy Riemann integrability).
+
+Lebesgue's revolutionary idea (1902) is to chop the **range** (vertical axis) instead of the domain!
+To integrate a function \(f : \Omega \to [0, \infty]\) on *any* measure space \((\Omega, \mathcal F, \mu)\):
+1. Ask where \(f(\omega)\) falls into horizontal slices \([k 2^{-n}, (k+1) 2^{-n})\); because \(f\) is
+   measurable, the preimage \(A_{n,k}\) of each slice is a measurable set in \(\mathcal F\)!
+2. Multiply the height of each slice by the measure \(\mu(A_{n,k})\) and add them up (a **simple
+   function** integral).
+3. Pass to the limit as the slices get finer and higher.
+
+#+begin_example
+   Riemann (chops the domain R):            Lebesgue (chops the range [0,\infty]):
+      f(x)                                     f(\omega)
+       |     _                                  |  c_3 - - - - - - .---.
+       |   _| |_                                |  c_2 - - - - .---|   |---.
+       | _| | | |_                              |  c_1 - - .---|           |---.
+       +-----------> x                          +----------|---|-----------|---|---> \omega
+         dx dx dx                                          \___ A_2 = {c_2 <= f < c_3}
+   Needs intervals in R^d & continuity!     Works on ANY (\Omega, F, \mu): coin tosses, graphs, R^d!
+#+end_example
+
+Because nothing in the definition of a simple function requires intervals, distances, or coordinates,
+this single construction unifies:
+- **Discrete weighted sums and series** (when \(\mu\) is counting measure on \(\mathbb N\) or a discrete
+  probability law);
+- **Lebesgue integrals on \(\mathbb R^d\)** (when \(\mu = \lambda\));
+- **Expectations \(\mathbb E[X] = \int_\Omega X\,d\mathbb P\)** on an abstract probability space!
+
+Even better, Lebesgue integration comes equipped with three powerhouse limit theorems — **Monotone
+Convergence (MCT)**, **Fatou's Lemma**, and **Dominated Convergence (DCT)** — that tell you *exact,
+easily checkable conditions* under which you can swap a limit and an integral:
+\(\lim_{n\to\infty} \int f_n\,d\mu = \int (\lim_{n\to\infty} f_n)\,d\mu\).
+
+** Probability motivation
+
+In probability theory, the integral of a random variable \(X\) with respect to \(\mathbb P\) is its
+**expectation** (or *mean*) \(\mathbb E[X] := \int_\Omega X\,d\mathbb P\).
+- For a nonnegative random variable \(X \ge 0\), \(\mathbb E[X]\) is *always* well-defined in
+  \([0, \infty]\) (Section 6.2), and for integer-valued \(X \ge 0\) we immediately get the famous tail-sum
+  formula \(\mathbb E[X] = \sum_{k=1}^\infty \mathbb P(X \ge k)\) (Example 6.7).
+- For a signed random variable \(X = X^+ - X^-\), \(\mathbb E[X]\) is defined and finite iff
+  \(\mathbb E[|X|] < \infty\) (Section 6.3).
+- How do you actually *compute* \(\mathbb E[h(X)]\) without knowing the abstract sample space \(\Omega\)?
+  Theorem 6.12 (**image-measure integration**, often called the *Law of the Unconscious Statistician*)
+  proves that \(\mathbb E[h(X)] = \int_{\mathbb R} h(x)\,d(X_\#\mathbb P)(x)\): the expectation depends
+  *only* on the distribution (law) \(X_\#\mathbb P\) of \(X\)!
+
+** Roadmap
+
+This chapter follows the **Standard Machine** (also called the *4-step bootstrap*), which is the master
+proof template of measure and integration theory:
+- *6.1 Step 1 (Simple functions):* Extended measurable functions \(f : \Omega \to [0, \infty]\) and
+  dyadic staircase approximation \(s_n \uparrow f\) by simple functions (Lemma 6.2).
+- *6.2 Step 2 (Nonnegative functions):* Defining \(\int_\Omega f\,d\mu\) for \(f \ge 0\) and proving the
+  **Monotone Convergence Theorem** (Theorem 6.5) and term-by-term integration of nonnegative series
+  (Proposition 6.6).
+- *6.3 Step 3 (Signed integrable functions):* Decomposition \(f = f^+ - f^-\), integrability
+  \(\int |f|\,d\mu < \infty\), linearity, and why conditional convergence is not Lebesgue integration
+  (Example 6.11).
+- *6.4 Putting the Standard Machine to work:* Image-measure integration \(\int h\,d(X_\#\mu) = \int (h\circ X)\,d\mu\)
+  (Theorem 6.12).
+- *6.5 Passage to the limit:* **Fatou's lemma** (Theorem 6.13), shrinking spikes (Example 6.14), and the
+  **Dominated Convergence Theorem** (Theorem 6.15).
+
+** What you need from earlier chapters
+
+- Extended real arithmetic on \([0, \infty]\) (especially \(0 \cdot \infty = 0\)), suprema, infima,
+  \(\liminf\) and \(\limsup\) of sequences: [[file:ch00-toolkit.org][Chapter 0]].
+- Measures, finite additivity, monotonicity, continuity from below (\(\mu(E_n) \uparrow \mu(E)\)):
+  [[file:ch02-measures.org][Chapter 2]].
+- Measurable functions and image measures \(X_\#\mu\): [[file:ch03-measurable-functions.org][Chapter 3]].
+
+* 6.1 Approximation by simple functions
+
+** Measurability of extended-real functions and limit operations
+
+Because sums of nonnegative functions and suprema of sequences can equal \(+\infty\), we allow functions
+\(f : \Omega \to [0, \infty]\) taking values in the extended nonnegative reals.
+
+#+begin_quote
+*Definition (Measurability for \(f : \Omega \to [0, \infty]\)).* A function \(f : \Omega \to [0, \infty]\)
+is *measurable* if the upper level set
+\[
+\{f > t\} := \{\omega \in \Omega : f(\omega) > t\} \in \mathcal F \quad \text{for every real } t \in \mathbb R.
+\]
+#+end_quote
+
+Let us check that all familiar operations preserve measurability:
+1. *The infinite-value set \(\{f = \infty\}\) is measurable:* A number in \([0, \infty]\) equals
+   \(\infty\) iff it exceeds every positive integer \(n\), so
+   \[
+   \{f = \infty\} = \bigcap_{n=1}^\infty \{f > n\} \in \mathcal F.
+   \]
+2. *Strict lower level sets \(\{f < t\}\) give an equivalent test:* Just as for real-valued functions
+   (Chapter 3),
+   \[
+   \{f < t\} = \bigcup_{m=1}^\infty \{f \le t - 1/m\} = \bigcup_{m=1}^\infty \{f > t - 1/m\}^c,
+   \qquad
+   \{f > t\} = \bigcup_{m=1}^\infty \{f \ge t + 1/m\} = \bigcup_{m=1}^\infty \{f < t + 1/m\}^c.
+   \]
+3. *Pointwise suprema, infima, \(\liminf\), \(\limsup\), and pointwise limits:* Given any sequence of
+   measurable functions \(f_n : \Omega \to [0, \infty]\), define \(\sup_n f_n\) and \(\inf_n f_n\)
+   pointwise at each \(\omega \in \Omega\). Then:
+   - \(\sup_n f_n(\omega) > t \iff \text{there exists } n \text{ with } f_n(\omega) > t\), so
+     \[
+     \Big\{\sup_n f_n > t\Big\} = \bigcup_{n=1}^\infty \{f_n > t\} \in \mathcal F.
+     \]
+   - \(\inf_n f_n(\omega) < t \iff \text{there exists } n \text{ with } f_n(\omega) < t\), so
+     \[
+     \Big\{\inf_n f_n < t\Big\} = \bigcup_{n=1}^\infty \{f_n < t\} \in \mathcal F.
+     \]
+   - Consequently, the *lower limit* and *upper limit*
+     \[
+     \liminf_{n\to\infty} f_n := \sup_{N \in \mathbb N} \Big(\inf_{n \ge N} f_n\Big)
+     \qquad \text{and} \qquad
+     \limsup_{n\to\infty} f_n := \inf_{N \in \mathbb N} \Big(\sup_{n \ge N} f_n\Big)
+     \]
+     are always measurable! In particular, if \(f_n(\omega) \to f(\omega)\) pointwise for every
+     \(\omega \in \Omega\), then \(f = \liminf_n f_n = \limsup_n f_n\) is automatically measurable. We
+     write \(f_n \uparrow f\) when \(f_n(\omega) \le f_{n+1}(\omega)\) for all \(n, \omega\) and
+     \(f_n(\omega) \to f(\omega)\) pointwise.
+4. *Sums \(f + g\) and compositions:* If \(f, g : \Omega \to \mathbb R\) (or \(f, g : \Omega \to [0, \infty]\),
+   where no undefined \(\infty - \infty\) can occur), then \(f + g\) is measurable because
+   \[
+   \{f + g > t\} = \bigcup_{q \in \mathbb Q} \big(\{f > q\} \cap \{g > t - q\}\big) \in \mathcal F
+   \]
+   (indeed, \(f(\omega) + g(\omega) > t \iff f(\omega) > t - g(\omega) \iff\) there exists a rational
+   \(q \in \mathbb Q\) with \(f(\omega) > q > t - g(\omega)\)). Finally, if \(\phi : \mathbb R \to \mathbb R\)
+   is continuous ( hence Borel measurable, such as \(\phi(x) = \max(x, 0)\) or \(\phi(x) = |x|^p\)) and
+   \(f\) is measurable, then \(\phi \circ f\) is measurable since
+   \((\phi \circ f)^{-1}(B) = f^{-1}(\phi^{-1}(B)) \in \mathcal F\).
+
+** Simple functions and the dyadic staircase approximation
+
+#+begin_quote
+*Definition 6.1 (Nonnegative simple function).* A *nonnegative simple function* on \((\Omega, \mathcal F)\)
+is a measurable function \(s : \Omega \to [0, \infty)\) taking only *finitely many finite* nonnegative
+values. It can be written in partition form as
+\[
+s = \sum_{j=1}^m a_j \mathbf 1_{A_j},
+\]
+where the sets \(A_1, \dots, A_m \in \mathcal F\) form a finite measurable partition of \(\Omega\)
+(\(\Omega = \bigsqcup_{j=1}^m A_j\)) and \(a_1, \dots, a_m \in [0, \infty)\) are finite nonnegative real
+numbers (including a block with \(a_j = 0\) where \(s = 0\), if needed).
+#+end_quote
+
+*(Note: There is NO requirement that the sets \(A_j\) have finite measure! Thus the constant function
+\(s = \mathbf 1_\Omega = 1\) is a simple function on every measure space, even when \(\mu(\Omega) = \infty\).)*
+
+Now comes the foundational approximation lemma of Lebesgue integration: *every* nonnegative measurable
+function \(f : \Omega \to [0, \infty]\) can be approximated from below by an increasing sequence of
+nonnegative simple functions \(s_n \uparrow f\).
+
+#+begin_quote
+*Lemma 6.2 (Increasing simple approximation / the dyadic staircase).* Every nonnegative measurable
+function \(f : \Omega \to [0, \infty]\) is the pointwise limit of an increasing sequence of nonnegative
+simple functions \(0 \le s_1 \le s_2 \le \cdots \le f\) with \(s_n \uparrow f\) pointwise on \(\Omega\).
+#+end_quote
+
+*Proof.* For any finite real number \(r \ge 0\), let \(\lfloor r \rfloor\) denote the floor of \(r\)
+(the largest integer \(\le r\)). At stage \(n \ge 1\), we do two things to \(f(\omega)\):
+1. **Truncate at height \(n\)** (replace \(f(\omega)\) by \(\min\{f(\omega), n\}\), so heights \(\ge n\)
+   including \(\infty\) are capped at \(n\));
+2. **Round down to the nearest multiple of \(2^{-n}\)** by defining
+\begin{equation}
+s_n(\omega) := 2^{-n} \big\lfloor 2^n \min\{f(\omega), n\} \big\rfloor. \tag{6.1}
+\end{equation}
+Equivalently, in terms of horizontal slices of thickness \(2^{-n}\):
+\[
+s_n(\omega) = \begin{cases}
+k 2^{-n}, & \text{if } k 2^{-n} \le f(\omega) < (k+1) 2^{-n} \text{ for } k \in \{0, 1, \dots, n 2^n - 1\},\\
+n, & \text{if } f(\omega) \ge n.
+\end{cases}
+\]
+Let us check all required properties of \(s_n\):
+- *\(s_n\) is a nonnegative simple function:* It takes at most \(n 2^n + 1\) distinct finite values in
+  \(\{0, 2^{-n}, 2 \cdot 2^{-n}, \dots, n\}\), and each level set
+  \(\{s_n = k 2^{-n}\} = \{k 2^{-n} \le f < (k+1) 2^{-n}\} \in \mathcal F\) (or \(\{f \ge n\} \in \mathcal F\))
+  is measurable because \(f\) is measurable.
+- *Monotonicity (\(s_n \le s_{n+1} \le f\)):* When we pass from \(n\) to \(n+1\), each slice
+  \([k 2^{-n}, (k+1) 2^{-n})\) is bisected into two half-slices
+  \([2k 2^{-(n+1)}, (2k+1) 2^{-(n+1)})\) (where \(s_{n+1} = s_n\)) and
+  \([(2k+1) 2^{-(n+1)}, (2k+2) 2^{-(n+1)})\) (where \(s_{n+1} = s_n + 2^{-(n+1)} > s_n\)), and the
+  ceiling cap increases from \(n\) to \(n+1\). In neither case can the rounded-down value decrease! Thus
+  \(s_n(\omega) \le s_{n+1}(\omega) \le f(\omega)\) for all \(\omega\).
+- *Pointwise convergence (\(s_n(\omega) \uparrow f(\omega)\)):*
+  - *Case 1:* \(f(\omega) < \infty\). Then for all \(n > f(\omega)\), the truncation cap \(n\) is inactive
+    (\(\min\{f(\omega), n\} = f(\omega)\)), and rounding down to the grid \(2^{-n}\mathbb Z\) makes an
+    error of at most one grid step:
+    \[
+    0 \le f(\omega) - s_n(\omega) < 2^{-n} \xrightarrow[n\to\infty]{} 0.
+    \]
+  - *Case 2:* \(f(\omega) = \infty\). Then \(\min\{f(\omega), n\} = n\) for every \(n\), so
+    \(s_n(\omega) = n \uparrow \infty = f(\omega)\). \(\blacksquare\)
+
+#+begin_example
+   Visualising the dyadic staircase s_n(\omega) at level n=1 (grid 1/2, cap 1) vs n=2 (grid 1/4, cap 2):
+   height
+    2.0 |                                      .---.---  s_2 = 2 (on {f >= 2})
+    1.5 |                              .---.---'
+    1.0 |                      .---.---'=======.=======  s_1 = 1 (on {f >= 1})
+    0.5 |              .---.==='               '
+    0.0 |======.---.==='
+        +----------------------------------------------> \omega (sorted by f(\omega) for clarity)
+        Each step of n -> n+1 halves the vertical step size (2^{-n}) and raises the ceiling cap (n).
+#+end_example
+
+* 6.2 Nonnegative integrals and expectations
+
+** Step 1 of the Standard Machine: Integrating simple functions
+
+For a nonnegative simple function \(s = \sum_{j=1}^m a_j \mathbf 1_{A_j}\) represented by a measurable
+partition \(\Omega = \bigsqcup_{j=1}^m A_j\) with \(a_j \in [0, \infty)\), we define its integral by
+\[
+\int_\Omega s\,d\mu := \sum_{j=1}^m a_j \mu(A_j) \in [0, \infty],
+\]
+using the measure-theory convention **\(0 \cdot \infty = 0\)** (so a block where \(s = 0\) contributes
+\(0\) to the integral even if \(\mu(A_j) = \infty\)).
+
+*Well-definedness (independence of the partition):* What if we write the same simple function \(s\) using
+a *different* measurable partition, say \(s = \sum_{k=1}^\ell b_k \mathbf 1_{B_k}\) where
+\(\Omega = \bigsqcup_{k=1}^\ell B_k\)?
+Take the common refinement \(\{A_j \cap B_k\}_{j,k}\):
+- By finite additivity of \(\mu\), \(\mu(A_j) = \sum_{k=1}^\ell \mu(A_j \cap B_k)\) and
+  \(\mu(B_k) = \sum_{j=1}^m \mu(A_j \cap B_k)\).
+- Whenever \(A_j \cap B_k \ne \emptyset\), picking any point \(\omega \in A_j \cap B_k\) gives
+  \(a_j = s(\omega) = b_k\)! And whenever \(A_j \cap B_k = \emptyset\), \(\mu(A_j \cap B_k) = 0\) so both
+  \(a_j \mu(A_j \cap B_k) = 0\) and \(b_k \mu(A_j \cap B_k) = 0\).
+Therefore:
+\[
+\sum_{j=1}^m a_j \mu(A_j) = \sum_{j=1}^m \sum_{k=1}^\ell a_j \mu(A_j \cap B_k)
+= \sum_{j=1}^m \sum_{k=1}^\ell b_k \mu(A_j \cap B_k) = \sum_{k=1}^\ell b_k \mu(B_k).
+\]
+Thus \(\int_\Omega s\,d\mu\) depends only on the function \(s\), not on how we partition \(\Omega\)!
+
+*Elementary rules for simple functions \(s, t \ge 0\) and \(c \in [0, \infty)\):* Using the common
+refinement partition \(\{A_j \cap B_k\}\) (on which \(s + t\) takes the constant value \(a_j + b_k\)),
+we immediately get:
+1. *Additivity:* \(\int_\Omega (s + t)\,d\mu = \int_\Omega s\,d\mu + \int_\Omega t\,d\mu\).
+2. *Nonnegative homogeneity:* \(\int_\Omega (c s)\,d\mu = c \int_\Omega s\,d\mu\) (using \(0 \cdot \infty = 0\)
+   if \(c = 0\)).
+3. *Monotonicity:* If \(s \le t\) everywhere on \(\Omega\), then \(a_j \le b_k\) on every nonempty
+   \(A_j \cap B_k\), so \(\int_\Omega s\,d\mu \le \int_\Omega t\,d\mu\).
+
+** Step 2 of the Standard Machine: Integrating general nonnegative functions
+
+#+begin_quote
+*Definition 6.3 (Integral of a nonnegative measurable function).* For any nonnegative measurable function
+\(f : \Omega \to [0, \infty]\), its *integral* with respect to \(\mu\) is defined by
+\begin{equation}
+\int_\Omega f\,d\mu := \sup\left\{\int_\Omega s\,d\mu : s \text{ is nonnegative and simple, } 0 \le s \le f\right\} \in [0, \infty]. \tag{6.2}
+\end{equation}
+On a probability space \((\Omega, \mathcal F, \mathbb P)\), this integral is called the *expectation* of
+\(f\), written \(\mathbb E[f] := \int_\Omega f\,d\mathbb P\).
+#+end_quote
+
+*Sanity checks:*
+- *Consistency for simple functions:* If \(f\) is already a simple function, then every simple
+  \(s \le f\) has \(\int_\Omega s\,d\mu \le \int_\Omega f\,d\mu\) by simple-function monotonicity, and
+  \(s = f\) is an admissible choice in (6.2), so the supremum equals \(\int_\Omega f\,d\mu\).
+- *Monotonicity (\(f \le g \implies \int_\Omega f\,d\mu \le \int_\Omega g\,d\mu\)):* If \(0 \le f \le g\),
+  then every simple function \(s\) satisfying \(0 \le s \le f\) also satisfies \(0 \le s \le g\), so the
+  supremum for \(f\) is taken over a subset of the collection for \(g\).
+
+#+begin_quote
+*Example 6.4 (A bounded function can have an infinite integral).* Boundedness is a property of a function
+alone; whether its integral is finite also depends on the measure \(\mu\)!
+- On \((\mathbb N, 2^{\mathbb N}, \#)\) with counting measure \(\#\), the constant function
+  \(f = \mathbf 1_{\mathbb N} \equiv 1\) is bounded (\(0 \le f \le 1\)), yet
+  \[
+  \int_{\mathbb N} 1\,d\# = 1 \cdot \#(\mathbb N) = \infty.
+  \]
+- On any probability space \((\Omega, \mathcal F, \mathbb P)\), the same constant function \(f \equiv 1\)
+  has \(\mathbb E[1] = 1 \cdot \mathbb P(\Omega) = 1\).
+#+end_quote
+
+** The Monotone Convergence Theorem (MCT)
+
+Definition 6.3 defines \(\int_\Omega f\,d\mu\) as a supremum over *all* simple functions \(s \le f\). To
+compute or manipulate integrals in practice, we want to know that for *any* increasing sequence of
+nonnegative measurable functions \(f_n \uparrow f\) (and in particular for the dyadic simple staircase
+\(s_n \uparrow f\) of Lemma 6.2!), the integrals \(\int_\Omega f_n\,d\mu\) converge to
+\(\int_\Omega f\,d\mu\).
+
+#+begin_quote
+*Theorem 6.5 (Monotone Convergence Theorem — MCT).* Let \(f_n, f : \Omega \to [0, \infty]\) be
+measurable functions. If \(f_n \uparrow f\) *almost everywhere* with respect to \(\mu\) (meaning there is
+a measurable set \(N \in \mathcal F\) with \(\mu(N) = 0\) such that
+\(0 \le f_1(\omega) \le f_2(\omega) \le \cdots\) and \(f_n(\omega) \uparrow f(\omega)\) for all
+\(\omega \notin N\)), then
+\[
+\int_\Omega f_n\,d\mu \uparrow \int_\Omega f\,d\mu \quad \text{as } n \to \infty.
+\]
+(No finiteness or \(\sigma\)-finiteness assumption on \(\mu\) is required!)
+#+end_quote
+
+*Proof.* We unpack the proof into two clean steps: first reduce "almost everywhere" to "everywhere", then
+use the famous \(0 < \theta < 1\) trick.
+
+*Step 1. Reduce to convergence everywhere on \(\Omega\).*
+Let \(N \in \mathcal F\) with \(\mu(N) = 0\) be the exceptional null set outside of which
+\(f_n(\omega) \uparrow f(\omega)\). Observe that for any nonnegative simple function
+\(s = \sum_{j=1}^m a_j \mathbf 1_{A_j}\), setting \(s\) to zero on \(N\) produces the simple function
+\(s \mathbf 1_{N^c} = \sum_{j=1}^m a_j \mathbf 1_{A_j \setminus N}\), and since
+\(\mu(A_j) = \mu(A_j \setminus N) + \mu(A_j \cap N) = \mu(A_j \setminus N) + 0\),
+\[
+\int_\Omega s \mathbf 1_{N^c}\,d\mu = \int_\Omega s\,d\mu.
+\]
+Consequently, for *any* nonnegative measurable function \(g\), multiplying by \(\mathbf 1_{N^c}\) leaves
+its integral unchanged: if \(0 \le s \le g\) is simple, then \(0 \le s \mathbf 1_{N^c} \le g \mathbf 1_{N^c}\)
+has the same integral \(\int s\,d\mu\), so taking suprema over \(s\) gives
+\(\int_\Omega g\,d\mu \le \int_\Omega g \mathbf 1_{N^c}\,d\mu\), while \(g \mathbf 1_{N^c} \le g\) gives
+the reverse inequality!
+Therefore, we may replace each \(f_n\) by \(\tilde f_n := f_n \mathbf 1_{N^c}\) and \(f\) by
+\(\tilde f := f \mathbf 1_{N^c}\): they remain measurable, their integrals are unchanged, and now
+\(\tilde f_n(\omega) \uparrow \tilde f(\omega)\) holds **at every point \(\omega \in \Omega\)** (since on
+\(N\) we have \(0 \uparrow 0\)). From now on we assume \(f_n(\omega) \uparrow f(\omega)\) for all
+\(\omega \in \Omega\).
+
+*Step 2. Prove the everywhere-convergent case.*
+- *Easy inequality (\(\le\)):* Since \(f_n \le f_{n+1} \le f\) everywhere, monotonicity of the integral
+  gives \(\int_\Omega f_n\,d\mu \le \int_\Omega f_{n+1}\,d\mu \le \int_\Omega f\,d\mu\) for all \(n\), so
+  the limit \(\lim_{n\to\infty} \int_\Omega f_n\,d\mu\) exists in \([0, \infty]\) and satisfies
+  \[
+  \lim_{n\to\infty} \int_\Omega f_n\,d\mu \le \int_\Omega f\,d\mu.
+  \]
+- *Reverse inequality (\(\ge\), the \(0 < \theta < 1\) trick):* To show that
+  \(\lim_{n\to\infty} \int_\Omega f_n\,d\mu \ge \int_\Omega f\,d\mu\), by Definition 6.3 it suffices to
+  take an arbitrary nonnegative simple function \(0 \le s \le f\) and show that
+  \(\lim_{n\to\infty} \int_\Omega f_n\,d\mu \ge \int_\Omega s\,d\mu\).
+  Why can't we just look at \(\{f_n \ge s\}\)? Because \(f_n(\omega)\) might approach \(s(\omega)\)
+  strictly from below (e.g. \(1 - 1/n \uparrow 1\)), so \(\{f_n \ge s\}\) could be **empty for every
+  finite \(n\)**!
+  To fix this, fix a slightly smaller fraction \(0 < \theta < 1\) (think of \(\theta = 0.99\)), and
+  define the measurable sets
+  \[
+  E_n := \{\omega \in \Omega : f_n(\omega) \ge \theta s(\omega)\} \in \mathcal F.
+  \]
+  Because \(f_n(\omega) \uparrow f(\omega) \ge s(\omega)\):
+  - First, \(E_1 \subseteq E_2 \subseteq \cdots\) (since \(f_n\) increases with \(n\)).
+  - Second, **\(E_n \uparrow \Omega\)**: at any point \(\omega\) where \(s(\omega) = 0\), we have
+    \(f_n(\omega) \ge 0 = \theta s(\omega)\) for all \(n \ge 1\) (so \(\omega \in E_1\)); and at any
+    point \(\omega\) where \(s(\omega) > 0\), since \(s(\omega) < \infty\) (simple functions are finite!)
+    and \(\theta < 1\), we have \(\lim_{n\to\infty} f_n(\omega) = f(\omega) \ge s(\omega) > \theta s(\omega)\),
+    so \(f_n(\omega) \ge \theta s(\omega)\) for all sufficiently large \(n\)!
+  Now compare functions on \(\Omega\): on \(E_n\) we have \(f_n \ge \theta s\), and outside \(E_n\) we
+  have \(f_n \ge 0\), so pointwise on all of \(\Omega\),
+  \[
+  f_n \ge \theta s \mathbf 1_{E_n}.
+  \]
+  Write \(s = \sum_{j=1}^m a_j \mathbf 1_{A_j}\). Then
+  \(\theta s \mathbf 1_{E_n} = \sum_{j=1}^m \theta a_j \mathbf 1_{A_j \cap E_n}\) is a simple function,
+  so monotonicity of the integral gives
+  \[
+  \int_\Omega f_n\,d\mu \ge \int_\Omega \theta s \mathbf 1_{E_n}\,d\mu = \theta \sum_{j=1}^m a_j \mu(A_j \cap E_n).
+  \]
+  Now let \(n \to \infty\): since \(A_j \cap E_n \uparrow A_j\), **continuity of the measure \(\mu\) from
+  below** gives \(\mu(A_j \cap E_n) \uparrow \mu(A_j)\) for each \(j = 1, \dots, m\)! Since this is a
+  finite sum of \(m\) terms,
+  \[
+  \lim_{n\to\infty} \int_\Omega f_n\,d\mu \ge \theta \sum_{j=1}^m a_j \mu(A_j) = \theta \int_\Omega s\,d\mu.
+  \]
+  This holds for every \(0 < \theta < 1\); letting \(\theta \uparrow 1\) gives
+  \(\lim_{n\to\infty} \int_\Omega f_n\,d\mu \ge \int_\Omega s\,d\mu\). Finally, taking the supremum over
+  all simple \(0 \le s \le f\) yields \(\lim_{n\to\infty} \int_\Omega f_n\,d\mu \ge \int_\Omega f\,d\mu\).
+  \(\blacksquare\)
+
+** Linearity and nonnegative series (Tonelli for series)
+
+With MCT in hand, we can immediately upgrade additivity from simple functions to *all* nonnegative
+measurable functions, and then to infinite series of nonnegative functions!
+
+#+begin_quote
+*Proposition 6.6 (Addition and nonnegative series).* For nonnegative measurable functions
+\(f, g, f_n : \Omega \to [0, \infty]\) and \(c \in [0, \infty)\), integration is additive and
+homogeneous (with \(0 \cdot \infty = 0\)):
+\[
+\int_\Omega (f + g)\,d\mu = \int_\Omega f\,d\mu + \int_\Omega g\,d\mu, \qquad
+\int_\Omega (c f)\,d\mu = c \int_\Omega f\,d\mu.
+\]
+Moreover, for any sequence of nonnegative measurable functions \(f_n \ge 0\), we can always interchange
+an infinite sum and an integral:
+\begin{equation}
+\int_\Omega \Big(\sum_{n=1}^\infty f_n\Big)\,d\mu = \sum_{n=1}^\infty \int_\Omega f_n\,d\mu. \tag{6.3}
+\end{equation}
+#+end_quote
+
+*Proof.*
+1. *Finite additivity:* By Lemma 6.2, choose simple functions \(s_n \uparrow f\) and \(t_n \uparrow g\).
+   Then \(s_n + t_n\) are simple functions with \(s_n + t_n \uparrow f + g\). By additivity for simple
+   functions and the Monotone Convergence Theorem (applied three times),
+   \[
+   \int_\Omega (f + g)\,d\mu = \lim_{n\to\infty} \int_\Omega (s_n + t_n)\,d\mu
+   = \lim_{n\to\infty} \left(\int_\Omega s_n\,d\mu + \int_\Omega t_n\,d\mu\right)
+   = \int_\Omega f\,d\mu + \int_\Omega g\,d\mu.
+   \]
+   Homogeneity \(\int (cf)\,d\mu = c \int f\,d\mu\) follows similarly from \(c s_n \uparrow c f\) (for
+   \(c > 0\); \(c = 0\) is \(0 = 0\)).
+2. *Infinite series (6.3):* Let \(S_N := \sum_{n=1}^N f_n\) be the partial sums. Since \(f_n \ge 0\),
+   we have \(S_N \uparrow \sum_{n=1}^\infty f_n\). Applying finite additivity to \(S_N\) and then MCT as
+   \(N \to \infty\) gives
+   \[
+   \int_\Omega \Big(\sum_{n=1}^\infty f_n\Big)\,d\mu
+   = \lim_{N\to\infty} \int_\Omega S_N\,d\mu
+   = \lim_{N\to\infty} \sum_{n=1}^N \int_\Omega f_n\,d\mu
+   = \sum_{n=1}^\infty \int_\Omega f_n\,d\mu. \quad \blacksquare
+   \]
+
+#+begin_quote
+*Example 6.7 (Counting the layers of an integer-valued random variable).* Let \(X\) be a nonnegative
+random variable on \((\Omega, \mathcal F, \mathbb P)\) taking values in \(\{0, 1, 2, \dots\} \cup \{\infty\}\).
+Pointwise at every \(\omega \in \Omega\), any nonnegative integer (or \(\infty\)) equals the number of
+positive integers \(k \ge 1\) that it reaches or exceeds (the "layer-cake representation"):
+\[
+X(\omega) = \sum_{k=1}^\infty \mathbf 1_{\{X \ge k\}}(\omega).
+\]
+Applying Proposition 6.6 (equation (6.3)) to the nonnegative functions \(f_k = \mathbf 1_{\{X \ge k\}}\)
+immediately yields the **tail-sum formula for expectation**:
+\[
+\mathbb E[X] = \sum_{k=1}^\infty \mathbb E\big[\mathbf 1_{\{X \ge k\}}\big] = \sum_{k=1}^\infty \mathbb P(X \ge k).
+\]
+Notice that because all terms are nonnegative, this identity holds in \([0, \infty]\) *without* assuming
+in advance that \(\mathbb E[X] < \infty\)!
+
+Let us test this on two concrete laws on \(\Omega = \mathbb N\) with \(X(n) = n\):
+1. *Geometric\((1/2)\) law:* Assign outcome \(n \in \mathbb N\) probability \(\mathbb P(\{n\}) = 2^{-n}\).
+   Then \(\mathbb P(X \ge k) = \sum_{n=k}^\infty 2^{-n} = 2^{1-k}\), so
+   \[
+   \mathbb E[X] = \sum_{n=1}^\infty n 2^{-n} = \sum_{k=1}^\infty \mathbb P(X \ge k) = \sum_{k=1}^\infty 2^{1-k} = 1 + \frac12 + \frac14 + \cdots = 2.
+   \]
+2. *A heavy-tailed law with \(X < \infty\) everywhere but \(\mathbb E[X] = \infty\):* Assign outcome
+   \(n \in \mathbb N\) probability \(\mathbb P(\{n\}) = \frac{1}{n(n+1)}\). Since
+   \(\frac{1}{n(n+1)} = \frac{1}{n} - \frac{1}{n+1}\), the telescoping sum gives
+   \[
+   \mathbb P(X \ge k) = \sum_{n=k}^\infty \left(\frac{1}{n} - \frac{1}{n+1}\right) = \frac{1}{k}.
+   \]
+   In particular, \(\mathbb P(\mathbb N) = \mathbb P(X \ge 1) = 1\), so \(\mathbb P\) is a valid
+   probability measure and \(X(n) = n < \infty\) is finite at **every** outcome! Yet its expectation is
+   the harmonic series:
+   \[
+   \mathbb E[X] = \sum_{k=1}^\infty \mathbb P(X \ge k) = \sum_{k=1}^\infty \frac{1}{k} = \infty.
+   \]
+   (If we truncate \(X\) at height \(m\), \(\mathbb E[\min\{X, m\}] = \sum_{k=1}^m \frac1k < \infty\), and
+   MCT sends \(\sum_{k=1}^m \frac1k \uparrow \infty = \mathbb E[X]\).) **Moral:** *A random variable can
+   be finite everywhere without having a finite expectation!*
+#+end_quote
+
+#+begin_example
+   Layer-cake decomposition X = \sum_{k=1}^\infty 1_{X >= k} for an integer-valued X:
+   height
+     3 |          +---+         k=3 layer: 1_{X >= 3}
+     2 |      +---+   +---+     k=2 layer: 1_{X >= 2}
+     1 |  +---+   |   |   |     k=1 layer: 1_{X >= 1}
+     0 +--+---+---+---+---+--> \omega
+         X=0 X=1 X=2 X=3 X=2
+     Sum of column heights (definition of E[X]) = Sum of horizontal layer widths (\sum_{k>=1} P(X >= k))!
+#+end_example
+
+* 6.3 Signed functions and integrability
+
+** Null sets and almost-everywhere agreement
+
+#+begin_quote
+*Lemma 6.8.*
+1. A nonnegative measurable function \(f : \Omega \to [0, \infty]\) has \(\int_\Omega f\,d\mu = 0\) if and
+   only if \(f = 0\) almost everywhere (that is, \(\mu(\{f > 0\}) = 0\)).
+2. If \(f, g : \Omega \to [0, \infty]\) are measurable and \(f = g\) almost everywhere, then
+   \(\int_\Omega f\,d\mu = \int_\Omega g\,d\mu\).
+#+end_quote
+
+*Proof.*
+1. *(\(\implies\), Chebyshev/Markov trick):* Suppose \(\int_\Omega f\,d\mu = 0\). Notice that the set where
+   \(f > 0\) can be exhausted by sets where \(f\) is bounded below by \(1/m\):
+   \[
+   \{f > 0\} = \bigcup_{m=1}^\infty \{f > 1/m\}.
+   \]
+   For each \(m \ge 1\), the simple function \(\frac{1}{m} \mathbf 1_{\{f > 1/m\}}\) satisfies
+   \(0 \le \frac{1}{m} \mathbf 1_{\{f > 1/m\}} \le f\) everywhere on \(\Omega\)! By monotonicity of the
+   integral,
+   \[
+   \frac{1}{m} \mu\big(\{f > 1/m\}\big) = \int_\Omega \frac{1}{m}\mathbf 1_{\{f > 1/m\}}\,d\mu \le \int_\Omega f\,d\mu = 0,
+   \]
+   which forces \(\mu(\{f > 1/m\}) = 0\) for every \(m \ge 1\). By countable subadditivity (or continuity
+   from below), \(\mu(\{f > 0\}) \le \sum_{m=1}^\infty \mu(\{f > 1/m\}) = 0\).
+   *(\(\Longleftarrow\)):* Conversely, if \(N = \{f > 0\}\) has \(\mu(N) = 0\), then any nonnegative simple
+   function \(0 \le s \le f\) vanishes outside \(N\), so each positive-coefficient block \(A_j \subseteq N\)
+   has \(\mu(A_j) = 0\), giving \(\int_\Omega s\,d\mu = 0\) and hence \(\int_\Omega f\,d\mu = 0\).
+2. If \(f = g\) outside a measurable null set \(N\) (\(\mu(N) = 0\)), split \(f = f\mathbf 1_N + f\mathbf 1_{N^c}\)
+   and \(g = g\mathbf 1_N + g\mathbf 1_{N^c}\). By part 1, \(\int f\mathbf 1_N\,d\mu = 0 = \int g\mathbf 1_N\,d\mu\),
+   and on \(N^c\) we have \(f\mathbf 1_{N^c} = g\mathbf 1_{N^c}\), so Proposition 6.6 gives
+   \(\int_\Omega f\,d\mu = \int_\Omega f\mathbf 1_{N^c}\,d\mu = \int_\Omega g\mathbf 1_{N^c}\,d\mu = \int_\Omega g\,d\mu\).
+   \(\blacksquare\)
+
+** Step 3 of the Standard Machine: Positive/negative parts and integrability
+
+For a real-valued measurable function \(f : \Omega \to \mathbb R\), we decompose \(f\) into its
+**positive part** \(f^+\) and **negative part** \(f^-\):
+\[
+f^+(\omega) := \max\{f(\omega), 0\} \ge 0, \qquad f^-(\omega) := \max\{-f(\omega), 0\} \ge 0.
+\]
+*(Watch out for the sign! Both \(f^+\) and \(f^-\) are **nonnegative** functions: \(f^-\) records the
+magnitude of the negative values of \(f\).)* At every point \(\omega \in \Omega\), we have the two key
+identities:
+\[
+f = f^+ - f^- \qquad \text{and} \qquad |f| = f^+ + f^-.
+\]
+In particular, \(0 \le f^+ \le |f|\) and \(0 \le f^- \le |f|\), so \(\int_\Omega |f|\,d\mu < \infty\) if
+and only if *both* \(\int_\Omega f^+\,d\mu < \infty\) and \(\int_\Omega f^-\,d\mu < \infty\).
+
+#+begin_quote
+*Definition 6.9 (Integrable function and signed integral).* A real-valued measurable function
+\(f : \Omega \to \mathbb R\) is *integrable* (with respect to \(\mu\)) if
+\[
+\int_\Omega |f|\,d\mu < \infty.
+\]
+Its *integral* is then the finite real number
+\[
+\int_\Omega f\,d\mu := \int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu \in \mathbb R.
+\]
+For an integrable random variable \(X\) on a probability space, this is its *expectation*
+\(\mathbb E[X] = \mathbb E[X^+] - \mathbb E[X^-]\).
+#+end_quote
+
+*(Remark on extended integrals:* If one of \(\int f^+\,d\mu, \int f^-\,d\mu\) is finite and the other is
+\(\infty\), one can still assign \(\int f\,d\mu\) the extended value \(+\infty\) or \(-\infty\). However,
+if **both** \(\int f^+\,d\mu = \infty\) and \(\int f^-\,d\mu = \infty\), the integral \(\int_\Omega f\,d\mu\)
+is **completely undefined** because \(\infty - \infty\) is meaningless! In this course, the word
+**integrable** *always* means \(\int_\Omega |f|\,d\mu < \infty\).)*
+
+** Linearity, monotonicity, and the triangle inequality for integrable functions
+
+Let us check that integrable functions form a vector space and that \(f \mapsto \int_\Omega f\,d\mu\) is
+linear, monotone, and satisfies the triangle inequality:
+1. *Vector space:* If \(f, g\) are integrable and \(c \in \mathbb R\), then \(|cf| = |c|\,|f|\) and
+   \(|f + g| \le |f| + |g|\) (pointwise triangle inequality), so monotonicity and Proposition 6.6 give
+   \[
+   \int_\Omega |f + g|\,d\mu \le \int_\Omega |f|\,d\mu + \int_\Omega |g|\,d\mu < \infty.
+   \]
+2. *Additivity \(\int (f+g)\,d\mu = \int f\,d\mu + \int g\,d\mu\):* How do we prove this when
+   \((f+g)^+ \ne f^+ + g^+\) (because positive and negative parts of \(f\) and \(g\) can cancel)?
+   Write \(f + g\) in two ways:
+   \[
+   (f + g)^+ - (f + g)^- = f + g = (f^+ - f^-) + (g^+ - g^-).
+   \]
+   Move all minus signs to the opposite sides so that **every term is nonnegative**:
+   \[
+   (f + g)^+ + f^- + g^- = (f + g)^- + f^+ + g^+.
+   \]
+   Now apply Proposition 6.6 (additivity for nonnegative functions!) to both sides:
+   \[
+   \int_\Omega (f + g)^+\,d\mu + \int_\Omega f^-\,d\mu + \int_\Omega g^-\,d\mu
+   = \int_\Omega (f + g)^-\,d\mu + \int_\Omega f^+\,d\mu + \int_\Omega g^+\,d\mu.
+   \]
+   Since \(f, g, f+g\) are integrable, all six integrals are **finite real numbers**, so we can rearrange
+   them by ordinary real subtraction:
+   \[
+   \int_\Omega (f + g)^+\,d\mu - \int_\Omega (f + g)^-\,d\mu
+   = \left(\int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu\right)
+   + \left(\int_\Omega g^+\,d\mu - \int_\Omega g^-\,d\mu\right).
+   \]
+3. *Scalar multiplication \(\int (cf)\,d\mu = c \int f\,d\mu\):* For \(c \ge 0\), \((cf)^+ = c f^+\) and
+   \((cf)^- = c f^-\); for \(c < 0\), \((cf)^+ = |c| f^-\) and \((cf)^- = |c| f^+\), which swaps the two
+   parts and pulls out \(c = -|c|\).
+4. *Monotonicity and the integral triangle inequality:* If \(f \le g\) are integrable, then \(g - f \ge 0\),
+   so \(\int g\,d\mu - \int f\,d\mu = \int (g - f)\,d\mu \ge 0\). Applying monotonicity to
+   \(-|f| \le f \le |f|\) gives \(-\int |f|\,d\mu \le \int f\,d\mu \le \int |f|\,d\mu\), i.e.
+   \[
+   \left|\int_\Omega f\,d\mu\right| \le \int_\Omega |f|\,d\mu.
+   \]
+5. *Almost-everywhere invariance:* If \(f, g\) are measurable and \(f = g\) almost everywhere, then
+   \(f^+ = g^+\), \(f^- = g^-\), and \(|f| = |g|\) almost everywhere, so by Lemma 6.8 \(f\) is integrable
+   iff \(g\) is integrable, and their integrals are equal. *(Caution: both \(f\) and \(g\) must be
+   measurable! On an incomplete measure space, changing \(f\) on a non-measurable subset of a null set can
+   destroy measurability.)*
+
+#+begin_quote
+*Example 6.10 (One payoff function, two probability measures).* On a 6-sided die
+\(\Omega = \{1, 2, 3, 4, 5, 6\}\) with \(\mathcal F = 2^\Omega\), consider the payoff random variable
+\[
+X(\omega) = \begin{cases} +3, & \text{if } \omega \in \{2, 4, 6\} \text{ (even)},\\ -1, & \text{if } \omega \in \{1, 3, 5\} \text{ (odd)}.\end{cases}
+\]
+Here \(X^+ = 3\,\mathbf 1_{\{2,4,6\}}\) and \(X^- = 1\,\mathbf 1_{\{1,3,5\}}\).
+- *Under a fair die \(\mathbb P_{\text{fair}}(\{k\}) = 1/6\):* Both \(\{2,4,6\}\) and \(\{1,3,5\}\) have
+  probability \(3/6 = 1/2\), so
+  \[
+  \mathbb E_{\text{fair}}[X] = 3 \cdot \frac12 - 1 \cdot \frac12 = 1.
+  \]
+- *Under a loaded die \(\mathbb P(\{k\}) = k/21\) (for \(k = 1, \dots, 6\)):* Now
+  \(\mathbb P(\{2,4,6\}) = \frac{2+4+6}{21} = \frac{12}{21} = \frac47\) and
+  \(\mathbb P(\{1,3,5\}) = \frac{1+3+5}{21} = \frac{9}{21} = \frac37\). For the *exact same function* \(X\),
+  the expectation is now
+  \[
+  \mathbb E[X] = 3 \cdot \frac47 - 1 \cdot \frac37 = \frac{9}{7}.
+  \]
+A random variable is a measurable function on \((\Omega, \mathcal F)\), but its expectation is a joint
+property of the function *and* the probability measure.
+#+end_quote
+
+#+begin_quote
+*Example 6.11 (Why conditional summation is NOT a Lebesgue integral).* On \((\mathbb N, 2^{\mathbb N}, \#)\)
+with counting measure \(\#\), consider the alternating harmonic sequence
+\[
+f(n) = \frac{(-1)^{n+1}}{n} \qquad (n = 1, 2, 3, \dots).
+\]
+In first-year calculus, the *ordered* alternating series \(\sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} = 1 - \frac12 + \frac13 - \frac14 + \cdots = \ln 2\)
+converges conditionally because we sum in the specific order \(1, 2, 3, \dots\) where positive and
+negative terms cancel.
+However, as a Lebesgue integral with respect to counting measure \(\#\):
+\[
+\int_{\mathbb N} f^+\,d\# = 1 + \frac13 + \frac15 + \cdots = \infty
+\qquad \text{and} \qquad
+\int_{\mathbb N} f^-\,d\# = \frac12 + \frac14 + \frac16 + \cdots = \infty,
+\]
+so \(\int_{\mathbb N} |f|\,d\# = \sum_{n=1}^\infty \frac1n = \infty\). Thus **\(f\) is NOT integrable**
+with respect to \(\#\), and \(\int_{\mathbb N} f\,d\#\) is undefined! Why? Because a measure space
+\((\Omega, \mathcal F, \mu)\) has no built-in linear ordering of its points \(\omega \in \Omega\) (and by
+Riemann's rearrangement theorem, rearranging a conditionally convergent series can make it converge to
+*any* real number or diverge). Lebesgue integration requires **absolute integrability**
+\(\int_\Omega |f|\,d\mu < \infty\) so that the integral is completely independent of how you chop up or
+order the space.
+#+end_quote
+
+* 6.4 Integrating with respect to an image measure
+
+** Intuition and the "Standard Machine" in action
+
+In Chapter 3, we saw that a measurable map \(X : (\Omega, \mathcal F) \to (S, \mathcal S)\) pushes a
+measure \(\mu\) on \(\Omega\) forward to the **image measure** \(X_\#\mu\) on \(S\), defined by
+\[
+(X_\#\mu)(B) := \mu\big(X^{-1}(B)\big) = \mu(\{X \in B\}) \qquad (B \in \mathcal S).
+\]
+When \(\mu = \mathbb P\) is a probability measure, \(X_\#\mathbb P\) is the **distribution (or law)** of
+the random variable \(X\).
+
+Suppose we want to compute the integral (or expectation) of a function \(h(X(\omega))\) of \(X\). Must we
+integrate over the big, abstract sample space \(\Omega\), or can we integrate \(h(x)\) directly on the
+target space \(S\) against the law \(X_\#\mu\)? Theorem 6.12 says both give the **exact same answer**, and
+its proof is the textbook showcase of the 4-step **Standard Machine**:
+1. *Step 1 (Indicators \(h = \mathbf 1_B\)):* True by the definition of \(X_\#\mu\)!
+2. *Step 2 (Nonnegative simple functions \(h = \sum a_j \mathbf 1_{B_j}\)):* True by linearity!
+3. *Step 3 (Nonnegative measurable \(h \ge 0\)):* Approximate \(h_n \uparrow h\) by simple functions and
+   apply MCT!
+4. *Step 4 (Signed integrable \(h = h^+ - h^-\)):* Apply Step 3 to \(|h|, h^+, h^-\) and subtract!
+
+#+begin_quote
+*Theorem 6.12 (Image-measure integration / Change of variables).* Let \(X : (\Omega, \mathcal F) \to (S, \mathcal S)\)
+be a measurable map, and let \(X_\#\mu\) be the image measure of \(\mu\) under \(X\).
+1. For every nonnegative measurable function \(h : (S, \mathcal S) \to [0, \infty]\),
+\begin{equation}
+\int_S h\,d(X_\#\mu) = \int_\Omega h\big(X(\omega)\big)\,d\mu(\omega). \tag{6.4}
+\end{equation}
+2. For a real-valued measurable function \(h : (S, \mathcal S) \to \mathbb R\), \(h\) is integrable with
+   respect to \(X_\#\mu\) if and only if \(h \circ X\) is integrable with respect to \(\mu\), and when
+   they are integrable, (6.4) holds.
+#+end_quote
+
+*Proof (via the Standard Machine).*
+- *Step 1 (Indicators):* Let \(h = \mathbf 1_B\) for some \(B \in \mathcal S\). Then
+  \((h \circ X)(\omega) = \mathbf 1_B(X(\omega)) = \mathbf 1_{X^{-1}(B)}(\omega)\), so
+  \[
+  \int_S \mathbf 1_B\,d(X_\#\mu) = (X_\#\mu)(B) = \mu\big(X^{-1}(B)\big) = \int_\Omega \mathbf 1_{X^{-1}(B)}\,d\mu = \int_\Omega (\mathbf 1_B \circ X)\,d\mu.
+  \]
+- *Step 2 (Nonnegative simple functions):* If \(h = \sum_{j=1}^m a_j \mathbf 1_{B_j}\) is a nonnegative
+  simple function on \(S\), then \(h \circ X = \sum_{j=1}^m a_j \mathbf 1_{X^{-1}(B_j)}\) is a
+  nonnegative simple function on \(\Omega\). By linearity of the integral and Step 1, (6.4) holds for
+  \(h\).
+- *Step 3 (General nonnegative measurable functions):* Let \(h : S \to [0, \infty]\) be measurable. By
+  Lemma 6.2, choose nonnegative simple functions \(h_n\) on \(S\) with \(h_n \uparrow h\) pointwise on
+  \(S\). Then at every \(\omega \in \Omega\), \(h_n(X(\omega)) \uparrow h(X(\omega))\), so
+  \(h_n \circ X \uparrow h \circ X\) pointwise on \(\Omega\). Applying the Monotone Convergence Theorem
+  (Theorem 6.5) on \((S, \mathcal S, X_\#\mu)\) and on \((\Omega, \mathcal F, \mu)\), together with Step 2
+  for each \(h_n\), gives
+  \[
+  \int_S h\,d(X_\#\mu) = \lim_{n\to\infty} \int_S h_n\,d(X_\#\mu)
+  = \lim_{n\to\infty} \int_\Omega (h_n \circ X)\,d\mu
+  = \int_\Omega (h \circ X)\,d\mu.
+  \]
+- *Step 4 (Signed measurable functions):* Let \(h : S \to \mathbb R\) be measurable. Since
+  \(|h \circ X| = |h| \circ X \ge 0\), applying Step 3 to the nonnegative function \(|h|\) gives
+  \[
+  \int_S |h|\,d(X_\#\mu) = \int_\Omega |h \circ X|\,d\mu,
+  \]
+  so the left-hand side is finite iff the right-hand side is finite. When they are finite, applying
+  Step 3 to \(h^+\) and \(h^-\) (noting \((h \circ X)^+ = h^+ \circ X\) and
+  \((h \circ X)^- = h^- \circ X\)) and subtracting yields (6.4). \(\blacksquare\)
+
+*Probabilistic payoff (Example 6.10 revisited).* In probability language, Theorem 6.12 says that for any
+random variable \(X\) with law \(\mu_X := X_\#\mathbb P\),
+\[
+\mathbb E\big[h(X)\big] = \int_\Omega h(X(\omega))\,d\mathbb P(\omega) = \int_S h(x)\,d\mu_X(x).
+\]
+In the loaded-die payoff of Example 6.10, \(X\) only takes two values: \(+3\) (with probability \(4/7\))
+and \(-1\) (with probability \(3/7\)). Thus the image measure (law) of \(X\) on \(\mathbb R\) is simply
+\(\mu_X = \frac47 \delta_3 + \frac37 \delta_{-1}\). Integrating \(h(x) = x\) against \(\mu_X\) on
+\(\mathbb R\) immediately gives \(3 \cdot \frac47 + (-1) \cdot \frac37 = \frac97\), without ever needing
+the 6-point die space \(\Omega\) again! (Notice also that \(\mu_X\) is a discrete measure here, *not*
+Lebesgue measure.)
+
+* 6.5 Passage to the limit
+
+** Fatou's lemma: what survives without monotonicity?
+
+The Monotone Convergence Theorem (Theorem 6.5) requires \(0 \le f_1 \le f_2 \le \cdots\) to be
+*increasing*. What if \(f_n \ge 0\) is a sequence of nonnegative measurable functions that is *not*
+increasing? As Example 6.14 below shows, mass can escape into narrower and narrower spikes (or escape to
+infinity), causing the integral of the pointwise limit to be **strictly smaller** than the limit of the
+integrals. However, mass can only be *lost* in the limit, never created out of nowhere! **Fatou's lemma**
+makes this precise.
+
+#+begin_quote
+*Theorem 6.13 (Fatou's lemma).* For any sequence of nonnegative measurable functions
+\(f_n : \Omega \to [0, \infty]\),
+\[
+\int_\Omega \Big(\liminf_{n\to\infty} f_n\Big)\,d\mu \le \liminf_{n\to\infty} \int_\Omega f_n\,d\mu.
+\]
+#+end_quote
+
+*(Memory aid for the direction of the inequality: "Integral of \(\liminf\) \(\le\) \(\liminf\) of
+integrals" — in the pointwise limit on the left, spikes/mass can disappear before you integrate, making
+the left-hand side smaller!)*
+
+*Proof.* Recall the definition of the pointwise lower limit:
+\[
+\liminf_{n\to\infty} f_n = \sup_{n \ge 1} \Big(\inf_{k \ge n} f_k\Big).
+\]
+Define the auxiliary sequence \(g_n := \inf_{k \ge n} f_k\) for \(n \ge 1\).
+1. Each \(g_n : \Omega \to [0, \infty]\) is a nonnegative measurable function, and as \(n\) increases we
+   take the infimum over a *smaller* set of indices \(\{k : k \ge n\}\), so \(g_n\) **increases** with
+   \(n\):
+   \[
+   0 \le g_1 \le g_2 \le \cdots \quad \text{and} \quad g_n \uparrow \liminf_{n\to\infty} f_n \text{ pointwise on }\Omega.
+   \]
+2. By the Monotone Convergence Theorem (Theorem 6.5) applied to \(g_n \uparrow \liminf_n f_n\),
+   \[
+   \int_\Omega \Big(\liminf_{n\to\infty} f_n\Big)\,d\mu = \lim_{n\to\infty} \int_\Omega g_n\,d\mu.
+   \]
+3. On the other hand, for every fixed \(n\) and every \(k \ge n\), we have \(g_n = \inf_{j \ge n} f_j \le f_k\)
+   pointwise on \(\Omega\). By monotonicity of the integral,
+   \[
+   \int_\Omega g_n\,d\mu \le \int_\Omega f_k\,d\mu \quad \text{for all } k \ge n.
+   \]
+   Taking the infimum over all \(k \ge n\) on the right-hand side gives
+   \[
+   \int_\Omega g_n\,d\mu \le \inf_{k \ge n} \int_\Omega f_k\,d\mu.
+   \]
+4. Now take \(\lim_{n\to\infty}\) on both sides (using step 2 on the left):
+   \[
+   \int_\Omega \Big(\liminf_{n\to\infty} f_n\Big)\,d\mu = \lim_{n\to\infty} \int_\Omega g_n\,d\mu
+   \le \lim_{n\to\infty} \left(\inf_{k \ge n} \int_\Omega f_k\,d\mu\right)
+   = \liminf_{n\to\infty} \int_\Omega f_n\,d\mu. \quad \blacksquare
+   \]
+
+#+begin_quote
+*Example 6.14 (Shrinking spikes: strict inequality in Fatou's lemma).* On \(\Omega = (0, 1)\) with
+Lebesgue measure \(\lambda\), define
+\[
+f_n(x) := n\,\mathbf 1_{(0, 1/n)}(x) \qquad (n \ge 1,\ x \in (0, 1)).
+\]
+- *Pointwise limit:* Fix *any* point \(x \in (0, 1)\). Since \(x > 0\), for all \(n > 1/x\) we have
+  \(1/n < x\), so \(x \notin (0, 1/n)\) and therefore \(f_n(x) = 0\)! Thus \(f_n(x) \to 0\) at **every**
+  point \(x \in (0, 1)\), so \(\liminf_{n\to\infty} f_n = 0\) and
+  \[
+  \int_{(0,1)} \Big(\liminf_{n\to\infty} f_n\Big)\,d\lambda = \int_{(0,1)} 0\,d\lambda = 0.
+  \]
+- *Limit of integrals:* For each \(n \ge 1\), the spike has height \(n\) and base length \(1/n\), so
+  \[
+  \int_{(0,1)} f_n\,d\lambda = n \cdot \lambda\big((0, 1/n)\big) = n \cdot \frac{1}{n} = 1 \quad \text{for every } n \ge 1!
+  \]
+Thus Fatou's inequality reads **\(0 < 1\)** (strict inequality!). Even though \(\int f_n\,d\lambda = 1\) is
+uniformly bounded and \(f_n \to 0\) pointwise everywhere on \((0, 1)\), we cannot swap \(\lim\) and
+\(\int\).
+#+end_quote
+
+#+begin_example
+   Example 6.14 (Shrinking spikes on (0,1): area = 1 escapes into x = 0):
+   height
+     3 | +--+         f_3 = 3 * 1_{(0, 1/3)}   (area = 3 * 1/3 = 1)
+     2 | |  +--+      f_2 = 2 * 1_{(0, 1/2)}   (area = 2 * 1/2 = 1)
+     1 | |  |  +----+ f_1 = 1 * 1_{(0, 1)}     (area = 1 * 1   = 1)
+     0 +-+--+--+----+---> x in (0, 1)
+         0 1/3 1/2  1
+     At every fixed x > 0, the spike eventually moves to the left of x, so f_n(x) -> 0!
+#+end_example
+
+** The Dominated Convergence Theorem (DCT)
+
+How do we prevent the mass of \(f_n\) from escaping into a tall thin spike (like Example 6.14) or escaping
+to \(\infty\) (like \(\mathbf 1_{(n, n+1)}\) on \(\mathbb R\))? By trapping all the functions \(|f_n|\)
+under a *single fixed integrable roof* \(g \in L^1(\mu)\): \(|f_n| \le g\) for all \(n\), with
+\(\int_\Omega g\,d\mu < \infty\)!
+
+#+begin_quote
+*Theorem 6.15 (Dominated Convergence Theorem — DCT).* Suppose that \(f_n : \Omega \to \mathbb R\) are
+real-valued measurable functions such that:
+1. *(Pointwise a.e. convergence)* \(f_n \to f\) almost everywhere for some measurable function
+   \(f : \Omega \to \mathbb R\), and
+2. *(Domination)* There exists a nonnegative **integrable** function \(g : \Omega \to [0, \infty]\)
+   (meaning \(\int_\Omega g\,d\mu < \infty\)) such that
+   \[
+   |f_n| \le g \quad \text{almost everywhere, for every } n \ge 1.
+   \]
+Then \(f_n\) and \(f\) are integrable, and as \(n \to \infty\),
+\[
+\int_\Omega |f_n - f|\,d\mu \longrightarrow 0 \qquad \text{and} \qquad
+\int_\Omega f_n\,d\mu \longrightarrow \int_\Omega f\,d\mu.
+\]
+#+end_quote
+
+*Proof.*
+- *Step 1 (Clean up null sets):* For each \(n \ge 1\), the inequality \(|f_n| \le g\) can fail on a
+  measurable null set \(N_n\), and \(f_n(\omega) \to f(\omega)\) can fail on a measurable null set
+  \(N_0\). Also, since \(\int_\Omega g\,d\mu < \infty\), the set \(N_\infty := \{g = \infty\}\) has
+  measure zero (by Exercise 1 below, or because \(m \mathbf 1_{\{g = \infty\}} \le g \implies \mu(\{g=\infty\}) \le \frac1m \int g\,d\mu \to 0\)).
+  The countable union \(N := N_0 \cup N_\infty \cup \bigcup_{n=1}^\infty N_n \in \mathcal F\) still has
+  \(\mu(N) = 0\). By Lemma 6.8, setting \(f\), every \(f_n\), and \(g\) to \(0\) on \(N\) preserves
+  measurability and leaves all their integrals unchanged! After this modification,
+  \(f_n(\omega) \to f(\omega)\) and \(|f_n(\omega)| \le g(\omega) < \infty\) hold **at every point
+  \(\omega \in \Omega\)**.
+  Taking the limit as \(n \to \infty\) gives \(|f(\omega)| \le g(\omega)\) for all \(\omega \in \Omega\).
+  Since \(\int_\Omega g\,d\mu < \infty\), both \(f\) and every \(f_n\) are integrable.
+- *Step 2 (Apply Fatou's lemma to \(2g - |f_n - f| \ge 0\)):* Define the error functions
+  \[
+  h_n := |f_n - f|.
+  \]
+  By the triangle inequality, \(0 \le h_n \le |f_n| + |f| \le g + g = 2g\) everywhere on \(\Omega\), and
+  \(h_n \to 0\) pointwise everywhere on \(\Omega\).
+  We want to show \(\int_\Omega h_n\,d\mu \to 0\). Since \(h_n\) is not monotone, we cannot apply MCT,
+  and applying Fatou directly to \(h_n\) only gives the useless \(0 \le \liminf_n \int h_n\,d\mu\). Instead,
+  flip \(h_n\) upside down under the roof \(2g\): the functions
+  \[
+  2g - h_n \ge 0
+  \]
+  are **nonnegative** measurable functions, and \(2g - h_n \to 2g\) pointwise on \(\Omega\)! Applying
+  Fatou's lemma (Theorem 6.13) to \(2g - h_n \ge 0\) gives
+  \[
+  \int_\Omega 2g\,d\mu = \int_\Omega \liminf_{n\to\infty} (2g - h_n)\,d\mu
+  \le \liminf_{n\to\infty} \int_\Omega (2g - h_n)\,d\mu
+  = \int_\Omega 2g\,d\mu - \limsup_{n\to\infty} \int_\Omega h_n\,d\mu.
+  \]
+  *(Note: In the last step we used linearity \(\int (2g - h_n)\,d\mu = \int 2g\,d\mu - \int h_n\,d\mu\)
+  and the real-sequence identity \(\liminf_{n\to\infty} (c - a_n) = c - \limsup_{n\to\infty} a_n\) for the
+  **finite** constant \(c = 2\int_\Omega g\,d\mu < \infty\) and bounded sequence
+  \(0 \le a_n = \int_\Omega h_n\,d\mu \le c\).)*
+- *Step 3 (Cancel the finite constant \(2\int_\Omega g\,d\mu\)):* Subtracting the finite real number
+  \(2\int_\Omega g\,d\mu < \infty\) from both sides yields
+  \[
+  \limsup_{n\to\infty} \int_\Omega h_n\,d\mu \le 0.
+  \]
+  Since \(\int_\Omega h_n\,d\mu \ge 0\) for every \(n\), we have
+  \[
+  0 \le \liminf_{n\to\infty} \int_\Omega h_n\,d\mu \le \limsup_{n\to\infty} \int_\Omega h_n\,d\mu \le 0,
+  \]
+  which proves \(\lim_{n\to\infty} \int_\Omega |f_n - f|\,d\mu = 0\)!
+- *Step 4 (Conclude \(\int f_n\,d\mu \to \int f\,d\mu\)):* By linearity and the integral triangle
+  inequality,
+  \[
+  \left|\int_\Omega f_n\,d\mu - \int_\Omega f\,d\mu\right|
+  = \left|\int_\Omega (f_n - f)\,d\mu\right|
+  \le \int_\Omega |f_n - f|\,d\mu \xrightarrow[n\to\infty]{} 0. \quad \blacksquare
+  \]
+
+** Examples: checking the dominating function
+
+#+begin_quote
+*Example 6.16 (Checking when a valid dominating function exists).*
+1. *Success on \((0, 1)\):* Let \(f_n = \mathbf 1_{(0, 1/n)}\) on \((0, 1)\) with Lebesgue measure
+   \(\lambda\). Here \(f_n \to 0\) pointwise and \(|f_n| \le 1\). Because \(\lambda((0, 1)) = 1 < \infty\),
+   the constant function \(g \equiv 1\) is **integrable** on \((0, 1)\)! Thus DCT applies and gives
+   \(\int_{(0,1)} f_n\,d\lambda \to 0\), matching the direct calculation \(\lambda((0, 1/n)) = 1/n \to 0\).
+2. *Why the shrinking spikes of Example 6.14 have NO integrable majorant:* For
+   \(f_n = n\,\mathbf 1_{(0, 1/n)}\) on \((0, 1)\), could there be an integrable \(g\) with
+   \(f_n \le g\) for all \(n\)? No! Any \(g \ge \sup_n f_n\) must satisfy \(g(x) \ge n\) on
+   \((1/(n+1), 1/n)\), essentially behaving like \(1/x\), whose integral \(\int_0^1 \frac{dx}{x} = \infty\)
+   diverges. (Even without computing \(\sup_n f_n\), DCT itself proves no integrable majorant can exist,
+   since \(\int f_n\,d\lambda = 1 \not\to 0\)!)
+3. *Why a constant bound \(|f_n| \le 1\) is NOT enough on an infinite measure space ("mass escaping to
+   infinity"):* On \((\mathbb N, 2^{\mathbb N}, \#)\) with counting measure \(\#\), let
+   \(f_n = \mathbf 1_{\{n\}}\). For each fixed \(k \in \mathbb N\), \(f_n(k) = 0\) for all \(n > k\), so
+   \(f_n \to 0\) pointwise everywhere on \(\mathbb N\), and \(|f_n| \le 1\). Yet
+   \[
+   \int_{\mathbb N} f_n\,d\# = \#(\{n\}) = 1 \not\to 0!
+   \]
+   Why didn't DCT apply? Because on \((\mathbb N, \#)\), the constant function \(g \equiv 1\) has
+   \(\int_{\mathbb N} 1\,d\# = \infty\) (Example 6.4), so \(g \equiv 1\) is **not integrable**! And any
+   function dominating every \(f_n = \mathbf 1_{\{n\}}\) must satisfy \(g(n) \ge 1\) for all \(n\), so no
+   integrable majorant exists.
+   *Rule of thumb:* **A constant bound \(|f_n| \le M\) suffices for DCT on a probability space (or any
+   finite measure space, since \(\int M\,d\mu = M\mu(\Omega) < \infty\)), where this special case is often
+   called the Bounded Convergence Theorem, but it does NOT suffice when \(\mu(\Omega) = \infty\)!**
+#+end_quote
+
+#+begin_quote
+*Example 6.17 (Truncating an integrable function).* Let \(f : \Omega \to \mathbb R\) be an integrable
+function (\(\int_\Omega |f|\,d\mu < \infty\)). For each \(n \ge 1\), define its bounded truncation at
+level \(\pm n\):
+\[
+f_n(\omega) := \max\big\{-n, \min\{f(\omega), n\}\big\} = \begin{cases}
+n, & \text{if } f(\omega) > n,\\
+f(\omega), & \text{if } -n \le f(\omega) \le n,\\
+-n, & \text{if } f(\omega) < -n.
+\end{cases}
+\]
+Then each \(f_n\) is bounded (\(|f_n| \le n\)), \(f_n(\omega) \to f(\omega)\) pointwise everywhere on
+\(\Omega\) (in fact \(f_n(\omega) = f(\omega)\) as soon as \(n \ge |f(\omega)|\)), and
+\[
+|f_n(\omega)| \le |f(\omega)| \quad \text{for every } n \ge 1 \text{ and } \omega \in \Omega.
+\]
+Since \(g := |f|\) is integrable by hypothesis, the Dominated Convergence Theorem immediately gives
+\[
+\int_\Omega |f_n - f|\,d\mu \longrightarrow 0 \quad \text{as } n \to \infty!
+\]
+Thus every integrable function can be approximated in \(L^1\) by bounded functions. (By contrast, if
+\(f \ge 0\) is a nonnegative measurable function with \(\int_\Omega f\,d\mu = \infty\), the truncations
+\(\min\{f, n\} \uparrow f\) instead fall under the Monotone Convergence Theorem, giving
+\(\int_\Omega \min\{f, n\}\,d\mu \uparrow \infty\).)
+#+end_quote
+
+** Common confusions
+
+- *"Simple function means step function on intervals":* No! On \(\mathbb R\), \(\mathbf 1_{\mathbb Q}\) is
+  a perfectly valid simple function (\(1 \cdot \mathbf 1_{\mathbb Q} + 0 \cdot \mathbf 1_{\mathbb R \setminus \mathbb Q}\)),
+  even though it is discontinuous everywhere and not a step function on intervals.
+- *"For MCT, \(f_n \uparrow f\) needs \(\int f\,d\mu < \infty\)":* No! MCT works even when
+  \(\int_\Omega f\,d\mu = \infty\) (in which case \(\int_\Omega f_n\,d\mu \uparrow \infty\)) and even when
+  \(\mu(\Omega) = \infty\). What MCT *does* require is \(f_n \ge 0\) (nonnegativity!). If
+  \(f_n = -\mathbf 1_{(n, \infty)}\) on \((\mathbb R, \lambda)\), then \(f_n \uparrow 0\) pointwise, yet
+  \(\int_{\mathbb R} f_n\,d\lambda = -\infty \not\to 0\) because \(f_1\) is not bounded below by an
+  integrable function.
+- *"For DCT, it is enough that \(|f_n| \le g_n\) with \(\int g_n\,d\mu < \infty\)":* No! In the shrinking
+  spikes \(f_n = n \mathbf 1_{(0, 1/n)}\) (Example 6.14), each individual \(f_n\) has
+  \(\int f_n\,d\lambda = 1 < \infty\), yet \(\int f_n\,d\lambda \not\to 0\). The dominating function
+  \(g\) in DCT must be a **single fixed** integrable function independent of \(n\)!
+
+** Historical remark and classroom route
+
+*Historical remark (When Fatou's inequality is strict).* In his 1906 paper on trigonometric and Taylor
+series, Pierre Fatou proved a version of the inequality now known as Fatou's lemma. Immediately
+afterwards, he noted that the inequality can be strict and credited this observation to Henri Lebesgue.
+The shrinking spikes of Example 6.14 provide the cleanest modern illustration: the supports \((0, 1/n)\)
+shrink so that the pointwise limit vanishes everywhere on \((0, 1)\), while the increasing heights \(n\)
+keep the area equal to \(1\) at every stage.
+
+*Classroom route.* Recall simple approximation (Lemma 6.2) and the definitions of nonnegative and signed
+integrals, state the three convergence theorems (MCT, Fatou, DCT), and prove the image-measure formula
+(Theorem 6.12) via the 4-step Standard Machine. Work through the tail-sum expectation (Example 6.7), the
+weighted-die payoff (Example 6.10), and the shrinking-spike and escaping-mass counterexamples
+(Examples 6.14 and 6.16). Note how \(\int_\Omega |f_n - f|\,d\mu \to 0\) in DCT previews \(L^1\)
+convergence in Chapter 7.
+
+* Worked Exercises
+
+** Exercise 1
+Let \((\Omega, \mathcal F, \mu)\) be a measure space and let \(f : \Omega \to [0, \infty]\) be measurable.
+1. *(Markov's inequality)* Prove that for every \(t > 0\),
+   \[
+   \mu\big(\{f \ge t\}\big) \le \frac{1}{t} \int_\Omega f\,d\mu.
+   \]
+2. Deduce that if \(\int_\Omega f\,d\mu < \infty\), then \(f < \infty\) almost everywhere (that is,
+   \(\mu(\{f = \infty\}) = 0\)), and the set \(\{f > 0\}\) is \(\sigma\)-finite (meaning it is a
+   countable union of measurable sets of finite \(\mu\)-measure).
+
+** Solution
+1. Fix \(t > 0\). Consider the nonnegative simple function \(s := t\,\mathbf 1_{\{f \ge t\}}\). At every
+   \(\omega \in \{f \ge t\}\) we have \(s(\omega) = t \le f(\omega)\), and at every
+   \(\omega \notin \{f \ge t\}\) we have \(s(\omega) = 0 \le f(\omega)\). Thus \(0 \le s \le f\) pointwise
+   on \(\Omega\). By monotonicity of the integral,
+   \[
+   t\,\mu\big(\{f \ge t\}\big) = \int_\Omega t\,\mathbf 1_{\{f \ge t\}}\,d\mu \le \int_\Omega f\,d\mu.
+   \]
+   Dividing by \(t > 0\) gives Markov's inequality.
+2. Suppose \(M := \int_\Omega f\,d\mu < \infty\).
+   - Since \(\{f = \infty\} \subseteq \{f \ge n\}\) for every integer \(n \ge 1\), monotonicity of \(\mu\)
+     and Markov's inequality give
+     \[
+     0 \le \mu\big(\{f = \infty\}\big) \le \mu\big(\{f \ge n\}\big) \le \frac{M}{n} \xrightarrow[n\to\infty]{} 0,
+     \]
+     so \(\mu(\{f = \infty\}) = 0\) (i.e. \(f < \infty\) almost everywhere).
+   - Similarly, write \(\{f > 0\} = \bigcup_{m=1}^\infty E_m\) where \(E_m := \{f \ge 1/m\} \in \mathcal F\).
+     By Markov's inequality with \(t = 1/m\), each \(E_m\) has
+     \[
+     \mu(E_m) \le m \int_\Omega f\,d\mu = m M < \infty.
+     \]
+     Thus \(\{f > 0\}\) is a countable union of finite-measure sets!
+
+** Exercise 2
+Let \(f : \Omega \to [0, \infty]\) be a nonnegative measurable function on \((\Omega, \mathcal F, \mu)\).
+For every \(A \in \mathcal F\), define
+\[
+\nu(A) := \int_\Omega f\,\mathbf 1_A\,d\mu.
+\]
+Prove that \(\nu\) is a **measure** on \((\Omega, \mathcal F)\), and that \(\nu\) is *absolutely
+continuous* with respect to \(\mu\) in the sense that \(\mu(A) = 0 \implies \nu(A) = 0\).
+
+** Solution
+1. *\(\nu(\emptyset) = 0\):* Since \(f\,\mathbf 1_\emptyset = 0\) everywhere on \(\Omega\),
+   \(\nu(\emptyset) = \int_\Omega 0\,d\mu = 0\).
+2. *Countable additivity:* Let \(A_1, A_2, \dots \in \mathcal F\) be pairwise disjoint, and let
+   \(A := \bigsqcup_{n=1}^\infty A_n\). Then at every \(\omega \in \Omega\),
+   \(\mathbf 1_A(\omega) = \sum_{n=1}^\infty \mathbf 1_{A_n}(\omega)\), and multiplying by
+   \(f(\omega) \ge 0\) gives
+   \[
+   f(\omega)\,\mathbf 1_A(\omega) = \sum_{n=1}^\infty f(\omega)\,\mathbf 1_{A_n}(\omega).
+   \]
+   Since each \(f_n := f\,\mathbf 1_{A_n} \ge 0\) is a nonnegative measurable function, Proposition 6.6
+   (equation (6.3), term-by-term integration of nonnegative series) immediately gives
+   \[
+   \nu\Big(\bigsqcup_{n=1}^\infty A_n\Big) = \int_\Omega \Big(\sum_{n=1}^\infty f\,\mathbf 1_{A_n}\Big)\,d\mu
+   = \sum_{n=1}^\infty \int_\Omega f\,\mathbf 1_{A_n}\,d\mu = \sum_{n=1}^\infty \nu(A_n).
+   \]
+   Thus \(\nu\) is a measure on \((\Omega, \mathcal F)\).
+3. *Absolute continuity:* If \(\mu(A) = 0\), then \(f\,\mathbf 1_A = 0\) outside the null set \(A\) (i.e.
+   \(f\,\mathbf 1_A = 0\) \(\mu\)-almost everywhere), so Lemma 6.8 gives \(\nu(A) = \int_\Omega f\,\mathbf 1_A\,d\mu = 0\).
+
+** Exercise 3
+Compute the limit
+\[
+\lim_{n\to\infty} \int_0^\infty \frac{n \sin(x/n)}{x (1 + x^2)}\,dx
+\]
+(where the integral is with respect to Lebesgue measure \(\lambda\) on \((0, \infty)\)), carefully
+justifying every step using a convergence theorem from this chapter.
+
+** Solution
+For \(x \in (0, \infty)\) and \(n \ge 1\), define
+\[
+f_n(x) := \frac{n \sin(x/n)}{x (1 + x^2)} = \frac{\sin(x/n)}{x/n} \cdot \frac{1}{1 + x^2}.
+\]
+1. *Pointwise limit:* For each fixed \(x \in (0, \infty)\), as \(n \to \infty\) we have \(u = x/n \to 0\),
+   and \(\lim_{u\to 0} \frac{\sin u}{u} = 1\). Therefore,
+   \[
+   \lim_{n\to\infty} f_n(x) = 1 \cdot \frac{1}{1 + x^2} = \frac{1}{1 + x^2} =: f(x) \quad \text{for all } x \in (0, \infty).
+   \]
+2. *Domination:* Recall the elementary inequality \(|\sin u| \le |u|\) for all \(u \in \mathbb R\), so
+   \(\left|\frac{\sin(x/n)}{x/n}\right| \le 1\) for all \(x > 0\) and all \(n \ge 1\). Consequently,
+   \[
+   |f_n(x)| \le \frac{1}{1 + x^2} =: g(x) \quad \text{for all } x \in (0, \infty) \text{ and all } n \ge 1.
+   \]
+3. *Integrability of the majorant \(g\):* On \((0, \infty)\), \(g(x) = \frac{1}{1+x^2} \ge 0\) is
+   integrable with respect to Lebesgue measure because
+   \[
+   \int_0^\infty \frac{1}{1 + x^2}\,dx = \lim_{R\to\infty} [\arctan x]_0^R = \frac{\pi}{2} < \infty.
+   \]
+4. *Conclusion via DCT:* By the Dominated Convergence Theorem (Theorem 6.15),
+   \[
+   \lim_{n\to\infty} \int_0^\infty \frac{n \sin(x/n)}{x (1 + x^2)}\,dx
+   = \int_0^\infty \frac{1}{1 + x^2}\,dx = \frac{\pi}{2}.
+   \]
+
+** Exercise 4
+Evaluate the limit
+\[
+\lim_{n\to\infty} \int_0^n \left(1 - \frac{x}{n}\right)^n e^{x/2}\,dx
+\]
+(with respect to Lebesgue measure on \((0, \infty)\)) and justify your steps.
+
+** Solution
+Write the integral over \((0, n)\) as an integral over the fixed domain \((0, \infty)\) by multiplying by
+the indicator \(\mathbf 1_{(0, n)}(x)\):
+\[
+f_n(x) := \left(1 - \frac{x}{n}\right)^n e^{x/2} \mathbf 1_{(0, n)}(x) \qquad (x \in (0, \infty),\ n \ge 1).
+\]
+1. *Pointwise limit:* For each fixed \(x > 0\), once \(n > x\) we have \(\mathbf 1_{(0,n)}(x) = 1\), and
+   from calculus \(\lim_{n\to\infty} (1 - x/n)^n = e^{-x}\). Thus
+   \[
+   \lim_{n\to\infty} f_n(x) = e^{-x} e^{x/2} = e^{-x/2} =: f(x) \quad \text{for all } x \in (0, \infty).
+   \]
+2. *Domination (or Monotone Convergence!):*
+   - *Via DCT:* Using the standard inequality \(1 - u \le e^{-u}\) for all \(u \in \mathbb R\), on
+     \(x \in (0, n)\) we have \(0 \le 1 - x/n \le e^{-x/n}\), so taking the \(n\)-th power gives
+     \(0 \le (1 - x/n)^n \le e^{-x}\). Therefore, for all \(x > 0\) and all \(n \ge 1\),
+     \[
+     0 \le f_n(x) \le e^{-x} e^{x/2} = e^{-x/2} =: g(x).
+     \]
+     The dominating function \(g(x) = e^{-x/2}\) is integrable on \((0, \infty)\) since
+     \(\int_0^\infty e^{-x/2}\,dx = [-2 e^{-x/2}]_0^\infty = 2 < \infty\).
+   - *(Note: In fact \((1 - x/n)^n \mathbf 1_{(0,n)}(x)\) is also strictly increasing in \(n\), so MCT
+     applies as well!)*
+3. *Conclusion:* By DCT (Theorem 6.15),
+   \[
+   \lim_{n\to\infty} \int_0^n \left(1 - \frac{x}{n}\right)^n e^{x/2}\,dx
+   = \int_0^\infty e^{-x/2}\,dx = 2.
+   \]
+
+** Exercise 5
+Let \((\Omega, \mathcal F, \mu)\) be a measure space and suppose \(f : \Omega \to \mathbb R\) is
+integrable (\(\int_\Omega |f|\,d\mu < \infty\)). Prove the **"absolute continuity of the Lebesgue
+integral"**: for every \(\varepsilon > 0\), there exists \(\delta > 0\) such that
+\[
+A \in \mathcal F \text{ and } \mu(A) < \delta \implies \int_A |f|\,d\mu := \int_\Omega |f|\,\mathbf 1_A\,d\mu < \varepsilon.
+\]
+*(Hint: Use the bounded truncations \(f_n = \min\{|f|, n\}\) from Example 6.17!)*
+
+** Solution
+Fix \(\varepsilon > 0\). For each \(n \ge 1\), define the bounded truncation \(g_n := \min\{|f|, n\}\).
+Then \(0 \le g_n \uparrow |f|\) pointwise (and \(|f| - g_n \to 0\) with \(0 \le |f| - g_n \le |f|\)). By
+MCT or DCT (Example 6.17),
+\[
+\lim_{n\to\infty} \int_\Omega (|f| - g_n)\,d\mu = 0.
+\]
+Choose and fix a single integer \(N \ge 1\) large enough that
+\[
+\int_\Omega (|f| - g_N)\,d\mu < \frac{\varepsilon}{2}.
+\]
+Now notice that \(g_N \le N\) is bounded! Set \(\delta := \frac{\varepsilon}{2N} > 0\). Then for *any*
+measurable set \(A \in \mathcal F\) with \(\mu(A) < \delta\), writing \(|f| = (|f| - g_N) + g_N\) on \(A\)
+gives
+\[
+\int_\Omega |f|\,\mathbf 1_A\,d\mu
+= \int_\Omega (|f| - g_N)\,\mathbf 1_A\,d\mu + \int_\Omega g_N\,\mathbf 1_A\,d\mu
+\le \int_\Omega (|f| - g_N)\,d\mu + N\,\mu(A)
+< \frac{\varepsilon}{2} + N \cdot \frac{\varepsilon}{2N} = \varepsilon.
+\]
+
+** Exercise 6
+Let \(X\) be a random variable on \((\Omega, \mathcal F, \mathbb P)\) taking values in \(\mathbb R\), and
+suppose its distribution \(X_\#\mathbb P\) is the discrete probability measure
+\[
+X_\#\mathbb P = \sum_{k=1}^\infty p_k \delta_{x_k},
+\]
+where \(x_1, x_2, \dots \in \mathbb R\) are distinct real numbers and \(p_k \ge 0\) satisfy
+\(\sum_{k=1}^\infty p_k = 1\). Using Theorem 6.12 (image-measure integration), prove that for any Borel
+function \(h : \mathbb R \to \mathbb R\), \(h(X)\) is integrable iff
+\(\sum_{k=1}^\infty |h(x_k)|\,p_k < \infty\), and in that case
+\[
+\mathbb E\big[h(X)\big] = \sum_{k=1}^\infty h(x_k)\,p_k.
+\]
+
+** Solution
+First consider any nonnegative Borel function \(g : \mathbb R \to [0, \infty]\). Notice that with respect
+to \(\mu_X := X_\#\mathbb P = \sum_{k=1}^\infty p_k \delta_{x_k}\), the complement of
+\(D := \{x_1, x_2, \dots\}\) has \(\mu_X(\mathbb R \setminus D) = 0\). On \(D\), we can write \(g\) as a
+countable series of point indicators:
+\[
+g(x)\,\mathbf 1_D(x) = \sum_{k=1}^\infty g(x_k)\,\mathbf 1_{\{x_k\}}(x).
+\]
+Since \(g = g\,\mathbf 1_D\) \(\mu_X\)-almost everywhere, Lemma 6.8 and Proposition 6.6 (equation (6.3))
+give
+\[
+\int_{\mathbb R} g\,d(X_\#\mathbb P)
+= \int_{\mathbb R} \Big(\sum_{k=1}^\infty g(x_k)\,\mathbf 1_{\{x_k\}}\Big)\,d\mu_X
+= \sum_{k=1}^\infty g(x_k)\,\mu_X(\{x_k\})
+= \sum_{k=1}^\infty g(x_k)\,p_k.
+\]
+Now let \(h : \mathbb R \to \mathbb R\) be any real-valued Borel function. By Theorem 6.12, \(h(X)\) is
+integrable with respect to \(\mathbb P\) iff \(h\) is integrable with respect to \(X_\#\mathbb P\), which
+by applying the nonnegative formula to \(g = |h|\) means
+\[
+\mathbb E\big[|h(X)|\big] = \int_{\mathbb R} |h|\,d(X_\#\mathbb P) = \sum_{k=1}^\infty |h(x_k)|\,p_k < \infty.
+\]
+When this holds, applying the nonnegative formula to \(h^+\) and \(h^-\) and subtracting via Theorem 6.12
+gives
+\[
+\mathbb E\big[h(X)\big] = \int_{\mathbb R} h\,d(X_\#\mathbb P)
+= \sum_{k=1}^\infty h^+(x_k)\,p_k - \sum_{k=1}^\infty h^-(x_k)\,p_k
+= \sum_{k=1}^\infty h(x_k)\,p_k.
+\]
+
+* Summary
+
+#+caption: Chapter 6 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement / Definition                                                                                       | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Simple function (6.1)   | \(s = \sum_{j=1}^m a_j \mathbf 1_{A_j}\) with \(A_j \in \mathcal F\) a finite partition, \(a_j \in [0,\infty)\) | Building block of the Lebesgue integral (\(\int s\,d\mu = \sum a_j \mu(A_j)\)) |
+| Dyadic staircase (6.2)  | \(s_n(\omega) = 2^{-n}\lfloor 2^n \min\{f(\omega), n\}\rfloor \uparrow f(\omega)\) for any measurable \(f \ge 0\) | Approximates any nonnegative measurable function from below |
+| Nonnegative \(\int f\,d\mu\) (6.3) | \(\sup\{\int_\Omega s\,d\mu : 0 \le s \le f\text{ simple}\} \in [0,\infty]\); expectation \(\mathbb E[f] = \int f\,d\mathbb P\) | Always defined in \([0,\infty]\) for \(f \ge 0\)           |
+| Monotone Convergence — MCT (6.5) | If \(0 \le f_n \uparrow f\) \(\mu\)-a.e., then \(\int_\Omega f_n\,d\mu \uparrow \int_\Omega f\,d\mu\) | Swaps \(\lim\) and \(\int\) for increasing nonnegative sequences |
+| Nonnegative series (6.6)| For \(f_n \ge 0\), \(\int_\Omega (\sum_{n=1}^\infty f_n)\,d\mu = \sum_{n=1}^\infty \int_\Omega f_n\,d\mu\)   | Always swaps \(\sum_{n=1}^\infty\) and \(\int\) when \(f_n \ge 0\) (e.g. tail-sum \(\mathbb E[X] = \sum_{k\ge 1}\mathbb P(X\ge k)\)) |
+| Lemma 6.8               | For \(f \ge 0\), \(\int_\Omega f\,d\mu = 0 \iff f = 0\) \(\mu\)-a.e.                                         | Null sets do not affect integrals                          |
+| Integrable \(f\) (6.9)  | \(\int_\Omega |f|\,d\mu < \infty\); \(\int_\Omega f\,d\mu = \int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu\)  | Requires absolute integrability (no \(\infty - \infty\) or conditional sums) |
+| Image-measure \(\int\) (6.12) | \(\int_S h\,d(X_\#\mu) = \int_\Omega h(X(\omega))\,d\mu(\omega)\) (LOTUS: \(\mathbb E[h(X)] = \int h\,d\mu_X\)) | Compute expectations using only the law \(X_\#\mathbb P\)  |
+| Fatou's lemma (6.13)    | For \(f_n \ge 0\), \(\int_\Omega (\liminf_n f_n)\,d\mu \le \liminf_n \int_\Omega f_n\,d\mu\)                 | Inequality that survives without monotonicity or domination|
+| Dominated Convergence — DCT (6.15) | If \(f_n \to f\) a.e. and \(|f_n| \le g\) a.e. with \(\int_\Omega g\,d\mu < \infty\), then \(\int |f_n-f|\,d\mu \to 0\) and \(\int f_n\,d\mu \to \int f\,d\mu\) | Workhorse theorem for swapping limits/derivatives with \(\int\) |
+
+*Key takeaways*
+
+- **The Standard Machine** proves identities for integrals in 4 steps: (1) indicators \(\mathbf 1_B\),
+  (2) nonnegative simple functions \(s = \sum a_j \mathbf 1_{B_j}\) by linearity, (3) nonnegative
+  measurable \(f \ge 0\) via \(s_n \uparrow f\) and MCT, and (4) signed integrable \(f = f^+ - f^-\) by
+  subtracting.
+- **Which limit theorem do I use?**
+  - Nonnegative and increasing (\(0 \le f_n \uparrow f\)) or series of nonnegative terms (\(\sum f_n\) with
+    \(f_n \ge 0\)) \(\implies\) **MCT (Theorem 6.5) / Proposition 6.6**.
+  - Signed or oscillating \(f_n \to f\), trapped under a *single* integrable roof \(|f_n| \le g\) with
+    \(\int g\,d\mu < \infty\) \(\implies\) **DCT (Theorem 6.15)**.
+  - Nonnegative \(f_n \ge 0\) with neither monotonicity nor an integrable majorant, and you only need an
+    inequality \(\int (\liminf f_n)\,d\mu \le \liminf \int f_n\,d\mu\) \(\implies\) **Fatou's lemma
+    (Theorem 6.13)**.
+- "Integrable" in measure theory *always* means **absolutely integrable** (\(\int_\Omega |f|\,d\mu < \infty\)).
+  Changing a measurable function on a measurable set of measure zero changes neither its integrability nor
+  its integral.

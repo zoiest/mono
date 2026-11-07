@@ -1,0 +1,1055 @@
+:PROPERTIES:
+:ID:       b5c28d05-88f3-4a99-a125-7c319a4e0005
+:ROAM_ALIASES: "MAST31051 Chapter 5" "Constructing Measures from Simpler Sets Notes"
+:END:
+#+title: Chapter 5: Constructing Measures from Simpler Sets
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch05:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch04-uniqueness.org][← Chapter 4]] | [[file:ch06-integration.org][Chapter 6 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+Knowing from Chapter 4 that a measure is *unique* does not tell us that it *exists*. When we build a
+measure or probability model, we can only write down explicit formulas for the sizes of "elementary"
+sets:
+- intervals \((a,b]\) on \(\mathbb R\) (where length is \(b-a\)),
+- rectangles \(A \times B\) in a product space (where area is \(\mu(A)\nu(B)\)),
+- cylinder events in \(\{0,1\}^{\mathbb N}\) determined by finitely many coin tosses.
+
+These elementary sets (or finite disjoint unions of them) form an **algebra** \(\mathcal A\) — closed
+under complements and *finite* unions, but not countable unions. How do we extend a size function
+\(\mu_0\) from an algebra \(\mathcal A\) to the entire generated \(\sigma\)-algebra
+\(\sigma(\mathcal A)\) without losing countable additivity?
+
+This chapter carries out **Carathéodory's extension machine** in three clean stages, generalizing the
+construction of Lebesgue measure on \(\mathbb R\) to an arbitrary abstract set \(\Omega\) with no geometry
+required:
+1. *Premeasure on an algebra (\(\mu_0\) on \(\mathcal A\)):* Check that the initial assignment \(\mu_0\)
+   is countably additive whenever a countable disjoint union happens to land back inside \(\mathcal A\)
+   (Definition 5.2, Proposition 5.5).
+2. *Outer measure on all subsets (\(\mu^*\) on \(2^\Omega\)):* Cover any subset \(E \subseteq \Omega\) by
+   countable families of sets from \(\mathcal A\) and take the infimum of their total sizes
+   (Definition 5.6, Lemma 5.7). This defines \(\mu^*(E)\) for *every* subset of \(\Omega\), but \(\mu^*\)
+   is only countably *subadditive*, not additive on all subsets (Example 5.8).
+3. *Carathéodory measurability (\(\mathcal M\)):* Isolate the sets \(E \subseteq \Omega\) that cleanly split
+   every test set \(T \subseteq \Omega\) additively:
+   \[
+   \mu^*(T) = \mu^*(T \cap E) + \mu^*(T \setminus E).
+   \]
+   Miraculously, the collection \(\mathcal M\) of such sets is a \(\sigma\)-algebra containing
+   \(\mathcal A\) (hence containing \(\sigma(\mathcal A)\)), and \(\mu^*\) restricted to \(\mathcal M\)
+   is a countably additive measure extending \(\mu_0\) (Theorems 5.9 and 5.10)!
+
+Finally, in Section 5.5 we examine **completeness** of a measure space: adjoining all subsets of
+measure-zero sets so that negligible modifications never accidentally take us outside the
+\(\sigma\)-algebra (Proposition 5.14).
+
+** Probability motivation
+
+Every major probability space in modern probability theory is built by Theorem 5.10:
+- The uniform distribution on \([0,1]\) (Lebesgue measure, Example 5.11);
+- Product measures for independent random variables (Chapter 9);
+- Infinite coin-tossing and general stochastic processes \((\Omega = \mathbb R^{\mathbb N})\) via cylinder
+  algebras (Chapter 10);
+- Probability laws on \(\mathbb R\) associated with arbitrary cumulative distribution functions
+  (Lebesgue–Stieltjes measures, Chapter 12).
+
+Even more importantly, Example 5.4 ("the finitely additive uniform lottery on \(\mathbb N\)") shows what
+goes wrong when a naive prescription is only *finitely* additive on an algebra: if it fails the
+continuity test \(A_n \downarrow \emptyset \implies \mu_0(A_n) \to 0\) (Proposition 5.5), no countably
+additive probability measure can extend it!
+
+** Roadmap
+
+- *5.1 Algebras and premeasures:* Definitions of algebra \(\mathcal A\) and premeasure \(\mu_0\); the
+  finite-partition model (Example 5.3); the failed uniform lottery on \(\mathbb N\) (Example 5.4); the
+  decreasing-to-\(\emptyset\) continuity test (Proposition 5.5).
+- *5.2 Outer measure from coverings:* Definition of outer measure \(\mu^*\); covering formula (5.1) and
+  proof that \(\mu^*\) extends \(\mu_0\) (Lemma 5.7); why \(\mu^*\) is not additive on all sets
+  (Example 5.8).
+- *5.3 Which sets can split every test set?* Carathéodory's splitting criterion (5.2) and proof that
+  Carathéodory-measurable sets \(\mathcal M\) form a \(\sigma\)-algebra on which \(\mu^*\) is a complete
+  measure (Theorem 5.9).
+- *5.4 The extension theorem:* Proof that \(\mathcal A \subseteq \mathcal M\), completing Carathéodory's
+  extension theorem (Theorem 5.10).
+- *5.5 Completing a measure:* Complete measure spaces (Definition 5.12) and the completion
+  \((\Omega, \overline{\mathcal F}, \overline{\mu})\) of any measure space (Proposition 5.14).
+
+** What you need from earlier chapters
+
+- \(\sigma\)-algebras and generated \(\sigma\)-algebras \(\sigma(\mathcal A)\):
+  [[file:ch01-measurable-spaces.org][Chapter 1]].
+- Measures, finite additivity, monotonicity, continuity from above/below:
+  [[file:ch02-measures.org][Chapter 2]].
+- \(\pi\)-systems and uniqueness of \(\sigma\)-finite measures (Proposition 4.11):
+  [[file:ch04-uniqueness.org][Chapter 4]].
+
+* 5.1 Algebras and premeasures
+
+** Intuition
+
+Before we have a \(\sigma\)-algebra, we start with a simpler family of sets closed under *finite* Boolean
+operations (complements, finite unions, finite intersections, set differences). Such a family is called
+an **algebra**. On an algebra \(\mathcal A\), we want to prescribe a size function \(\mu_0\) that has a
+chance of extending to a genuine measure on \(\sigma(\mathcal A)\).
+
+If a measure \(\mu\) on \(\sigma(\mathcal A)\) extends \(\mu_0\), then whenever pairwise disjoint sets
+\(A_1, A_2, \dots \in \mathcal A\) happen to have their countable union
+\(\bigcup_{n=1}^\infty A_n\) *already inside \(\mathcal A\)*, \(\mu_0\) must obey countable additivity on
+that union! A function \(\mu_0\) on \(\mathcal A\) with this property is called a **premeasure**.
+
+** Definitions and examples
+
+#+begin_quote
+*Definition 5.1 (Algebra of sets).* An *algebra* of subsets of \(\Omega\) is a collection
+\(\mathcal A \subseteq 2^\Omega\) that:
+1. contains \(\Omega\) (\(\Omega \in \mathcal A\)),
+2. is closed under complements (\(A \in \mathcal A \implies A^c \in \mathcal A\)), and
+3. is closed under finite unions (\(A, B \in \mathcal A \implies A \cup B \in \mathcal A\)).
+#+end_quote
+
+By De Morgan's laws, an algebra is automatically closed under finite intersections
+(\(A \cap B = (A^c \cup B^c)^c \in \mathcal A\)) and set differences
+(\(B \setminus A = B \cap A^c \in \mathcal A\)), and contains \(\emptyset = \Omega^c\). In particular,
+**every algebra is a \(\pi\)-system**. Unlike a \(\sigma\)-algebra, an algebra need *not* contain
+countable unions of its members.
+
+*Concrete example (The finite/cofinite algebra on \(\mathbb N\)).* A subset \(A \subseteq \mathbb N\) is
+called *cofinite* if its complement \(\mathbb N \setminus A\) is finite. Let
+\[
+\mathcal A := \{A \subseteq \mathbb N : A \text{ is finite or } A^c \text{ is finite}\}.
+\]
+- \(\mathbb N \in \mathcal A\) (since \(\mathbb N^c = \emptyset\) is finite), and \(\mathcal A\) is
+  manifestly closed under complements.
+- If \(A, B \in \mathcal A\): if both are finite, \(A \cup B\) is finite; if at least one is cofinite,
+  then \((A \cup B)^c = A^c \cap B^c\) is a subset of a finite set, hence finite, so \(A \cup B\) is
+  cofinite. Thus \(\mathcal A\) is an algebra!
+- \(\mathcal A\) is *not* a \(\sigma\)-algebra: each singleton \(\{2k\} \in \mathcal A\) is finite, but
+  their countable union \(E = \{2, 4, 6, \dots\}\) (the even integers) is neither finite nor cofinite, so
+  \(E \notin \mathcal A\).
+- Nevertheless, what is the generated \(\sigma\)-algebra \(\sigma(\mathcal A)\)? Every subset
+  \(S \subseteq \mathbb N\) is a countable union of singletons \(S = \bigcup_{n \in S} \{n\}\), so
+  \(\sigma(\mathcal A) = 2^{\mathbb N}\)!
+
+#+begin_quote
+*Definition 5.2 (Premeasure).* A *premeasure* on an algebra \(\mathcal A\) is a function
+\(\mu_0 : \mathcal A \to [0, \infty]\) such that:
+1. \(\mu_0(\emptyset) = 0\), and
+2. *(Countable additivity within \(\mathcal A\))* Whenever \(A_1, A_2, \dots \in \mathcal A\) are pairwise
+   disjoint and their union **also belongs to \(\mathcal A\)** (\(\bigcup_{n=1}^\infty A_n \in \mathcal A\)),
+   \[
+   \mu_0\Big(\bigcup_{n=1}^\infty A_n\Big) = \sum_{n=1}^\infty \mu_0(A_n).
+   \]
+#+end_quote
+
+Notice why the condition "\(\bigcup_{n=1}^\infty A_n \in \mathcal A\)" is essential: \(\mu_0\) is only
+defined on \(\mathcal A\), so if the union falls outside \(\mathcal A\), the left-hand side
+\(\mu_0(\bigcup_{n=1}^\infty A_n)\) is not even defined yet!
+
+*Immediate consequences of Definition 5.2:*
+- *Finite additivity:* If \(A_1, \dots, A_m \in \mathcal A\) are pairwise disjoint, set
+  \(A_{m+1} = A_{m+2} = \cdots = \emptyset\). Since \(\mathcal A\) is an algebra,
+  \(\bigcup_{k=1}^m A_k \in \mathcal A\), and \(\mu_0(\emptyset) = 0\) gives
+  \(\mu_0(\bigcup_{k=1}^m A_k) = \sum_{k=1}^m \mu_0(A_k)\).
+- *Monotonicity:* If \(A, B \in \mathcal A\) with \(A \subseteq B\), then \(B \setminus A \in \mathcal A\)
+  and \(B = A \sqcup (B \setminus A)\), so
+  \(\mu_0(B) = \mu_0(A) + \mu_0(B \setminus A) \ge \mu_0(A)\).
+
+#+begin_quote
+*Example 5.3 (Assigning masses to a finite partition).* A *finite partition* of \(\Omega\) is a finite
+family of nonempty, pairwise disjoint sets \(B_1, \dots, B_m\) whose union is \(\Omega\); its members
+are called *blocks*. Let \(\mathcal A\) consist of all unions of these blocks:
+\[
+\mathcal A = \Big\{\bigcup_{j \in J} B_j : J \subseteq \{1, \dots, m\}\Big\}
+\]
+(where \(J = \emptyset\) gives the empty set \(\emptyset\)). Since the blocks are nonempty and disjoint,
+every set in \(\mathcal A\) corresponds to a unique index set \(J \subseteq \{1, \dots, m\}\), so
+\(\mathcal A\) has \(2^m\) sets.
+
+Assign each block \(B_j\) a mass \(p_j \ge 0\) (with \(\sum_{j=1}^m p_j = 1\) for a probability model),
+and prescribe
+\[
+\mu_0\Big(\bigcup_{j \in J} B_j\Big) := \sum_{j \in J} p_j \qquad (J \subseteq \{1, \dots, m\}).
+\]
+Disjoint unions of sets in \(\mathcal A\) correspond to disjoint index sets \(J\), so their masses add.
+Because \(\mathcal A\) is finite, in any sequence of pairwise disjoint sets in \(\mathcal A\) at most
+\(m\) sets can be nonempty; hence countable additivity holds automatically, and \(\mathcal A\) is already
+a \(\sigma\)-algebra! What remains unspecified is how mass might be distributed *inside* an individual
+block \(B_j\) if \(B_j\) contains more than one point.
+#+end_quote
+
+#+begin_quote
+*Example 5.4 (A finitely additive "uniform lottery" on \(\mathbb N\) that is NOT a premeasure).* On the
+finite/cofinite algebra \(\mathcal A\) of \(\mathbb N\), define \(\mu_0 : \mathcal A \to \{0, 1\}\) by
+\[
+\mu_0(A) := \begin{cases} 0, & \text{if } A \text{ is finite},\\ 1, & \text{if } A \text{ is cofinite}.\end{cases}
+\]
+- *\(\mu_0\) is finitely additive:* Let \(A_1, \dots, A_m \in \mathcal A\) be pairwise disjoint.
+  - If all \(A_k\) are finite, their union is finite, and \(0 = 0 + \cdots + 0\).
+  - Could two disjoint sets \(A_j, A_k\) both be cofinite? No! If \(A_j\) is cofinite, then
+    \(A_k \subseteq A_j^c\) is contained in a finite set, so \(A_k\) must be finite. Thus at most one
+    \(A_j\) is cofinite; the union is then cofinite, and both sides equal \(1\).
+- *\(\mu_0\) is NOT a premeasure:* The singletons \(A_n = \{n\} \in \mathcal A\) are pairwise disjoint,
+  and their countable union is \(\bigcup_{n=1}^\infty \{n\} = \mathbb N \in \mathcal A\). Yet
+  \[
+  1 = \mu_0(\mathbb N) \ne \sum_{n=1}^\infty \mu_0(\{n\}) = \sum_{n=1}^\infty 0 = 0!
+  \]
+Thus **finite additivity on an algebra does not guarantee a measure extension**. Notice how the same
+obstruction appears in the decreasing tail sets \(T_n = \{n, n+1, \dots\} \in \mathcal A\): each \(T_n\)
+is cofinite with \(\mu_0(T_n) = 1\), and \(T_n \downarrow \emptyset\), yet
+\(\mu_0(T_n) = 1 \not\to 0\). Mass "escapes to infinity"!
+#+end_quote
+
+** The continuity test for a finite premeasure
+
+Example 5.4 suggests that when \(\mu_0(\Omega) < \infty\), checking countable additivity on
+\(\mathcal A\) is equivalent to checking that no mass can escape along a sequence of sets in
+\(\mathcal A\) decreasing to \(\emptyset\).
+
+#+begin_quote
+*Proposition 5.5 (A continuity test for a finite premeasure).* Suppose that \(\mu_0 : \mathcal A \to [0, \infty)\)
+is nonnegative and finitely additive on an algebra \(\mathcal A\), with \(\mu_0(\emptyset) = 0\) and
+\(\mu_0(\Omega) < \infty\). Then \(\mu_0\) is a premeasure if and only if
+\[
+\mu_0(A_n) \longrightarrow 0 \quad \text{whenever } A_n \in \mathcal A \text{ and } A_n \downarrow \emptyset.
+\]
+#+end_quote
+
+*Proof.*
+- *(\(\implies\)) Suppose \(\mu_0\) is a premeasure and \(A_n \in \mathcal A\) with \(A_n \downarrow \emptyset\):*
+  Write \(A_1\) as the telescoping disjoint union of differences \(A_k \setminus A_{k+1} \in \mathcal A\):
+  \[
+  A_1 = \bigsqcup_{k=1}^\infty (A_k \setminus A_{k+1}) \qquad \text{and more generally} \qquad
+  A_n = \bigsqcup_{k=n}^\infty (A_k \setminus A_{k+1}).
+  \]
+  Since \(A_1 \in \mathcal A\) and \(\mu_0\) is a premeasure, the series
+  \(\sum_{k=1}^\infty \mu_0(A_k \setminus A_{k+1}) = \mu_0(A_1) \le \mu_0(\Omega) < \infty\) converges!
+  Because \(A_n \in \mathcal A\) is the union from index \(k = n\) onwards, \(\mu_0(A_n)\) is the tail
+  \(\sum_{k=n}^\infty \mu_0(A_k \setminus A_{k+1})\) of a convergent series, which tends to \(0\) as
+  \(n \to \infty\).
+- *(\(\Longleftarrow\)) Suppose \(\mu_0(B_n) \to 0\) whenever \(B_n \in \mathcal A\) decreases to \(\emptyset\):*
+  Let \(A_1, A_2, \dots \in \mathcal A\) be pairwise disjoint sets whose union
+  \(A := \bigcup_{j=1}^\infty A_j\) belongs to \(\mathcal A\). For each \(n \ge 1\), consider the
+  remainder after removing the first \(n\) pieces:
+  \[
+  B_n := A \setminus \bigcup_{j=1}^n A_j.
+  \]
+  Since \(\mathcal A\) is an algebra and \(A, A_1, \dots, A_n \in \mathcal A\), we have
+  \(B_n \in \mathcal A\). Moreover, \(B_1 \supseteq B_2 \supseteq \cdots\) and
+  \(\bigcap_{n=1}^\infty B_n = A \setminus \bigcup_{j=1}^\infty A_j = \emptyset\), so
+  \(B_n \downarrow \emptyset\). By finite additivity of \(\mu_0\) on \(\mathcal A\),
+  \[
+  \mu_0(A) = \sum_{j=1}^n \mu_0(A_j) + \mu_0(B_n).
+  \]
+  Letting \(n \to \infty\) and using \(\mu_0(B_n) \to 0\) gives
+  \(\mu_0(A) = \sum_{j=1}^\infty \mu_0(A_j)\). Thus \(\mu_0\) is a premeasure. \(\blacksquare\)
+
+We will use Proposition 5.5 in Chapter 10 to prove that cylinder probabilities on infinite product
+spaces form a premeasure, and in Chapter 12 to prove that interval lengths \(\mu_0((a,b]) = F(b) - F(a)\)
+form a premeasure.
+
+* 5.2 Outer measure from coverings
+
+** Intuition
+
+Given a premeasure \(\mu_0\) on an algebra \(\mathcal A\), how do we assign a size to an *arbitrary*
+subset \(E \subseteq \Omega\) that is not in \(\mathcal A\)? We approximate \(E\) from the outside! We
+cover \(E\) by a countable sequence of elementary sets \(A_1, A_2, \dots \in \mathcal A\) (so
+\(E \subseteq \bigcup_{n=1}^\infty A_n\)), add up their prescribed sizes \(\sum_{n=1}^\infty \mu_0(A_n)\),
+and take the **infimum** over all possible countable covers of \(E\).
+
+#+begin_example
+          A_1            A_2               A_3          A_4 ...   (sets in algebra A)
+    +-------------+---------------+------------------+---------+
+    |   ..........|...............|.............     |         |
+    |  .          |      E        |             .    |         |
+    |   ..........|...............|.............     |         |
+    +-------------+---------------+------------------+---------+
+    mu*(E) = inf { sum_n mu_0(A_n) : E is covered by A_1, A_2, ... in A }
+#+end_example
+
+** Definitions and the covering lemma
+
+#+begin_quote
+*Definition 5.6 (Outer measure).* An *outer measure* on \(\Omega\) is a function
+\(\mu^* : 2^\Omega \to [0, \infty]\) defined on **all** subsets of \(\Omega\) such that:
+1. \(\mu^*(\emptyset) = 0\),
+2. *(Monotonicity)* \(\mu^*(E) \le \mu^*(F)\) whenever \(E \subseteq F \subseteq \Omega\), and
+3. *(Countable subadditivity)* For any sequence of subsets \(E_1, E_2, \dots \subseteq \Omega\),
+   \[
+   \mu^*\Big(\bigcup_{n=1}^\infty E_n\Big) \le \sum_{n=1}^\infty \mu^*(E_n).
+   \]
+#+end_quote
+
+*(Warning: An outer measure is NOT required to be additive, even for two disjoint sets \(E_1, E_2\)!)*
+
+Given a premeasure \(\mu_0\) on an algebra \(\mathcal A\), define \(\mu^* : 2^\Omega \to [0, \infty]\) by
+\begin{equation}
+\mu^*(E) := \inf\left\{\sum_{n=1}^\infty \mu_0(A_n) : A_n \in \mathcal A,\ E \subseteq \bigcup_{n=1}^\infty A_n\right\}. \tag{5.1}
+\end{equation}
+- *Why does at least one cover always exist?* Because \(\Omega \in \mathcal A\), so
+  \(A_1 = \Omega, A_2 = \emptyset, \dots\) covers every \(E \subseteq \Omega\).
+- *Are finite covers allowed?* Yes: any finite cover \(A_1, \dots, A_m\) can be padded with
+  \(A_{m+1} = A_{m+2} = \cdots = \emptyset\), which adds \(\mu_0(\emptyset) = 0\) to the sum.
+
+#+begin_quote
+*Lemma 5.7.* The function \(\mu^*\) defined in (5.1) is an outer measure on \(\Omega\), and it agrees with
+\(\mu_0\) on \(\mathcal A\) (that is, \(\mu^*(A) = \mu_0(A)\) for every \(A \in \mathcal A\)).
+#+end_quote
+
+*Proof.*
+
+*Step 1. Check the three outer-measure properties (Definition 5.6).*
+- *Vanishing at \(\emptyset\):* Covering \(\emptyset\) with \(A_n = \emptyset\) for all \(n\) gives
+  \(0 \le \mu^*(\emptyset) \le \sum_{n=1}^\infty \mu_0(\emptyset) = 0\).
+- *Monotonicity:* If \(E \subseteq F\), then every cover \(F \subseteq \bigcup_{n=1}^\infty A_n\) is
+  automatically a cover of \(E\) as well. Thus the set of cover sums for \(E\) contains the set of cover
+  sums for \(F\), so taking infima reverses the inclusion: \(\mu^*(E) \le \mu^*(F)\).
+- *Countable subadditivity (the \(\varepsilon/2^j\) trick):* Let \(E_1, E_2, \dots \subseteq \Omega\). We
+  want to prove \(\mu^*(\bigcup_{j=1}^\infty E_j) \le \sum_{j=1}^\infty \mu^*(E_j)\).
+  If \(\sum_{j=1}^\infty \mu^*(E_j) = \infty\), the right-hand side is \(\infty\) and the inequality holds
+  trivially. So assume \(\sum_{j=1}^\infty \mu^*(E_j) < \infty\); in particular, \(\mu^*(E_j) < \infty\)
+  for every \(j\).
+  Fix any \(\varepsilon > 0\). For each \(j \ge 1\), by the definition of \(\mu^*(E_j)\) as an infimum,
+  we can choose a countable cover \(E_j \subseteq \bigcup_{n=1}^\infty A_{j,n}\) with
+  \(A_{j,n} \in \mathcal A\) whose total size exceeds \(\mu^*(E_j)\) by at most \(2^{-j}\varepsilon\):
+  \[
+  \sum_{n=1}^\infty \mu_0(A_{j,n}) \le \mu^*(E_j) + 2^{-j}\varepsilon.
+  \]
+  Since \(\mathbb N \times \mathbb N\) is countable, the double family \(\{A_{j,n}\}_{j,n \ge 1}\) forms a
+  single countable cover of \(\bigcup_{j=1}^\infty E_j\) by sets in \(\mathcal A\)! Therefore,
+  \(\mu^*(\bigcup_{j=1}^\infty E_j)\) is at most the sum of \(\mu_0(A_{j,n})\) over all \(j, n \ge 1\):
+  \[
+  \mu^*\Big(\bigcup_{j=1}^\infty E_j\Big) \le \sum_{j=1}^\infty \sum_{n=1}^\infty \mu_0(A_{j,n})
+  \le \sum_{j=1}^\infty \big(\mu^*(E_j) + 2^{-j}\varepsilon\big)
+  = \sum_{j=1}^\infty \mu^*(E_j) + \varepsilon.
+  \]
+  (All terms are in \([0, \infty]\), so summing a double series in any order is valid.) Since
+  \(\varepsilon > 0\) was arbitrary, letting \(\varepsilon \downarrow 0\) gives
+  \(\mu^*(\bigcup_{j=1}^\infty E_j) \le \sum_{j=1}^\infty \mu^*(E_j)\).
+
+*Step 2. Show that \(\mu^*(A) = \mu_0(A)\) for every \(A \in \mathcal A\).*
+- *(\(\le\)) Trivial cover:* If \(A \in \mathcal A\), then \(A_1 = A, A_2 = \emptyset, \dots\) is a valid
+  cover of \(A\) by sets in \(\mathcal A\), so \(\mu^*(A) \le \mu_0(A) + 0 + \cdots = \mu_0(A)\).
+- *(\(\ge\)) Any cover is at least as big as \(\mu_0(A)\):* Let \(A \subseteq \bigcup_{n=1}^\infty A_n\)
+  be *any* cover of \(A\) by sets \(A_n \in \mathcal A\). Disjointify and clip to \(A\) by defining
+  \[
+  B_n := A \cap \Big(A_n \setminus \bigcup_{j < n} A_j\Big) \qquad (n \ge 1).
+  \]
+  Since \(\mathcal A\) is an algebra, each \(B_n \in \mathcal A\). Furthermore, the sets \(B_n\) are
+  pairwise disjoint and their union is \(\bigsqcup_{n=1}^\infty B_n = A \cap \bigcup_{n=1}^\infty A_n = A \in \mathcal A\)!
+  Because \(\mu_0\) is a **premeasure** on \(\mathcal A\) (and \(B_n \subseteq A_n\) implies
+  \(\mu_0(B_n) \le \mu_0(A_n)\)), we get
+  \[
+  \mu_0(A) = \sum_{n=1}^\infty \mu_0(B_n) \le \sum_{n=1}^\infty \mu_0(A_n).
+  \]
+  Taking the infimum over all covers \(\{A_n\}\) gives \(\mu_0(A) \le \mu^*(A)\). Combining both
+  inequalities yields \(\mu^*(A) = \mu_0(A)\). \(\blacksquare\)
+
+*Important observation:* Step 2 is the **exact place** where the premeasure hypothesis (countable
+additivity of \(\mu_0\) on \(\mathcal A\)) is used! If you apply formula (5.1) to the failed uniform
+lottery of Example 5.4, covering \(\mathbb N\) by the singletons \(\{n\}\) gives
+\(\mu^*(\mathbb N) = \sum_{n=1}^\infty \mu_0(\{n\}) = 0 \ne 1 = \mu_0(\mathbb N)\), so \(\mu^*\) fails to
+recover \(\mu_0\)!
+
+#+begin_quote
+*Example 5.8 (Outer measure sees whole blocks and is NOT additive on all sets).* Let
+\(\Omega = \{1, 2, 3, 4\}\) and let \(\mathcal A = \{\emptyset, \{1, 2\}, \{3, 4\}, \Omega\}\) be the
+algebra generated by the two blocks \(B_1 = \{1, 2\}\) and \(B_2 = \{3, 4\}\), with premeasure
+\[
+\mu_0(\emptyset) = 0, \qquad \mu_0(\{1, 2\}) = \frac12, \qquad \mu_0(\{3, 4\}) = \frac12, \qquad \mu_0(\Omega) = 1.
+\]
+What is the outer measure \(\mu^*(\{1\})\) of the singleton \(\{1\} \notin \mathcal A\)?
+Every cover of \(\{1\}\) by sets in \(\mathcal A\) must include either \(\{1, 2\}\) or \(\Omega\), because
+those are the only sets in \(\mathcal A\) that contain the point \(1\). The cheapest such cover is
+\(A_1 = \{1, 2\}\) itself, which has mass \(\frac12\). The exact same reasoning applies to \(\{2\}\).
+Therefore:
+\[
+\mu^*(\{1\}) = \frac12, \qquad \mu^*(\{2\}) = \frac12, \qquad \text{and} \qquad \mu^*(\{1, 2\}) = \frac12.
+\]
+In particular, on the disjoint sets \(\{1\}\) and \(\{2\}\),
+\[
+\mu^*\big(\{1\} \cup \{2\}\big) = \frac12 < \frac12 + \frac12 = \mu^*(\{1\}) + \mu^*(\{2\})!
+\]
+Outer measure is strictly subadditive here: because \(\mathcal A\) cannot distinguish \(1\) from \(2\),
+covering \(\{1\}\) and \(\{2\}\) separately pays for the whole block \(\{1, 2\}\) twice.
+#+end_quote
+
+* 5.3 Which sets can split every test set?
+
+** Intuition
+
+In Example 5.8, why did \(\{1\}\) misbehave while the block \(\{1, 2\}\) behaved nicely? Because when we
+use \(E = \{1\}\) to split the test set \(T = \{1, 2\}\) into \(T \cap E = \{1\}\) and
+\(T \setminus E = \{2\}\), the outer measures of the two pieces add up to
+\(\frac12 + \frac12 = 1 > \frac12 = \mu^*(T)\). Intuitively, \(E = \{1\}\) cuts right through the middle
+of an indivisible block of \(\mathcal A\), causing double-counting!
+
+Constantin Carathéodory's brilliant idea (1914) was to define a set \(E \subseteq \Omega\) to be
+*measurable* if it never causes double-counting when splitting *any* test set \(T \subseteq \Omega\).
+
+** Carathéodory's criterion and the measurable-set theorem
+
+For *any* outer measure \(\mu^*\), countable ( hence finite) subadditivity applied to the union
+\(T = (T \cap E) \cup (T \setminus E)\) always gives one inequality for free:
+\[
+\mu^*(T) \le \mu^*(T \cap E) + \mu^*(T \setminus E) \quad \text{for all } T, E \subseteq \Omega.
+\]
+We call a set \(E \subseteq \Omega\) **Carathéodory measurable** if the reverse inequality (\(\ge\))
+also holds for every test set \(T \subseteq \Omega\), so that we have exact equality:
+\begin{equation}
+\mu^*(T) = \mu^*(T \cap E) + \mu^*(T \setminus E) \quad \text{for every } T \subseteq \Omega. \tag{5.2}
+\end{equation}
+We denote the collection of all Carathéodory-measurable subsets of \(\Omega\) by \(\mathcal M\).
+
+#+begin_example
+   Figure 5.1: Caratheodory's splitting test for a candidate set E using an arbitrary test set T
+
+                        Omega
+       +--------------------------------------------------+
+       |                        E                         |
+       |              +--------------------------------+  |
+       |      T       |                                |  |
+       |   +----------+---------------+                |  |
+       |   |          |               |                |  |
+       |   |  T \ E   |    T \cap E   |                |  |
+       |   | (outside)|   (inside E)  |                |  |
+       |   +----------+---------------+                |  |
+       |              |                                |  |
+       |              +--------------------------------+  |
+       +--------------------------------------------------+
+       Set identity:     T = (T \cap E) \sqcup (T \setminus E)  (always true)
+       Caratheodory (5.2): mu*(T) = mu*(T \cap E) + mu*(T \setminus E) for ALL T \subseteq \Omega
+#+end_example
+
+*Practical tip for checking \(E \in \mathcal M\):* Because \(\mu^*(T) \le \mu^*(T \cap E) + \mu^*(T \setminus E)\)
+is automatic from subadditivity, and because \(\mu^*(T) = \infty\) makes
+\(\mu^*(T) \ge \mu^*(T \cap E) + \mu^*(T \setminus E)\) hold trivially, to prove \(E \in \mathcal M\) you
+only ever need to check:
+\[
+\mu^*(T) \ge \mu^*(T \cap E) + \mu^*(T \setminus E) \quad \text{for all } T \subseteq \Omega \text{ with } \mu^*(T) < \infty.
+\]
+
+#+begin_quote
+*Theorem 5.9 (Carathéodory's measurable-set theorem).* For any outer measure \(\mu^*\) on \(\Omega\), the
+collection \(\mathcal M\) defined by (5.2) is a \(\sigma\)-algebra. Furthermore, the restriction of
+\(\mu^*\) to \(\mathcal M\) is a *complete measure*: it is a measure on \((\Omega, \mathcal M)\), and
+every subset \(Z \subseteq N\) of a set \(N \in \mathcal M\) with \(\mu^*(N) = 0\) also belongs to
+\(\mathcal M\) and has measure zero.
+#+end_quote
+
+*Proof.* Throughout this proof we use **only** the three properties of an outer measure (vanishing at
+\(\emptyset\), monotonicity, countable subadditivity) and the splitting identity (5.2).
+
+*Step 1. Closure under finite set operations (\(\mathcal M\) is an algebra).*
+- *\(\emptyset, \Omega \in \mathcal M\):* For \(E = \emptyset\),
+  \(\mu^*(T \cap \emptyset) + \mu^*(T \setminus \emptyset) = \mu^*(\emptyset) + \mu^*(T) = \mu^*(T)\).
+- *Complements:* Replacing \(E\) by \(E^c\) simply swaps \(T \cap E\) and \(T \setminus E = T \cap E^c\)
+  on the right-hand side of (5.2). Thus \(E \in \mathcal M \implies E^c \in \mathcal M\).
+- *Finite unions:* Let \(E, F \in \mathcal M\) and let \(T \subseteq \Omega\) be any test set.
+  1. First split \(T\) using \(E \in \mathcal M\):
+     \[
+     \mu^*(T) = \mu^*(T \cap E) + \mu^*(T \setminus E).
+     \]
+  2. Next split the second piece \(T \setminus E\) using \(F \in \mathcal M\):
+     \[
+     \mu^*(T \setminus E) = \mu^*\big((T \setminus E) \cap F\big) + \mu^*\big((T \setminus E) \setminus F\big).
+     \]
+  3. Substitute (2) into (1), noting that \((T \setminus E) \setminus F = T \setminus (E \cup F)\):
+     \[
+     \mu^*(T) = \mu^*(T \cap E) + \mu^*\big((T \setminus E) \cap F\big) + \mu^*\big(T \setminus (E \cup F)\big).
+     \]
+  4. Observe that the first two sets on the right have union
+     \((T \cap E) \cup ((T \setminus E) \cap F) = T \cap (E \cup F)\) (see diagram below!). By
+     subadditivity of \(\mu^*\) on those first two terms,
+     \[
+     \mu^*(T \cap E) + \mu^*\big((T \setminus E) \cap F\big) \ge \mu^*\big(T \cap (E \cup F)\big).
+     \]
+     Inserting this into (3) gives
+     \[
+     \mu^*(T) \ge \mu^*\big(T \cap (E \cup F)\big) + \mu^*\big(T \setminus (E \cup F)\big).
+     \]
+     Since the opposite inequality (\(\le\)) always holds by subadditivity, equality holds and
+     \(E \cup F \in \mathcal M\).
+
+#+begin_example
+   Splitting T first by E, then by F:
+   +-------------------------------------------------+
+   | T                                               |
+   |   +-------------+---------------+---------------+
+   |   |   T \cap E  | (T \ E)\cap F | T \ (E \cup F)|
+   |   +-------------+---------------+---------------+
+   |   \____________  ______________/
+   |                \/
+   |          T \cap (E \cup F)
+   +-------------------------------------------------+
+#+end_example
+
+Since \(\mathcal M\) is closed under complements and finite unions, it is an algebra (hence also closed
+under finite intersections and set differences).
+
+*Step 2. Closure under countable unions (\(\mathcal M\) is a \(\sigma\)-algebra).*
+First let \(E_1, E_2, \dots \in \mathcal M\) be **pairwise disjoint**, and set
+\(E := \bigsqcup_{j=1}^\infty E_j\). Fix any test set \(T \subseteq \Omega\).
+- By induction on \(n\), splitting \(T\) successively by \(E_1\), then the remainder by \(E_2\), ..., up
+  to \(E_n\) gives, for every finite \(n \ge 1\):
+  \[
+  \mu^*(T) = \sum_{j=1}^n \mu^*(T \cap E_j) + \mu^*\Big(T \setminus \bigcup_{j=1}^n E_j\Big).
+  \]
+- Now comes a key monotonicity step: since \(\bigcup_{j=1}^n E_j \subseteq E\), taking complements inside
+  \(T\) reverses the inclusion:
+  \[
+  T \setminus E \subseteq T \setminus \bigcup_{j=1}^n E_j, \quad \text{so} \quad
+  \mu^*(T \setminus E) \le \mu^*\Big(T \setminus \bigcup_{j=1}^n E_j\Big).
+  \]
+  Substituting this lower bound into the previous identity gives an inequality where the second term on
+  the right no longer depends on \(n\):
+  \[
+  \mu^*(T) \ge \sum_{j=1}^n \mu^*(T \cap E_j) + \mu^*(T \setminus E) \quad \text{for every } n \ge 1.
+  \]
+- Now let \(n \to \infty\) (taking the supremum over \(n\), with no continuity assumption on \(\mu^*\)
+  needed!), and then apply countable subadditivity of \(\mu^*\) to
+  \(T \cap E = \bigcup_{j=1}^\infty (T \cap E_j)\):
+  \begin{equation}
+  \mu^*(T) \ge \sum_{j=1}^\infty \mu^*(T \cap E_j) + \mu^*(T \setminus E) \ge \mu^*(T \cap E) + \mu^*(T \setminus E). \tag{$\star$}
+  \end{equation}
+  Since \(\mu^*(T) \le \mu^*(T \cap E) + \mu^*(T \setminus E)\) always holds, both inequalities in
+  \((\star)\) are equalities! In particular, \(E \in \mathcal M\).
+- What if \(F_1, F_2, \dots \in \mathcal M\) are *not* disjoint? Disjointify them by setting
+  \(E_1 = F_1\) and \(E_j = F_j \setminus \bigcup_{k=1}^{j-1} F_k\) for \(j \ge 2\). By Step 1, each
+  \(E_j \in \mathcal M\), they are pairwise disjoint, and \(\bigcup_{j=1}^\infty F_j = \bigsqcup_{j=1}^\infty E_j \in \mathcal M\).
+  Thus \(\mathcal M\) is a \(\sigma\)-algebra!
+
+*Step 3. Countable additivity and completeness of \(\mu^*|_{\mathcal M}\).*
+- *Countable additivity:* Take \(T = E = \bigsqcup_{j=1}^\infty E_j\) in \((\star)\) for pairwise disjoint
+  \(E_j \in \mathcal M\). Since \(E \cap E_j = E_j\) and \(E \setminus E = \emptyset\) (with
+  \(\mu^*(\emptyset) = 0\)), \((\star)\) and countable subadditivity give
+  \[
+  \mu^*(E) \ge \sum_{j=1}^\infty \mu^*(E_j) \ge \mu^*(E),
+  \]
+  so \(\mu^*(\bigsqcup_{j=1}^\infty E_j) = \sum_{j=1}^\infty \mu^*(E_j)\). Thus \(\mu^*|_{\mathcal M}\)
+  is a measure!
+- *Completeness:* Suppose \(N \in \mathcal M\) has \(\mu^*(N) = 0\), and let \(Z \subseteq N\) be *any*
+  subset. By monotonicity, \(0 \le \mu^*(Z) \le \mu^*(N) = 0\), so \(\mu^*(Z) = 0\). For any test set
+  \(T \subseteq \Omega\), monotonicity gives \(\mu^*(T \cap Z) \le \mu^*(Z) = 0\) and
+  \(\mu^*(T \setminus Z) \le \mu^*(T)\), so
+  \[
+  \mu^*(T) \le \mu^*(T \cap Z) + \mu^*(T \setminus Z) = 0 + \mu^*(T \setminus Z) \le \mu^*(T).
+  \]
+  Thus equality holds, \(Z \in \mathcal M\), and \(\mu^*(Z) = 0\). \(\blacksquare\)
+
+* 5.4 The extension theorem
+
+** Intuition
+
+Theorem 5.9 works for *any* outer measure \(\mu^*\), but for an arbitrary outer measure \(\mathcal M\)
+might be tiny (just \(\{\emptyset, \Omega\}\)). When \(\mu^*\) is built from a premeasure \(\mu_0\) on an
+algebra \(\mathcal A\) via covering formula (5.1), we have one last crucial link to check: **every set
+\(A \in \mathcal A\) in the original algebra satisfies Carathéodory's splitting test (5.2)**! Once we know
+\(\mathcal A \subseteq \mathcal M\), the fact that \(\mathcal M\) is a \(\sigma\)-algebra immediately gives
+\(\sigma(\mathcal A) \subseteq \mathcal M\).
+
+** Statement and proof of Carathéodory's extension theorem
+
+#+begin_quote
+*Theorem 5.10 (Carathéodory's extension theorem).* Let \(\mu_0\) be a premeasure on an algebra
+\(\mathcal A\) of subsets of \(\Omega\).
+1. *(Existence)* There exists a measure \(\mu\) on \(\sigma(\mathcal A)\) such that
+   \(\mu(A) = \mu_0(A)\) for every \(A \in \mathcal A\).
+2. *(Uniqueness)* If there are sets \(E_n \in \mathcal A\) such that \(E_n \uparrow \Omega\) and
+   \(\mu_0(E_n) < \infty\) for every \(n\), then this extension \(\mu\) to \(\sigma(\mathcal A)\) is
+   unique.
+#+end_quote
+
+*Proof.* Let \(\mu^*\) be the outer measure defined by (5.1), and let \(\mathcal M\) be its
+\(\sigma\)-algebra of Carathéodory-measurable sets (Theorem 5.9). By Lemma 5.7, \(\mu^*\) agrees with
+\(\mu_0\) on \(\mathcal A\).
+
+To prove existence, it suffices to show \(\mathcal A \subseteq \mathcal M\); then
+\(\sigma(\mathcal A) \subseteq \mathcal M\) (since \(\mathcal M\) is a \(\sigma\)-algebra), and
+restricting the measure \(\mu^*|_{\mathcal M}\) to \(\sigma(\mathcal A)\) gives a measure \(\mu\) on
+\(\sigma(\mathcal A)\) with \(\mu(A) = \mu^*(A) = \mu_0(A)\) for all \(A \in \mathcal A\).
+
+Fix \(A \in \mathcal A\) and an arbitrary test set \(T \subseteq \Omega\). Let
+\(T \subseteq \bigcup_{n=1}^\infty A_n\) be *any* countable cover of \(T\) by sets \(A_n \in \mathcal A\).
+Since \(\mathcal A\) is an algebra, for each \(n\) both \(A_n \cap A \in \mathcal A\) and
+\(A_n \setminus A \in \mathcal A\), and finite additivity of \(\mu_0\) on \(\mathcal A\) gives
+\[
+\mu_0(A_n) = \mu_0(A_n \cap A) + \mu_0(A_n \setminus A).
+\]
+Furthermore, \(\{A_n \cap A\}_{n \ge 1}\) is an algebra cover of \(T \cap A\), and
+\(\{A_n \setminus A\}_{n \ge 1}\) is an algebra cover of \(T \setminus A\)! Summing over \(n \ge 1\) and
+using the definition (5.1) of \(\mu^*\) as an infimum over algebra covers gives
+\[
+\sum_{n=1}^\infty \mu_0(A_n) = \sum_{n=1}^\infty \mu_0(A_n \cap A) + \sum_{n=1}^\infty \mu_0(A_n \setminus A)
+\ge \mu^*(T \cap A) + \mu^*(T \setminus A).
+\]
+Taking the infimum of the left-hand side over all algebra covers \(\{A_n\}\) of \(T\) yields
+\[
+\mu^*(T) \ge \mu^*(T \cap A) + \mu^*(T \setminus A).
+\]
+Together with subadditivity, this proves \(A \in \mathcal M\), so \(\mathcal A \subseteq \mathcal M\) and
+existence holds!
+
+Finally, under the \(\sigma\)-finiteness assumption \(E_n \in \mathcal A\), \(E_n \uparrow \Omega\),
+\(\mu_0(E_n) < \infty\), note that every algebra \(\mathcal A\) is a \(\pi\)-system, so Proposition 4.11
+applied with \(\mathcal P = \mathcal A\) immediately guarantees that the extension to
+\(\sigma(\mathcal A)\) is unique. \(\blacksquare\)
+
+#+begin_example
+   Summary of Caratheodory's Extension Pipeline:
+
+   Premeasure mu_0        Outer measure mu*         Measure mu*|M         Measure mu
+   on algebra A    ===>   on all of 2^\Omega  ===>  on Caratheodory ===>  on \sigma(A)
+   (Def 5.2)       (5.1)  (Lemma 5.7)         (5.2) \sigma-alg M          (restrict from M
+                                                    (Thm 5.9)              to \sigma(A) \subseteq M)
+#+end_example
+
+#+begin_quote
+*Example 5.11 (Recognizing the Lebesgue construction).* On \(\Omega = (0, 1]\), let \(\mathcal A\) be the
+collection of all finite disjoint unions of half-open intervals \((a, b]\) with \(0 \le a < b \le 1\)
+(including the empty union \(\emptyset\)).
+- *\(\mathcal A\) is an algebra:* Taking the complement of a finite union of intervals in \((0,1]\), or
+  cutting two unions at all of their endpoints, produces another finite disjoint union of half-open
+  intervals \((a_j, b_j]\).
+- *Premeasure:* Define \(\mu_0\big(\bigsqcup_{j=1}^m (a_j, b_j]\big) := \sum_{j=1}^m (b_j - a_j)\). From
+  real analysis (or Chapter 12 using compactness of closed intervals \([a+\delta, b]\)), \(\mu_0\) is a
+  premeasure on \(\mathcal A\).
+- *Extension:* Theorem 5.10 extends \(\mu_0\) uniquely to a probability measure \(\lambda\) on
+  \(\sigma(\mathcal A) = \mathcal B((0, 1])\), namely Lebesgue measure on \((0, 1]\). Doing the same on
+  \(\mathbb R\) with the exhausting intervals \(E_n = (-n, n] \in \mathcal A\) gives Lebesgue measure on
+  \((\mathbb R, \mathcal B(\mathbb R))\).
+
+Notice that Theorem 5.10 never used distances or Euclidean geometry — only algebra operations, countable
+coverings, and additivity. All the geometry of a specific model lives in verifying that \(\mu_0\) is a
+premeasure on \(\mathcal A\)!
+#+end_quote
+
+*Scope of uniqueness (a subtle point).* Theorem 5.10 guarantees uniqueness on \(\sigma(\mathcal A)\),
+*not* on larger \(\sigma\)-algebras! For instance, in Example 5.8 (\(\Omega = \{1,2,3,4\}\) with blocks
+\(\{1,2\}\) and \(\{3,4\}\) of mass \(1/2\)), \(\sigma(\mathcal A) = \mathcal A\) has only \(4\) sets,
+and on \(\sigma(\mathcal A)\) the measure is unique. If you enlarge the \(\sigma\)-algebra to
+\(2^\Omega\), you could assign mass \(1/4\) to each of \(1, 2, 3, 4\), or assign mass \(1/2\) to \(1\)
+and \(3\) and \(0\) to \(2\) and \(4\). Both extend \(\mu_0\) to \(2^\Omega\), and this does not
+contradict uniqueness on \(\sigma(\mathcal A)\).
+
+* 5.5 Completing a measure
+
+** Intuition
+
+In Theorem 5.9, the restriction of \(\mu^*\) to the Carathéodory \(\sigma\)-algebra \(\mathcal M\) was
+*complete* (every subset of a null set in \(\mathcal M\) was again in \(\mathcal M\)). However, when we
+restrict \(\mu^*\) down to the smaller generated \(\sigma\)-algebra \(\mathcal F = \sigma(\mathcal A)\)
+(for instance, restricting from Lebesgue-measurable sets \(\mathcal M\) to Borel sets
+\(\mathcal B(\mathbb R) = \sigma(\mathcal A)\)), we can lose completeness!
+
+Why do we care about completeness? Suppose two functions \(f\) and \(g\) agree outside a measurable set
+\(N \in \mathcal F\) with \(\mu(N) = 0\) (we say \(f = g\) *almost everywhere*). If \(f\) is measurable,
+we want \(g\) to be measurable too! On an *incomplete* measure space, \(f\) and \(g\) can differ on a
+non-measurable subset \(Z \subseteq N\), making \(g\) non-measurable even though \(\mu\) considers \(N\)
+negligible. **Completing** a measure space fixes this once and for all by adjoining all subsets of
+\(\mu\)-null sets.
+
+** Definition and construction of the completion
+
+#+begin_quote
+*Definition 5.12 (Complete measure space).* A measure space \((\Omega, \mathcal F, \mu)\) is *complete*
+if every subset of every measurable set of measure zero belongs to \(\mathcal F\):
+\[
+N \in \mathcal F,\ \mu(N) = 0,\ Z \subseteq N \implies Z \in \mathcal F.
+\]
+(By monotonicity, any such \(Z\) then automatically has \(\mu(Z) = 0\).)
+#+end_quote
+
+#+begin_quote
+*Example 5.13 (A missing event inside a null set).* Let \(\Omega = \{1, 2, 3\}\), let
+\(\mathcal F = \{\emptyset, \{1\}, \{2, 3\}, \Omega\}\), and define a probability measure \(\mathbb P\) on
+\(\mathcal F\) by \(\mathbb P(\{1\}) = 1\) and \(\mathbb P(\{2, 3\}) = 0\).
+Here \(N = \{2, 3\} \in \mathcal F\) has \(\mathbb P(N) = 0\), but its subset \(Z = \{2\} \subseteq N\)
+does *not* belong to \(\mathcal F\)! Thus \((\Omega, \mathcal F, \mathbb P)\) is **not complete**.
+Adjoining \(\{2\}\) and \(\{3\}\) (and their unions with \(\{1\}\)) with probability \(0\) and \(1\)
+respectively enlarges \(\mathcal F\) to \(2^\Omega\) and makes the space complete without changing any
+previously defined probability.
+#+end_quote
+
+#+begin_quote
+*Proposition 5.14 (Completion of a measure space).* For any measure space \((\Omega, \mathcal F, \mu)\),
+let \(\overline{\mathcal F}\) consist of all subsets \(E \subseteq \Omega\) that can be squeezed between
+two \(\mathcal F\)-measurable sets whose difference has \(\mu\)-measure zero:
+\[
+\overline{\mathcal F} := \big\{E \subseteq \Omega : \text{there exist } A, B \in \mathcal F \text{ with } A \subseteq E \subseteq B \text{ and } \mu(B \setminus A) = 0\big\}.
+\]
+Then:
+1. \(\overline{\mathcal F}\) is a \(\sigma\)-algebra containing \(\mathcal F\),
+2. the formula \(\overline{\mu}(E) := \mu(A) = \mu(B)\) is well-defined and defines a *complete* measure
+   \(\overline{\mu}\) on \(\overline{\mathcal F}\) extending \(\mu\), and
+3. \(\overline{\mathcal F}\) is the smallest \(\sigma\)-algebra containing \(\mathcal F\) and all subsets
+   of \(\mu\)-null sets in \(\mathcal F\), and \(\overline{\mu}\) is the unique measure on
+   \(\overline{\mathcal F}\) extending \(\mu\).
+#+end_quote
+
+#+begin_example
+   Squeezing a completed-measurable set E between A and B in F:
+        B  (in F)
+      +----------------------------------------+
+      |     E  (in \overline{F})               |
+      |   +--------------------------------+   |
+      |   |     A  (in F)                  |   |
+      |   |   +------------------------+   |   |
+      |   |   |                        |   |   |
+      |   |   +------------------------+   |   |
+      |   +--------------------------------+   |
+      +----------------------------------------+
+        A \subseteq E \subseteq B,   mu(B \setminus A) = 0  ===>  \overline{mu}(E) = mu(A) = mu(B)
+#+end_example
+
+*Proof.*
+
+*Step 1. \(\overline{\mu}(E)\) is well-defined (independent of the enclosing pair \(A, B\)).*
+First, for any pair \(A, B \in \mathcal F\) with \(A \subseteq E \subseteq B\) and \(\mu(B \setminus A) = 0\),
+finite additivity gives \(\mu(B) = \mu(A) + \mu(B \setminus A) = \mu(A) + 0 = \mu(A)\) (even if
+\(\mu(A) = \infty\)).
+Second, suppose \(A', B' \in \mathcal F\) is another pair with \(A' \subseteq E \subseteq B'\) and
+\(\mu(B' \setminus A') = 0\). Since \(A \subseteq E \subseteq B'\) and \(A' \subseteq E \subseteq B\),
+monotonicity of \(\mu\) on \(\mathcal F\) gives
+\[
+\mu(A) \le \mu(B') = \mu(A') \qquad \text{and} \qquad \mu(A') \le \mu(B) = \mu(A),
+\]
+so \(\mu(A) = \mu(A')\). Thus \(\overline{\mu}(E)\) does not depend on the choice of \(A, B\). Moreover,
+by monotonicity, *any* measure on \(\overline{\mathcal F}\) extending \(\mu\) must satisfy
+\(\mu(A) \le \tilde\mu(E) \le \mu(B) = \mu(A)\), proving uniqueness of \(\overline{\mu}\).
+
+*Step 2. \(\overline{\mathcal F}\) is a \(\sigma\)-algebra and \(\overline{\mu}\) is a measure.*
+- *\(\mathcal F \subseteq \overline{\mathcal F}\):* For \(E \in \mathcal F\), take \(A = B = E\); then
+  \(B \setminus A = \emptyset\) has measure \(0\) and \(\overline{\mu}(E) = \mu(E)\).
+- *Complements:* If \(A \subseteq E \subseteq B\) with \(A, B \in \mathcal F\) and \(\mu(B \setminus A) = 0\),
+  then taking complements reverses inclusions:
+  \[
+  B^c \subseteq E^c \subseteq A^c, \qquad \text{with } A^c \setminus B^c = B \setminus A,
+  \]
+  so \(\mu(A^c \setminus B^c) = \mu(B \setminus A) = 0\) and \(E^c \in \overline{\mathcal F}\).
+- *Countable unions:* Let \(E_n \in \overline{\mathcal F}\) for \(n \ge 1\), and choose enclosing pairs
+  \(A_n, B_n \in \mathcal F\) with \(A_n \subseteq E_n \subseteq B_n\) and \(\mu(B_n \setminus A_n) = 0\).
+  Set \(A := \bigcup_{n=1}^\infty A_n \in \mathcal F\) and \(B := \bigcup_{n=1}^\infty B_n \in \mathcal F\).
+  Then \(A \subseteq \bigcup_{n=1}^\infty E_n \subseteq B\), and any point in \(B \setminus A\) belongs
+  to \(B_n \setminus A_n\) for some \(n\):
+  \[
+  B \setminus A = \Big(\bigcup_{n=1}^\infty B_n\Big) \setminus \Big(\bigcup_{k=1}^\infty A_k\Big)
+  \subseteq \bigcup_{n=1}^\infty (B_n \setminus A_n).
+  \]
+  By monotonicity and countable subadditivity of \(\mu\) on \(\mathcal F\),
+  \[
+  0 \le \mu(B \setminus A) \le \sum_{n=1}^\infty \mu(B_n \setminus A_n) = \sum_{n=1}^\infty 0 = 0.
+  \]
+  Thus \(\bigcup_{n=1}^\infty E_n \in \overline{\mathcal F}\), and \(\overline{\mathcal F}\) is a
+  \(\sigma\)-algebra.
+- *Countable additivity:* If the sets \(E_n \in \overline{\mathcal F}\) above are pairwise disjoint, then
+  their inner sets \(A_n \subseteq E_n\) are also pairwise disjoint! Using the enclosing pair
+  \(A = \bigsqcup_{n=1}^\infty A_n\) and \(B = \bigcup_{n=1}^\infty B_n\) for \(\bigsqcup_{n=1}^\infty E_n\),
+  we get
+  \[
+  \overline{\mu}\Big(\bigsqcup_{n=1}^\infty E_n\Big) = \mu\Big(\bigsqcup_{n=1}^\infty A_n\Big)
+  = \sum_{n=1}^\infty \mu(A_n) = \sum_{n=1}^\infty \overline{\mu}(E_n).
+  \]
+  Since \(\overline{\mu}(\emptyset) = \mu(\emptyset) = 0\), \(\overline{\mu}\) is a measure on
+  \(\overline{\mathcal F}\).
+
+*Step 3. Completeness and minimality of \(\overline{\mathcal F}\).*
+- *Completeness:* Suppose \(E \in \overline{\mathcal F}\) has \(\overline{\mu}(E) = 0\), with enclosing
+  sets \(A \subseteq E \subseteq B\) in \(\mathcal F\), so \(\mu(B) = \overline{\mu}(E) = 0\). For *any*
+  subset \(Z \subseteq E\), we have
+  \[
+  \emptyset \subseteq Z \subseteq B \qquad \text{with } \mu(B \setminus \emptyset) = \mu(B) = 0,
+  \]
+  so \(Z \in \overline{\mathcal F}\) and \(\overline{\mu}(Z) = 0\).
+- *Minimality:* Every \(E \in \overline{\mathcal F}\) with enclosing pair \(A \subseteq E \subseteq B\)
+  can be written as \(E = A \cup (E \setminus A)\), where \(A \in \mathcal F\) and
+  \(E \setminus A \subseteq B \setminus A\) is a subset of the \(\mu\)-null set \(B \setminus A \in \mathcal F\).
+  Therefore, any \(\sigma\)-algebra containing \(\mathcal F\) and all subsets of \(\mu\)-null sets in
+  \(\mathcal F\) must contain both \(A\) and \(E \setminus A\), hence their union \(E\). \(\blacksquare\)
+
+** Examples of completion
+
+#+begin_quote
+*Example 5.15 (Completion need not reveal every point).* Partition \(\Omega = \{1, 2, 3, 4, 5, 6\}\) into
+three blocks:
+\[
+B_1 = \{1, 2\} \text{ (mass } 1/3\text{)}, \qquad
+B_2 = \{3, 4\} \text{ (mass } 2/3\text{)}, \qquad
+B_3 = \{5, 6\} \text{ (mass } 0\text{)}.
+\]
+Let \(\mathcal F\) be the \(\sigma\)-algebra of all unions of these three blocks (\(2^3 = 8\) sets).
+- The only nonempty \(\mu\)-null set in \(\mathcal F\) is \(B_3 = \{5, 6\}\), whose subsets are
+  \(\emptyset, \{5\}, \{6\}, \{5, 6\}\) (\(4\) choices).
+- The positive-mass blocks \(B_1 = \{1, 2\}\) and \(B_2 = \{3, 4\}\) must still be taken whole or not at
+  all (\(2 \times 2 = 4\) choices).
+Thus the completion \(\overline{\mathcal F}\) has \(2 \times 2 \times 4 = 16\) sets, *not* all
+\(2^6 = 64\) subsets of \(\Omega\)! For example, \(E = \{1, 2, 5\} \in \overline{\mathcal F}\) (enclosed
+by \(A = \{1, 2\}\) and \(B = \{1, 2, 5, 6\}\) with \(\mu(B \setminus A) = \mu(\{5, 6\}) = 0\), giving
+\(\overline{\mu}(\{1, 2, 5\}) = 1/3\)). By contrast, \(\{1\} \notin \overline{\mathcal F}\): any
+\(A \subseteq \{1\} \subseteq B\) with \(A, B \in \mathcal F\) forces \(A = \emptyset\) and
+\(B \supseteq \{1, 2\}\), so \(\mu(B \setminus A) \ge 1/3 > 0\).
+#+end_quote
+
+#+begin_quote
+*Example 5.16 (Completion depends on the measure).* Equip \(\mathbb R\) with the Borel \(\sigma\)-algebra
+\(\mathcal B(\mathbb R)\) and the Dirac measure \(\delta_0\) at the origin.
+- The Borel set \(N = \mathbb R \setminus \{0\} \in \mathcal B(\mathbb R)\) has \(\delta_0(N) = 0\)!
+- Every subset \(Z \subseteq \mathbb R\) with \(0 \notin Z\) is a subset of the null set \(N\), hence
+  belongs to the completion \(\overline{\mathcal B(\mathbb R)}^{\delta_0}\) with measure \(0\).
+- Every subset \(E \subseteq \mathbb R\) with \(0 \in E\) can be written as
+  \(E = \{0\} \cup (E \setminus \{0\})\), where \(\{0\} \in \mathcal B(\mathbb R)\) and
+  \(E \setminus \{0\} \subseteq N\), so \(E\) also belongs to the completion (with enclosing sets
+  \(A = \{0\}\) and \(B = \mathbb R\), since \(\delta_0(\mathbb R \setminus \{0\}) = 0\))!
+Consequently, **the completion of \(\mathcal B(\mathbb R)\) with respect to \(\delta_0\) is the entire
+power set \(2^{\mathbb R}\)**. By contrast, the completion of \(\mathcal B(\mathbb R)\) with respect to
+Lebesgue measure \(\lambda\) (the *Lebesgue \(\sigma\)-algebra*) is strictly smaller than \(2^{\mathbb R}\)
+(as we will prove in Chapter 11 by constructing a Vitali non-measurable set).
+#+end_quote
+
+** Common confusions
+
+- *"Every finitely additive set function on an algebra extends to a measure":* False! Example 5.4 (the
+  finite/cofinite lottery on \(\mathbb N\)) is finitely additive on \(\mathcal A\) with total mass \(1\),
+  yet fails to be a premeasure and has no countably additive extension.
+- *"Outer measure \(\mu^*\) is a measure":* False! \(\mu^*\) is defined on *all* of \(2^\Omega\), and on
+  sets outside \(\mathcal M\) it is only subadditive, not additive (Example 5.8). It becomes a measure
+  only when restricted to \(\mathcal M\) (or \(\sigma(\mathcal A)\)).
+- *"To check Carathéodory measurability of \(E\), it suffices to check \(\mu^*(\Omega) = \mu^*(E) + \mu^*(E^c)\)":*
+  False in general (especially when \(\mu^*(\Omega) = \infty\))! Criterion (5.2) requires \(E\) to split
+  **every** test set \(T \subseteq \Omega\) additively, which is what allows Step 1 and Step 2 of
+  Theorem 5.9 to chain splits together (\(T \to T \setminus E \to (T \setminus E) \setminus F\)).
+- *"Completing a measure makes every subset measurable":* False! Completion only adds subsets of
+  *null* sets (Examples 5.15 and Chapter 11).
+
+** Historical remark and classroom route
+
+*Historical remark (A measurability test motivated by length).* In 1914, Constantin Carathéodory sought a
+linear measure of point sets in Euclidean space that would agree with ordinary arc length on rectifiable
+curves. He began by developing an abstract axiomatic theory of outer measures \(\mu^*\) before returning
+to geometry, emphasizing that his definition also works when \(\mu^*(\Omega) = \infty\). His key insight
+was the splitting identity (5.2): instead of comparing inner and outer measures (which fails when
+\(\mu^*(E) = \infty\)), test whether \(E\) divides every test set \(T\) additively.
+
+*Classroom route.* Introduce algebras, premeasures, and the failed uniform lottery (Example 5.4) right
+after Chapter 4's uniqueness theorem. Use the 4-point block example (Example 5.8) to motivate both why
+covering outer measure \(\mu^*\) is not additive on all subsets and how Carathéodory's splitting test
+(5.2) filters out subsets that cut across indivisible blocks. Follow the extension proof (Theorem 5.10),
+note the decreasing-set continuity test (Proposition 5.5) for upcoming infinite-product constructions,
+and record completion (Proposition 5.14).
+
+* Worked Exercises
+
+** Exercise 1
+In Example 5.8 (\(\Omega = \{1, 2, 3, 4\}\), \(\mathcal A = \{\emptyset, \{1, 2\}, \{3, 4\}, \Omega\}\),
+with \(\mu_0(\{1, 2\}) = \mu_0(\{3, 4\}) = 1/2\)):
+1. Compute \(\mu^*(T)\) for every subset \(T \subseteq \Omega\) (all \(16\) subsets).
+2. Using Carathéodory's criterion (5.2) directly, prove that \(\{1, 2\} \in \mathcal M\) and that no
+   \(1\)-element or \(3\)-element subset belongs to \(\mathcal M\). What is \(\mathcal M\) here?
+
+** Solution
+1. From formula (5.1):
+   - \(\mu^*(\emptyset) = 0\).
+   - If \(T \ne \emptyset\) is contained in \(\{1, 2\}\) (namely \(T = \{1\}, \{2\}, \{1, 2\}\)), the
+     minimal algebra cover is \(\{1, 2\}\), so \(\mu^*(T) = 1/2\).
+   - If \(T \ne \emptyset\) is contained in \(\{3, 4\}\) (namely \(T = \{3\}, \{4\}, \{3, 4\}\)), the
+     minimal algebra cover is \(\{3, 4\}\), so \(\mu^*(T) = 1/2\).
+   - If \(T\) contains at least one point from \(\{1, 2\}\) *and* at least one point from \(\{3, 4\}\)
+     (the remaining \(9\) subsets, such as \(\{1, 3\}\), \(\{1, 2, 3\}\), \(\Omega\)), any algebra cover
+     must cover both blocks, so \(\mu^*(T) = 1/2 + 1/2 = 1\).
+   Notice the neat formula: \(\mu^*(T) = \frac12 \mathbf 1_{\{T \cap \{1,2\} \ne \emptyset\}} + \frac12 \mathbf 1_{\{T \cap \{3,4\} \ne \emptyset\}}\).
+2. Let \(E = \{1, 2\}\). Then for any \(T \subseteq \Omega\), \(T \cap E = T \cap \{1, 2\}\) lies in
+   \(\{1, 2\}\) and \(T \setminus E = T \cap \{3, 4\}\) lies in \(\{3, 4\}\). Using the formula from part 1,
+   \[
+   \mu^*(T \cap E) = \frac12 \mathbf 1_{\{T \cap \{1,2\} \ne \emptyset\}}, \qquad
+   \mu^*(T \setminus E) = \frac12 \mathbf 1_{\{T \cap \{3,4\} \ne \emptyset\}},
+   \]
+   whose sum is \(\mu^*(T)\) for *every* \(T \subseteq \Omega\)! Thus \(\{1, 2\} \in \mathcal M\).
+   On the other hand, if \(E\) is any subset that splits one of the blocks — say \(1 \in E\) and
+   \(2 \notin E\) — test with \(T = \{1, 2\}\): then \(T \cap E = \{1\}\) and \(T \setminus E = \{2\}\), so
+   \[
+   \mu^*(T \cap E) + \mu^*(T \setminus E) = \mu^*(\{1\}) + \mu^*(\{2\}) = \frac12 + \frac12 = 1 \ne \frac12 = \mu^*(T).
+   \]
+   Similarly, if \(E\) splits \(\{3, 4\}\), testing with \(T = \{3, 4\}\) fails (5.2). Thus a set
+   \(E\) belongs to \(\mathcal M\) if and only if it splits neither \(\{1, 2\}\) nor \(\{3, 4\}\), which
+   means \(\mathcal M = \mathcal A = \{\emptyset, \{1, 2\}, \{3, 4\}, \Omega\}\).
+
+** Exercise 2
+Let \(\Omega\) be a nonempty set and define \(\mu^* : 2^\Omega \to [0, 1]\) by \(\mu^*(\emptyset) = 0\) and
+\(\mu^*(E) = 1\) for every nonempty \(E \subseteq \Omega\).
+1. Verify that \(\mu^*\) is an outer measure on \(\Omega\).
+2. Determine the \(\sigma\)-algebra \(\mathcal M\) of Carathéodory-measurable sets for \(\mu^*\).
+
+** Solution
+1. \(\mu^*(\emptyset) = 0\); if \(E \subseteq F\), then either \(E = \emptyset\) (\(\mu^*(E)=0 \le \mu^*(F)\))
+   or \(E \ne \emptyset \implies F \ne \emptyset\) (\(\mu^*(E) = 1 = \mu^*(F)\)); and for any sequence
+   \(E_n\), if all \(E_n = \emptyset\) then both sides of countable subadditivity are \(0\), while if at
+   least one \(E_n \ne \emptyset\) then \(\mu^*(\bigcup_n E_n) = 1 \le \sum_n \mu^*(E_n)\). Thus
+   \(\mu^*\) is an outer measure.
+2. Always \(\emptyset, \Omega \in \mathcal M\). Now suppose \(E \subseteq \Omega\) is any proper nonempty
+   subset (\(\emptyset \subsetneq E \subsetneq \Omega\)), so both \(E \ne \emptyset\) and
+   \(E^c \ne \emptyset\). Take the test set \(T = \Omega\):
+   \[
+   \mu^*(\Omega \cap E) + \mu^*(\Omega \setminus E) = \mu^*(E) + \mu^*(E^c) = 1 + 1 = 2 \ne 1 = \mu^*(\Omega).
+   \]
+   Thus *no* proper nonempty subset \(E\) satisfies (5.2), and \(\mathcal M = \{\emptyset, \Omega\}\).
+
+** Exercise 3
+Let \(\mu^*\) be any outer measure on \(\Omega\), and suppose \(N \subseteq \Omega\) has
+\(\mu^*(N) = 0\) (we call \(N\) an *\(\mu^*\)-null set*).
+1. Prove directly from (5.2) that \(N \in \mathcal M\).
+2. Conclude that for *any* outer measure \(\mu^*\), the \(\sigma\)-algebra \(\mathcal M\) contains all
+   subsets of \(\Omega\) of outer measure zero, and for any \(A \in \mathcal M\) and \(N \subseteq \Omega\)
+   with \(\mu^*(N) = 0\), both \(A \cup N\) and \(A \setminus N\) belong to \(\mathcal M\) with
+   \(\mu^*(A \cup N) = \mu^*(A \setminus N) = \mu^*(A)\).
+
+** Solution
+1. Let \(T \subseteq \Omega\) be any test set. Since \(T \cap N \subseteq N\) and \(T \setminus N \subseteq T\),
+   monotonicity of \(\mu^*\) gives
+   \[
+   0 \le \mu^*(T \cap N) \le \mu^*(N) = 0 \implies \mu^*(T \cap N) = 0,
+   \qquad \text{and} \qquad
+   \mu^*(T \setminus N) \le \mu^*(T).
+   \]
+   Combining this with subadditivity \(\mu^*(T) \le \mu^*(T \cap N) + \mu^*(T \setminus N)\) gives
+   \[
+   \mu^*(T) \le 0 + \mu^*(T \setminus N) \le \mu^*(T),
+   \]
+   so \(\mu^*(T) = \mu^*(T \cap N) + \mu^*(T \setminus N)\) for every \(T \subseteq \Omega\). Thus
+   \(N \in \mathcal M\).
+2. By part 1, every set \(N\) with \(\mu^*(N) = 0\) is in \(\mathcal M\). Since \(\mathcal M\) is a
+   \(\sigma\)-algebra (Theorem 5.9), if \(A \in \mathcal M\) and \(\mu^*(N) = 0\), then
+   \(A \cup N \in \mathcal M\) and \(A \setminus N \in \mathcal M\), and also \(A \cap N \subseteq N\)
+   has \(\mu^*(A \cap N) = 0\). By finite additivity of the measure \(\mu^*|_{\mathcal M}\),
+   \[
+   \mu^*(A \cup N) = \mu^*(A) + \mu^*(N \setminus A) = \mu^*(A) + 0 = \mu^*(A),
+   \]
+   and \(\mu^*(A) = \mu^*(A \setminus N) + \mu^*(A \cap N) = \mu^*(A \setminus N) + 0 = \mu^*(A \setminus N)\).
+
+** Exercise 4
+Let \((\Omega, \mathcal F, \mu)\) be a measure space and let \((\Omega, \overline{\mathcal F}, \overline{\mu})\)
+be its completion (Proposition 5.14). Prove that a subset \(E \subseteq \Omega\) belongs to
+\(\overline{\mathcal F}\) if and only if \(E\) can be written as
+\[
+E = A \cup Z \quad \text{where } A \in \mathcal F \text{ and } Z \subseteq N \text{ for some } N \in \mathcal F \text{ with } \mu(N) = 0.
+\]
+
+** Solution
+- *(\(\implies\))* Suppose \(E \in \overline{\mathcal F}\). By definition of \(\overline{\mathcal F}\),
+  there exist \(A, B \in \mathcal F\) such that \(A \subseteq E \subseteq B\) and
+  \(\mu(B \setminus A) = 0\). Set \(Z := E \setminus A\) and \(N := B \setminus A \in \mathcal F\). Then
+  \(E = A \cup Z\), \(A \in \mathcal F\), \(Z \subseteq N\), and \(\mu(N) = 0\).
+- *(\(\Longleftarrow\))* Suppose \(E = A \cup Z\) where \(A \in \mathcal F\) and \(Z \subseteq N\) with
+  \(N \in \mathcal F\) and \(\mu(N) = 0\). Set \(B := A \cup N \in \mathcal F\). Then
+  \(A \subseteq E \subseteq B\), and \(B \setminus A = N \setminus A \subseteq N\). Since
+  \(B \setminus A \in \mathcal F\) and \(\mu\) is monotone, \(0 \le \mu(B \setminus A) \le \mu(N) = 0\),
+  so \(\mu(B \setminus A) = 0\) and \(E \in \overline{\mathcal F}\).
+
+** Exercise 5
+Suppose \(\mu_0\) is a premeasure on an algebra \(\mathcal A \subseteq 2^\Omega\) with
+\(\mu_0(\Omega) < \infty\), and let \(\mu^*\) be the outer measure defined by (5.1). Prove that a subset
+\(E \subseteq \Omega\) is Carathéodory measurable (\(E \in \mathcal M\)) if and only if for every
+\(\varepsilon > 0\) there exists a set \(B \in \sigma(\mathcal A)\) such that \(E \subseteq B\) and
+\(\mu^*(B \setminus E) < \varepsilon\).
+*(Hint: First show that for any \(E \subseteq \Omega\) there is always a "measurable hull"
+\(B \in \sigma(\mathcal A)\) with \(E \subseteq B\) and \(\mu^*(B) = \mu^*(E)\)!)*
+
+** Solution
+1. *Existence of a measurable hull \(B \in \sigma(\mathcal A)\) for any \(E \subseteq \Omega\):*
+   For each integer \(k \ge 1\), by definition (5.1) of \(\mu^*(E)\) there exists a countable algebra cover
+   \(E \subseteq \bigcup_{n=1}^\infty A_{k,n}\) with \(A_{k,n} \in \mathcal A\) such that
+   \(\sum_{n=1}^\infty \mu_0(A_{k,n}) \le \mu^*(E) + 1/k\).
+   Let \(B_k := \bigcup_{n=1}^\infty A_{k,n} \in \sigma(\mathcal A)\) and set
+   \(B := \bigcap_{k=1}^\infty B_k \in \sigma(\mathcal A)\). Then \(E \subseteq B \subseteq B_k\) for all
+   \(k\), so by monotonicity and countable subadditivity of \(\mu^*\),
+   \[
+   \mu^*(E) \le \mu^*(B) \le \mu^*(B_k) \le \sum_{n=1}^\infty \mu^*(A_{k,n}) = \sum_{n=1}^\infty \mu_0(A_{k,n}) \le \mu^*(E) + \frac1k.
+   \]
+   Letting \(k \to \infty\) gives \(\mu^*(B) = \mu^*(E)\).
+2. *(\(\implies\)) If \(E \in \mathcal M\):* Take the hull \(B \in \sigma(\mathcal A) \subseteq \mathcal M\)
+   from Step 1 with \(E \subseteq B\) and \(\mu^*(B) = \mu^*(E) \le \mu_0(\Omega) < \infty\). Since
+   \(E \in \mathcal M\), we can split the test set \(T = B\) along \(E\):
+   \[
+   \mu^*(B) = \mu^*(B \cap E) + \mu^*(B \setminus E) = \mu^*(E) + \mu^*(B \setminus E).
+   \]
+   Subtracting the finite number \(\mu^*(B) = \mu^*(E)\) gives \(\mu^*(B \setminus E) = 0 < \varepsilon\)!
+3. *(\(\Longleftarrow\)) If for every \(\varepsilon > 0\) there is \(B \in \sigma(\mathcal A)\) with
+   \(E \subseteq B\) and \(\mu^*(B \setminus E) < \varepsilon\):* Choose \(B_k \in \sigma(\mathcal A) \subseteq \mathcal M\)
+   with \(E \subseteq B_k\) and \(\mu^*(B_k \setminus E) < 1/k\), and set
+   \(B := \bigcap_{k=1}^\infty B_k \in \sigma(\mathcal A) \subseteq \mathcal M\). Then \(E \subseteq B\)
+   and \(\mu^*(B \setminus E) \le \mu^*(B_k \setminus E) < 1/k\) for all \(k\), so
+   \(\mu^*(B \setminus E) = 0\). By Exercise 3, \(B \setminus E \in \mathcal M\), so
+   \(E = B \setminus (B \setminus E) \in \mathcal M\)!
+
+** Exercise 6
+Let \(\Omega = \mathbb N\) and let \(\mathcal A\) be the finite/cofinite algebra of \(\mathbb N\). Let
+\(p_1, p_2, \dots \ge 0\) be nonnegative weights with \(\sum_{n=1}^\infty p_n = 1\). For every
+\(A \in \mathcal A\) (whether finite or cofinite!), define \(\mu_0(A) := \sum_{n \in A} p_n\).
+1. Use Proposition 5.5 to prove that \(\mu_0\) is a premeasure on \(\mathcal A\).
+2. What is the Carathéodory extension of \(\mu_0\) to \(\sigma(\mathcal A) = 2^{\mathbb N}\)? Compare
+   this with Example 5.4.
+
+** Solution
+1. Clearly \(\mu_0(\emptyset) = 0\), \(\mu_0(\mathbb N) = \sum_{n=1}^\infty p_n = 1 < \infty\), and for
+   disjoint \(A, B \in \mathcal A\) we have \(\mu_0(A \cup B) = \sum_{n \in A \cup B} p_n = \mu_0(A) + \mu_0(B)\),
+   so \(\mu_0\) is finitely additive.
+   Now suppose \(A_k \in \mathcal A\) decrease to \(\emptyset\) (\(A_1 \supseteq A_2 \supseteq \cdots\) and
+   \(\bigcap_{k=1}^\infty A_k = \emptyset\)). Given \(\varepsilon > 0\), since \(\sum_{n=1}^\infty p_n = 1 < \infty\),
+   choose \(N \in \mathbb N\) large enough that the tail satisfies \(\sum_{n = N+1}^\infty p_n < \varepsilon\).
+   For each \(m \in \{1, \dots, N\}\), since \(\bigcap_{k=1}^\infty A_k = \emptyset\), there is some index
+   \(k_m\) such that \(m \notin A_{k_m}\), hence \(m \notin A_k\) for all \(k \ge k_m\). Set
+   \(K := \max(k_1, \dots, k_N)\). Then for all \(k \ge K\), we have
+   \(A_k \cap \{1, \dots, N\} = \emptyset\), meaning \(A_k \subseteq \{N+1, N+2, \dots\}\). Therefore,
+   \[
+   \mu_0(A_k) = \sum_{n \in A_k} p_n \le \sum_{n = N+1}^\infty p_n < \varepsilon \quad \text{for all } k \ge K.
+   \]
+   Thus \(\mu_0(A_k) \to 0\), and Proposition 5.5 proves that \(\mu_0\) is a premeasure!
+2. On \(\sigma(\mathcal A) = 2^{\mathbb N}\), the formula \(\mu(E) = \sum_{n \in E} p_n\) (for *all*
+   \(E \subseteq \mathbb N\)) is a probability measure extending \(\mu_0\), and by Theorem 5.10 it is the
+   unique extension. Unlike Example 5.4 (where all singletons had mass \(0\) and cofinite sets had mass
+   \(1\), putting the mass "at infinity"), here the mass is carried by the points \(n \in \mathbb N\) via
+   a convergent series \(\sum_{n=1}^\infty p_n = 1\), so tails \(A_k \downarrow \emptyset\) have
+   \(\mu_0(A_k) \to 0\).
+
+* Summary
+
+#+caption: Chapter 5 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement / Definition                                                                                       | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Algebra \(\mathcal A\) (5.1) | \(\Omega \in \mathcal A\); closed under complements and *finite* unions (hence finite intersections/differences) | Domain of elementary sets where sizes are first prescribed |
+| Premeasure \(\mu_0\) (5.2) | \(\mu_0(\emptyset)=0\) and \(\mu_0(\bigsqcup_{n=1}^\infty A_n) = \sum_{n=1}^\infty \mu_0(A_n)\) whenever \(A_n \in \mathcal A\) and \(\bigsqcup_n A_n \in \mathcal A\) | Necessary and sufficient condition on \(\mathcal A\) to extend to a measure |
+| Example 5.4             | On finite/cofinite algebra of \(\mathbb N\), \(\mu_0(\text{finite})=0, \mu_0(\text{cofinite})=1\)           | Finitely additive, NOT a premeasure (\(\mu_0(\mathbb N)=1 \ne \sum \mu_0(\{n\})=0\)) |
+| Proposition 5.5         | Finite finitely-additive \(\mu_0\) is a premeasure \(\iff [A_n \in \mathcal A,\ A_n \downarrow \emptyset \implies \mu_0(A_n) \to 0]\) | Practical tool to verify premeasures (cylinders, intervals)|
+| Outer measure \(\mu^*\) (5.6, 5.1) | \(\mu^*(E) = \inf\{\sum_{n=1}^\infty \mu_0(A_n) : E \subseteq \bigcup_n A_n,\ A_n \in \mathcal A\}\); monotone & countably subadditive | Extends \(\mu_0\) to *all* subsets \(2^\Omega\) (Lemma 5.7)|
+| Carathéodory set \(\mathcal M\) (5.2) | \(E \in \mathcal M \iff \mu^*(T) = \mu^*(T \cap E) + \mu^*(T \setminus E)\) for all \(T \subseteq \Omega\) | Selects sets that split every test set additively          |
+| Theorem 5.9             | \(\mathcal M\) is a \(\sigma\)-algebra and \(\mu^*|_{\mathcal M}\) is a complete measure                     | Abstract engine turning any outer measure into a measure   |
+| Theorem 5.10            | \(\mathcal A \subseteq \mathcal M\), so \(\mu^*|_{\sigma(\mathcal A)}\) is a measure extending \(\mu_0\) (unique if \(\sigma\)-finite on \(\mathcal A\)) | Carathéodory's Extension Theorem                           |
+| Completion (5.12, 5.14) | \(\overline{\mathcal F} = \{E : A \subseteq E \subseteq B \text{ in }\mathcal F,\ \mu(B \setminus A)=0\}\), \(\overline{\mu}(E)=\mu(A)\) | Adjoins all subsets of \(\mu\)-null sets                   |
+
+*Key takeaways*
+
+- Finite additivity on an algebra \(\mathcal A\) is *not* enough to extend \(\mu_0\) to a measure on
+  \(\sigma(\mathcal A)\); \(\mu_0\) must be a **premeasure** (checked via \(A_n \downarrow \emptyset \implies \mu_0(A_n) \to 0\)
+  when \(\mu_0(\Omega) < \infty\)).
+- Carathéodory's extension works in two steps: first define \(\mu^*(E)\) for *all* subsets
+  \(E \subseteq \Omega\) by infimum over countable covers from \(\mathcal A\); second, restrict \(\mu^*\)
+  to the \(\sigma\)-algebra \(\mathcal M\) of sets \(E\) that split every test set \(T\) additively.
+- Every original algebra set \(A \in \mathcal A\) belongs to \(\mathcal M\), so
+  \(\sigma(\mathcal A) \subseteq \mathcal M\).
+- Completion \((\Omega, \overline{\mathcal F}, \overline{\mu})\) adds all subsets of \(\mu\)-null sets by
+  squeezing \(A \subseteq E \subseteq B\) with \(\mu(B \setminus A) = 0\). It depends on the measure
+  \(\mu\) and does not make every subset measurable in general.

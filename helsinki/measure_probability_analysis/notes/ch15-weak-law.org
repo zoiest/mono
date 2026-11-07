@@ -1,0 +1,744 @@
+:PROPERTIES:
+:ID:       15b9d4e2-8c3f-4a0b-9d2e-6f7a8b9c0d1e
+:ROAM_ALIASES: "MAST31051 Chapter 15" "Repeated Events and the Weak Law Notes"
+:END:
+#+title: Chapter 15: Repeated Events and the Weak Law
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch15:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch14-convergence.org][← Chapter 14]] | [[file:ch16-strong-law.org][Chapter 16 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In [[file:ch14-convergence.org][Chapter 14]] we saw two very different ways to control errors in a sequence of random variables
+\((X_n)\):
+1. *One index at a time (in probability):* At a single large index \(n\), is \(\mathbb P(|X_n - X| > \varepsilon)\)
+   small?
+2. *All sufficiently large indices at once (almost surely):* Does the error stay below \(\varepsilon\)
+   *forever after some random time \(N(\omega)\)*?
+
+This chapter builds the two bridges that make proving both kinds of statements routine:
+- *Bridge 1 (Borel–Cantelli, Section 15.1):* How do we pass from individual probabilities
+  \(\mathbb P(A_n)\) to the probability that \(A_n\) happens *infinitely many times*? If the probabilities
+  are summable (\(\sum_n \mathbb P(A_n) < \infty\)), then with probability \(1\) only *finitely many*
+  \(A_n\) ever occur—no independence needed! Conversely, if the \(A_n\) are *independent* and
+  \(\sum_n \mathbb P(A_n) = \infty\), then \(A_n\) occurs infinitely often with probability \(1\).
+- *Bridge 2 (Markov and Chebyshev, Section 15.2):* How do we bound a tail probability
+  \(\mathbb P(|X - \mathbb E X| \ge \varepsilon)\) when we don't know the exact distribution of \(X\)?
+  Markov's and Chebyshev's inequalities turn expectations and variances directly into probability bounds.
+
+Combining Bridge 2 with the variance formula for sums of independent random variables from [[file:ch13-independence.org][Chapter 13]]
+gives the *Weak Law of Large Numbers* (Section 15.3): the sample average \(\frac{1}{n}\sum_{j=1}^n X_j\)
+of independent, identically distributed (iid) random variables converges in probability to the true mean
+\(\mathbb E X_1\).
+
+** Probability motivation
+
+Why do polls, casino profits, insurance pricing, and Monte Carlo algorithms work? Because when you
+average \(n\) independent copies \(X_1, \dots, X_n\) of a random measurement:
+- the mean of the average stays equal to \(\mathbb E X_1\), while
+- the fluctuations cancel out: when \(\operatorname{var}(X_1) = \sigma^2 < \infty\), the variance of the
+  sample average drops like \(\sigma^2 / n \to 0\).
+
+Even when the variance is *infinite* (for example, heavy-tailed distributions where \(\mathbb E|X_1| < \infty\)
+but \(\mathbb E[X_1^2] = \infty\), Example 15.8), splitting each variable into a *bounded part* and a
+*rare tail part* (truncation, Theorem 15.7) shows that the sample average still converges in probability
+to \(\mathbb E X_1\).
+
+** Roadmap
+
+- 15.1 Events occurring infinitely often (\(\limsup_n A_n\)), the Borel–Cantelli lemmas (Theorem 15.1),
+  and upgrading summable error probabilities to almost-sure convergence (Corollary 15.3).
+- 15.2 Bounding probabilities by expectations: Markov's and Chebyshev's inequalities (Proposition 15.4)
+  and polling/sample-proportion bounds (Example 15.5).
+- 15.3 The Weak Law of Large Numbers: the finite-variance proof via Chebyshev (Theorem 15.6) and the
+  general integrable proof via truncation (Theorem 15.7).
+
+** What you need from earlier chapters
+
+- Countable subadditivity (union bound) and continuity of measure from above: [[file:ch02-measures.org][Chapter 2]].
+- Monotone and dominated convergence theorems: [[file:ch06-integration.org][Chapter 6]].
+- Countable product space (for constructing infinite sequences of iid variables): [[file:ch10-infinite-products.org][Chapter 10]].
+- Independence of events and random variables, Lemma 13.3 (functions of independent variables are
+  independent), and the variance identity \(\operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\)
+  ((13.1)): [[file:ch13-independence.org][Chapter 13]].
+- Almost-sure convergence and convergence in probability: [[file:ch14-convergence.org][Chapter 14]].
+
+* 15.1 Events occurring infinitely often
+
+** Intuition
+
+Suppose \(A_1, A_2, A_3, \dots\) is an infinite sequence of events—say, \(A_n\) is the event "it rains
+on day \(n\)" or "the \(n\)-th estimate makes an error larger than \(\varepsilon\)". When does an
+outcome \(\omega \in \Omega\) belong to *infinitely many* of the sets \(A_n\)?
+
+Let's test whether \(\omega\) sees infinitely many occurrences by checking *tail unions*:
+- For a fixed starting day \(m \ge 1\), the tail union
+  \[
+  U_m := \bigcup_{n \ge m} A_n = A_m \cup A_{m+1} \cup A_{m+2} \cup \dots
+  \]
+  is the event: *"at least one \(A_n\) occurs at or after time \(m\)."*
+- If \(\omega\) belongs to \(U_m\) for *every* starting time \(m = 1, 2, 3, \dots\), then no matter how
+  far out you go in the sequence, there is always another occurrence of \(A_n\) waiting ahead. That
+  means \(\omega\) belongs to infinitely many \(A_n\)!
+- Conversely, if \(\omega\) only belongs to *finitely many* \(A_n\), then there is some last time it ever
+  occurs, so after some index \(m\) *no* \(A_n\) occurs: \(\omega \in \bigcap_{n \ge m} A_n^c\).
+
+#+begin_example
+  Index n:    1   2   3   4   5   6   7   8   ...
+  Outcome w:  in  out in  out out in  out out ...
+                              |<--- U_m = union_{n >= m} A_n asks:
+                                    "is there at least one 'in' from m onwards?"
+  - In U_m for ALL m >= 1  <==>  infinitely many 'in's  (limsup_n A_n)
+  - Outside U_m for SOME m <==>  only finitely many 'in's
+#+end_example
+
+** Definition of \(\limsup_n A_n\) and the Borel–Cantelli lemmas
+
+#+begin_quote
+*Definition (Limit superior of events).* For events \(A_n\), define
+\[
+\limsup_{n\to\infty} A_n := \bigcap_{m=1}^\infty \bigcup_{n \ge m} A_n .
+\]
+An outcome belongs to this event exactly when it belongs to infinitely many \(A_n\): after every index
+\(m\), another occurrence remains. We also write \(\{A_n\text{ infinitely often}\}\) (or \(\{A_n\text{ i.o.}\}\))
+for this event. Its complement is the event that only finitely many of the \(A_n\) occur:
+\[
+\big(\limsup_{n\to\infty} A_n\big)^c = \bigcup_{m=1}^\infty \bigcap_{n \ge m} A_n^c .
+\]
+#+end_quote
+
+Now we ask: when does \(\{A_n\text{ infinitely often}\}\) have probability \(0\), and when does it have
+probability \(1\)? The answer is governed by whether the infinite series \(\sum_{n=1}^\infty \mathbb P(A_n)\)
+converges or diverges.
+
+#+begin_quote
+*Theorem 15.1 (Borel–Cantelli lemmas).*
+1. *(First Borel–Cantelli lemma.)* If \(\sum_n \mathbb P(A_n) < \infty\), then
+   \(\mathbb P(\limsup_n A_n) = 0\).
+2. *(Second Borel–Cantelli lemma.)* If the events are independent and \(\sum_n \mathbb P(A_n) = \infty\),
+   then \(\mathbb P(\limsup_n A_n) = 1\).
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*** Part 1: Summable probabilities \(\implies\) probability zero (NO independence needed!)
+
+Assume \(\sum_{n=1}^\infty \mathbb P(A_n) < \infty\).
+- For any starting index \(m \ge 1\), the event \(\limsup_n A_n = \bigcap_{k=1}^\infty \bigcup_{n \ge k} A_n\)
+  is a subset of the \(m\)-th tail union \(\bigcup_{n \ge m} A_n\).
+- By monotonicity and countable subadditivity (the union bound),
+  \[
+  \mathbb P(\limsup_n A_n) \le \mathbb P\Big(\bigcup_{n \ge m} A_n\Big) \le \sum_{n \ge m} \mathbb P(A_n) .
+  \]
+- Because the infinite series \(\sum_{n=1}^\infty \mathbb P(A_n)\) converges to a finite number, its tail
+  \(\sum_{n \ge m} \mathbb P(A_n)\) tends to \(0\) as \(m \to \infty\).
+- The left-hand side \(\mathbb P(\limsup_n A_n)\) is a fixed nonnegative number that is \(\le \sum_{n \ge m} \mathbb P(A_n)\)
+  for every \(m\). Letting \(m \to \infty\) forces \(\mathbb P(\limsup_n A_n) = 0\).
+Notice that we *never* used independence in Part 1—only the union bound!
+
+*** Part 2: Independent events with divergent sum \(\implies\) probability one
+
+Now assume the events \((A_n)_{n\ge 1}\) are independent and \(\sum_{n=1}^\infty \mathbb P(A_n) = \infty\).
+To show \(\mathbb P(\limsup_n A_n) = 1\), we will show that its complement—the event of *finitely many
+occurrences*—has probability \(0\):
+\[
+\mathbb P\Big(\bigcup_{m=1}^\infty \bigcap_{n \ge m} A_n^c\Big) = 0 .
+\]
+Since a countable union of probability-zero sets has probability zero, it suffices to fix an arbitrary
+starting index \(m \ge 1\) and show that \(\mathbb P(\bigcap_{n \ge m} A_n^c) = 0\) (i.e., the probability
+that *no* event occurs from time \(m\) onwards is zero).
+
+- *Why are the complements \(A_n^c\) independent?* For each \(n\), the indicator \(\mathbf 1_{A_n^c} = 1 - \mathbf 1_{A_n}\)
+  is a measurable function of \(\mathbf 1_{A_n}\). By Lemma 13.3 (or directly by expanding products in
+  the definition of event independence), the events \((A_n^c)_{n\ge 1}\) are independent.
+- *Bound finite intersections using \(1 - x \le e^{-x}\):* Fix \(m \ge 1\) and any finite upper cutoff
+  \(N \ge m\). By independence of \(A_m^c, \dots, A_N^c\),
+  \[
+  \mathbb P\Big(\bigcap_{n=m}^N A_n^c\Big) = \prod_{n=m}^N \mathbb P(A_n^c) = \prod_{n=m}^N \big(1 - \mathbb P(A_n)\big) .
+  \]
+  Why is a product hard to take to the limit, whereas a sum is easy? Recall the elementary calculus
+  inequality
+  \[
+  1 - x \le e^{-x} \quad \text{for all } x \in \mathbb R
+  \]
+  (the tangent line to the convex curve \(y = e^{-x}\) at \(x = 0\) is \(y = 1 - x\)). Since each factor
+  \(1 - \mathbb P(A_n)\) lies in \([0,1]\), we can bound each factor by \(e^{-\mathbb P(A_n)}\) and turn
+  the product into the exponential of a sum:
+  \[
+  \mathbb P\Big(\bigcap_{n=m}^N A_n^c\Big)
+    = \prod_{n=m}^N \big(1 - \mathbb P(A_n)\big)
+    \le \prod_{n=m}^N \exp\big(-\mathbb P(A_n)\big)
+    = \exp\Big(-\sum_{n=m}^N \mathbb P(A_n)\Big) .
+  \]
+- *Let \(N \to \infty\):* Because \(\sum_{n=1}^\infty \mathbb P(A_n) = \infty\), keeping \(m\) fixed and
+  sending \(N \to \infty\) makes \(\sum_{n=m}^N \mathbb P(A_n) \to +\infty\), so
+  \(\exp(-\sum_{n=m}^N \mathbb P(A_n)) \to 0\).
+- Meanwhile, the finite intersections \(B_N := \bigcap_{n=m}^N A_n^c\) decrease as \(N \to \infty\) to
+  \(\bigcap_{n \ge m} A_n^c\). By *continuity of measure from above* (Proposition 2.3),
+  \[
+  \mathbb P\Big(\bigcap_{n \ge m} A_n^c\Big) = \lim_{N\to\infty} \mathbb P\Big(\bigcap_{n=m}^N A_n^c\Big) = 0 .
+  \]
+- Finally, taking the countable union over \(m = 1, 2, \dots\) gives
+  \(\mathbb P\big(\bigcup_{m=1}^\infty \bigcap_{n \ge m} A_n^c\big) \le \sum_{m=1}^\infty 0 = 0\).
+  Therefore \(\mathbb P(\limsup_n A_n) = 1 - 0 = 1\). \(\blacksquare\)
+
+** Why independence matters in Part 2 (and does NOT matter in Part 1)
+
+#+begin_quote
+*Example 15.2 (The same probabilities, different recurrence).* On \((0,1)\), the events \(A_n = (0, 1/n)\)
+have probabilities \(1/n\). Their sum diverges, but every positive outcome belongs to only finitely many
+of them. On a space with independent uniform variables \(U_n\), the events \(\{U_n < 1/n\}\) have the
+same individual probabilities and occur infinitely often almost surely. Thus the dependence between
+events matters. By contrast, the events \(\{U_n < 1/n^2\}\) occur only finitely often almost surely,
+whether or not the \(U_n\) are independent.
+#+end_quote
+
+Let's compare the three regimes in Example 15.2 side by side:
+
+#+begin_example
+  Case 1: Nested intervals A_n = (0, 1/n) on Omega = (0,1)   [EXTREME POSITIVE DEPENDENCE]
+    P(A_n) = 1/n,  sum_n P(A_n) = infinity.
+    Yet for any omega > 0, once n >= 1/omega we have omega notin (0, 1/n).
+    So limsup_n A_n = empty set, and P(limsup_n A_n) = 0!
+
+  Case 2: Independent uniforms {U_n < 1/n}                   [INDEPENDENT, HARMONIC SUM]
+    P(U_n < 1/n) = 1/n,  sum_n P(U_n < 1/n) = infinity.
+    By Second Borel-Cantelli, P(U_n < 1/n infinitely often) = 1!
+
+  Case 3: {U_n < 1/n^2} with ANY coupling whatsoever         [SUMMABLE PROBABILITIES]
+    P(U_n < 1/n^2) = 1/n^2,  sum_n (1/n^2) = pi^2/6 < infinity.
+    By First Borel-Cantelli, P(U_n < 1/n^2 infinitely often) = 0 ALWAYS!
+#+end_example
+
+** Upgrading probability bounds to almost-sure convergence
+
+How do we prove \(X_n \to X\) almost surely in practice? Checking the definition directly requires
+analyzing \(\omega\) by \(\omega\). Corollary 15.3 gives a purely computational sufficient condition: if
+the error probabilities \(\mathbb P(|X_n - X| > \varepsilon)\) are *summable in \(n\)* for every
+\(\varepsilon > 0\), then \(X_n \to X\) almost surely!
+
+#+begin_quote
+*Corollary 15.3 (Summable error bounds).* If for every \(\varepsilon > 0\),
+\[
+\sum_{n=1}^\infty \mathbb P(|X_n - X| > \varepsilon) < \infty ,
+\]
+then \(X_n \to X\) almost surely.
+#+end_quote
+
+** Proof (unpacked step by step)
+
+- *Step 1. Test at rational tolerances \(\varepsilon = 1/m\).*
+  For each positive integer \(m \ge 1\), define the sequence of error events
+  \[
+  A_n^{(m)} := \{|X_n - X| > 1/m\}, \qquad n = 1, 2, \dots
+  \]
+  By hypothesis (with \(\varepsilon = 1/m\)), \(\sum_{n=1}^\infty \mathbb P(A_n^{(m)}) < \infty\).
+  Applying the First Borel–Cantelli Lemma (Theorem 15.1, first part) to \((A_n^{(m)})_{n\ge 1}\) shows
+  that the exceptional event
+  \[
+  E_m := \limsup_{n\to\infty} A_n^{(m)} = \{|X_n - X| > 1/m \text{ infinitely often}\}
+  \]
+  has probability \(\mathbb P(E_m) = 0\).
+- *Step 2. Union the countably many null sets.*
+  Let \(E := \bigcup_{m=1}^\infty E_m\). Since a countable union of null sets is null,
+  \(\mathbb P(E) \le \sum_{m=1}^\infty \mathbb P(E_m) = 0\).
+  (Why did we use \(1/m\) instead of all real \(\varepsilon > 0\)? Because an uncountable union of null
+  sets need not be null!)
+- *Step 3. Check convergence outside \(E\).*
+  Fix any outcome \(\omega \in \Omega \setminus E\), and fix any \(\varepsilon > 0\). Choose an integer
+  \(m \ge 1\) with \(1/m < \varepsilon\). Since \(\omega \notin E_m\), the inequality
+  \(|X_n(\omega) - X(\omega)| > 1/m\) holds for only *finitely many* indices \(n\). Thus there is an
+  index \(N(\omega, m)\) such that for all \(n \ge N(\omega, m)\),
+  \[
+  \lvert X_n(\omega) - X(\omega)\rvert \le \frac{1}{m} < \varepsilon .
+  \]
+  This says \(X_n(\omega) \to X(\omega)\) for every \(\omega \in \Omega \setminus E\). Since
+  \(\mathbb P(\Omega \setminus E) = 1\), we have \(X_n \to X\) almost surely. \(\blacksquare\)
+
+** Additional worked examples
+
+*Example A (Infinite monkey theorem / runs of heads).* Flip a fair coin independently forever, and let
+\(A_n\) be the event that the \(n\)-th block of \(100\) tosses (tosses \(100(n-1)+1\) through \(100n\))
+is all heads.
+- Because the blocks use disjoint sets of coin tosses, the events \(A_1, A_2, \dots\) are *independent*
+  (by Lemma 13.3).
+- Each block has positive probability \(\mathbb P(A_n) = 2^{-100} > 0\), so
+  \(\sum_{n=1}^\infty \mathbb P(A_n) = \sum_{n=1}^\infty 2^{-100} = \infty\).
+- By the Second Borel–Cantelli Lemma, \(\mathbb P(A_n \text{ i.o.}) = 1\): a run of \(100\) consecutive
+  heads will occur infinitely many times with probability \(1\)!
+
+*Example B (Connection to Proposition 14.3).* Look back at Proposition 14.3: when \(X_n \to X\) in
+probability, we chose a subsequence \(n_k\) with \(\mathbb P(|X_{n_k} - X| > 2^{-k}) \le 2^{-k}\). For
+any \(\varepsilon > 0\), once \(2^{-k} < \varepsilon\) we have
+\(\mathbb P(|X_{n_k} - X| > \varepsilon) \le \mathbb P(|X_{n_k} - X| > 2^{-k}) \le 2^{-k}\), which is
+summable in \(k\). Thus Proposition 14.3 is an immediate application of Corollary 15.3!
+
+* 15.2 Expectation bounds probability
+
+** Intuition
+
+Suppose you only know that the average score on an exam (where scores are nonnegative) is \(\mathbb E Y = 10\).
+Could more than half the class have scored at least \(a = 30\)?
+No! If more than \(1/3\) of the class scored \(\ge 30\), then those students *alone* would contribute
+more than \(\frac{1}{3} \times 30 = 10\) to the class average, leaving no room for anyone else.
+
+Graphically, for any nonnegative variable \(Y \ge 0\) and threshold \(a > 0\), the step function
+\(a \mathbf 1_{\{Y \ge a\}}\) always sits underneath \(Y\):
+
+#+begin_example
+  value
+    |          /
+  Y |         /   <-- Y(omega)
+    |        *---------
+  a |        |/////////   <-- step function a * 1_{Y >= a}
+    |        |/////////       has expectation a * P(Y >= a) <= E[Y]
+  0 +--------+---------
+           Y >= a
+#+end_example
+
+** Markov's and Chebyshev's inequalities
+
+#+begin_quote
+*Proposition 15.4 (Markov and Chebyshev inequalities).* For a nonnegative random variable \(Y\) and
+\(a > 0\),
+\[
+\mathbb P(Y \ge a) \le \frac{\mathbb E Y}{a} .
+\]
+Consequently, for \(X \in L^2(\mathbb P)\) and \(\varepsilon > 0\),
+\[
+\mathbb P(|X - \mathbb E X| \ge \varepsilon) \le \frac{\operatorname{var}(X)}{\varepsilon^2} .
+\]
+#+end_quote
+
+** Proof (unpacked step by step)
+
+1. *Markov's inequality:* Check the pointwise inequality \(a \mathbf 1_{\{Y \ge a\}}(\omega) \le Y(\omega)\)
+   at every outcome \(\omega \in \Omega\):
+   - If \(Y(\omega) < a\), the left side is \(0 \le Y(\omega)\) (since \(Y \ge 0\)).
+   - If \(Y(\omega) \ge a\), the left side is \(a \le Y(\omega)\).
+   Integrating both sides with respect to \(\mathbb P\) (using monotonicity of expectation) gives
+   \[
+   a\,\mathbb P(Y \ge a) = \mathbb E\big[a\mathbf 1_{\{Y \ge a\}}\big] \le \mathbb E Y .
+   \]
+   Dividing by \(a > 0\) yields \(\mathbb P(Y \ge a) \le \mathbb E Y / a\) (which holds in \([0,\infty]\)
+   even if \(\mathbb E Y = \infty\)).
+2. *Chebyshev's inequality:* For \(X \in L^2(\mathbb P)\), the mean \(\mathbb E X\) is finite, and the
+   event \(\{|X - \mathbb E X| \ge \varepsilon\}\) is identical to the event
+   \(\{(X - \mathbb E X)^2 \ge \varepsilon^2\}\) (since \(t \mapsto t^2\) is strictly increasing on
+   \([0, \infty)\)). Apply Markov's inequality to the nonnegative random variable
+   \(Y := (X - \mathbb E X)^2 \ge 0\) with threshold \(a := \varepsilon^2 > 0\):
+   \[
+   \mathbb P(|X - \mathbb E X| \ge \varepsilon)
+     = \mathbb P\big((X - \mathbb E X)^2 \ge \varepsilon^2\big)
+     \le \frac{\mathbb E[(X - \mathbb E X)^2]}{\varepsilon^2}
+     = \frac{\operatorname{var}(X)}{\varepsilon^2} . \quad \blacksquare
+   \]
+
+** Polling and sample proportions
+
+#+begin_quote
+*Example 15.5 (A sample proportion).* For iid indicators of success probability \(p\), let
+\(\overline X_n = n^{-1} \sum_{j=1}^n X_j\). The variance calculation and Chebyshev give
+\[
+\mathbb P(|\overline X_n - p| \ge \varepsilon) \le \frac{p(1-p)}{n\varepsilon^2} \le \frac{1}{4n\varepsilon^2} .
+\]
+For \(n = 10\,000\) and \(\varepsilon = 0.05\), this upper bound is \(0.01\). It is a general bound, not
+the exact probability. It depends on independence through the variance calculation.
+#+end_quote
+
+Let's walk through every step of Example 15.5:
+- Each \(X_j \in \{0,1\}\) has \(\mathbb P(X_j = 1) = p\) and \(\mathbb P(X_j = 0) = 1 - p\). Since
+  \(X_j^2 = X_j\), we have \(\mathbb E X_j = p\) and
+  \[
+  \operatorname{var}(X_j) = \mathbb E[X_j^2] - (\mathbb E X_j)^2 = p - p^2 = p(1 - p) .
+  \]
+- By linearity of expectation, \(\mathbb E[\overline X_n] = \frac{1}{n}\sum_{j=1}^n p = p\).
+- Because \(X_1, \dots, X_n\) are *independent*, the variance of their sum is the sum of their variances
+  (Equation (13.1) in [[file:ch13-independence.org][Chapter 13]]), and pulling the constant \(1/n\) out of a variance squares it:
+  \[
+  \operatorname{var}(\overline X_n) = \frac{1}{n^2} \sum_{j=1}^n \operatorname{var}(X_j) = \frac{n p(1-p)}{n^2} = \frac{p(1-p)}{n} .
+  \]
+- Why is \(p(1-p) \le 1/4\) for every \(p \in [0,1]\)? Completing the square gives
+  \(p(1-p) = \frac{1}{4} - (p - \frac{1}{2})^2 \le \frac{1}{4}\) (maximized at \(p = 1/2\)). This worst-case
+  bound is hugely practical in polling because we do *not* know the true proportion \(p\) in advance!
+- Plugging in \(n = 10\,000\) and \(\varepsilon = 0.05 = 1/20\) gives \(n\varepsilon^2 = 10\,000 \times 0.0025 = 25\),
+  so \(\frac{1}{4n\varepsilon^2} = \frac{1}{100} = 0.01\): with at least \(99\%\) probability, a poll of
+  \(10\,000\) independent respondents is within \(\pm 5\) percentage points of the true proportion \(p\).
+
+** Additional worked examples
+
+*Example C (Markov and Chebyshev are sharp in general).* Could Chebyshev's constant \(\operatorname{var}(X)/\varepsilon^2\)
+be improved for *all* distributions? No! Fix \(\varepsilon > 0\) and \(0 < q \le 1\), and let \(X\) take
+values \(-\varepsilon, 0, +\varepsilon\) with probabilities \(q/2, 1-q, q/2\). Then \(\mathbb E X = 0\),
+\(\operatorname{var}(X) = \mathbb E[X^2] = q\varepsilon^2\), and
+\[
+\mathbb P(|X - \mathbb E X| \ge \varepsilon) = \mathbb P(|X| = \varepsilon) = q = \frac{\operatorname{var}(X)}{\varepsilon^2} .
+\]
+Chebyshev holds with *exact equality* here! For specific smooth distributions like the normal distribution,
+actual tail probabilities decay much faster (\(\sim e^{-n\varepsilon^2 / (2\sigma^2)}\)), which is why
+Chebyshev is a conservative universal guarantee.
+
+*Example D (Higher-moment Markov bounds).* Just as Chebyshev applies Markov to \(|X - \mathbb E X|^2\),
+for any \(p > 0\) and any increasing nonnegative function \(\varphi\) on \([0, \infty)\) we can apply
+Markov to \(|X|^p\) or \(e^{tX}\):
+\[
+\mathbb P(|X| \ge \varepsilon) = \mathbb P(|X|^p \ge \varepsilon^p) \le \frac{\mathbb E|X|^p}{\varepsilon^p} .
+\]
+When \(p = 4\), the fourth-moment bound \(\mathbb P(|X - m| \ge \varepsilon) \le \mathbb E[(X-m)^4]/\varepsilon^4\)
+often decays as \(O(n^{-2})\) for averages, which is summable in \(n\)!
+
+* 15.3 The weak law of large numbers
+
+** Intuition
+
+Let \(X_1, X_2, \dots\) be independent and identically distributed (iid) random variables with mean
+\(m = \mathbb E X_1\). Why does the sample average \(\overline X_n = \frac{1}{n}\sum_{j=1}^n X_j\)
+concentrate near \(m\)?
+
+1. *When \(\sigma^2 = \operatorname{var}(X_1) < \infty\):* Independence makes the variance of the sum
+   grow only linearly (\(n\sigma^2\)), and dividing by \(n\) divides the variance by \(n^2\), leaving
+   \(\operatorname{var}(\overline X_n) = \sigma^2 / n \to 0\). Chebyshev immediately turns this into
+   convergence in probability!
+2. *When \(\mathbb E|X_1| < \infty\) but \(\operatorname{var}(X_1) = \infty\):* We cannot use Chebyshev
+   directly on \(X_j\), because big spikes make the second moment infinite. Instead, we *truncate* each
+   \(X_j\) at a high threshold \(K\):
+   \[
+   X_j = \underbrace{X_j \mathbf 1_{\{|X_j| \le K\}}}_{Y_j\text{ (bounded, has finite variance!)}}
+       + \underbrace{X_j \mathbf 1_{\{|X_j| > K\}}}_{R_j\text{ (rare tail, has tiny } L^1\text{ norm!)}} .
+   \]
+   First we pick \(K\) large enough so the discarded tail \(R_j\) has tiny expectation \(\mathbb E|R_1|\)
+   (which controls \(\frac{1}{n}\sum_{j=1}^n |R_j|\) via Markov's inequality *uniformly for all \(n\)*);
+   then, with \(K\) held fixed, we apply the finite-variance Weak Law to the bounded variables \(Y_j\)!
+
+** Weak law with finite variance
+
+#+begin_quote
+*Theorem 15.6 (Weak law, finite variance).* If \(X_j\) are iid and square-integrable, with mean \(m\) and
+variance \(\sigma^2\), then
+\[
+\frac{1}{n} \sum_{j=1}^n X_j \longrightarrow m \quad \text{in probability} .
+\]
+#+end_quote
+
+** Proof (and remarks on \(L^2\) and Borel–Cantelli)
+
+By linearity of expectation and the variance formula for independent variables ((13.1) in [[file:ch13-independence.org][Chapter 13]]),
+the sample average \(\overline X_n = \frac{1}{n}\sum_{j=1}^n X_j\) has mean
+\[
+\mathbb E[\overline X_n] = \frac{1}{n}\sum_{j=1}^n \mathbb E X_j = m
+\]
+and variance
+\[
+\operatorname{var}(\overline X_n) = \mathbb E\big[(\overline X_n - m)^2\big]
+  = \frac{1}{n^2}\sum_{j=1}^n \operatorname{var}(X_j) = \frac{\sigma^2}{n} .
+\]
+For any \(\varepsilon > 0\), Chebyshev's inequality (Proposition 15.4) bounds the error probability by
+\[
+\mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n X_j - m\Big| > \varepsilon\Big)
+  \le \frac{\sigma^2}{n\varepsilon^2} \xrightarrow[n\to\infty]{} 0 . \quad \blacksquare
+\]
+
+Let us pause to digest three important remarks from the lecture notes:
+1. *Convergence in \(L^2\):* Because \(\|\overline X_n - m\|_2^2 = \mathbb E[(\overline X_n - m)^2] = \operatorname{var}(\overline X_n) = \sigma^2 / n \to 0\),
+   the exact same calculation proves \(\frac{1}{n}\sum_{j=1}^n X_j \to m\) *in \(L^2\)* (and hence in
+   \(L^1\)).
+2. *Why doesn't this immediately give almost-sure convergence via Corollary 15.3?* Look at the upper bound
+   \(\frac{\sigma^2}{n\varepsilon^2}\). When \(\sigma^2 > 0\), the harmonic series
+   \[
+   \sum_{n=1}^\infty \frac{\sigma^2}{n\varepsilon^2} = \frac{\sigma^2}{\varepsilon^2}\sum_{n=1}^\infty \frac{1}{n} = \infty
+   \]
+   diverges! So Chebyshev's upper bounds *by themselves* do not give the summability needed for
+   Corollary 15.3 over all \(n\). (Note: this only says the *upper bounds* have an infinite sum; it says
+   nothing about whether the actual error probabilities have a finite sum.) In [[file:ch16-strong-law.org][Chapter 16]], we will
+   overcome this by applying Borel–Cantelli along the subsequence of *squares* \(n = k^2\), where
+   \(\sum_k 1/k^2 < \infty\), and then interpolating in between!
+3. *The degenerate case \(\sigma^2 = 0\):* When \(\sigma^2 = 0\), \(\mathbb E[(X_j - m)^2] = 0\), so each
+   \(X_j = m\) almost surely. Outside the countable union \(\bigcup_{j=1}^\infty \{X_j \ne m\}\) of null
+   sets, *every* term equals \(m\), so every average \(\frac{1}{n}\sum_{j=1}^n X_j\) already equals \(m\).
+
+** Weak law for integrable variables (without finite variance)
+
+Now we remove the assumption \(\mathbb E[X_1^2] < \infty\) and require only \(\mathbb E|X_1| < \infty\).
+
+#+begin_quote
+*Theorem 15.7 (Weak law, integrable variables).* If \(X_j\) are iid and \(\mathbb E|X_1| < \infty\), their
+averages converge in probability to \(\mathbb E X_1\).
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*** Step 1. Separate a bounded part by truncation
+
+For a fixed cutoff \(K > 0\), split each \(X_j\) into its truncated part inside \([-K, K]\) and its tail
+part outside \([-K, K]\):
+\[
+Y_j := X_j \mathbf 1_{\{|X_j| \le K\}}, \qquad R_j := X_j - Y_j = X_j \mathbf 1_{\{|X_j| > K\}} .
+\]
+Let's check the properties of \(Y_j\) and \(R_j\):
+- Each \(Y_j\) is a measurable function of \(X_j\), so by Lemma 13.3 the variables \(Y_1, Y_2, \dots\) are
+  still iid.
+- Moreover, \(|Y_j| \le K\) is bounded, so \(\mathbb E[Y_j^2] \le K^2 < \infty\)! Thus Theorem 15.6
+  applies to \((Y_j)_{j\ge 1}\): for any fixed \(K > 0\),
+  \[
+  \frac{1}{n}\sum_{j=1}^n Y_j \xrightarrow[n\to\infty]{\text{in prob.}} \mathbb E Y_1 .
+  \]
+- Meanwhile, look at the tail expectation \(\mathbb E|R_1| = \mathbb E[|X_1|\mathbf 1_{\{|X_1| > K\}}]\).
+  As \(K \to \infty\), the integrand \(|X_1|\mathbf 1_{\{|X_1| > K\}} \to 0\) pointwise (since \(|X_1| < \infty\) a.s.)
+  and is dominated by the integrable function \(|X_1| \in L^1(\mathbb P)\). By the *Dominated Convergence
+  Theorem*,
+  \[
+  \mathbb E|R_1| = \mathbb E\big[|X_1|\mathbf 1_{\{|X_1| > K\}}\big] \xrightarrow[K\to\infty]{} 0 .
+  \]
+
+*** Step 2. Bound the discarded part uniformly in \(n\)
+
+To prove \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) in probability, fix an error threshold
+\(\varepsilon > 0\) and a target probability bound \(\delta > 0\). We want to find \(N\) such that for
+all \(n \ge N\),
+\[
+\mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n X_j - \mathbb E X_1\Big| > \varepsilon\Big) < \delta .
+\]
+- *Choice of \(K\):* Using Step 1, choose \(K > 0\) so large that
+  \[
+  \mathbb E|R_1| < \min\Big(\frac{\varepsilon}{3},\, \frac{\varepsilon\delta}{6}\Big) .
+  \]
+- *Three-term triangle inequality:* Write \(X_j - \mathbb E X_1 = (Y_j - \mathbb E Y_1) + R_j + (\mathbb E Y_1 - \mathbb E X_1)\).
+  By the triangle inequality,
+  \[
+  \Big|\frac{1}{n}\sum_{j=1}^n X_j - \mathbb E X_1\Big|
+    \le \Big|\frac{1}{n}\sum_{j=1}^n Y_j - \mathbb E Y_1\Big|
+      + \frac{1}{n}\sum_{j=1}^n |R_j|
+      + |\mathbb E Y_1 - \mathbb E X_1| .
+  \]
+- *Bound the deterministic third term:* Since \(Y_1 - X_1 = -R_1\), we have
+  \[
+  \lvert\mathbb E Y_1 - \mathbb E X_1\rvert = \lvert\mathbb E R_1\rvert \le \mathbb E\lvert R_1\rvert < \frac{\varepsilon}{3} .
+  \]
+- *Split the event \(\{\text{total error} > \varepsilon\}\):* Because the third term is strictly less than
+  \(\varepsilon/3\), if the left-hand side exceeds \(\varepsilon\), the sum of the first two terms must
+  exceed \(\frac{2}{3}\varepsilon\), so *at least one* of the first two terms must exceed \(\varepsilon/3\).
+  By the union bound,
+  \[
+  \mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n X_j - \mathbb E X_1\Big| > \varepsilon\Big)
+    \le \mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n Y_j - \mathbb E Y_1\Big| > \frac{\varepsilon}{3}\Big)
+      + \mathbb P\Big(\frac{1}{n}\sum_{j=1}^n |R_j| > \frac{\varepsilon}{3}\Big) .
+  \]
+- *Bound the second probability via Markov (uniformly in \(n\)):* The nonnegative random variable
+  \(\frac{1}{n}\sum_{j=1}^n |R_j|\) has expectation \(\frac{1}{n}\sum_{j=1}^n \mathbb E|R_j| = \mathbb E|R_1|\)
+  (since the \(R_j\) are identically distributed). Applying Markov's inequality with threshold
+  \(a = \varepsilon/3\) gives
+  \[
+  \mathbb P\Big(\frac{1}{n}\sum_{j=1}^n |R_j| > \frac{\varepsilon}{3}\Big)
+    \le \frac{\mathbb E|R_1|}{\varepsilon/3} = \frac{3\mathbb E|R_1|}{\varepsilon} < \frac{3}{\varepsilon}\cdot\frac{\varepsilon\delta}{6} = \frac{\delta}{2}
+  \]
+  for *every* \(n \ge 1\)!
+- *Bound the first probability for large \(n\):* Now keep this \(K\) *fixed*. By Step 1,
+  \(\frac{1}{n}\sum_{j=1}^n Y_j \to \mathbb E Y_1\) in probability, so there is an index \(N\) such that
+  for all \(n \ge N\),
+  \[
+  \mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n Y_j - \mathbb E Y_1\Big| > \frac{\varepsilon}{3}\Big) < \frac{\delta}{2} .
+  \]
+- Adding the two bounds shows that for all \(n \ge N\), the total probability is \(< \delta/2 + \delta/2 = \delta\).
+  *Notice the crucial order of quantifier choices:* first choose the cutoff \(K\) from \(\varepsilon, \delta\)
+  (to make the tail error \(< \delta/2\) for all \(n\)), and *then* choose \(N\) for that fixed \(K\). \(\blacksquare\)
+
+** An example where Theorem 15.7 works and Theorem 15.6 fails
+
+#+begin_quote
+*Example 15.8 (A finite mean without a finite second moment).* Give the positive integer \(k\) probability
+\(c / k^3\), where \(c = (\sum_{k \ge 1} k^{-3})^{-1}\). This is a well-defined positive normalizing
+constant. Then \(\mathbb E X = c \sum_{k \ge 1} k^{-2} < \infty\), but
+\(\mathbb E[X^2] = c \sum_{k \ge 1} k^{-1} = \infty\). Independent copies exist by the countable product
+theorem. Their averages satisfy the integrable weak law, although the finite-variance proof does not
+apply.
+#+end_quote
+
+Let's check the series in Example 15.8:
+- Recall the \(p\)-series test: \(\sum_{k=1}^\infty k^{-p} < \infty\) if and only if \(p > 1\).
+- *Total probability:* \(\sum_{k=1}^\infty k^{-3} < \infty\) (\(p = 3 > 1\)), so \(c = (\sum_{k=1}^\infty k^{-3})^{-1} > 0\)
+  normalizes the probabilities to sum to \(1\).
+- *First moment (mean):* \(\mathbb E|X| = \mathbb E X = \sum_{k=1}^\infty k \cdot \frac{c}{k^3} = c \sum_{k=1}^\infty k^{-2} = c \frac{\pi^2}{6} < \infty\)
+  (\(p = 2 > 1\)).
+- *Second moment:* \(\mathbb E[X^2] = \sum_{k=1}^\infty k^2 \cdot \frac{c}{k^3} = c \sum_{k=1}^\infty k^{-1} = \infty\)
+  (the harmonic series, \(p = 1\)).
+- By the countable product theorem ([[file:ch10-infinite-products.org][Chapter 10]]), there exists a probability space carrying an
+  infinite iid sequence \(X_1, X_2, \dots\) with this distribution. Because \(\operatorname{var}(X_1) = \infty\),
+  Theorem 15.6 cannot be used; Theorem 15.7 guarantees \(\frac{1}{n}\sum_{j=1}^n X_j \to c\pi^2/6\) in
+  probability.
+
+** Historical remark (Émile Borel, 1919)
+
+In 1919, Émile Borel (/Sur la classification des ensembles de mesure nulle/, /Bull. Soc. Math. France/ 47,
+pp. 97–125) used infinite sequences of events to study decimal expansions with long runs of zeros or nines,
+relating them to close approximation of real numbers by terminating decimals.
+- For independent events, Borel stated the zero-one dichotomy: infinitely many occurrences have probability
+  \(0\) or \(1\) according as the sum of their probabilities converges or diverges.
+- Immediately afterwards, he warned his readers that *probability zero does not mean impossibility*, and
+  *probability one does not mean certainty at every outcome* (p. 100)—the exact distinction between an empty
+  set and a null set!
+- As our union-bound proof of Theorem 15.1 shows (and as Francesco Paolo Cantelli had observed in 1917),
+  the first statement (\(\sum_n \mathbb P(A_n) < \infty \implies \mathbb P(\limsup_n A_n) = 0\)) does not
+  need independence at all.
+
+** Classroom route (from the notes)
+
+Prove both Borel–Cantelli statements (Theorem 15.1) and compare nested events with independent ones of the
+same probabilities (Example 15.2). Derive Markov and Chebyshev (Proposition 15.4), then prove the
+finite-variance weak law (Theorem 15.6) and compute the sample-proportion bound (Example 15.5). Explain
+truncation as the reason finite variance can be removed; the two-limit proof of Theorem 15.7 is available
+for reading.
+
+* Worked Exercises
+
+** Exercise 1
+Let \((A_n)_{n\ge 1}\) be events on \((\Omega, \mathcal F, \mathbb P)\).
+1. Express the event \(\liminf_{n\to\infty} A_n := \bigcup_{m=1}^\infty \bigcap_{n \ge m} A_n\) in plain
+   English (in terms of how many \(A_n\) or \(A_n^c\) occur).
+2. Show that \(\mathbf 1_{\limsup_n A_n}(\omega) = \limsup_{n\to\infty} \mathbf 1_{A_n}(\omega)\) and
+   \(\mathbf 1_{\liminf_n A_n}(\omega) = \liminf_{n\to\infty} \mathbf 1_{A_n}(\omega)\) for every
+   \(\omega \in \Omega\).
+
+** Solution
+1. An outcome \(\omega\) belongs to \(\bigcup_{m=1}^\infty \bigcap_{n \ge m} A_n\) if and only if there is
+   some starting index \(m \ge 1\) such that \(\omega \in A_n\) for *all* \(n \ge m\). In plain English:
+   "\(A_n\) occurs for all sufficiently large \(n\)" (or "\(A_n\) occurs eventually", or "only finitely
+   many \(A_n^c\) occur").
+2. Since \(\mathbf 1_{A_n}(\omega) \in \{0,1\}\), the numerical sequence \((\mathbf 1_{A_n}(\omega))_{n\ge 1}\)
+   takes only the values \(0\) and \(1\).
+   - Its \(\limsup\) is \(1\) if and only if \(1\) appears infinitely often in the sequence, which is
+     \(\omega \in \limsup_n A_n\), and \(0\) otherwise.
+   - Its \(\liminf\) is \(1\) if and only if \(0\) appears only finitely often (so the sequence is
+     eventually \(1\)), which is \(\omega \in \liminf_n A_n\), and \(0\) otherwise.
+
+** Exercise 2
+Let \(X_1, X_2, \dots\) be independent Exponential(\(1\)) random variables, so \(\mathbb P(X_n > x) = e^{-x}\)
+for \(x \ge 0\). Use the Borel–Cantelli lemmas to prove that
+\[
+\limsup_{n\to\infty} \frac{X_n}{\log n} = 1 \quad \text{almost surely} .
+\]
+
+** Solution
+- *Upper bound (\(\le 1\) a.s.):* Fix any \(\varepsilon > 0\). For \(n \ge 2\),
+  \[
+  \mathbb P\Big(\frac{X_n}{\log n} > 1 + \varepsilon\Big)
+    = \mathbb P\big(X_n > (1+\varepsilon)\log n\big)
+    = e^{-(1+\varepsilon)\log n} = \frac{1}{n^{1+\varepsilon}} .
+  \]
+  Since \(1 + \varepsilon > 1\), \(\sum_{n=2}^\infty n^{-(1+\varepsilon)} < \infty\). By the First
+  Borel–Cantelli Lemma, with probability \(1\) only finitely many \(n\) satisfy
+  \(X_n / \log n > 1 + \varepsilon\), so \(\limsup_n (X_n / \log n) \le 1 + \varepsilon\) a.s. Taking
+  \(\varepsilon = 1/m\) and intersecting over \(m \ge 1\) gives \(\limsup_n (X_n / \log n) \le 1\) a.s.
+- *Lower bound (\(\ge 1\) a.s.):* For \(n \ge 2\), the events \(A_n := \{X_n / \log n \ge 1\} = \{X_n \ge \log n\}\)
+  are independent and have probability
+  \[
+  \mathbb P(A_n) = e^{-\log n} = \frac{1}{n} .
+  \]
+  Since \(\sum_{n=2}^\infty \frac{1}{n} = \infty\), the Second Borel–Cantelli Lemma gives
+  \(\mathbb P(A_n \text{ i.o.}) = 1\), so \(\limsup_n (X_n / \log n) \ge 1\) a.s. Combining both bounds
+  gives \(\limsup_n (X_n / \log n) = 1\) a.s.
+
+** Exercise 3
+Suppose \(X_n\) is a sequence of random variables such that \(\mathbb E|X_n - X|^p \le C n^{-(1+\alpha)}\)
+for some constants \(p \ge 1\), \(C > 0\), and \(\alpha > 0\). Prove that \(X_n \to X\) almost surely.
+
+** Solution
+Fix \(\varepsilon > 0\). Applying Markov's inequality to \(|X_n - X|^p \ge \varepsilon^p\) gives
+\[
+\mathbb P(|X_n - X| > \varepsilon) \le \frac{\mathbb E|X_n - X|^p}{\varepsilon^p} \le \frac{C}{\varepsilon^p}\,\frac{1}{n^{1+\alpha}} .
+\]
+Because \(1 + \alpha > 1\), the \(p\)-series \(\sum_{n=1}^\infty n^{-(1+\alpha)}\) converges. Thus
+\(\sum_{n=1}^\infty \mathbb P(|X_n - X| > \varepsilon) < \infty\) for every \(\varepsilon > 0\), and
+Corollary 15.3 yields \(X_n \to X\) almost surely.
+
+** Exercise 4 (Fast-subsequence preview of Proposition 14.3 and Chapter 16)
+Let \(X_1, X_2, \dots\) be iid with mean \(m\) and finite variance \(\sigma^2\). Using Chebyshev's
+inequality and Corollary 15.3, prove that the subsequence of *square* sample averages
+\[
+\overline X_{k^2} = \frac{1}{k^2} \sum_{j=1}^{k^2} X_j
+\]
+converges to \(m\) *almost surely* as \(k \to \infty\).
+
+** Solution
+For each integer \(k \ge 1\), \(\overline X_{k^2}\) has mean \(m\) and variance \(\sigma^2 / k^2\). For any
+\(\varepsilon > 0\), Chebyshev's inequality gives
+\[
+\mathbb P(|\overline X_{k^2} - m| > \varepsilon) \le \frac{\sigma^2}{k^2 \varepsilon^2} .
+\]
+Summing over \(k = 1, 2, \dots\) gives
+\[
+\sum_{k=1}^\infty \mathbb P(|\overline X_{k^2} - m| > \varepsilon)
+  \le \frac{\sigma^2}{\varepsilon^2} \sum_{k=1}^\infty \frac{1}{k^2} = \frac{\sigma^2 \pi^2}{6\varepsilon^2} < \infty .
+\]
+By Corollary 15.3, \(\overline X_{k^2} \to m\) almost surely as \(k \to \infty\). (This is Step 1 of the
+Strong Law of Large Numbers in [[file:ch16-strong-law.org][Chapter 16]]!)
+
+** Exercise 5
+How many independent coin tosses \(n\) are needed so that Chebyshev's bound (Example 15.5) guarantees
+\(\mathbb P(|\overline X_n - p| \ge 0.01) \le 0.05\), regardless of the unknown bias \(p \in [0,1]\)?
+
+** Solution
+By Example 15.5, \(\mathbb P(|\overline X_n - p| \ge \varepsilon) \le \frac{1}{4n\varepsilon^2}\). We want
+\[
+\frac{1}{4 n (0.01)^2} \le 0.05 \iff n \ge \frac{1}{4 \times 10^{-4} \times 0.05} = \frac{1}{2 \times 10^{-5}} = 50\,000 .
+\]
+Thus \(n = 50\,000\) independent tosses suffice for any \(p \in [0,1]\).
+
+** Exercise 6 (Weak law for correlated variables with decaying covariance)
+Suppose \(X_1, X_2, \dots\) have common mean \(\mathbb E X_j = m\) and bounded variances
+\(\operatorname{var}(X_j) \le C\), and are *uncorrelated* (\(\operatorname{cov}(X_i, X_j) = 0\) for
+\(i \ne j\)). Does \(\frac{1}{n}\sum_{j=1}^n X_j \to m\) in probability and in \(L^2\)?
+
+** Solution
+Yes! In the proof of Theorem 15.6, independence was used *only* to ensure that the cross-terms in
+\[
+\operatorname{var}\Big(\sum_{j=1}^n X_j\Big) = \sum_{j=1}^n \operatorname{var}(X_j) + \sum_{i \ne j} \operatorname{cov}(X_i, X_j)
+\]
+vanish. When the \(X_j\) are pairwise uncorrelated, the cross-terms are zero, so
+\[
+\operatorname{var}(\overline X_n) = \frac{1}{n^2}\sum_{j=1}^n \operatorname{var}(X_j) \le \frac{nC}{n^2} = \frac{C}{n} \xrightarrow[n\to\infty]{} 0 .
+\]
+Thus \(\overline X_n \to m\) in \(L^2\) and (by Chebyshev) in probability.
+
+* Summary
+
+#+caption: Chapter 15 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| \(\limsup_n A_n\)       | \(\bigcap_{m=1}^\infty \bigcup_{n\ge m} A_n = \{A_n \text{ i.o.}\}\)                                         | Formalizes "infinitely many \(A_n\) occur"                 |
+| Theorem 15.1 (BC 1)     | \(\sum_n \mathbb P(A_n) < \infty \implies \mathbb P(\limsup_n A_n) = 0\)                                     | Needs NO independence; comes from tail union bound         |
+| Theorem 15.1 (BC 2)     | \(A_n\) independent, \(\sum_n \mathbb P(A_n) = \infty \implies \mathbb P(\limsup_n A_n) = 1\)                | Needs independence; uses \(1-x \le e^{-x}\)                |
+| Example 15.2            | Nested \((0, 1/n)\) vs. independent \(\{U_n < 1/n\}\)                                                        | Same marginal probabilities \(1/n\), opposite recurrence   |
+| Corollary 15.3          | \(\forall \varepsilon>0,\ \sum_n \mathbb P(|X_n-X|>\varepsilon)<\infty \implies X_n\to X\) a.s.              | Main workhorse for proving almost-sure convergence         |
+| Proposition 15.4        | Markov: \(\mathbb P(Y\ge a)\le \mathbb E Y/a\); Chebyshev: \(\mathbb P(|X-\mathbb E X|\ge\varepsilon)\le \operatorname{var}(X)/\varepsilon^2\) | Converts moment bounds into tail-probability bounds        |
+| Example 15.5            | \(\mathbb P(|\overline X_n - p| \ge \varepsilon) \le \frac{p(1-p)}{n\varepsilon^2} \le \frac{1}{4n\varepsilon^2}\) | Distribution-free sample size bound for proportions        |
+| Theorem 15.6            | WLLN (\(\sigma^2 < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to m\) in prob. (and \(L^2\))                   | One-line proof from \(\operatorname{var}(\overline X_n) = \sigma^2/n\) + Chebyshev |
+| Theorem 15.7            | WLLN (\(\mathbb E|X_1| < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) in prob.               | Truncation \(Y_j = X_j\mathbf 1_{\{|X_j|\le K\}}\) removes finite-variance hypothesis |
+| Example 15.8            | \(\mathbb P(X=k) = c/k^3\): \(\mathbb E X < \infty\), \(\mathbb E[X^2] = \infty\)                            | Concrete law where Theorem 15.7 applies and 15.6 does not  |
+
+*Key takeaways*
+
+- Read \(\limsup_n A_n = \bigcap_{m=1}^\infty \bigcup_{n\ge m} A_n\) as: "for every starting time \(m\),
+  there is at least one occurrence \(n \ge m\)". Its complement \(\bigcup_{m=1}^\infty \bigcap_{n\ge m} A_n^c\)
+  is: "there is some starting time \(m\) after which *no* \(A_n\) ever occurs".
+- First Borel–Cantelli (\(\sum \mathbb P(A_n) < \infty \implies \mathbb P(A_n\text{ i.o.}) = 0\)) requires
+  *no* independence; Second Borel–Cantelli (\(\sum \mathbb P(A_n) = \infty \implies \mathbb P(A_n\text{ i.o.}) = 1\))
+  requires independence (as Example 15.2 shows).
+- Chebyshev's inequality applied to \(\overline X_n\) gives \(\mathbb P(|\overline X_n - m| > \varepsilon) \le \sigma^2/(n\varepsilon^2) \to 0\),
+  proving the finite-variance Weak Law of Large Numbers.
+- When only \(\mathbb E|X_1| < \infty\) holds, truncating at a fixed level \(K\) splits \(X_j = Y_j + R_j\)
+  into a bounded piece \(Y_j\) (handled by Chebyshev) and a tail piece \(R_j\) (handled uniformly in \(n\)
+  by Markov and DCT).

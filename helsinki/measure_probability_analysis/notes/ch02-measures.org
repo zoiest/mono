@@ -1,0 +1,771 @@
+:PROPERTIES:
+:ID:       a1b2c3d4-0002-4000-8000-000000000002
+:ROAM_ALIASES: "MAST31051 Chapter 2" "Measures and Probability Measures Notes"
+:END:
+#+title: Chapter 2: Measures and Probability Measures
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch02:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch01-measurable-spaces.org][← Chapter 1]] | [[file:ch03-measurable-functions.org][Chapter 3 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In Chapter 1 we built a *measurable space* \((\Omega, \mathcal{F})\), which specifies *which* subsets
+of \(\Omega\) are eligible to have a size. Now we want to assign an actual numerical size \(\mu(A)\)
+to each measurable set \(A \in \mathcal{F}\) — whether that size represents length, area, volume,
+mass, counting the number of elements, or the probability of an event.
+
+Importantly, choosing the \(\sigma\)-algebra \(\mathcal{F}\) and choosing the measure \(\mu\) are
+*two separate steps*: the exact same measurable space \((\Omega, \mathcal{F})\) can carry many
+different measures (for example, a fair die and a loaded die live on the same measurable space, and
+so do Lebesgue length and a Gaussian distribution on \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\)).
+
+What rules should a notion of "size" obey?
+1. The empty set has size zero: \(\mu(\emptyset) = 0\).
+2. Sizes are nonnegative, though possibly infinite: \(\mu(A) \in [0, \infty]\).
+3. *Countable additivity:* If we break a measurable set into a sequence of pairwise disjoint
+   measurable pieces \(A_1, A_2, \dots\), the size of the whole union equals the sum of the sizes of
+   the pieces:
+   \[
+   \mu\left(\bigcup_{n=1}^\infty A_n\right) = \sum_{n=1}^\infty \mu(A_n).
+   \]
+
+Why require *countable* additivity rather than just finite additivity (\(\mu(A \cup B) = \mu(A) + \mu(B)\)
+for disjoint \(A, B\))? Because countable additivity is the engine that lets measure theory interact
+with *limits*. As we prove in Section 2.2, countable additivity guarantees that when a sequence of
+measurable sets \(A_n\) grows up to a limit set \(A\) (or shrinks down to \(A\) from a set of finite
+measure), the measures \(\mu(A_n)\) converge to \(\mu(A)\). Without countable additivity, calculus-style
+limit theorems for integrals and probabilities would collapse.
+
+** Probability motivation
+
+When a measure \(\mu\) assigns total size \(1\) to the entire sample space (\(\mu(\Omega) = 1\)), we
+call it a *probability measure* and usually denote it by \(\mathbb{P}\). The triple
+\((\Omega, \mathcal{F}, \mathbb{P})\) is a *probability space*. Everything we prove for general
+measures immediately applies to probability measures — and often simplifies because
+\(\mathbb{P}(A) \le \mathbb{P}(\Omega) = 1 < \infty\) for every event \(A \in \mathcal{F}\), so
+infinite-measure traps (like \(\infty - \infty\)) never arise!
+
+At the end of the chapter we also meet one of the most important concepts in modern probability and
+analysis: *null sets* (sets of measure zero) and properties that hold *almost everywhere* (or *almost
+surely* in probability), meaning they hold outside a negligible set of measure zero.
+
+** Roadmap
+
+- *2.0 Definition and core examples of measures:* Extended nonnegative reals \([0, \infty]\),
+  countable additivity (Definition 2.1), events and observations (Remark 2.2), discrete weighted
+  measures, counting measure, Dirac measure \(\delta_x\), Lebesgue measure \(\lambda\), finite vs.
+  \(\sigma\)-finite measures (Example 2.3), and why there is no uniform probability distribution on
+  \(\mathbb{N}\) (Example 2.4).
+- *2.1 Two consequences of countable additivity:* Monotonicity (\(\mu(A) \le \mu(B)\)) and the union
+  bound / countable subadditivity (Lemma 2.5), proved via the *disjointification trick*.
+- *2.2 Continuity of a measure:* Continuity from below (\(A_n \uparrow A\)) and continuity from above
+  (\(A_n \downarrow A\) when \(\mu(A_1) < \infty\)) (Proposition 2.6), why finiteness is essential in
+  continuity from above (Example 2.7), why single points can have probability zero in a continuous
+  model (Example 2.8), and the definitions of *null set*, *almost everywhere*, and *almost surely*.
+
+** What you need from earlier chapters
+
+- Measurable spaces \((\Omega, \mathcal{F})\), \(\sigma\)-algebras, pairwise disjoint sequences of
+  sets, and the Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R})\): [[file:ch01-measurable-spaces.org][Chapter 1]].
+- Basic properties of suprema and limits of monotone sequences in \([0, \infty]\): [[file:ch00-toolkit.org][Chapter 0]].
+
+* 2.0 Definition and first examples of measures
+
+** Intuition
+
+Imagine pouring sand (mass) onto a tabletop \(\Omega\). If \(A_1, A_2, \dots\) are non-overlapping
+regions on the table, the total mass of sand inside the combined region \(\bigcup_{n=1}^\infty A_n\)
+is simply the sum \(\sum_{n=1}^\infty \mu(A_n)\) of the masses in each individual region.
+
+Because the total length of the real line \(\mathbb{R}\) or the total number of integers in
+\(\mathbb{N}\) is infinite, we must allow measures to take the value \(\infty\). Before stating the
+definition of a measure, let us make sure our rules for arithmetic and infinite series in
+\([0, \infty]\) are completely unambiguous.
+
+** Arithmetic in \([0, \infty]\) and the definition of a measure
+
+We write \([0, \infty] := [0, \infty) \cup \{\infty\}\) for the nonnegative real numbers together with
+\(\infty\), ordered so that \(a < \infty\) for every finite \(a \in [0, \infty)\).
+- *Addition:* For every \(a \in [0, \infty]\), we set
+  \[
+  a + \infty = \infty + a = \infty.
+  \]
+  Notice that since all numbers in \([0, \infty]\) are nonnegative, *we never encounter the
+  indeterminate form \(\infty - \infty\) when adding*.
+- *Nonnegative infinite series:* Given any sequence of values \(a_n \in [0, \infty]\), the partial
+  sums \(S_N := \sum_{n=1}^N a_n\) form an increasing sequence in \([0, \infty]\). We define the
+  infinite series by
+  \[
+  \sum_{n=1}^\infty a_n := \sup_{N \in \mathbb{N}} \sum_{n=1}^N a_n \in [0, \infty].
+  \]
+  Thus a nonnegative series *always has a well-defined value in \([0, \infty]\)*: it is a finite real
+  number if the partial sums are bounded, and \(\infty\) if any \(a_n = \infty\) or if the partial
+  sums grow without bound. By convention, an empty sum (a sum with no terms) has value \(0\).
+
+#+begin_quote
+*Definition 2.1 (Measure, measure space, and probability space).* Let \((\Omega, \mathcal{F})\) be a
+measurable space. A *measure* on this space is a function \(\mu : \mathcal{F} \to [0, \infty]\) such
+that \(\mu(\emptyset) = 0\) and, for every sequence of pairwise disjoint sets \(A_n \in \mathcal{F}\),
+\begin{equation}
+\mu\left(\bigcup_{n=1}^\infty A_n\right) = \sum_{n=1}^\infty \mu(A_n). \tag{2.1}
+\end{equation}
+This identity is called *countable additivity*. The triple \((\Omega, \mathcal{F}, \mu)\) is a
+*measure space*.
+
+If \(\mu(\Omega) = 1\), the measure is a *probability measure*; we usually denote it by
+\(\mathbb{P}\). The triple \((\Omega, \mathcal{F}, \mathbb{P})\) is then a *probability space*. Its
+points are *outcomes* or *sample points*, and its measurable sets are *events*.
+#+end_quote
+
+Let us note two immediate points about Definition 2.1:
+1. *Both sides of (2.1) live in \([0, \infty]\):* No subtraction of infinite quantities is involved.
+   Because \(\bigcup_{n=1}^\infty A_n \in \mathcal{F}\) (by the \(\sigma\)-algebra axiom), the left
+   side is well-defined; because \(\mu(A_n) \ge 0\), the series on the right is well-defined in
+   \([0, \infty]\).
+2. *Finite additivity is included automatically:* Suppose \(A_1, \dots, A_k \in \mathcal{F}\) is a
+   *finite* list of pairwise disjoint measurable sets. How do we get
+   \(\mu(A_1 \cup \cdots \cup A_k) = \mu(A_1) + \cdots + \mu(A_k)\)? Just as in Chapter 1, we append
+   empty sets: set \(A_n := \emptyset\) for all \(n > k\). Since \(A_n \cap A_m = \emptyset\) still
+   holds for all \(n \ne m\) and \(\mu(\emptyset) = 0\), countable additivity (2.1) gives
+   \[
+   \mu(A_1 \cup \cdots \cup A_k) = \mu\left(\bigcup_{n=1}^\infty A_n\right)
+   = \sum_{n=1}^k \mu(A_n) + \sum_{n=k+1}^\infty 0 = \sum_{n=1}^k \mu(A_n).
+   \]
+   (Note why we had to assume \(\mu(\emptyset) = 0\) explicitly in Definition 2.1: if \(\mu\) were identically
+   \(\infty\) on *every* set including \(\emptyset\), then \(\infty = \infty + \infty + \cdots\) would
+   still hold in \([0, \infty]\)! Requiring \(\mu(\emptyset) = 0\) rules out that degenerate case.)
+
+#+begin_quote
+*Remark 2.2 (Events and observations).* If the outcome of an experiment is \(\omega \in \Omega\), we
+say that an event \(A \in \mathcal{F}\) *occurs* when \(\omega \in A\). For the die
+(\(\Omega = \{1,\dots,6\}\)), the event \(D = \{2, 4, 6\}\) occurs exactly when the outcome is even.
+Recording only the parity of the roll suffices to answer whether \(D\) occurred, but does not
+determine whether the outcome was \(6\).
+
+This observational interpretation helps explain *why* we might choose a particular \(\sigma\)-algebra
+\(\mathcal{F}\). However, it is *not* a mathematical definition of measurability, nor does it imply
+that every measurable event in an infinite model can be decided from finitely many observations. The
+mathematical definition of an event remains simply membership in \(\mathcal{F}\).
+#+end_quote
+
+** Core examples of measures
+
+#+begin_quote
+*Example 2.3 (Assigning weights to outcomes; counting, Dirac, and Lebesgue measures; \(\sigma\)-finiteness).*
+On a finite or countable set \(\Omega\), choose nonnegative weights \(p_\omega \ge 0\) for each
+\(\omega \in \Omega\) and set
+\begin{equation}
+\mu(A) = \sum_{\omega \in A} p_\omega, \qquad A \subseteq \Omega. \tag{2.2}
+\end{equation}
+Then \(\mu\) is a measure on \((\Omega, 2^\Omega)\).
+#+end_quote
+
+Because (2.2) sums over an arbitrary subset \(A \subseteq \Omega\) (which does not come with a pre-assigned
+order), let us carefully unpack how the lecture notes define \(\sum_{\omega \in A} p_\omega\) and
+prove countable additivity using only elementary supremum arguments:
+
+1. *How is \(\sum_{\omega \in A} p_\omega\) defined?* By definition, it is the supremum of the finite
+   sums over all finite subsets \(F \subseteq A\):
+   \[
+   \mu(A) = \sum_{\omega \in A} p_\omega := \sup\left\{\sum_{\omega \in F} p_\omega : F \subseteq A,\ F \text{ finite}\right\} \in [0, \infty].
+   \]
+   For \(A = \emptyset\), the only finite subset is \(F = \emptyset\), whose empty sum is \(0\), so
+   \(\mu(\emptyset) = 0\).
+2. *Why does this match any sequential listing when \(A\) is countably infinite?* Suppose \(A\) is
+   countably infinite and we list its elements without repetitions as \(\omega_1, \omega_2, \dots\).
+   - Every partial sum \(\sum_{k=1}^N p_{\omega_k}\) is the sum over the finite subset
+     \(F_N = \{\omega_1, \dots, \omega_N\} \subseteq A\), so
+     \(\sup_N \sum_{k=1}^N p_{\omega_k} \le \mu(A)\).
+   - Conversely, if \(F \subseteq A\) is any finite subset, its finitely many elements must all
+     appear somewhere in the listing \(\omega_1, \omega_2, \dots\), so \(F \subseteq \{\omega_1, \dots, \omega_N\}\)
+     for some large enough \(N\). Since \(p_\omega \ge 0\), we have
+     \(\sum_{\omega \in F} p_\omega \le \sum_{k=1}^N p_{\omega_k}\). Taking the supremum over all
+     finite \(F \subseteq A\) gives \(\mu(A) \le \sup_N \sum_{k=1}^N p_{\omega_k}\).
+   In particular, *the sum \(\sum_{\omega \in A} p_\omega\) does not depend on the order in which we
+   list the elements of \(A\)!*
+3. *Step-by-step proof of countable additivity for (2.2):* Let \(A_1, A_2, \dots \subseteq \Omega\)
+   be pairwise disjoint, and write \(A = \bigcup_{j=1}^\infty A_j\). We prove the two inequalities
+   \(\mu(A) \le \sum_{j=1}^\infty \mu(A_j)\) and \(\sum_{j=1}^\infty \mu(A_j) \le \mu(A)\):
+   - *(\(\le\)):* Take any finite subset \(F \subseteq \bigcup_{j=1}^\infty A_j\). Because \(F\) has
+     only finitely many elements and the \(A_j\) are disjoint, \(F\) can meet only finitely many of
+     the sets \(A_j\), say \(A_1, \dots, A_M\). For each \(j \in \{1, \dots, M\}\), the slice
+     \(F \cap A_j\) is a finite subset of \(A_j\), so \(\sum_{\omega \in F \cap A_j} p_\omega \le \mu(A_j)\).
+     Summing over \(j = 1, \dots, M\) gives
+     \[
+     \sum_{\omega \in F} p_\omega = \sum_{j=1}^M \sum_{\omega \in F \cap A_j} p_\omega
+     \le \sum_{j=1}^M \mu(A_j) \le \sum_{j=1}^\infty \mu(A_j).
+     \]
+     Taking the supremum over all finite subsets \(F \subseteq \bigcup_{j=1}^\infty A_j\) yields
+     \(\mu\bigl(\bigcup_{j=1}^\infty A_j\bigr) \le \sum_{j=1}^\infty \mu(A_j)\).
+   - *(\(\ge\)):* Fix any integer \(N \ge 1\), and for each \(1 \le j \le N\) pick an arbitrary
+     finite subset \(F_j \subseteq A_j\). Since \(A_1, \dots, A_N\) are pairwise disjoint, the
+     \(F_j\) are pairwise disjoint and their union \(F := \bigcup_{j=1}^N F_j\) is a finite subset of
+     \(\bigcup_{j=1}^\infty A_j\). Hence
+     \[
+     \sum_{j=1}^N \sum_{\omega \in F_j} p_\omega = \sum_{\omega \in F} p_\omega
+     \le \mu\left(\bigcup_{j=1}^\infty A_j\right).
+     \]
+     Taking the supremum independently over each of the finitely many choices \(F_1 \subseteq A_1, \dots, F_N \subseteq A_N\)
+     gives \(\sum_{j=1}^N \mu(A_j) \le \mu\bigl(\bigcup_{j=1}^\infty A_j\bigr)\). Finally, taking the
+     supremum over \(N \in \mathbb{N}\) gives \(\sum_{j=1}^\infty \mu(A_j) \le \mu\bigl(\bigcup_{j=1}^\infty A_j\bigr)\). \(\square\)
+
+Let us survey the key examples and concepts introduced right after (2.2) in Example 2.3:
+
+- *Discrete probability measures (Fair vs. loaded die):* The weighted measure (2.2) is a probability
+  measure when \(\sum_{\omega \in \Omega} p_\omega = 1\). For a *fair die* on
+  \(\Omega = \{1, \dots, 6\}\), each weight is \(p_\omega = \frac{1}{6}\), and for
+  \(D = \{2, 4, 6\}\) we have \(\mathbb{P}(D) = \frac{1}{6} + \frac{1}{6} + \frac{1}{6} = \frac{1}{2}\).
+  Choosing unequal weights (with \(\sum_{\omega=1}^6 p_\omega = 1\)) gives a *different* probability
+  measure on the *exact same* measurable space. Thus *fairness is an assumption about the measure,
+  not about the \(\sigma\)-algebra*.
+- *Counting measure:* For any set \(\Omega\), *counting measure* assigns to each set \(A\) its number
+  of elements \(\#(A)\) when \(A\) is finite, and \(\infty\) when \(A\) is infinite. On
+  \(\Omega = \mathbb{N}\), counting measure is simply (2.2) with weight \(p_\omega = 1\) at every
+  point, and its total mass is \(\mu(\mathbb{N}) = \infty\).
+- *Dirac measure (Point mass):* For *any* measurable space \((\Omega, \mathcal{F})\) and any fixed
+  point \(x \in \Omega\), the *Dirac measure at \(x\)*, denoted by \(\delta_x\), is defined by
+  \[
+  \delta_x(A) := \begin{cases} 1 & \text{if } x \in A, \\ 0 & \text{if } x \notin A, \end{cases} \qquad A \in \mathcal{F}.
+  \]
+  Why is \(\delta_x\) a probability measure? First, \(x \notin \emptyset\), so \(\delta_x(\emptyset) = 0\),
+  and \(x \in \Omega\), so \(\delta_x(\Omega) = 1\). Second, if \(A_1, A_2, \dots \in \mathcal{F}\)
+  are pairwise disjoint, then the point \(x\) can belong to *at most one* of the sets \(A_n\):
+  - If \(x \in A_{n_0}\) for some (unique) \(n_0\), then \(x \in \bigcup_{n=1}^\infty A_n\), so both
+    \(\delta_x\bigl(\bigcup_{n=1}^\infty A_n\bigr)\) and \(\sum_{n=1}^\infty \delta_x(A_n)\) equal \(1\).
+  - If \(x \notin A_n\) for all \(n\), then \(x \notin \bigcup_{n=1}^\infty A_n\), so both sides equal \(0\).
+  Notice a subtle point remarked in the lecture notes: *defining \(\delta_x\) requires no assumption
+  that the singleton \(\{x\}\) is measurable!* It simply evaluates whether \(x \in A\) for sets
+  \(A\) that belong to \(\mathcal{F}\).
+- *Lebesgue measure \(\lambda\):* We denote Lebesgue measure by \(\lambda\) (constructed rigorously
+  in Chapter 5; it extends the length \(\lambda([a, b]) = b - a\) of intervals to all Borel sets). On
+  \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\), its total mass is \(\lambda(\mathbb{R}) = \infty\). On
+  the unit interval \(([0, 1], \mathcal{B}([0, 1]))\), the restriction \(A \mapsto \lambda(A)\) has
+  total mass \(\lambda([0, 1]) = 1 - 0 = 1\), so it is a *probability measure* (the continuous
+  uniform distribution on \([0, 1]\)).
+- *Finite and \(\sigma\)-finite measures:*
+  #+begin_quote
+  *Definition (Finite and \(\sigma\)-finite measures).* A measure \(\mu\) on \((\Omega, \mathcal{F})\) is:
+  - *finite* if \(\mu(\Omega) < \infty\);
+  - *\(\sigma\)-finite* (sigma-finite) if \(\Omega\) can be written as a countable union of measurable
+    sets of finite measure:
+    \[
+    \Omega = \bigcup_{n=1}^\infty E_n \quad \text{with } E_n \in \mathcal{F} \text{ and } \mu(E_n) < \infty \text{ for every } n \in \mathbb{N}.
+    \]
+  #+end_quote
+  - *Examples of \(\sigma\)-finite measures:*
+    1. Every finite measure (and in particular every probability measure) is \(\sigma\)-finite: just
+       take \(E_1 = \Omega, E_2 = \emptyset, \dots\)
+    2. Counting measure on \(\mathbb{N}\) has \(\mu(\mathbb{N}) = \infty\), so it is not finite, but
+       it *is* \(\sigma\)-finite because \(\mathbb{N} = \bigcup_{n=1}^\infty \{n\}\) and each
+       singleton has \(\mu(\{n\}) = 1 < \infty\).
+    3. Lebesgue measure \(\lambda\) on \(\mathbb{R}\) has \(\lambda(\mathbb{R}) = \infty\), but it
+       *is* \(\sigma\)-finite because \(\mathbb{R} = \bigcup_{n=1}^\infty [-n, n]\) and each bounded
+       interval has \(\lambda([-n, n]) = 2n < \infty\).
+  - *Non-example (A measure that is NOT \(\sigma\)-finite):* Consider counting measure \(\#\) on the
+    uncountable space \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\). If \(E \subseteq \mathbb{R}\) has
+    finite counting measure \(\#(E) < \infty\), then \(E\) is a finite set. A countable union of
+    finite sets \(\bigcup_{n=1}^\infty E_n\) is at most countable, so it can *never* cover the
+    uncountable set \(\mathbb{R}\)! Thus counting measure on \(\mathbb{R}\) is not \(\sigma\)-finite.
+  - *Normalizing finite measures:* If \(0 < \mu(\Omega) < \infty\), we can normalize \(\mu\) into a
+    probability measure by setting \(\mathbb{P}(A) := \mu(A) / \mu(\Omega)\). An infinite measure
+    (\(\mu(\Omega) = \infty\)) cannot be normalized this way.
+
+#+begin_quote
+*Example 2.4 (There is no uniform probability on \(\mathbb{N}\)).* There does not exist a probability
+measure \(\mathbb{P}\) on \((\mathbb{N}, 2^{\mathbb{N}})\) that assigns the same probability to every
+singleton \(\{n\}\).
+#+end_quote
+
+*Proof of Example 2.4:* Suppose for contradiction that \(\mathbb{P}(\{n\}) = c \in [0, 1]\) for every
+\(n \in \mathbb{N}\). Since \(\mathbb{N} = \bigcup_{n=1}^\infty \{n\}\) is a countable union of
+pairwise disjoint singletons, countable additivity requires
+\[
+1 = \mathbb{P}(\mathbb{N}) = \sum_{n=1}^\infty \mathbb{P}(\{n\}) = \sum_{n=1}^\infty c.
+\]
+- *Case 1 (\(c > 0\)):* By the Archimedean property, taking \(N > 1/c\) disjoint singletons already
+  gives \(\mathbb{P}(\{1, \dots, N\}) = N c > 1\), and the infinite series sums to \(\infty \ne 1\).
+- *Case 2 (\(c = 0\)):* Then \(\sum_{n=1}^\infty 0 = 0 \ne 1\).
+
+Neither case is compatible with \(\mathbb{P}(\mathbb{N}) = 1\). Therefore, an informal instruction
+like "choose a positive integer uniformly at random" does *not* define a countably additive
+probability model! \(\square\)
+
+* 2.1 Two consequences of countable additivity
+
+** Intuition
+
+Countable additivity requires the sets \(A_n\) to be *pairwise disjoint*. What if we have sets that
+*overlap*?
+1. If \(A \subseteq B\), then \(B\) consists of \(A\) plus the extra non-overlapping collar
+   \(B \setminus A\). Since the collar has nonnegative measure \(\mu(B \setminus A) \ge 0\), the larger
+   set \(B\) must have measure at least \(\mu(A)\). This is *monotonicity*.
+2. If \(A_1, A_2, \dots\) is an arbitrary sequence of measurable sets (possibly overlapping), how can
+   we relate \(\mu\bigl(\bigcup_{n=1}^\infty A_n\bigr)\) to \(\sum_{n=1}^\infty \mu(A_n)\)? We use a
+   fundamental technique that recurs throughout the course: *disjointification* (removing the overlaps).
+   We keep all of \(A_1\), then from \(A_2\) keep only the part not already in \(A_1\), then from
+   \(A_3\) keep only the part not already in \(A_1 \cup A_2\), and so on. This slices the union into
+   pairwise disjoint pieces \(B_n \subseteq A_n\) without losing or double-counting a single point!
+
+#+begin_example
+Overlapping sets:                     Disjoint pieces, same union:
+  +---------+                           +---------+
+  |   A_1   |                           |   B_1   |
+  |     +---+-------+                   |   = A_1 +-------+
+  |     |   |  A_2  |        ===>       +---------+  B_2  |
+  +-----+---+   +---+-----+                   | = A_2\A_1 +-----+
+        |       |   | A_3 |                   +-----------+ B_3 |
+        +-------+---+-----+                               |     |
+                                                          +-----+
+                                               B_3 = A_3 \ (A_1 U A_2)
+#+end_example
+
+** Monotonicity and the union bound
+
+#+begin_quote
+*Lemma 2.5 (Monotonicity and the union bound).* Let \((\Omega, \mathcal{F}, \mu)\) be a measure space.
+If \(A, B \in \mathcal{F}\) and \(A \subseteq B\), then \(\mu(A) \le \mu(B)\). For every sequence
+\(A_n \in \mathcal{F}\), we have
+\begin{equation}
+\mu\left(\bigcup_{n=1}^\infty A_n\right) \le \sum_{n=1}^\infty \mu(A_n). \tag{2.3}
+\end{equation}
+#+end_quote
+
+*(Terminology:* Inequality (2.3) is called *countable subadditivity* in measure theory, and *Boole's
+inequality* or the *union bound* in probability theory.)
+
+** Unpacked proof of Lemma 2.5
+
+*Step 1. Monotonicity.* Suppose \(A, B \in \mathcal{F}\) with \(A \subseteq B\). Then we can split
+\(B\) into two disjoint measurable sets:
+\[
+B = A \cup (B \setminus A), \qquad A \cap (B \setminus A) = \emptyset.
+\]
+By finite additivity (obtained from countable additivity (2.1) by appending empty sets),
+\[
+\mu(B) = \mu(A) + \mu(B \setminus A).
+\]
+Since \(\mu(B \setminus A) \ge 0\) in \([0, \infty]\), adding it to \(\mu(A)\) gives
+\[
+\mu(B) = \mu(A) + \mu(B \setminus A) \ge \mu(A).
+\]
+Notice that we did *not* subtract \(\mu(A)\) from both sides, so this argument remains 100% valid
+even when \(\mu(A) = \infty\) or \(\mu(B) = \infty\)!
+
+*(Useful side remark — the excision / subtraction formula:* If \(A \subseteq B\) and we additionally
+know that \(\mu(A) < \infty\), then because \(\mu(A)\) is a finite real number we *can* subtract it from
+\(\mu(B) = \mu(A) + \mu(B \setminus A)\) to get
+\[
+\mu(B \setminus A) = \mu(B) - \mu(A) \qquad (\text{valid whenever } A \subseteq B \text{ and } \mu(A) < \infty).
+\]
+We will use this subtraction formula in Step 2 of Proposition 2.6 below.)
+
+*Step 2. Remove the overlaps (Disjointification).* Let \(A_1, A_2, \dots \in \mathcal{F}\) be any
+sequence of measurable sets. Define a new sequence \(B_1, B_2, \dots\) by setting
+\[
+B_1 := A_1 \quad \text{and} \quad B_n := A_n \setminus \bigcup_{j=1}^{n-1} A_j \quad \text{for } n \ge 2.
+\]
+Let us check four properties of the sets \(B_n\):
+1. *Measurability:* Since \(\mathcal{F}\) is closed under finite unions and set differences, each
+   \(B_n \in \mathcal{F}\).
+2. *Containment:* By definition of set difference, \(B_n \subseteq A_n\) for every \(n \in \mathbb{N}\).
+3. *Pairwise disjointness:* Take any \(m < n\). By definition, \(B_n\) excludes all elements of
+   \(\bigcup_{j=1}^{n-1} A_j\). Since \(m \le n - 1\), we have
+   \(B_m \subseteq A_m \subseteq \bigcup_{j=1}^{n-1} A_j\), so no element of \(B_m\) can belong to
+   \(B_n\). Thus \(B_m \cap B_n = \emptyset\) whenever \(m \ne n\).
+4. *Same union:* Why does \(\bigcup_{n=1}^\infty B_n = \bigcup_{n=1}^\infty A_n\)?
+   - (\(\subseteq\)): Since \(B_n \subseteq A_n\) for every \(n\), we immediately have
+     \(\bigcup_{n=1}^\infty B_n \subseteq \bigcup_{n=1}^\infty A_n\).
+   - (\(\supseteq\)): Take any point \(\omega \in \bigcup_{n=1}^\infty A_n\). The set of indices
+     \(\{k \in \mathbb{N} : \omega \in A_k\}\) is a nonempty subset of \(\mathbb{N}\), so by the
+     well-ordering of \(\mathbb{N}\) there is a *first* index \(n \in \mathbb{N}\) such that
+     \(\omega \in A_n\). Being the *first* such index means \(\omega \notin A_j\) for all
+     \(1 \le j \le n - 1\), which is the exact definition of \(\omega \in B_n\)! Thus every point of
+     \(\bigcup_{n=1}^\infty A_n\) belongs to a unique piece \(B_n\).
+
+Now combine countable additivity (applied to the pairwise disjoint sequence \(B_n\)) with
+monotonicity from Step 1 (\(\mu(B_n) \le \mu(A_n)\) since \(B_n \subseteq A_n\)):
+\[
+\mu\left(\bigcup_{n=1}^\infty A_n\right) = \mu\left(\bigcup_{n=1}^\infty B_n\right)
+= \sum_{n=1}^\infty \mu(B_n) \le \sum_{n=1}^\infty \mu(A_n). \qquad \square
+\]
+
+*Probabilistic interpretation of the union bound:* If \(A_1, A_2, \dots\) are events in a probability
+space, \(\mathbb{P}\bigl(\bigcup_{n=1}^\infty A_n\bigr)\) is the probability that *at least one* of
+the events \(A_n\) occurs. Lemma 2.5 says this is at most \(\sum_{n=1}^\infty \mathbb{P}(A_n)\),
+*with no independence assumption whatsoever*: overlaps between the events \(A_n\) can only cause the
+right-hand sum \(\sum_{n=1}^\infty \mathbb{P}(A_n)\) to count the overlapping outcomes multiple times.
+
+* 2.2 Continuity of a measure
+
+** Intuition
+
+Suppose a sequence of measurable sets \(A_1, A_2, A_3, \dots\) approximates a limiting set \(A\) in a
+monotone way:
+- *Increasing sets (\(A_n \uparrow A\)):* \(A_1 \subseteq A_2 \subseteq A_3 \subseteq \cdots\) and
+  \(A = \bigcup_{n=1}^\infty A_n\). Think of an expanding inkblot: every point of \(A\) enters at
+  some stage \(n\) and remains inside from then on. We can slice the expanding inkblot into concentric
+  "annuli" (rings) \(B_1 = A_1\) and \(B_n = A_n \setminus A_{n-1}\), which are pairwise disjoint!
+  Applying countable additivity to the rings shows that \(\mu(A_n) \to \mu(A)\) *always*.
+- *Decreasing sets (\(A_n \downarrow A\)):* \(A_1 \supseteq A_2 \supseteq A_3 \supseteq \cdots\) and
+  \(A = \bigcap_{n=1}^\infty A_n\). Think of a puddle evaporating: a point belongs to the final puddle
+  \(A\) precisely when it survives at *every* stage \(n\). If the initial puddle has finite size
+  \(\mu(A_1) < \infty\), then taking complements inside \(A_1\) turns the shrinking sequence \(A_n\)
+  into an expanding sequence \(A_1 \setminus A_n \uparrow A_1 \setminus A\), and subtracting from
+  \(\mu(A_1)\) shows \(\mu(A_n) \to \mu(A)\).
+
+#+begin_example
+   Increasing sets: A_n \uparrow A               Decreasing sets: A_n \downarrow A
+       A = \bigcup_{n=1}^\infty A_n                  A = \bigcap_{n=1}^\infty A_n
+     - - - - - - - - - - - - - - -                 +-------------------------------+
+   :   +-----------------------+   :               | A_1                           |
+   :   | A_3                   |   :               |   +-----------------------+   |
+   :   |   +---------------+   |   :               |   | A_2                   |   |
+   :   |   | A_2           |   |   :               |   |   +---------------+   |   |
+   :   |   |   +-------+   |   |   :               |   |   | A_3           |   |   |
+   :   |   |   |  A_1  |   |   |   :               |   |   |   : - - - :   |   |   |
+   :   |   |   +-------+   |   |   :               |   |   |   :   A   :   |   |   |
+   :   |   +---------------+   |   :               |   |   |   : - - - :   |   |   |
+   :   +-----------------------+   :               |   |   +---------------+   |   |
+     - - - - - - - - - - - - - - -                 +---+-----------------------+---+
+#+end_example
+
+** Monotone sequences of sets and Proposition 2.6
+
+Let us record the exact notation from the lecture notes:
+- A sequence of sets \((A_n)_{n=1}^\infty\) is *increasing* if \(A_n \subseteq A_{n+1}\) for every
+  \(n \in \mathbb{N}\). We write \(A_n \uparrow A\) if \((A_n)\) is increasing and
+  \(\bigcup_{n=1}^\infty A_n = A\).
+- A sequence of sets \((A_n)_{n=1}^\infty\) is *decreasing* if \(A_{n+1} \subseteq A_n\) for every
+  \(n \in \mathbb{N}\). We write \(A_n \downarrow A\) if \((A_n)\) is decreasing and
+  \(\bigcap_{n=1}^\infty A_n = A\).
+
+Note that the arrows \(\uparrow\) and \(\downarrow\) describe set inclusion and the limiting union or
+intersection, not convergence of individual points in \(\Omega\). Successive sets are allowed to be
+equal (\(A_n = A_{n+1}\)), and the limiting set \(A\) can be \(\emptyset\).
+
+#+begin_quote
+*Proposition 2.6 (Continuity of a measure).* Let \(A_n\) and \(A\) be measurable sets in a measure
+space \((\Omega, \mathcal{F}, \mu)\).
+- (i) *(Continuity from below)* If \(A_n \uparrow A\), then \(\mu(A_n) \to \mu(A)\) as \(n \to \infty\).
+- (ii) *(Continuity from above)* If \(A_n \downarrow A\) and \(\mu(A_1) < \infty\), then
+  \(\mu(A_n) \to \mu(A)\) as \(n \to \infty\).
+#+end_quote
+
+** Unpacked proof of Proposition 2.6
+
+*Step 1. Increasing sets (Part (i)).* Suppose \(A_n \uparrow A\). We separate the "new ring" added at
+each stage by defining
+\[
+B_1 := A_1 \quad \text{and} \quad B_j := A_j \setminus A_{j-1} \quad \text{for } j \ge 2.
+\]
+Because \(A_1 \subseteq A_2 \subseteq A_3 \subseteq \cdots\), notice that the disjointification
+formula \(A_j \setminus \bigcup_{i=1}^{j-1} A_i\) from Lemma 2.5 simplifies directly to
+\(A_j \setminus A_{j-1}\)! Thus:
+1. The sets \(B_1, B_2, \dots \in \mathcal{F}\) are pairwise disjoint.
+2. For each fixed \(n \in \mathbb{N}\), the union of the first \(n\) rings is telescope-like:
+   \[
+   \bigcup_{j=1}^n B_j = A_1 \cup (A_2 \setminus A_1) \cup \cdots \cup (A_n \setminus A_{n-1}) = A_n.
+   \]
+   By finite additivity, \(\sum_{j=1}^n \mu(B_j) = \mu(A_n)\).
+3. The union of *all* the rings is \(\bigcup_{j=1}^\infty B_j = \bigcup_{n=1}^\infty A_n = A\).
+
+Applying countable additivity to \(A = \bigcup_{j=1}^\infty B_j\) and using the definition of an
+infinite series as the limit of its partial sums, we obtain
+\[
+\mu(A) = \sum_{j=1}^\infty \mu(B_j) = \lim_{n \to \infty} \sum_{j=1}^n \mu(B_j) = \lim_{n \to \infty} \mu(A_n).
+\]
+Notice that this holds whether the common value \(\mu(A)\) is finite or \(\infty\).
+
+*Step 2. Decreasing sets (Part (ii)).* Suppose \(A_n \downarrow A\) and \(\mu(A_1) < \infty\). We
+convert the decreasing sequence into an increasing sequence by taking complements *inside \(A_1\)*:
+define \(C_n := A_1 \setminus A_n\) for \(n \in \mathbb{N}\).
+1. Since \(A_{n+1} \subseteq A_n\), removing a smaller set from \(A_1\) leaves a larger set:
+   \(C_n = A_1 \setminus A_n \subseteq A_1 \setminus A_{n+1} = C_{n+1}\).
+2. By De Morgan's law relative to \(A_1\),
+   \[
+   \bigcup_{n=1}^\infty (A_1 \setminus A_n) = A_1 \setminus \bigcap_{n=1}^\infty A_n = A_1 \setminus A.
+   \]
+   Thus \(C_n \uparrow A_1 \setminus A\).
+3. Applying Step 1 to the increasing sequence \(C_n \uparrow A_1 \setminus A\) gives
+   \[
+   \mu(A_1 \setminus A_n) \longrightarrow \mu(A_1 \setminus A) \quad \text{as } n \to \infty.
+   \]
+4. Now use the hypothesis \(\mu(A_1) < \infty\)! Because \(A_n \subseteq A_1\) and \(A \subseteq A_1\),
+   monotonicity gives \(\mu(A_n) \le \mu(A_1) < \infty\) and \(\mu(A) \le \mu(A_1) < \infty\). By
+   finite additivity on the disjoint decompositions \(A_1 = A_n \cup (A_1 \setminus A_n)\) and
+   \(A_1 = A \cup (A_1 \setminus A)\), we have
+   \[
+   \mu(A_1) = \mu(A_n) + \mu(A_1 \setminus A_n) \quad \text{and} \quad \mu(A_1) = \mu(A) + \mu(A_1 \setminus A).
+   \]
+   Since all numbers in these equations are *finite*, we can subtract \(\mu(A_1 \setminus A_n)\) and
+   \(\mu(A_1 \setminus A)\) to conclude:
+   \[
+   \mu(A_n) = \mu(A_1) - \mu(A_1 \setminus A_n) \longrightarrow \mu(A_1) - \mu(A_1 \setminus A) = \mu(A). \qquad \square
+   \]
+
+*(Bonus enhancement:* In Proposition 2.6(ii), what if \(\mu(A_1) = \infty\), wait — what if
+\(\mu(A_N) < \infty\) for *some* later index \(N \ge 1\)? Then we can simply discard the first
+\(N - 1\) terms and apply Proposition 2.6(ii) starting at \(A_N\), so \(\mu(A_n) \to \mu(A)\) still
+holds whenever \(\mu(A_N) < \infty\) for at least one \(N\). What fails is when \(\mu(A_n) = \infty\)
+for *all* \(n\), as Example 2.7 now demonstrates!)
+
+** Examples from the notes: Finiteness, null sets, and "almost surely"
+
+#+begin_quote
+*Example 2.7 (Why finiteness is needed in continuity from above).* On \(\mathbb{N}\) with counting
+measure \(\mu = \#\), consider the tail sets
+\[
+A_n := \{n, n+1, n+2, \dots\}, \qquad n \in \mathbb{N}.
+\]
+Clearly \(A_1 \supseteq A_2 \supseteq A_3 \supseteq \cdots\), and what is their intersection
+\(\bigcap_{n=1}^\infty A_n\)? Any positive integer \(k \in \mathbb{N}\) fails to belong to
+\(A_{k+1} = \{k+1, k+2, \dots\}\), so no integer belongs to all \(A_n\):
+\[
+A_n \downarrow \emptyset.
+\]
+However, every \(A_n\) contains infinitely many integers, so \(\mu(A_n) = \infty\) for all
+\(n \in \mathbb{N}\), whereas \(\mu(\emptyset) = 0\):
+\[
+\lim_{n \to \infty} \mu(A_n) = \infty \ne 0 = \mu\left(\bigcap_{n=1}^\infty A_n\right).
+\]
+Where did Step 2 of the proof of Proposition 2.6 break down here? The sets
+\(A_1 \setminus A_n = \{1, \dots, n-1\}\) do increase to \(A_1 \setminus \emptyset = \mathbb{N}\), and
+\(\mu(A_1 \setminus A_n) = n - 1 \to \infty = \mu(\mathbb{N})\) is completely true! What breaks is
+the subtraction \(\mu(A_1) - \mu(A_1 \setminus A)\), which would be \(\infty - \infty\).
+
+Notice that on a *probability space* \((\Omega, \mathcal{F}, \mathbb{P})\), this obstruction can
+*never* occur, because \(\mathbb{P}(A_1) \le \mathbb{P}(\Omega) = 1 < \infty\) is always finite!
+#+end_quote
+
+#+begin_quote
+*Example 2.8 (A point can have probability zero).* On \([0, 1]\) equipped with Lebesgue probability
+measure \(\mathbb{P} = \lambda|_{[0,1]}\), consider the shrinking intervals
+\[
+A_n := [0, 1/n], \qquad n \in \mathbb{N}.
+\]
+Here \(A_1 \supseteq A_2 \supseteq \cdots\) and \(\bigcap_{n=1}^\infty [0, 1/n] = \{0\}\), so
+\(A_n \downarrow \{0\}\). Since \(\mathbb{P}(A_1) = 1 < \infty\), continuity from above
+(Proposition 2.6(ii)) gives
+\[
+\mathbb{P}(\{0\}) = \lim_{n \to \infty} \mathbb{P}([0, 1/n]) = \lim_{n \to \infty} \frac{1}{n} = 0.
+\]
+By the same argument (using \([x, x + 1/n]\) or \([x - 1/n, x]\)), *every singleton \(\{x\} \subseteq [0, 1]\)
+has probability zero*, even though when we pick a random point \(\omega \in [0, 1]\), *some* point is
+selected!
+
+Why is there no contradiction with additivity? Because
+\[
+[0, 1] = \bigcup_{x \in [0, 1]} \{x\}
+\]
+is an *uncountable* union of singletons, whereas countable additivity (2.1) applies only to
+*countable* unions.
+#+end_quote
+
+This leads directly to the fundamental notions of *null sets*, *almost everywhere*, and *almost surely*:
+
+#+begin_quote
+*Definition (Null set, almost everywhere, and almost surely).* Let \((\Omega, \mathcal{F}, \mu)\) be a
+measure space.
+- A measurable set \(N \in \mathcal{F}\) with \(\mu(N) = 0\) is called a *null set*.
+- A property or assertion \(P(\omega)\) about points \(\omega \in \Omega\) holds *almost everywhere*
+  (abbreviated *a.e.* or *\(\mu\)-a.e.*) if it holds outside some measurable null set — that is, if
+  there exists a measurable set \(N \in \mathcal{F}\) with \(\mu(N) = 0\) such that
+  \[
+  \{\omega \in \Omega : P(\omega) \text{ fails}\} \subseteq N.
+  \]
+- When \(\mu = \mathbb{P}\) is a probability measure, the exact same condition is said to hold
+  *almost surely* (abbreviated *a.s.* or *\(\mathbb{P}\)-a.s.*).
+#+end_quote
+
+Let us highlight two crucial subtleties in this definition:
+1. *"Almost surely" does NOT mean "for every outcome":* In Example 2.8 (\([0, 1]\) with Lebesgue
+   measure), the singleton \(N = \{0\}\) is a Borel null set (\(\mathbb{P}(\{0\}) = 0\)). Thus the
+   statement "the selected point \(\omega\) is nonzero" (\(\omega \ne 0\)) holds *almost surely*, even
+   though \(\omega = 0\) belongs to the sample space \([0, 1]\)! Conversely, an event of probability
+   \(0\) (such as picking \(0\), or picking a rational number since \(\mathbb{P}(\mathbb{Q} \cap [0,1]) = \sum_{q \in \mathbb{Q} \cap [0,1]} \mathbb{P}(\{q\}) = 0\))
+   is not "logically impossible" as a subset of \(\Omega\); it simply has measure zero.
+2. *Why does the definition say \(\{\omega : P(\omega) \text{ fails}\} \subseteq N\) rather than
+   \(\mu(\{\omega : P(\omega) \text{ fails}\}) = 0\)?* Look closely at the lecture notes' wording:
+   *"Its set of exceptions need only be contained in that null set; it need not itself be measurable."*
+   Depending on the \(\sigma\)-algebra \(\mathcal{F}\), a subset \(E \subseteq N\) of a null set
+   \(N \in \mathcal{F}\) might not belong to \(\mathcal{F}\) (so writing \(\mu(E)\) would not even
+   make sense!). Requiring \(E \subseteq N\) for some *measurable* null set \(N \in \mathcal{F}\) avoids
+   having to check whether the exception set \(E\) itself is measurable. (In Chapter 5 we will study
+   *complete* measure spaces, where all subsets of null sets are adjoined to \(\mathcal{F}\).)
+
+* Worked Exercises
+
+** Exercise 1 (A countable union of null sets is a null set)
+Let \((\Omega, \mathcal{F}, \mu)\) be a measure space.
+1. Suppose \(N_1, N_2, \dots \in \mathcal{F}\) are null sets (\(\mu(N_k) = 0\) for all \(k \in \mathbb{N}\)).
+   Prove that \(\bigcup_{k=1}^\infty N_k\) is also a null set.
+2. Deduce that on \((\mathbb{R}, \mathcal{B}(\mathbb{R}), \lambda)\), every countable subset
+   \(C \subseteq \mathbb{R}\) (in particular \(\mathbb{Q}\)) satisfies \(\lambda(C) = 0\).
+3. Suppose \(P_1(\omega), P_2(\omega), \dots\) is a sequence of assertions, each of which holds
+   \(\mu\)-almost everywhere. Prove that the combined assertion "\(P_k(\omega)\) holds for *every*
+   \(k \in \mathbb{N}\)" also holds \(\mu\)-almost everywhere.
+
+** Solution
+1. By monotonicity (\(\mu \ge 0\)) and the union bound (Lemma 2.5),
+   \[
+   0 \le \mu\left(\bigcup_{k=1}^\infty N_k\right) \le \sum_{k=1}^\infty \mu(N_k) = \sum_{k=1}^\infty 0 = 0.
+   \]
+   Hence \(\mu\bigl(\bigcup_{k=1}^\infty N_k\bigr) = 0\).
+2. Just as in Example 2.8, for every \(x \in \mathbb{R}\) we have \([x, x + 1/n] \downarrow \{x\}\)
+   with \(\lambda([x, x+1]) = 1 < \infty\), so Proposition 2.6(ii) gives \(\lambda(\{x\}) = \lim_{n\to\infty} 1/n = 0\).
+   Any countable set \(C \subseteq \mathbb{R}\) is a countable union of singletons
+   \(C = \bigcup_{x \in C} \{x\}\), so by part 1 we have \(\lambda(C) = 0\).
+3. For each \(k \in \mathbb{N}\), let \(E_k := \{\omega \in \Omega : P_k(\omega) \text{ fails}\}\).
+   Since \(P_k\) holds \(\mu\)-a.e., there exists a measurable null set \(N_k \in \mathcal{F}\) with
+   \(\mu(N_k) = 0\) and \(E_k \subseteq N_k\). The set of points where "\(P_k(\omega)\) for all \(k\)"
+   fails is \(\bigcup_{k=1}^\infty E_k \subseteq \bigcup_{k=1}^\infty N_k =: N\). By part 1,
+   \(N \in \mathcal{F}\) and \(\mu(N) = 0\). Thus "\(P_k(\omega)\) holds for all \(k\)" holds
+   \(\mu\)-almost everywhere! (Warning: this works for *countably* many assertions, not uncountably
+   many!)
+
+** Exercise 2 (Inclusion-exclusion and symmetric difference)
+Let \((\Omega, \mathcal{F}, \mathbb{P})\) be a probability space, and let \(A, B \in \mathcal{F}\).
+1. Prove the addition law \(\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B)\).
+2. If \(\mathbb{P}(A) = 1\), prove that \(\mathbb{P}(A \cap B) = \mathbb{P}(B)\) for every event
+   \(B \in \mathcal{F}\).
+
+** Solution
+1. We decompose \(A \cup B\) and \(B\) into disjoint measurable pieces:
+   \[
+   A \cup B = A \cup (B \setminus A) \quad \text{and} \quad B = (A \cap B) \cup (B \setminus A).
+   \]
+   By finite additivity,
+   \[
+   \mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B \setminus A) \quad \text{and} \quad
+   \mathbb{P}(B) = \mathbb{P}(A \cap B) + \mathbb{P}(B \setminus A).
+   \]
+   Since all probabilities lie in \([0, 1]\) (hence are finite!), we can subtract
+   \(\mathbb{P}(A \cap B)\) from the second equation to get
+   \(\mathbb{P}(B \setminus A) = \mathbb{P}(B) - \mathbb{P}(A \cap B)\), and substitute this into the
+   first equation to obtain \(\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B)\).
+2. Suppose \(\mathbb{P}(A) = 1\). Since \(A \subseteq A \cup B \subseteq \Omega\), monotonicity gives
+   \(1 = \mathbb{P}(A) \le \mathbb{P}(A \cup B) \le \mathbb{P}(\Omega) = 1\), so
+   \(\mathbb{P}(A \cup B) = 1\). Substituting \(\mathbb{P}(A) = 1\) and \(\mathbb{P}(A \cup B) = 1\)
+   into part 1 gives \(1 = 1 + \mathbb{P}(B) - \mathbb{P}(A \cap B)\), i.e.,
+   \(\mathbb{P}(A \cap B) = \mathbb{P}(B)\).
+
+** Exercise 3 (Using continuity from below and above on intervals)
+Let \(\mu\) be a finite Borel measure on \((\mathbb{R}, \mathcal{B}(\mathbb{R}))\) (so
+\(\mu(\mathbb{R}) < \infty\)), and define \(F(t) := \mu((-\infty, t])\) for \(t \in \mathbb{R}\).
+1. Using continuity from below (Proposition 2.6(i)), prove that
+   \(\lim_{t \to \infty} F(t) = \mu(\mathbb{R})\) and that \(\mu((-\infty, b)) = \lim_{n \to \infty} F(b - 1/n)\)
+   for every \(b \in \mathbb{R}\).
+2. Using continuity from above (Proposition 2.6(ii)), prove that \(F\) is right-continuous along
+   sequences \(b + 1/n\): \(\lim_{n \to \infty} F(b + 1/n) = F(b)\), and deduce that
+   \[
+   \mu(\{b\}) = F(b) - \lim_{n \to \infty} F(b - 1/n).
+   \]
+
+** Solution
+1. Since \(F(t) = \mu((-\infty, t])\) is increasing in \(t\) by monotonicity (Lemma 2.5), to find
+   \(\lim_{t \to \infty} F(t)\) it suffices to check the increasing sequence of sets
+   \(A_n := (-\infty, n]\). We have \(A_n \uparrow \mathbb{R}\), so Proposition 2.6(i) gives
+   \(F(n) = \mu(A_n) \to \mu(\mathbb{R})\).
+   Similarly, for any fixed \(b \in \mathbb{R}\), the sets \(E_n := (-\infty, b - 1/n]\) form an
+   increasing sequence with \(\bigcup_{n=1}^\infty (-\infty, b - 1/n] = (-\infty, b)\) (as checked in
+   Chapter 1, Section 1.4). Thus \(E_n \uparrow (-\infty, b)\), and Proposition 2.6(i) gives
+   \(\mu((-\infty, b)) = \lim_{n \to \infty} \mu(E_n) = \lim_{n \to \infty} F(b - 1/n)\).
+2. For fixed \(b \in \mathbb{R}\), the sets \(D_n := (-\infty, b + 1/n]\) form a decreasing sequence
+   with \(\bigcap_{n=1}^\infty (-\infty, b + 1/n] = (-\infty, b]\), so \(D_n \downarrow (-\infty, b]\).
+   Since \(\mu\) is a finite measure, \(\mu(D_1) \le \mu(\mathbb{R}) < \infty\). Therefore
+   Proposition 2.6(ii) applies and gives
+   \[
+   \lim_{n \to \infty} F(b + 1/n) = \lim_{n \to \infty} \mu(D_n) = \mu((-\infty, b]) = F(b).
+   \]
+   Finally, decompose \((-\infty, b]\) into the disjoint union \((-\infty, b) \cup \{b\}\). By finite
+   additivity and finiteness of \(\mu\),
+   \[
+   \mu(\{b\}) = \mu((-\infty, b]) - \mu((-\infty, b)) = F(b) - \lim_{n \to \infty} F(b - 1/n).
+   \]
+   (In particular, \(\mu(\{b\}) = 0\) if and only if \(F\) is continuous at \(b\)! We will return to
+   this systematically in Chapter 12.)
+
+** Exercise 4 (Constructing a probability measure on \(\mathbb{N}\) via geometric weights)
+While Example 2.4 showed that no *uniform* probability measure exists on \(\mathbb{N}\), show that
+setting \(p_n := 2^{-n}\) for \(n \in \mathbb{N}\) in Example 2.3 defines a valid probability measure
+\(\mathbb{P}\) on \((\mathbb{N}, 2^{\mathbb{N}})\), and compute \(\mathbb{P}(D)\) for the set
+\(D = \{2, 4, 6, \dots\}\) of all even positive integers.
+
+** Solution
+By Example 2.3, \(\mathbb{P}(A) = \sum_{n \in A} 2^{-n}\) is a measure on \((\mathbb{N}, 2^{\mathbb{N}})\).
+Its total mass is the geometric series
+\[
+\mathbb{P}(\mathbb{N}) = \sum_{n=1}^\infty 2^{-n} = \frac{1/2}{1 - 1/2} = 1,
+\]
+so \(\mathbb{P}\) is a probability measure. For the set of even positive integers
+\(D = \{2k : k \in \mathbb{N}\}\), we have
+\[
+\mathbb{P}(D) = \sum_{k=1}^\infty p_{2k} = \sum_{k=1}^\infty 2^{-2k} = \sum_{k=1}^\infty 4^{-k}
+= \frac{1/4}{1 - 1/4} = \frac{1}{3}.
+\]
+
+** Exercise 5 (Characterizing countable additivity via finite additivity + continuity)
+Let \((\Omega, \mathcal{F})\) be a measurable space, and suppose \(\mu : \mathcal{F} \to [0, \infty)\)
+is a *finitely additive* set function (meaning \(\mu(\emptyset) = 0\) and
+\(\mu(A \cup B) = \mu(A) + \mu(B)\) whenever \(A, B \in \mathcal{F}\) are disjoint). Prove that the
+following three statements are equivalent:
+1. \(\mu\) is countably additive (i.e. \(\mu\) is a finite measure).
+2. \(\mu\) is continuous from below: whenever \(E_n \uparrow E\) in \(\mathcal{F}\),
+   \(\mu(E_n) \to \mu(E)\).
+3. \(\mu\) is continuous from above at \(\emptyset\): whenever \(D_n \downarrow \emptyset\) in
+   \(\mathcal{F}\), \(\mu(D_n) \to 0\).
+
+** Solution
+- *\((1 \Rightarrow 2)\):* This is Proposition 2.6(i).
+- *\((2 \Rightarrow 3)\):* Suppose \(D_n \downarrow \emptyset\). Then \(E_n := \Omega \setminus D_n\)
+  satisfies \(E_n \uparrow \Omega\). By finite additivity on \(\Omega = D_n \cup E_n\) (and finiteness
+  \(\mu(\Omega) < \infty\)), we have \(\mu(D_n) = \mu(\Omega) - \mu(E_n) \to \mu(\Omega) - \mu(\Omega) = 0\).
+- *\((3 \Rightarrow 1)\):* Let \(A_1, A_2, \dots \in \mathcal{F}\) be pairwise disjoint, and set
+  \(A := \bigcup_{k=1}^\infty A_k\). For each \(n \in \mathbb{N}\), split \(A\) into the finite union
+  \(\bigcup_{k=1}^n A_k\) and the tail \(D_n := \bigcup_{k=n+1}^\infty A_k\). By finite additivity,
+  \[
+  \mu(A) = \mu\left(\bigcup_{k=1}^n A_k\right) + \mu(D_n) = \sum_{k=1}^n \mu(A_k) + \mu(D_n).
+  \]
+  Because the \(A_k\) are pairwise disjoint, any point \(\omega \in A\) belongs to a unique \(A_{k_0}\),
+  and therefore \(\omega \notin D_n\) for all \(n \ge k_0\). Thus \(D_n \downarrow \emptyset\). By
+  (3), \(\lim_{n \to \infty} \mu(D_n) = 0\), so taking \(n \to \infty\) gives
+  \(\mu(A) = \lim_{n \to \infty} \sum_{k=1}^n \mu(A_k) + 0 = \sum_{k=1}^\infty \mu(A_k)\).
+
+* Summary
+
+#+caption: Chapter 2 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept | Definition / Formula | Why it matters |
+|---------+----------------------+----------------|
+| Definition 2.1 (Measure \(\mu\)) | \(\mu(\emptyset)=0\) and \(\mu\bigl(\bigcup_{n=1}^\infty A_n\bigr) = \sum_{n=1}^\infty \mu(A_n)\) for pairwise disjoint \(A_n \in \mathcal{F}\) | Assigns nonnegative sizes in \([0, \infty]\) to measurable sets; when \(\mu(\Omega)=1\), \(\mu=\mathbb{P}\) is a probability measure |
+| Example 2.3 (Weighted / Dirac / \(\sigma\)-finite) | \(\mu(A) = \sum_{\omega \in A} p_\omega\); \(\delta_x(A) = \mathbf{1}_A(x)\); \(\sigma\)-finite if \(\Omega = \bigcup_{n=1}^\infty E_n\) with \(\mu(E_n) < \infty\) | Builds all discrete measures and introduces \(\sigma\)-finiteness (\(\lambda\) on \(\mathbb{R}\), \(\#\) on \(\mathbb{N}\)) |
+| Example 2.4 (No uniform law on \(\mathbb{N}\)) | \(\mathbb{P}(\{n\}) = c \implies \mathbb{P}(\mathbb{N}) = \sum_{n=1}^\infty c \in \{0, \infty\} \ne 1\) | Shows why countable additivity forbids an equally-likely distribution on a countably infinite set |
+| Lemma 2.5 (Monotonicity & Union bound) | \(A \subseteq B \implies \mu(A) \le \mu(B)\); \(\mu\bigl(\bigcup_{n=1}^\infty A_n\bigr) \le \sum_{n=1}^\infty \mu(A_n)\) | Works for *arbitrary* (overlapping) measurable sets via disjointification \(B_n = A_n \setminus \bigcup_{j<n} A_j\) |
+| Proposition 2.6(i) (Continuity from below) | \(A_n \uparrow A \implies \mu(A_n) \to \mu(A)\) | Always holds (even if limits are \(\infty\)) |
+| Proposition 2.6(ii) (Continuity from above) | \(A_n \downarrow A\) and \(\mu(A_1) < \infty \implies \mu(A_n) \to \mu(A)\) | Requires \(\mu(A_1) < \infty\) (Example 2.7 shows failure for \(A_n = \{n, n+1, \dots\}\) under counting measure) |
+| Null set / a.e. / a.s. | \(\mu(N) = 0\); property fails only on a subset of some measurable null set \(N\) | Singletons have Lebesgue measure \(0\) (Example 2.8);countable unions of null sets are null |
+
+*Key takeaways*
+
+- A \(\sigma\)-algebra \(\mathcal{F}\) tells us *which* sets are measurable; a measure \(\mu\) tells
+  us *how big* they are. The same \((\Omega, \mathcal{F})\) can carry many measures.
+- Never subtract \(\infty - \infty\)! When proving inequalities for measures, decompose larger sets
+  into disjoint pieces (\(B = A \cup (B \setminus A)\)) and only subtract \(\mu(A)\) when you have
+  explicitly checked \(\mu(A) < \infty\).
+- Whenever you are handed an overlapping sequence of sets \(A_1, A_2, \dots\), think of the
+  *disjointification trick*: \(B_1 = A_1\) and \(B_n = A_n \setminus \bigcup_{j=1}^{n-1} A_j\).
+- Countable additivity applies to *countable* unions, not uncountable ones: \([0, 1]\) has Lebesgue
+  measure \(1\) even though every single point \(\{x\} \subseteq [0, 1]\) has Lebesgue measure \(0\).

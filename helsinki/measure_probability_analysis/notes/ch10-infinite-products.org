@@ -1,0 +1,660 @@
+:PROPERTIES:
+:ID:       10a9b8c7-6d5e-4f3a-8b9c-0d1e2f3a4b10
+:ROAM_ALIASES: "MAST31051 Chapter 10" "Infinitely Many Coordinates Notes"
+:END:
+#+title: Chapter 10: Infinitely Many Coordinates
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch10:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch09-product-measures.org][← Chapter 9]] | [[file:ch11-nonmeasurable-paths.org][Chapter 11 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In Chapter 9 we built finite product measures \(\mu_1 \otimes \cdots \otimes \mu_n\) on \(S_1 \times \cdots \times S_n\). A finite product space describes *finitely many* observations—for instance, tossing a coin \(n = 100\) times.
+
+In probability theory, however, we constantly need to talk about *infinitely many* observations all living on *one single probability space* \((\Omega, \mathcal{F}, \mathbb{P})\) at the same time:
+- "What is the probability that in an *infinite* sequence of fair coin tosses, heads occurs infinitely many times?"
+- "Does the sample average \(\frac{1}{n}(X_1 + \cdots + X_n)\) of an infinite sequence of independent random variables \(X_1, X_2, \dots\) converge as \(n \to \infty\)?" (Chapters 15 and 16).
+- "Can we construct a continuous-time stochastic process \((X_t)_{t \in [0, \infty)}\) (where the index set \(I = [0, \infty)\) is even uncountable!) given the joint distributions of \((X_{t_1}, \dots, X_{t_n})\) at all finite collections of times?"
+
+In all three situations, it is completely natural to prescribe the probabilities of *finite-coordinate events* ("cylinder sets" that only look at finitely many coordinates at a time). For example, the probability that the first \(n\) coin tosses land in a specific pattern \((a_1, \dots, a_n) \in \{0, 1\}^n\) must be \(2^{-n}\). That immediately gives a well-defined, finitely additive set function \(\mathbb{P}_0\) on the algebra \(\mathcal{A}\) of cylinder sets.
+
+*The central mathematical obstacle:* To extend \(\mathbb{P}_0\) from the algebra \(\mathcal{A}\) of finite-coordinate cylinders to a countably additive probability measure \(\mathbb{P}\) on the generated \(\sigma\)-algebra \(\mathcal{F} = \sigma(\mathcal{A})\) via Carathéodory's extension theorem (Chapter 5, Theorem 5.2), we must prove that \(\mathbb{P}_0\) is a *premeasure*—which by Proposition 5.5 reduces to verifying *continuity at the empty set*:
+\[
+A_n \in \mathcal{A},\quad A_1 \supseteq A_2 \supseteq \cdots,\quad \bigcap_{n=1}^\infty A_n = \emptyset \quad \Longrightarrow \quad \lim_{n \to \infty} \mathbb{P}_0(A_n) = 0.
+\]
+Equivalently (by contraposition): if \(A_1 \supseteq A_2 \supseteq \cdots\) is a decreasing sequence of cylinder sets whose probabilities stay bounded away from zero (\(\mathbb{P}_0(A_n) \ge \varepsilon > 0\) for all \(n\)), we must prove that their infinite intersection \(\bigcap_{n=1}^\infty A_n\) is *nonempty*—i.e., we must construct an actual infinite sequence \(\omega = (\omega_1, \omega_2, \dots) \in \bigcap_{n=1}^\infty A_n\)!
+
+This chapter solves this extension problem in three progressively broader settings:
+1. *The fair-coin space \(\Omega = \{0, 1\}^{\mathbb{N}}\) (Section 10.1):* Because each coordinate has only *two* possible values (\(0\) or \(1\)), a simple pigeonhole / diagonalization argument (Lemma 10.1, which is really the compactness of \(\{0, 1\}^{\mathbb{N}}\)) shows that *any* decreasing sequence of nonempty finite-coordinate events has nonempty intersection!
+2. *Countable products \(\prod_{j=1}^\infty S_j\) of arbitrary probability spaces (Section 10.2, Theorem 10.4):* On a general measurable space \((S_j, \mathcal{S}_j, \mu_j)\), there is no topology or compactness at all. Instead, we use a magical analytic argument: we integrate out coordinates \(k+1, \dots, n\) using Tonelli's theorem (Chapter 9) and pass to the limit \(n \to \infty\) using the Dominated Convergence Theorem (Chapter 6) to pick coordinates \(s_1, s_2, \dots\) one by one so that the conditional probability of staying inside every \(A_n\) remains strictly positive!
+3. *Consistent finite-dimensional laws on \(\mathbb{R}^I\) for an arbitrary index set \(I\) (Section 10.3, Theorem 10.5 — Kolmogorov's extension theorem):* When the coordinates are *not* independent (or when \(I\) is uncountable, like \(I = [0, 1]\)), we can no longer integrate out coordinates using product measures. Instead, because the coordinates take values in \(\mathbb{R}\), we use *inner regularity by compact sets* (Theorem 8.1 from Chapter 8!) together with a diagonal subsequence argument to extract a point in \(\bigcap_{n=1}^\infty A_n\).
+
+** Probability motivation
+
+Without Theorem 10.4 and Theorem 10.5, modern probability theory could barely begin:
+- Whenever a textbook writes "Let \(X_1, X_2, \dots\) be an infinite sequence of independent random variables with distributions \(\mu_1, \mu_2, \dots\)," *Theorem 10.4* is the theorem that guarantees a probability space \((\Omega, \mathcal{F}, \mathbb{P})\) and random variables \(X_1, X_2, \dots\) with those distributions actually exist! Namely, we take \(\Omega = \prod_{j=1}^\infty \mathbb{R}\), \(\mathbb{P} = \bigotimes_{j=1}^\infty \mu_j\), and let \(X_j(\omega) = \omega_j\) be the \(j\)-th coordinate map.
+- Whenever we construct a Markov chain, a Gaussian process, a Poisson process, or Brownian motion from its finite-dimensional marginal distributions, *Kolmogorov's extension theorem (Theorem 10.5)* is the engine that turns consistent finite-dimensional distributions into a single probability measure on the space of trajectories \(\mathbb{R}^I\).
+- At the same time, Remark 10.7 previews the crucial warning of Chapter 11: when the index set \(I\) is uncountable (such as \(I = [0, 1]\)), the product \(\sigma\)-algebra on \(\mathbb{R}^I\) only sees countably many coordinates at a time, so whole-path properties like \(\{\omega \in \mathbb{R}^{[0,1]} : t \mapsto \omega(t) \text{ is continuous}\}\) require extra care!
+
+** Roadmap
+
+- *10.1 The fair-coin space:* Infinite binary sequences \(\Omega = \{0, 1\}^{\mathbb{N}}\), initial cylinders \(C(a)\), the algebra \(\mathcal{A}\) of finite-coordinate events, Lemma 10.1 (nonempty intersection of decreasing nonempty cylinders via bit-by-bit selection), construction of the fair-coin measure \(\mathbb{P}\), and basic almost-sure events (Examples 10.2 and 10.3).
+- *10.2 Countable products of arbitrary probability spaces:* Finite-coordinate cylinders in \(\Omega = \prod_{j \ge 1} S_j\), Theorem 10.4 (the countable product measure \(\bigotimes_{j \ge 1} \mu_j\)), and its purely measure-theoretic proof by integrating out unused coordinates.
+- *10.3 Consistent finite-dimensional laws:* The function space \(\mathbb{R}^I\), coordinate restrictions \(\pi_J\), the consistency condition for a family of Borel probability measures \((\nu_J)\), Theorem 10.5 (Kolmogorov's extension theorem), Example 10.6 (dependent coordinates), and Remark 10.7.
+
+** What you need from earlier chapters
+
+- Uniqueness of finite measures on a \(\pi\)-system (Theorem 4.4) and initial cylinders (Example 4.9): [[file:ch04-uniqueness.org][Chapter 4]].
+- Algebras, premeasures, continuity at \(\emptyset\) (Proposition 5.5), and Carathéodory's extension theorem (Theorem 5.2): [[file:ch05-construction.org][Chapter 5]].
+- Dominated Convergence Theorem (Theorem 6.15) and Lemma 6.8: [[file:ch06-integration.org][Chapter 6]].
+- Inner regularity of finite Borel measures on \(\mathbb{R}^n\) by compact sets (Theorem 8.1): [[file:ch08-regularity.org][Chapter 8]].
+- Finite product measures and Tonelli's theorem (Theorems 9.2 and 9.4): [[file:ch09-product-measures.org][Chapter 9]].
+
+** Background: Cantor's Diagonal / Sequential Extraction Trick
+
+In both Lemma 10.1 (for bits in \(\{0, 1\}\)) and Step 4 of Theorem 10.5 (for points in compact subsets \(K_j \subseteq \mathbb{R}^j\)), we have a sequence of elements \(\omega^{(1)}, \omega^{(2)}, \omega^{(3)}, \dots\) and want to extract a single subsequence along which *every* coordinate \(j = 1, 2, 3, \dots\) converges (or stabilizes). How do we do infinitely many subsequence extractions without running out of terms?
+
+#+begin_example
+   Stage 1 (coord 1 converges):  n_{1,1} < n_{1,2} < n_{1,3} < ...   (infinite index set I_1)
+                                              |
+   Stage 2 (coords 1,2 converge):          n_{2,1} < n_{2,2} < ...   (infinite subset I_2 subset I_1)
+                                                        |
+   Stage 3 (coords 1,2,3 converge):                  n_{3,1} < ...   (infinite subset I_3 subset I_2)
+
+   Diagonal selection: pick N_1 in I_1, N_2 in I_2 (with N_2 > N_1), N_3 in I_3 (with N_3 > N_2), ...
+   For any fixed j, all terms N_k with k >= j lie in I_k subset I_j, so their first j coordinates converge!
+#+end_example
+
+This is *Cantor's diagonal subsequence trick*: at each stage \(j\) we keep an infinite set of indices \(I_j \subseteq I_{j-1}\) along which the first \(j\) coordinates converge, and then we pick one index \(N_k \in I_k\) at each stage with \(N_1 < N_2 < N_3 < \cdots\). Because \(N_k \in I_k \subseteq I_j\) for all \(k \ge j\), the tail \((N_k)_{k \ge j}\) is a subsequence of the stage-\(j\) indices \(I_j\), so its first \(j\) coordinates are guaranteed to converge!
+
+* 10.1 The fair-coin space
+
+** Intuition
+
+Imagine tossing a fair coin infinitely many times, recording \(1\) for heads and \(0\) for tails. A single complete outcome of the experiment is an infinite binary sequence
+\[
+\omega = (\omega_1, \omega_2, \omega_3, \dots) \in \{0, 1\}^{\mathbb{N}}.
+\]
+What is the simplest kind of event we can describe? An event that specifies the outcomes of the *first \(n\) tosses*, say \(\omega_1 = a_1, \dots, \omega_n = a_n\), and leaves all later tosses \(\omega_{n+1}, \omega_{n+2}, \dots\) completely unconstrained. Such a set is called an *initial cylinder* \(C(a_1, \dots, a_n)\). For instance:
+- \(C(1) = \{\omega : \omega_1 = 1\}\) (first toss is heads; mass \(1/2\));
+- \(C(1, 0, 1) = \{\omega : \omega_1 = 1, \omega_2 = 0, \omega_3 = 1\}\) (first three tosses are H, T, H; mass \(1/2^3 = 1/8\)).
+
+#+begin_example
+                           Omega = C(empty) [mass 1]
+                          /                         \
+                C(0) [1/2]                           C(1) [1/2]
+               /          \                         /          \
+        C(0,0) [1/4]   C(0,1) [1/4]          C(1,0) [1/4]   C(1,1) [1/4]
+#+end_example
+
+More generally, any event whose truth or falsity can be decided after seeing some finite number \(n\) of tosses is a *finite union of length-\(n\) initial cylinders*. These finite-coordinate events form an algebra \(\mathcal{A}\). Why does the natural probability assignment on \(\mathcal{A}\) satisfy continuity at the empty set? Because of a remarkable combinatorial/topological property of \(\{0, 1\}^{\mathbb{N}}\) (Lemma 10.1): if \(A_1 \supseteq A_2 \supseteq A_3 \supseteq \cdots\) is a decreasing sequence of nonempty events in \(\mathcal{A}\), their intersection \(\bigcap_{n=1}^\infty A_n\) can *never* be empty! Therefore, the *only* way a decreasing sequence \(A_n \in \mathcal{A}\) can have \(\bigcap_{n=1}^\infty A_n = \emptyset\) is if \(A_n = \emptyset\) from some finite index \(N\) onwards—in which case \(\mathbb{P}_0(A_n) = 0\) for all \(n \ge N\), so \(\lim_{n \to \infty} \mathbb{P}_0(A_n) = 0\) trivially!
+
+** Initial Cylinders and the Algebra \(\mathcal{A}\)
+
+Let \(\Omega = \{0, 1\}^{\mathbb{N}}\). Its elements are infinite binary sequences \(\omega = (\omega_1, \omega_2, \dots)\) with \(\omega_j \in \{0, 1\}\). For a finite binary word \(a = (a_1, \dots, a_n) \in \{0, 1\}^n\), write
+\[
+C(a) := \{\omega \in \Omega : \omega_1 = a_1, \dots, \omega_n = a_n\}.
+\]
+These *initial cylinders* appeared already in Example 4.9. We also include the empty word (\(n = 0\)), whose cylinder is the whole space \(\Omega\).
+
+Let \(\mathcal{A}\) be the collection of all *finite unions of initial cylinders*.
+- \(\mathcal{A}\) consists precisely of the subsets of \(\Omega\) whose membership can be decided from some finite initial segment \((\omega_1, \dots, \omega_n)\).
+- *How to compare two sets in \(\mathcal{A}\) (common refinement):* Every length-\(n\) cylinder \(C(a_1, \dots, a_n)\) splits into the disjoint union of two length-\((n+1)\) cylinders:
+  \[
+  C(a_1, \dots, a_n) = C(a_1, \dots, a_n, 0) \sqcup C(a_1, \dots, a_n, 1).
+  \]
+  Iterating this splitting, the \(2^n\) cylinders of length \(n\) form a *disjoint partition* of \(\Omega\), and any set \(A \in \mathcal{A}\) determined by the first \(m \le n\) coordinates can be written uniquely as a disjoint union of length-\(n\) cylinders. Thus, given any two sets \(A, B \in \mathcal{A}\) determined at lengths \(m\) and \(n\), we can refine both to the common length \(N = \max(m, n)\), showing immediately that \(\mathcal{A}\) is an *algebra* (closed under complements, finite unions, and finite intersections).
+- *Prescribing the cylinder masses:* Give each length-\(n\) cylinder \(C(a)\) mass \(2^{-n}\), and give each disjoint union of length-\(n\) cylinders the sum of their masses.
+  - *Well-definedness:* Refining a length-\(n\) cylinder \(C(a)\) to length \(n+1\) splits it into two disjoint pieces \(C(a, 0)\) and \(C(a, 1)\), each of mass \(2^{-(n+1)}\), and \(2^{-(n+1)} + 2^{-(n+1)} = 2^{-n}\). By induction, refining any description of \(A \in \mathcal{A}\) from length \(n\) to length \(N > n\) leaves the sum of cylinder masses unchanged.
+  - *Finite additivity:* If \(A, B \in \mathcal{A}\) are disjoint, refine both to a common length \(N\); then \(A\) and \(B\) are disjoint unions of distinct length-\(N\) cylinders, so the mass of \(A \sqcup B\) is the sum of the masses of \(A\) and \(B\).
+
+** Continuity at the Empty Set via Bit-by-Bit Selection
+
+#+begin_quote
+*Lemma 10.1 (A decreasing sequence of finite-coordinate events).* If \(A_n \in \mathcal{A}\) are decreasing (\(A_1 \supseteq A_2 \supseteq \cdots\)) and all nonempty (\(A_n \ne \emptyset\) for every \(n\)), then
+\[
+\bigcap_{n=1}^\infty A_n \ne \emptyset.
+\]
+#+end_quote
+
+** Proof of Lemma 10.1 (unpacked step by step)
+
+Since each \(A_n\) is nonempty, choose one sequence \(\omega^{(n)} = (\omega_1^{(n)}, \omega_2^{(n)}, \dots) \in A_n\) for each \(n \ge 1\). We construct a single sequence \(\omega = (\omega_1, \omega_2, \dots) \in \bigcap_{n=1}^\infty A_n\) bit by bit using the pigeonhole principle:
+- *First bit:* As \(n\) ranges over the infinite set \(\mathbb{N}\), the first bit \(\omega_1^{(n)}\) takes only two possible values (\(0\) or \(1\)). Therefore, at least one of those two values—call it \(\omega_1 \in \{0, 1\}\)—must occur for *infinitely many* indices \(n\)! Retain only that infinite set of indices \(I_1 := \{n \in \mathbb{N} : \omega_1^{(n)} = \omega_1\}\).
+- *Second bit:* As \(n\) ranges over the infinite set \(I_1\), the second bit \(\omega_2^{(n)}\) again takes only two possible values (\(0\) or \(1\)). Therefore, at least one value \(\omega_2 \in \{0, 1\}\) occurs for infinitely many \(n \in I_1\). Retain that infinite subset of indices \(I_2 := \{n \in I_1 : \omega_2^{(n)} = \omega_2\} \subseteq I_1\).
+- *Continue inductively:* At stage \(m\), having retained an infinite set of indices \(I_{m-1}\), choose \(\omega_m \in \{0, 1\}\) so that \(I_m := \{n \in I_{m-1} : \omega_m^{(n)} = \omega_m\} \subseteq I_{m-1}\) is still infinite.
+
+Let \(\omega := (\omega_1, \omega_2, \omega_3, \dots) \in \{0, 1\}^{\mathbb{N}}\) be the sequence formed by the successively selected bits. We claim that \(\omega \in A_k\) for *every* \(k \ge 1\):
+1. Fix \(k \ge 1\). Since \(A_k \in \mathcal{A}\) is a finite union of initial cylinders, membership in \(A_k\) depends only on some first \(m\) bits: any two sequences that agree in their first \(m\) bits either both belong to \(A_k\) or both fail to belong to \(A_k\).
+2. Look at the retained index set \(I_m\) after stage \(m\). Because \(I_m\) is an *infinite* subset of \(\mathbb{N}\), it contains at least one index \(n \ge k\)!
+3. For this index \(n \in I_m\) with \(n \ge k\):
+   - Because \(n \ge k\) and the sets are decreasing (\(A_n \subseteq A_k\)), we have \(\omega^{(n)} \in A_n \subseteq A_k\).
+   - Because \(n \in I_m \subseteq I_{m-1} \subseteq \cdots \subseteq I_1\), the sequence \(\omega^{(n)}\) has the *exact same first \(m\) bits* as \(\omega\):
+     \[
+     (\omega_1^{(n)}, \dots, \omega_m^{(n)}) = (\omega_1, \dots, \omega_m).
+     \]
+   - Since membership in \(A_k\) is decided entirely by the first \(m\) bits and \(\omega^{(n)} \in A_k\), it follows that \(\omega \in A_k\) as well!
+Since \(k \ge 1\) was arbitrary, \(\omega \in \bigcap_{k=1}^\infty A_k\), so \(\bigcap_{k=1}^\infty A_k \ne \emptyset\). \(\blacksquare\)
+
+*Consequence: The fair-coin probability measure \(\mathbb{P}\).*
+Suppose \(A_n \in \mathcal{A}\) is a decreasing sequence with \(\bigcap_{n=1}^\infty A_n = \emptyset\). By the contrapositive of Lemma 10.1, the sets \(A_n\) cannot all be nonempty: there is some \(N\) such that \(A_n = \emptyset\) for all \(n \ge N\). Their prescribed masses therefore equal \(0\) for \(n \ge N\) and hence tend to \(0\) as \(n \to \infty\).
+- By Proposition 5.5, this continuity at \(\emptyset\) makes the finitely additive cylinder prescription a *premeasure* on \(\mathcal{A}\).
+- By Carathéodory's extension theorem (Theorem 5.2), it extends to a probability measure \(\mathbb{P}\) on the generated \(\sigma\)-algebra \(\mathcal{F} := \sigma(\mathcal{A})\), and finite-measure uniqueness on the \(\pi\)-system of initial cylinders (Theorem 4.4) shows that \(\mathbb{P}\) is the unique probability measure on \((\Omega, \mathcal{F})\) assigning \(\mathbb{P}(C(a)) = 2^{-n}\) to every length-\(n\) cylinder \(C(a)\)!
+
+** Examples from the notes
+
+#+begin_quote
+*Example 10.2 (A prescribed infinite sequence).* For each fixed sequence \(\bar{\omega} = (\bar{\omega}_1, \bar{\omega}_2, \dots) \in \Omega\), its singleton \(\{\bar{\omega}\}\) is the decreasing intersection of its initial cylinders:
+\[
+\{\bar{\omega}\} = \bigcap_{n=1}^\infty C(\bar{\omega}_1, \dots, \bar{\omega}_n).
+\]
+Hence \(\{\bar{\omega}\} \in \mathcal{F}\), and by continuity of \(\mathbb{P}\) from above (Proposition 2.4),
+\[
+\mathbb{P}(\{\bar{\omega}\}) = \lim_{n \to \infty} \mathbb{P}\big(C(\bar{\omega}_1, \dots, \bar{\omega}_n)\big) = \lim_{n \to \infty} 2^{-n} = 0.
+\]
+The sample space \(\Omega = \bigcup_{\bar{\omega} \in \Omega} \{\bar{\omega}\}\) is the union of these zero-probability singletons, with \(\mathbb{P}(\Omega) = 1\), because it is an *uncountable* union (recall \(\{0, 1\}^{\mathbb{N}}\) has the cardinality of the continuum \(\mathbb{R}\)). Countable additivity does not require an uncountable union of zero-probability sets to have probability zero!
+#+end_quote
+
+#+begin_quote
+*Example 10.3 (Infinitely many ones).* What is the probability that an infinite sequence of fair coin tosses produces infinitely many ones (heads)?
+- Fix \(m \ge 0\), and consider the event \(E_m\) that *every bit after position \(m\) is zero*:
+  \[
+  E_m := \{\omega \in \Omega : \omega_{m+1} = \omega_{m+2} = \cdots = 0\} = \bigcap_{k=1}^\infty \{\omega \in \Omega : \omega_{m+1} = \cdots = \omega_{m+k} = 0\}.
+  \]
+  For each \(k \ge 1\), the event \(\{\omega_{m+1} = \cdots = \omega_{m+k} = 0\}\) specifies \(k\) bits (leaving the first \(m\) bits free, so it is the disjoint union of \(2^m\) cylinders of length \(m + k\)) and therefore has probability \(2^m \cdot 2^{-(m+k)} = 2^{-k}\). By continuity from above,
+  \[
+  \mathbb{P}(E_m) = \lim_{k \to \infty} 2^{-k} = 0.
+  \]
+- Now, a sequence \(\omega\) has *only finitely many ones* if and only if there is some index \(m \ge 0\) after which all bits are zero:
+  \[
+  \{\omega \in \Omega : \text{only finitely many } 1\text{'s occur}\} = \bigcup_{m=0}^\infty E_m.
+  \]
+  As a *countable* union of zero-probability events \(E_m\), this event has probability \(0\)! Taking complements,
+  \[
+  \mathbb{P}(\{\omega \in \Omega : \text{infinitely many } 1\text{'s occur}\}) = 1 - 0 = 1.
+  \]
+Thus infinitely many ones occur *almost surely* (and by the exact same proof, infinitely many zeros also occur almost surely!).
+#+end_quote
+
+* 10.2 Countable products of arbitrary probability spaces
+
+** Intuition
+
+In Section 10.1, each coordinate took values in the two-point set \(\{0, 1\}\), so Lemma 10.1 could pick a common point \(\omega \in \bigcap_{n=1}^\infty A_n\) by simple pigeonholing. What if we want a countable product of *arbitrary* probability spaces \((S_j, \mathcal{S}_j, \mu_j)\) (\(j \in \mathbb{N}\)), where the spaces \(S_j\) might be infinite and carry *no topology or compactness at all*?
+
+This is Theorem 10.4. Its proof is one of the gems of measure theory. Suppose for contradiction that we have decreasing finite-coordinate cylinders \(A_1 \supseteq A_2 \supseteq \cdots\) (where \(A_n\) depends on the first \(n\) coordinates, with base \(B_n \subseteq S_1 \times \cdots \times S_n\)) whose probabilities stay bounded away from zero:
+\[
+(\mu_1 \otimes \cdots \otimes \mu_n)(B_n) \ge \varepsilon > 0 \quad \text{for all } n \ge 1,
+\]
+yet \(\bigcap_{n=1}^\infty A_n = \emptyset\). How can we find a sequence \(s = (s_1, s_2, \dots) \in \bigcap_{n=1}^\infty A_n\) without any compactness?
+
+The idea is *backward integration of unused coordinates* (a conditional-probability lookahead!):
+- For each \(n \ge k\), define \(f_{n, k}(s_1, \dots, s_k)\) to be the "slice probability" of staying in \(B_n\) given the prefix \((s_1, \dots, s_k)\), obtained by integrating \(\mathbf{1}_{B_n}(s_1, \dots, s_n)\) over the remaining coordinates \(s_{k+1}, \dots, s_n\):
+  \[
+  f_{n, k}(s_1, \dots, s_k) := \int_{S_{k+1}} \cdots \int_{S_n} \mathbf{1}_{B_n}(s_1, \dots, s_k, s_{k+1}, \dots, s_n) \, d\mu_n(s_n) \cdots d\mu_{k+1}(s_{k+1}).
+  \]
+- Because \(A_{n+1} \subseteq A_n\), as \(n\) increases the condition gets stricter, so \(f_{n, k}(s_1, \dots, s_k)\) *decreases* with \(n\) to a limit \(h_k(s_1, \dots, s_k) := \lim_{n \to \infty} f_{n, k}(s_1, \dots, s_k) \in [0, 1]\). Intuitively, \(h_k(s_1, \dots, s_k)\) is the asymptotic survival probability of the prefix \((s_1, \dots, s_k)\) for *all* future stages \(n\)!
+- By Tonelli (for finite products) and the Dominated Convergence Theorem (as \(n \to \infty\), since \(0 \le f_{n, k+1} \le 1\) on the probability space \(S_{k+1}\)), these survival functions satisfy the exact one-step recursion
+  \[
+  h_k(s_1, \dots, s_k) = \int_{S_{k+1}} h_{k+1}(s_1, \dots, s_k, t) \, d\mu_{k+1}(t) \qquad \text{at EVERY prefix } (s_1, \dots, s_k)!
+  \]
+- At \(k = 0\) (no coordinates fixed yet), \(h_0 = \lim_{n \to \infty} \text{mass}(A_n) \ge \varepsilon > 0\). Since \(\int_{S_1} h_1(t) \, d\mu_1(t) = h_0 > 0\), the integrand \(h_1\) cannot be identically zero—so there exists \(s_1 \in S_1\) with \(h_1(s_1) > 0\)! Then \(\int_{S_2} h_2(s_1, t) \, d\mu_2(t) = h_1(s_1) > 0\) implies there exists \(s_2 \in S_2\) with \(h_2(s_1, s_2) > 0\), and so on! And because \(0 < h_k(s_1, \dots, s_k) \le f_{k, k}(s_1, \dots, s_k) = \mathbf{1}_{B_k}(s_1, \dots, s_k)\), every prefix \((s_1, \dots, s_k)\) belongs to \(B_k\), so \(s = (s_1, s_2, \dots) \in \bigcap_{k=1}^\infty A_k\)!
+
+#+begin_example
+   k = 0:  h_0 >= epsilon > 0
+             |  h_0 = int_{S_1} h_1(t) d mu_1(t) > 0  ==>  pick s_1 in S_1 with h_1(s_1) > 0
+             v
+   k = 1:  h_1(s_1) > 0   (and <= 1_{B_1}(s_1), so s_1 in B_1!)
+             |  h_1(s_1) = int_{S_2} h_2(s_1, t) d mu_2(t) > 0  ==>  pick s_2 in S_2 with h_2(s_1, s_2) > 0
+             v
+   k = 2:  h_2(s_1, s_2) > 0   (and <= 1_{B_2}(s_1, s_2), so (s_1, s_2) in B_2!)
+             |
+             v  ... continues forever to build (s_1, s_2, s_3, ...) in cap_{k=1}^infty A_k!
+#+end_example
+
+** Product \(\sigma\)-Algebra and Finite-Coordinate Cylinders
+
+Let \((S_j, \mathcal{S}_j, \mu_j)\), \(j \in \mathbb{N}\), be probability spaces.
+- The *product set* \(\Omega = \prod_{j \ge 1} S_j\) consists of all infinite sequences \(\omega = (\omega_1, \omega_2, \dots)\) with \(\omega_j \in S_j\) for each \(j \ge 1\).
+- The *product \(\sigma\)-algebra* \(\bigotimes_{j \ge 1} \mathcal{S}_j\) on \(\Omega\) is the smallest \(\sigma\)-algebra generated by all coordinate inverse images \(\{\omega \in \Omega : \omega_j \in A_j\}\) (\(j \in \mathbb{N}, A_j \in \mathcal{S}_j\)).
+- A *finite-coordinate cylinder* is a subset of \(\Omega\) of the form
+  \[
+  C_n(B) := \{\omega \in \Omega : (\omega_1, \dots, \omega_n) \in B\}, \qquad B \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n.
+  \]
+  We call \(B\) the *base* of the cylinder in \(S_1 \times \cdots \times S_n\).
+- *Why do finite-coordinate cylinders form an algebra generating \(\bigotimes_{j \ge 1} \mathcal{S}_j\)?*
+  If one cylinder has base \(B \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_m\) and another has base \(B' \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n\) with \(m < n\), we can *lift* the first base to the first \(n\) coordinates by replacing \(B\) with \(B \times S_{m+1} \times \cdots \times S_n \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n\) without changing the cylinder set in \(\Omega\)! Once two cylinders are written over the same number of coordinates \(n\), their union, intersection, and set difference correspond to the union, intersection, and set difference of their bases in the \(\sigma\)-algebra \(\mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n\). Thus the collection of finite-coordinate cylinders is an algebra (in fact, each fixed-\(n\) family is already a \(\sigma\)-algebra!), and since it contains all coordinate preimages \(\{\omega_n \in A_n\} = C_n(S_1 \times \cdots \times S_{n-1} \times A_n)\) and is contained in \(\bigotimes_{j \ge 1} \mathcal{S}_j\), it generates \(\bigotimes_{j \ge 1} \mathcal{S}_j\).
+
+** The Countable Product Measure Theorem
+
+#+begin_quote
+*Theorem 10.4 (Countable product measure).* Let \((S_j, \mathcal{S}_j, \mu_j)\), \(j \in \mathbb{N}\), be probability spaces. There is a unique probability measure \(\bigotimes_{j \ge 1} \mu_j\) on the product \(\sigma\)-algebra \(\bigotimes_{j \ge 1} \mathcal{S}_j\) whose restriction to the first \(n\) coordinates is \(\mu_1 \otimes \cdots \otimes \mu_n\) for every \(n \ge 1\):
+\[
+\left(\bigotimes_{j \ge 1} \mu_j\right)\big(\{\omega \in \Omega : (\omega_1, \dots, \omega_n) \in B\}\big) = (\mu_1 \otimes \cdots \otimes \mu_n)(B) \qquad \forall B \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n.
+\]
+#+end_quote
+
+** Proof of Theorem 10.4 (unpacked step by step)
+
+*Step 1. Prescribe the cylinder masses.*
+Assign to a cylinder \(C_n(B) = \{\omega : (\omega_1, \dots, \omega_n) \in B\}\) with base \(B \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n\) the finite-product measure
+\[
+\mathbb{P}_0(C_n(B)) := (\mu_1 \otimes \cdots \otimes \mu_n)(B).
+\]
+Why is this well-defined when we lift \(B\) to include unused coordinates \(S_{n+1} \times \cdots \times S_{n+r}\)? Because \(\mu_{n+1}(S_{n+1}) = \cdots = \mu_{n+r}(S_{n+r}) = 1\) (each factor is a *probability* space!), so adding unused coordinates multiplies the mass of any rectangle \(A_1 \times \cdots \times A_n\) by \(1\), and by finite-product uniqueness (or (9.1)),
+\[
+(\mu_1 \otimes \cdots \otimes \mu_{n+r})(B \times S_{n+1} \times \cdots \times S_{n+r}) = (\mu_1 \otimes \cdots \otimes \mu_n)(B) \cdot 1 = (\mu_1 \otimes \cdots \otimes \mu_n)(B)
+\]
+for every measurable base \(B \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n\). Lifting any two disjoint cylinders to a common coordinate length \(N\) also shows that \(\mathbb{P}_0\) is finitely additive on the algebra of cylinders. By Proposition 5.5, to show that \(\mathbb{P}_0\) is a premeasure, we only need to prove *continuity at the empty set*.
+
+*Step 2. Arrange a decreasing sequence by coordinates.*
+Suppose for contradiction that \(E_1 \supseteq E_2 \supseteq \cdots\) is a decreasing sequence of finite-coordinate cylinders with \(\bigcap_{j=1}^\infty E_j = \emptyset\), but \(\mathbb{P}_0(E_j) \ge \varepsilon > 0\) for all \(j \ge 1\).
+A minor annoyance is that \(E_j\) might depend on \(m_j\) coordinates where \(m_j\) is larger than \(j\). We tidy this up so that the \(n\)-th cylinder depends on at most the first \(n\) coordinates:
+- For each \(j \ge 1\), let \(m_j \in \mathbb{N}\) be the number of coordinates determining \(E_j\).
+- For each \(n \ge 1\), define
+  \[
+  A_n := \bigcap \{E_j : j \le n \text{ and } m_j \le n\},
+  \]
+  with the convention that an intersection of an empty family of sets is the whole space \(\Omega\).
+Let us check four properties of the new sequence \((A_n)_{n \ge 1}\):
+1. *\(A_{n+1} \subseteq A_n\):* Every condition \(E_j\) imposed at stage \(n\) (\(j \le n, m_j \le n\)) remains imposed at stage \(n+1\) (\(j \le n+1, m_j \le n+1\)), so \(A_{n+1} \subseteq A_n\).
+2. *\(A_n\) depends only on the first \(n\) coordinates:* Every \(E_j\) appearing in the intersection for \(A_n\) has \(m_j \le n\), so \(A_n\) is a cylinder over the first \(n\) coordinates.
+3. *\(\mathbb{P}_0(A_n) \ge \varepsilon\):* If the intersection defining \(A_n\) has no members, \(A_n = \Omega\) has mass \(1 \ge \varepsilon\). Otherwise, since the sets \(E_j\) are decreasing, a finite intersection of members \(E_j\) simply equals the member \(E_j\) with the largest index \(j\), which has mass \(\mathbb{P}_0(E_j) \ge \varepsilon\).
+4. *\(\bigcap_{n=1}^\infty A_n = \emptyset\):* Each fixed cylinder \(E_j\) enters the intersection defining \(A_n\) as soon as \(n \ge \max\{j, m_j\}\). Therefore \(\bigcap_{n=1}^\infty A_n = \bigcap_{j=1}^\infty E_j = \emptyset\).
+
+*Step 3. Integrate the unused coordinates.*
+Write the base of \(A_n\) in \(S_1 \times \cdots \times S_n\) as \(B_n \in \mathcal{S}_1 \otimes \cdots \otimes \mathcal{S}_n\).
+For each \(n \ge 1\) and \(0 \le k \le n\), integrate the indicator \(\mathbf{1}_{B_n}\) over the last \(n - k\) coordinates \(k+1, \dots, n\), leaving a measurable function \(f_{n, k} : S_1 \times \cdots \times S_k \to [0, 1]\) of the first \(k\) coordinates:
+- At the top endpoint \(k = n\) (no coordinates integrated out), set \(f_{n, n}(s_1, \dots, s_n) := \mathbf{1}_{B_n}(s_1, \dots, s_n)\).
+- For \(0 \le k < n\), define
+  \[
+  f_{n, k}(s_1, \dots, s_k) := \int_{S_{k+1} \times \cdots \times S_n} \mathbf{1}_{B_n}(s_1, \dots, s_k, s_{k+1}, \dots, s_n) \, d(\mu_{k+1} \otimes \cdots \otimes \mu_n)(s_{k+1}, \dots, s_n).
+  \]
+- At the bottom endpoint \(k = 0\) (all \(n\) coordinates integrated out), \(f_{n, 0}\) is simply a constant number: the cylinder mass \(\mathbb{P}_0(A_n) \ge \varepsilon\)!
+
+Let us check the key properties of the functions \(f_{n, k}\):
+1. *One-step integral relation:* By Tonelli's theorem for finite products (Section 9.4), integrating over \(S_{k+1} \times \cdots \times S_n\) is the same as first integrating over \(S_{k+2} \times \cdots \times S_n\) (which gives \(f_{n, k+1}\)) and then integrating in coordinate \(k+1\):
+   \[
+   f_{n, k}(s_1, \dots, s_k) = \int_{S_{k+1}} f_{n, k+1}(s_1, \dots, s_k, t) \, d\mu_{k+1}(t).
+   \]
+2. *Range in \([0, 1]\):* Since \(0 \le \mathbf{1}_{B_n} \le 1\) and \(\mu_{k+1} \otimes \cdots \otimes \mu_n\) is a probability measure, \(0 \le f_{n, k} \le 1\) everywhere.
+3. *Monotonicity in \(n\) (\(f_{n+1, k} \le f_{n, k}\) pointwise):* Because \(A_{n+1} \subseteq A_n\), we have \(B_{n+1} \subseteq B_n \times S_{n+1}\), so \(\mathbf{1}_{B_{n+1}}(s_1, \dots, s_{n+1}) \le \mathbf{1}_{B_n}(s_1, \dots, s_n)\). Integrating this inequality over \(S_{n+1}\) (using \(\mu_{n+1}(S_{n+1}) = 1\)) and then over \(S_{k+1} \times \cdots \times S_n\) gives
+   \[
+   f_{n+1, k}(s_1, \dots, s_k) \le f_{n, k}(s_1, \dots, s_k) \qquad \text{at every point } (s_1, \dots, s_k).
+   \]
+
+Now, for each \(k \ge 0\), since \(n \mapsto f_{n, k}(s_1, \dots, s_k)\) is a decreasing sequence in \([0, 1]\) (for \(n \ge \max(k, 1)\)), it converges pointwise to a limit function
+\[
+h_k(s_1, \dots, s_k) := \lim_{n \to \infty} f_{n, k}(s_1, \dots, s_k) \in [0, 1].
+\]
+Fix any prefix \((s_1, \dots, s_k) \in S_1 \times \cdots \times S_k\). As functions of the next coordinate \(t \in S_{k+1}\), the functions \(t \mapsto f_{n, k+1}(s_1, \dots, s_k, t)\) converge pointwise to \(t \mapsto h_{k+1}(s_1, \dots, s_k, t)\) as \(n \to \infty\), and they are bounded in absolute value by the constant function \(1\), which is integrable on \(S_{k+1}\) because \(\mu_{k+1}(S_{k+1}) = 1 < \infty\)! Therefore, the *Dominated Convergence Theorem* (Theorem 6.15) gives, at *every* fixed prefix \((s_1, \dots, s_k)\),
+\[
+h_k(s_1, \dots, s_k) = \lim_{n \to \infty} \int_{S_{k+1}} f_{n, k+1}(s_1, \dots, s_k, t) \, d\mu_{k+1}(t) = \int_{S_{k+1}} h_{k+1}(s_1, \dots, s_k, t) \, d\mu_{k+1}(t).
+\]
+Now we select coordinates \(s_1, s_2, \dots\) inductively:
+- At \(k = 0\), \(h_0 = \lim_{n \to \infty} f_{n, 0} = \lim_{n \to \infty} \mathbb{P}_0(A_n) \ge \varepsilon > 0\). Since \(\int_{S_1} h_1(t) \, d\mu_1(t) = h_0 > 0\), the nonnegative integrand \(h_1\) cannot be zero at every point of \(S_1\)! Thus we can choose \(s_1 \in S_1\) with \(h_1(s_1) > 0\).
+- Inductively, having chosen \((s_1, \dots, s_k)\) with \(h_k(s_1, \dots, s_k) > 0\), the identity
+  \[
+  \int_{S_{k+1}} h_{k+1}(s_1, \dots, s_k, t) \, d\mu_{k+1}(t) = h_k(s_1, \dots, s_k) > 0
+  \]
+  shows that \(t \mapsto h_{k+1}(s_1, \dots, s_k, t)\) cannot be zero at every \(t \in S_{k+1}\), so we can choose \(s_{k+1} \in S_{k+1}\) with \(h_{k+1}(s_1, \dots, s_k, s_{k+1}) > 0\). (Notice that because the DCT identity holds at *every* prefix, no exceptional null sets of prefixes ever have to be avoided!)
+- Finally, for every \(k \ge 1\), monotonicity of \(n \mapsto f_{n, k}\) gives
+  \[
+  0 < h_k(s_1, \dots, s_k) \le f_{k, k}(s_1, \dots, s_k) = \mathbf{1}_{B_k}(s_1, \dots, s_k).
+  \]
+  Since \(\mathbf{1}_{B_k}(s_1, \dots, s_k) > 0\), the prefix \((s_1, \dots, s_k)\) belongs to \(B_k\)! Therefore the infinite sequence \(s = (s_1, s_2, s_3, \dots) \in \Omega\) belongs to \(A_k\) for every \(k \ge 1\), contradicting \(\bigcap_{k=1}^\infty A_k = \emptyset\).
+
+*Step 4. Extend.*
+The contradiction proves that \(\mathbb{P}_0\) is continuous at the empty set, and hence is a premeasure on the algebra of finite-coordinate cylinders. Carathéodory's extension theorem (Theorem 5.2) extends \(\mathbb{P}_0\) to a probability measure \(\bigotimes_{j \ge 1} \mu_j\) on \(\bigotimes_{j \ge 1} \mathcal{S}_j\), and finite-measure uniqueness on the \(\pi\)-system of cylinders (Theorem 4.4) proves uniqueness. \(\blacksquare\)
+
+*Remark:* Notice that *no topology or regularity was assumed on the factor spaces \((S_j, \mathcal{S}_j, \mu_j)\)*! Theorem 10.4 works for completely arbitrary measurable spaces because the finite-dimensional laws were *product* measures \(\mu_1 \otimes \cdots \otimes \mu_n\), allowing us to integrate out coordinate \(k+1\) with respect to \(\mu_{k+1}\). When the coordinates are *dependent*, their finite-dimensional laws are not product measures, so we need a different argument (Section 10.3).
+
+* 10.3 Consistent finite-dimensional laws
+
+** Intuition
+
+Suppose \(I\) is an arbitrary nonempty index set—for example, \(I = \mathbb{N}\) (discrete time: a sequence of random variables \(X_1, X_2, \dots\) that may be *dependent*, like a random walk or Markov chain) or \(I = [0, 1]\) (continuous time: a stochastic process \((X_t)_{t \in [0, 1]}\)).
+
+An outcome path is a function \(\omega : I \to \mathbb{R}\), which we view as an element of the infinite Cartesian product \(\mathbb{R}^I\). For any finite nonempty subset of indices \(J \subseteq I\) (say \(J = \{t_1, \dots, t_n\}\)), the projection map
+\[
+\pi_J : \mathbb{R}^I \to \mathbb{R}^J, \qquad \pi_J(\omega) = (\omega(t))_{t \in J}
+\]
+records the values of the path \(\omega\) at the finitely many times in \(J\).
+
+Suppose someone hands us, for each finite nonempty set \(J \subseteq I\), a Borel probability measure \(\nu_J\) on \(\mathbb{R}^J\) (the proposed joint distribution of \((\omega(t))_{t \in J}\)). When does there exist a single master probability measure \(\mathbb{P}\) on \(\mathbb{R}^I\) whose finite-dimensional marginals \(\mathbb{P} \circ \pi_J^{-1}\) equal \(\nu_J\) for every finite \(J \subseteq I\)?
+
+Obviously, a *necessary* condition is *consistency*: if \(J \subseteq K\) are two finite subsets of \(I\) (say \(J = \{t_1, t_2\}\) and \(K = \{t_1, t_2, t_3\}\)), then forgetting the extra coordinates in \(K \setminus J\) must recover the smaller law \(\nu_J\):
+\[
+\nu_K(\{x \in \mathbb{R}^K : x|_J \in B\}) = \nu_J(B) \qquad \text{for every Borel } B \subseteq \mathbb{R}^J.
+\]
+(In plain probability language: the marginal distribution of \((X_{t_1}, X_{t_2})\) computed from the 3D law of \((X_{t_1}, X_{t_2}, X_{t_3})\) must agree with the 2D law specified for \((X_{t_1}, X_{t_2})\)!)
+
+*Kolmogorov's extension theorem (Theorem 10.5)* says that because the coordinates take values in \(\mathbb{R}\), this obvious consistency condition is also *sufficient*!
+How does the proof overcome the lack of product structure when showing that decreasing cylinders \(A_n = \{\omega : (\omega(t_1), \dots, \omega(t_n)) \in B_n\}\) with \(\nu_n(B_n) \ge \varepsilon > 0\) have a common point?
+By *inner regularity* (Theorem 8.1 from Chapter 8)! Every Borel probability measure \(\nu_n\) on \(\mathbb{R}^n\) is inner regular: we can find a *compact* subset \(K_n \subseteq B_n\) inside each Borel base \(B_n\) losing less than \(\varepsilon 2^{-n-1}\) of probability:
+\[
+\nu_n(B_n \setminus K_n) < \varepsilon 2^{-n-1}.
+\]
+Summing these tiny probability losses over \(j = 1, \dots, N\) loses at most \(\sum_{j=1}^N \varepsilon 2^{-j-1} < \varepsilon/2\), leaving at least \(\varepsilon - \varepsilon/2 = \varepsilon/2 > 0\) probability in \(\mathbb{R}^N\) for points \(x^{(N)}\) that satisfy *all* the compact conditions \(K_1, \dots, K_N\) simultaneously! Then, because each \(K_j \subseteq \mathbb{R}^j\) is *compact*, we can extract a diagonal subsequence of \((x^{(N)})_{N \ge 1}\) converging in every coordinate to a point \(x\) lying in every \(K_j \subseteq B_j\)!
+
+#+begin_example
+   Borel base B_n subset R^n   (mass >= epsilon, but B_n might not be closed/compact)
+        |
+        |  Theorem 8.1 (Regularity): put compact K_n subset B_n with nu_n(B_n \ K_n) < epsilon * 2^{-n-1}
+        v
+   At stage N: measure of points x^(N) in R^N with (x_1,...,x_j) in K_j for all j <= N
+               is >= nu_N(B_N) - sum_{j=1}^N nu_j(B_j \ K_j) > epsilon - epsilon/2 = epsilon/2 > 0!
+        |
+        |  Pick one such point x^(N) for each N; since K_j is COMPACT,
+        |  use Cantor's diagonal subsequence trick across j = 1, 2, 3, ...
+        v
+   Limit sequence x has (x_1,...,x_j) in K_j subset B_j for all j  ==>  x in cap_n A_n != empty!
+#+end_example
+
+** Setup: \(\mathbb{R}^I\), Coordinate Projections, and Consistency
+
+Let \(I\) be an arbitrary nonempty index set (for example, \(I = \mathbb{N}\) or \(I = [0, 1]\)).
+- The set \(\mathbb{R}^I\) consists of all functions \(\omega : I \to \mathbb{R}\).
+- For each finite nonempty subset \(J \subseteq I\), let
+  \[
+  \pi_J : \mathbb{R}^I \to \mathbb{R}^J, \qquad \pi_J(\omega) = (\omega(t))_{t \in J},
+  \]
+  be the coordinate restriction map. We identify \(\mathbb{R}^J\) with a finite-dimensional Euclidean space \(\mathbb{R}^{|J|}\); its Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R}^J) = \bigotimes_{t \in J} \mathcal{B}(\mathbb{R})\) does not depend on how the finitely many coordinates in \(J\) are ordered.
+- The *product \(\sigma\)-algebra* on \(\mathbb{R}^I\), denoted \(\mathcal{B}(\mathbb{R})^{\otimes I}\), is generated by all *cylinder sets*
+  \[
+  \pi_J^{-1}(B) = \{\omega \in \mathbb{R}^I : \pi_J(\omega) \in B\} \qquad (J \subseteq I \text{ finite nonempty},\; B \in \mathcal{B}(\mathbb{R}^J)).
+  \]
+
+#+begin_quote
+*Definition (Consistent family of finite-dimensional laws).* Suppose a Borel probability measure \(\nu_J\) on \(\mathbb{R}^J\) has been specified for each finite nonempty \(J \subseteq I\). The family \((\nu_J)\) is *consistent* if forgetting coordinates gives the specified smaller law: whenever \(J \subseteq K\) are finite nonempty subsets of \(I\) and \(B \in \mathcal{B}(\mathbb{R}^J)\),
+\[
+\nu_K(\{x \in \mathbb{R}^K : x|_J \in B\}) = \nu_J(B).
+\]
+#+end_quote
+
+If \(\mathbb{P}\) is already a probability measure on \((\mathbb{R}^I, \mathcal{B}(\mathbb{R})^{\otimes I})\) and we define \(\nu_J := \mathbb{P} \circ \pi_J^{-1}\) to be its finite-coordinate laws, then for \(J \subseteq K\) we have \(\{x \in \mathbb{R}^K : x|_J \in B\} = \pi_{K \to J}^{-1}(B)\) where \(\pi_J = \pi_{K \to J} \circ \pi_K\), so
+\[
+\nu_K(\{x \in \mathbb{R}^K : x|_J \in B\}) = \mathbb{P}(\pi_K^{-1}(\pi_{K \to J}^{-1}(B))) = \mathbb{P}(\pi_J^{-1}(B)) = \nu_J(B).
+\]
+Thus consistency is *necessary* for \((\nu_J)\) to arise from a single probability measure \(\mathbb{P}\). For real coordinates, Kolmogorov's theorem shows that consistency is also *sufficient*.
+
+** Kolmogorov's Extension Theorem
+
+#+begin_quote
+*Theorem 10.5 (Kolmogorov's extension theorem for real coordinates).* Every consistent family \((\nu_J)\) of Borel probability measures on \(\mathbb{R}^J\) (for finite nonempty \(J \subseteq I\)) is the family of finite-coordinate laws of a unique probability measure \(\mathbb{P}\) on \(\mathbb{R}^I\) with its product \(\sigma\)-algebra:
+\[
+\mathbb{P}(\pi_J^{-1}(B)) = \nu_J(B) \qquad \text{for every finite nonempty } J \subseteq I \text{ and } B \in \mathcal{B}(\mathbb{R}^J).
+\]
+#+end_quote
+
+** Proof of Theorem 10.5 (unpacked step by step)
+
+*Step 1. Define a cylinder prescription.*
+Assign to each cylinder \(\pi_J^{-1}(B)\) (with \(J \subseteq I\) finite nonempty and \(B \in \mathcal{B}(\mathbb{R}^J)\)) the mass
+\[
+\mathbb{P}_0(\pi_J^{-1}(B)) := \nu_J(B).
+\]
+Let us check that \(\mathbb{P}_0\) is well-defined and finitely additive on the collection \(\mathcal{A}\) of all cylinder sets:
+- Suppose a cylinder set is described in two ways: \(\pi_J^{-1}(B) = \pi_{J'}^{-1}(B')\), where \(J, J' \subseteq I\) are finite nonempty sets and \(B \in \mathcal{B}(\mathbb{R}^J), B' \in \mathcal{B}(\mathbb{R}^{J'})\). Let \(K := J \cup J'\) (which is still a finite nonempty subset of \(I\)!). We can lift both bases \(B\) and \(B'\) to \(K\) by setting
+  \[
+  \tilde{B} := \{x \in \mathbb{R}^K : x|_J \in B\}, \qquad \tilde{B}' := \{x \in \mathbb{R}^K : x|_{J'} \in B'\}.
+  \]
+  Then \(\pi_K^{-1}(\tilde{B}) = \pi_J^{-1}(B) = \pi_{J'}^{-1}(B') = \pi_K^{-1}(\tilde{B}')\). Because the coordinate projection \(\pi_K : \mathbb{R}^I \to \mathbb{R}^K\) is *surjective* (onto: any \(x \in \mathbb{R}^K\) can be extended to \(\omega \in \mathbb{R}^I\) by setting \(\omega(t) = 0\) for \(t \in I \setminus K\)), equality of preimages \(\pi_K^{-1}(\tilde{B}) = \pi_K^{-1}(\tilde{B}')\) forces equality of the lifted bases \(\tilde{B} = \tilde{B}'\) in \(\mathbb{R}^K\)!
+- Now apply the consistency condition for \(J \subseteq K\) and \(J' \subseteq K\):
+  \[
+  \nu_J(B) = \nu_K(\tilde{B}) = \nu_K(\tilde{B}') = \nu_{J'}(B').
+  \]
+  Thus \(\mathbb{P}_0\) is well-defined!
+- Similarly, given finitely many cylinders \(\pi_{J_1}^{-1}(B_1), \dots, \pi_{J_m}^{-1}(B_m)\), lifting all of them to the single finite coordinate set \(K = J_1 \cup \cdots \cup J_m\) shows that cylinders form an algebra \(\mathcal{A}\) (since \(\mathcal{B}(\mathbb{R}^K)\) is a \(\sigma\)-algebra) and that \(\mathbb{P}_0\) is finitely additive on \(\mathcal{A}\) (since \(\nu_K\) is a measure on \(\mathcal{B}(\mathbb{R}^K)\)).
+
+*Step 2. Reduce a possible failure to countably many coordinates.*
+To prove continuity at the empty set, suppose for contradiction that \(E_1 \supseteq E_2 \supseteq \cdots\) is a decreasing sequence of cylinders in \(\mathcal{A}\) with \(\bigcap_{n=1}^\infty E_n = \emptyset\) and \(\mathbb{P}_0(E_n) \ge \varepsilon > 0\) for all \(n \ge 1\).
+- Each cylinder \(E_n\) is determined by a finite set of coordinates \(J_n \subseteq I\). Therefore, in the entire sequence \((E_n)_{n=1}^\infty\), only *countably many* coordinates \(J_\infty := \bigcup_{n=1}^\infty J_n \subseteq I\) ever appear!
+- If \(J_\infty\) is actually a *finite* set, then all \(E_n\) live over the single finite coordinate set \(J_\infty\), and since \(\nu_{J_\infty}\) is already a countably additive probability measure on \(\mathbb{R}^{J_\infty}\), continuity from above for \(\nu_{J_\infty}\) immediately gives \(\lim_{n \to \infty} \mathbb{P}_0(E_n) = 0\), contradicting \(\mathbb{P}_0(E_n) \ge \varepsilon > 0\).
+- Otherwise \(J_\infty\) is countably infinite; enumerate its elements as \(t_1, t_2, t_3, \dots\). Just as in Step 2 of the proof of Theorem 10.4, let \(m_j\) be the largest index among \(\{t_1, t_2, \dots\}\) appearing in \(J_j\), and define
+  \[
+  A_n := \bigcap \{E_j : j \le n \text{ and } m_j \le n\}.
+  \]
+  Then \(A_1 \supseteq A_2 \supseteq \cdots\) are decreasing cylinders, each \(A_n\) depends only on the first \(n\) listed coordinates \((t_1, \dots, t_n)\), \(\mathbb{P}_0(A_n) \ge \varepsilon\), and \(\bigcap_{n=1}^\infty A_n = \bigcap_{j=1}^\infty E_j = \emptyset\).
+  Write the Borel base of \(A_n\) in \(\mathbb{R}^n\) (corresponding to \((t_1, \dots, t_n)\)) as \(B_n \in \mathcal{B}(\mathbb{R}^n)\), and write \(\nu_n := \nu_{\{t_1, \dots, t_n\}}\) for the corresponding \(n\)-dimensional law.
+
+*Step 3. Use compact inner approximations (Chapter 8!).*
+Each \(\nu_n\) is a finite Borel measure on Euclidean space \(\mathbb{R}^n\). By inner regularity (Theorem 8.1), for each \(n \ge 1\) there exists a *compact* set \(K_n \subseteq B_n \subseteq \mathbb{R}^n\) such that
+\[
+\nu_n(B_n \setminus K_n) < \varepsilon 2^{-n-1}.
+\]
+Now fix \(N \ge 1\), and consider inside \(\mathbb{R}^N\) the set of points \(x = (x_1, \dots, x_N) \in \mathbb{R}^N\) whose prefix \((x_1, \dots, x_j)\) belongs to the compact set \(K_j\) for *every* \(1 \le j \le N\):
+\[
+\widehat{K}_N := \{x \in \mathbb{R}^N : (x_1, \dots, x_j) \in K_j \text{ for all } 1 \le j \le N\}.
+\]
+Let us show that \(\nu_N(\widehat{K}_N) > \varepsilon / 2\):
+- Because \(A_N \subseteq A_j\) for every \(j \le N\), any point \(x \in B_N\) automatically has its first \(j\) coordinates \((x_1, \dots, x_j)\) in \(B_j\).
+- Therefore, if a point \(x \in B_N\) *fails* to belong to \(\widehat{K}_N\), there must be some \(j \in \{1, \dots, N\}\) for which \((x_1, \dots, x_j) \in B_j \setminus K_j\). That is,
+  \[
+  B_N \setminus \widehat{K}_N \subseteq \bigcup_{j=1}^N \{x \in \mathbb{R}^N : (x_1, \dots, x_j) \in B_j \setminus K_j\}.
+  \]
+- By the *consistency condition*, the \(\nu_N\)-measure of the lifted error set \(\{x \in \mathbb{R}^N : (x_1, \dots, x_j) \in B_j \setminus K_j\}\) is precisely \(\nu_j(B_j \setminus K_j) < \varepsilon 2^{-j-1}\)!
+- Therefore, by subadditivity of \(\nu_N\),
+  \[
+  \nu_N(\widehat{K}_N) \ge \nu_N(B_N) - \sum_{j=1}^N \nu_j(B_j \setminus K_j) > \varepsilon - \sum_{j=1}^N \varepsilon 2^{-j-1} > \varepsilon - \frac{\varepsilon}{2} = \frac{\varepsilon}{2} > 0.
+  \]
+Because \(\nu_N(\widehat{K}_N) > \varepsilon / 2 > 0\), the set \(\widehat{K}_N\) cannot be empty! Choose one point \(x^{(N)} = (x_1^{(N)}, \dots, x_N^{(N)}) \in \widehat{K}_N\) for each \(N \ge 1\). By definition of \(\widehat{K}_N\), for every \(j \le N\), the prefix \((x_1^{(N)}, \dots, x_j^{(N)})\) belongs to the compact set \(K_j \subseteq \mathbb{R}^j\).
+
+*Step 4. Obtain an infinite point via diagonal extraction.*
+We now extract a single subsequence along which every coordinate converges:
+- *Stage 1:* For all \(N \ge 1\), the first coordinate \(x_1^{(N)}\) lies in the compact set \(K_1 \subseteq \mathbb{R}^1\). By sequential compactness in \(\mathbb{R}\), there is an infinite set of indices \(I_1 \subseteq \mathbb{N}\) along which \(x_1^{(N)}\) converges to a point in \(K_1\).
+- *Stage 2:* From \(I_1\), discard the finitely many indices \(N < 2\); for all remaining \(N \in I_1\), the pair \((x_1^{(N)}, x_2^{(N)})\) lies in the compact set \(K_2 \subseteq \mathbb{R}^2\), so we can select an infinite subset \(I_2 \subseteq I_1 \cap \{N \ge 2\}\) along which the first two coordinates converge to a point of \(K_2\).
+- *Stage \(j\):* Continue inductively: at stage \(j\), the retained indices form an infinite set \(I_j \subseteq I_{j-1} \cap \{N \ge j\}\) along which the first \(j\) coordinates \((x_1^{(N)}, \dots, x_j^{(N)})\) converge to a point of \(K_j\).
+- *Diagonal selection:* Choose \(N_1 \in I_1\), and for \(k \ge 2\) inductively choose \(N_k \in I_k\) with \(N_k > N_{k-1}\) (and \(N_k \ge k\)).
+  For each fixed \(j \ge 1\), all diagonal terms with \(k \ge j\) have \(N_k \in I_k \subseteq I_j\), so the sequence of \(j\)-tuples \(\big(x_1^{(N_k)}, \dots, x_j^{(N_k)}\big)_{k \ge j}\) is a subsequence of the stage-\(j\) sequence and therefore converges as \(k \to \infty\) to a point of the compact set \(K_j\)!
+- *Compatibility:* The first \(j\) coordinates of the stage-\((j+1)\) limit in \(K_{j+1}\) are the limit of the exact same coordinate sequences \(\big(x_1^{(N_k)}, \dots, x_j^{(N_k)}\big)\), so they agree with the stage-\(j\) limit in \(K_j\). Therefore, these finite-dimensional limits define a single infinite sequence \((x_1, x_2, x_3, \dots) \in \mathbb{R}^{\mathbb{N}}\) whose prefix \((x_1, \dots, x_j)\) belongs to \(K_j \subseteq B_j\) for *every* \(j \ge 1\)!
+- Finally, define \(\omega \in \mathbb{R}^I\) by setting \(\omega(t_j) := x_j\) for the enumerated coordinates \(t_j \in J_\infty\), and \(\omega(t) := 0\) for all other coordinates \(t \in I \setminus J_\infty\). Then \(\omega \in A_j\) for every \(j \ge 1\), contradicting \(\bigcap_{j=1}^\infty A_j = \emptyset\)!
+
+Thus \(\mathbb{P}_0\) is continuous at the empty set, hence a premeasure on the algebra of cylinders. Carathéodory's theorem (Theorem 5.2) gives the probability measure \(\mathbb{P}\) on \(\mathcal{B}(\mathbb{R})^{\otimes I}\), and finite-measure uniqueness on the \(\pi\)-system of cylinders (Theorem 4.4) proves uniqueness. \(\blacksquare\)
+
+** Examples and Remarks from the Notes
+
+#+begin_quote
+*Example 10.6 (All coordinates equal: consistency does not mean independence!).* Let \(\nu\) be *any* Borel probability measure on \(\mathbb{R}\) (say the standard normal law \(\mathcal{N}(0, 1)\), or the uniform law on \([0, 1]\)). For each finite nonempty set \(J \subseteq I\), define \(\nu_J\) on \(\mathbb{R}^J\) to be the image measure of \(\nu\) under the diagonal map
+\[
+\Delta_J : \mathbb{R} \to \mathbb{R}^J, \qquad \Delta_J(x) = (x)_{t \in J} = (x, x, \dots, x).
+\]
+That is, \(\nu_J(B) = \nu(\{x \in \mathbb{R} : (x, \dots, x) \in B\})\).
+- *Consistency:* If \(J \subseteq K\) and \(B \in \mathcal{B}(\mathbb{R}^J)\), forgetting the coordinates in \(K \setminus J\) maps \((x)_{t \in K}\) to \((x)_{t \in J}\), so \(\nu_K(\{y \in \mathbb{R}^K : y|_J \in B\}) = \nu(\{x \in \mathbb{R} : (x)_{t \in J} \in B\}) = \nu_J(B)\). Thus the family \((\nu_J)\) is consistent!
+- *What is the extension \(\mathbb{P}\) on \(\mathbb{R}^I\)?* Here we can also see the extension directly without invoking Carathéodory: it is simply the image measure of \(\nu\) under the global constant-path map \(\Delta_I : \mathbb{R} \to \mathbb{R}^I\) sending \(x \in \mathbb{R}\) to the constant function \(\omega(t) = x\) for all \(t \in I\)!
+This example illustrates vividly that *consistency of finite-dimensional distributions does not mean that the coordinates are independent*—here all coordinates are 100% locked together (\(\omega(t) = \omega(s)\) for all \(s, t\))!
+#+end_quote
+
+#+begin_quote
+*Remark 10.7 (What the theorem has constructed).* Theorem 10.5 constructs a probability measure on the *product \(\sigma\)-algebra* \(\mathcal{B}(\mathbb{R})^{\otimes I}\), not on the power set of \(\mathbb{R}^I\). In particular, when \(I\) is an uncountable interval such as \(I = [0, 1]\), it does *not* yet assert that the set of continuous sample paths
+\[
+C([0, 1]) = \{\omega \in \mathbb{R}^{[0, 1]} : t \mapsto \omega(t) \text{ is continuous on } [0, 1]\}
+\]
+is measurable in \(\mathcal{B}(\mathbb{R})^{\otimes I}\)! Finite-dimensional probabilities and whole-path properties are two very different matters. We examine that distinction in detail in [[file:ch11-nonmeasurable-paths.org][Chapter 11]].
+#+end_quote
+
+** Historical remark (from the notes)
+
+Andrey Kolmogorov's 1933 extension argument (*Grundbegriffe der Wahrscheinlichkeitsrechnung*, [4, Chapter III, Section 4, pp. 27–30]) already separates consistent finite-dimensional prescriptions from the proof of continuity needed for extension. After checking that a cylinder has a well-defined probability, he reduces a decreasing sequence of cylinders to countably many real coordinates. Bounded closed inner approximations and a diagonal subsequence then produce a common point if the probabilities stay bounded away from zero. Our formulation starts from finite-dimensional Borel measures rather than distribution functions, but the distinction between consistency and countable additivity is the same.
+
+** Classroom route (from the notes)
+
+Give the fair-coin construction in full. State the countable product theorem and explain its use of integration over unused coordinates; its general proof can remain in the notes. For Kolmogorov's theorem, explain consistency and the compact approximation argument. Do not begin a catalogue of stochastic processes: the next section supplies the essential warning about path spaces.
+
+* Worked Exercises
+
+** Exercise 1
+On the fair-coin space \((\Omega, \mathcal{F}, \mathbb{P})\) with \(\Omega = \{0, 1\}^{\mathbb{N}}\), let \(A\) be the event that the pattern \((1, 1)\) (two consecutive heads) *never* occurs at the odd-even pairs \((2k-1, 2k)\) for any \(k \ge 1\):
+\[
+A := \{\omega \in \Omega : (\omega_{2k-1}, \omega_{2k}) \ne (1, 1) \text{ for all } k \ge 1\}.
+\]
+Show that \(A \in \mathcal{F}\) and compute \(\mathbb{P}(A)\).
+
+** Solution
+For each \(N \ge 1\), define the finite-coordinate event
+\[
+A_N := \{\omega \in \Omega : (\omega_{2k-1}, \omega_{2k}) \ne (1, 1) \text{ for all } 1 \le k \le N\}.
+\]
+1. *Why is \(A_N \in \mathcal{A}\) and what is \(\mathbb{P}(A_N)\)?* Membership in \(A_N\) depends only on the first \(2N\) bits \((\omega_1, \dots, \omega_{2N})\). For each pair \((\omega_{2k-1}, \omega_{2k})\), there are \(3\) allowed binary words of length \(2\): \((0, 0), (0, 1), (1, 0)\). Thus over the first \(N\) pairs there are \(3^N\) allowed binary words of length \(2N\), so \(A_N\) is the disjoint union of \(3^N\) initial cylinders of length \(2N\), each having mass \(2^{-2N} = 4^{-N}\). Hence \(A_N \in \mathcal{A} \subseteq \mathcal{F}\) and
+   \[
+   \mathbb{P}(A_N) = 3^N \cdot 4^{-N} = \left(\frac{3}{4}\right)^N.
+   \]
+2. *Pass to the limit:* The events \(A_N\) decrease (\(A_1 \supseteq A_2 \supseteq \cdots\)) and their intersection is \(A = \bigcap_{N=1}^\infty A_N\). Thus \(A \in \mathcal{F}\), and by continuity of \(\mathbb{P}\) from above (Proposition 2.4),
+   \[
+   \mathbb{P}(A) = \lim_{N \to \infty} \mathbb{P}(A_N) = \lim_{N \to \infty} \left(\frac{3}{4}\right)^N = 0.
+   \]
+(In words: almost surely, the pair \((1, 1)\) occurs at some odd-even position \((2k-1, 2k)\)!)
+
+** Exercise 2 (Geometric Waiting Time for the First Head)
+On the fair-coin space \((\Omega, \mathcal{F}, \mathbb{P})\), define the waiting time for the first \(1\) (head) by
+\[
+\tau(\omega) := \inf\{n \ge 1 : \omega_n = 1\}, \qquad \text{with } \inf \emptyset := \infty.
+\]
+Show that \(\{\tau = n\} \in \mathcal{F}\) for each \(n \in \mathbb{N}\), compute \(\mathbb{P}(\tau = n)\) and \(\mathbb{P}(\tau = \infty)\), and compute the expectation \(\mathbb{E}[\tau] = \int_\Omega \tau \, d\mathbb{P}\).
+
+** Solution
+For each integer \(n \ge 1\), the event \(\{\tau = n\}\) means that the first \(n - 1\) bits are \(0\) and the \(n\)-th bit is \(1\):
+\[
+\{\tau = n\} = \{\omega \in \Omega : \omega_1 = 0, \dots, \omega_{n-1} = 0, \omega_n = 1\} = C(\underbrace{0, \dots, 0}_{n-1}, 1).
+\]
+This is a single initial cylinder of length \(n\), so \(\{\tau = n\} \in \mathcal{A} \subseteq \mathcal{F}\) and
+\[
+\mathbb{P}(\tau = n) = 2^{-n} \qquad (n = 1, 2, 3, \dots).
+\]
+What is the event \(\{\tau = \infty\}\)? It is the singleton \(\{(0, 0, 0, \dots)\}\) consisting of the all-zeros sequence! By Example 10.2 (or by summing \(\sum_{n=1}^\infty \mathbb{P}(\tau = n) = \sum_{n=1}^\infty 2^{-n} = 1\)), we have \(\{\tau = \infty\} \in \mathcal{F}\) and
+\[
+\mathbb{P}(\tau = \infty) = 1 - \sum_{n=1}^\infty 2^{-n} = 0.
+\]
+Finally, since \(\tau = \sum_{n=1}^\infty n \mathbf{1}_{\{\tau = n\}}\) outside the null set \(\{\tau = \infty\}\), the Monotone Convergence Theorem gives
+\[
+\mathbb{E}[\tau] = \sum_{n=1}^\infty n \mathbb{P}(\tau = n) = \sum_{n=1}^\infty n 2^{-n} = 2.
+\]
+(Recall the power-series identity \(\sum_{n=1}^\infty n r^n = \frac{r}{(1-r)^2}\) for \(|r| < 1\); at \(r = 1/2\) this gives \(\frac{1/2}{(1/2)^2} = 2\), or by Exercise 2 of Chapter 9, \(\mathbb{E}[\tau] = \sum_{k=0}^\infty \mathbb{P}(\tau > k) = \sum_{k=0}^\infty 2^{-k} = 2\).)
+
+** Exercise 3 (Biased Coins via Countable Product Measure)
+Let \((p_j)_{j=1}^\infty\) be a sequence of numbers in \([0, 1]\), and for each \(j \in \mathbb{N}\) let \(\mu_j = (1 - p_j)\delta_0 + p_j \delta_1\) be the Bernoulli\((p_j)\) probability measure on \(S_j = \{0, 1\}\) (with \(\mathcal{S}_j = 2^{\{0, 1\}}\)). Let \(\mathbb{P} = \bigotimes_{j \ge 1} \mu_j\) be the countable product measure on \(\Omega = \{0, 1\}^{\mathbb{N}}\) constructed by Theorem 10.4.
+(a) What is \(\mathbb{P}(C(a_1, \dots, a_n))\) for a binary word \((a_1, \dots, a_n) \in \{0, 1\}^n\)?
+(b) Compute \(\mathbb{P}(\{\omega : \omega_j = 0 \text{ for all } j \ge 1\})\) in terms of the infinite product \(\prod_{j=1}^\infty (1 - p_j)\), and show that if \(\sum_{j=1}^\infty p_j = \infty\), then \(\mathbb{P}(\{\omega : \text{infinitely many } 1\text{'s occur}\}) = 1\).
+
+** Solution
+(a) Since \(C(a_1, \dots, a_n)\) is the cylinder with base \(\{a_1\} \times \cdots \times \{a_n\}\) in the first \(n\) coordinates, Theorem 10.4 gives
+\[
+\mathbb{P}(C(a_1, \dots, a_n)) = (\mu_1 \otimes \cdots \otimes \mu_n)(\{a_1\} \times \cdots \times \{a_n\}) = \prod_{j=1}^n \mu_j(\{a_j\}) = \prod_{j=1}^n p_j^{a_j}(1 - p_j)^{1 - a_j}.
+\]
+
+(b) The event \(E_0 = \{\omega : \omega_j = 0 \text{ for all } j \ge 1\}\) is the decreasing intersection of the initial cylinders \(C(0, \dots, 0)\) of length \(n\), which have probability \(\prod_{j=1}^n (1 - p_j)\). By continuity from above,
+\[
+\mathbb{P}(E_0) = \lim_{n \to \infty} \prod_{j=1}^n (1 - p_j) = \prod_{j=1}^\infty (1 - p_j).
+\]
+Now assume \(\sum_{j=1}^\infty p_j = \infty\). Using the elementary inequality \(1 - x \le e^{-x}\) for all \(x \in \mathbb{R}\), we have for every \(m \ge 0\) and \(k \ge 1\):
+\[
+\mathbb{P}(\{\omega : \omega_{m+1} = \cdots = \omega_{m+k} = 0\}) = \prod_{j=m+1}^{m+k} (1 - p_j) \le \prod_{j=m+1}^{m+k} e^{-p_j} = \exp\left( -\sum_{j=m+1}^{m+k} p_j \right).
+\]
+Since \(\sum_{j=1}^\infty p_j = \infty\), the tail \(\sum_{j=m+1}^{m+k} p_j \to \infty\) as \(k \to \infty\) for each fixed \(m\). Therefore, by continuity from above, the event \(E_m := \{\omega : \omega_j = 0 \text{ for all } j > m\}\) has
+\[
+\mathbb{P}(E_m) = \lim_{k \to \infty} \prod_{j=m+1}^{m+k} (1 - p_j) \le \lim_{k \to \infty} \exp\left(-\sum_{j=m+1}^{m+k} p_j\right) = 0.
+\]
+Taking the countable union over \(m \ge 0\) as in Example 10.3 gives \(\mathbb{P}(\{\text{only finitely many } 1\text{'s}\}) = \mathbb{P}(\bigcup_{m=0}^\infty E_m) = 0\), so \(\mathbb{P}(\{\text{infinitely many } 1\text{'s occur}\}) = 1\). (This is a special case of the Second Borel–Cantelli Lemma, which we will study in [[file:ch15-weak-law.org][Chapter 15]]!)
+
+** Exercise 4 (Tracing Step 3 of Theorem 10.4 Explicitly)
+On the fair-coin space \(\Omega = \{0, 1\}^{\mathbb{N}}\) (\(\mu_j = \frac{1}{2}\delta_0 + \frac{1}{2}\delta_1\)), let \(A_1 = \Omega\), and for \(n \ge 2\) consider the decreasing sequence of finite-coordinate events
+\[
+A_n := \{\omega \in \Omega : \omega_1 = 1 \text{ or } (\omega_1 = 0 \text{ and } \omega_2 = \cdots = \omega_n = 1)\} \qquad (n \ge 2).
+\]
+(a) Check that \(A_1 \supseteq A_2 \supseteq A_3 \supseteq \cdots\) and compute \(\mathbb{P}_0(A_n) = f_{n, 0}\) and \(h_0 = \lim_{n \to \infty} f_{n, 0}\).
+(b) Compute the functions \(f_{n, 1}(s_1)\) and \(h_1(s_1) = \lim_{n \to \infty} f_{n, 1}(s_1)\) for \(s_1 \in \{0, 1\}\) as defined in Step 3 of Theorem 10.4, and explain which value of \(s_1 \in \{0, 1\}\) Step 3 selects!
+
+** Solution
+(a) For \(n \ge 2\), \(A_n = C(1) \sqcup C(0, \underbrace{1, \dots, 1}_{n-1})\). Since \(C(0, 1, \dots, 1)\) of length \(n+1\) is a subset of \(C(0, 1, \dots, 1)\) of length \(n\), we have \(A_{n+1} \subseteq A_n\). Its cylinder mass is
+\[
+f_{n, 0} = \mathbb{P}_0(A_n) = \frac{1}{2} + 2^{-n}, \qquad \text{so } h_0 = \lim_{n \to \infty} f_{n, 0} = \frac{1}{2} > 0.
+\]
+
+(b) Fix \(s_1 \in \{0, 1\}\) and integrate \(\mathbf{1}_{B_n}(s_1, s_2, \dots, s_n)\) over \((s_2, \dots, s_n) \in \{0, 1\}^{n-1}\) with respect to \(\mu_2 \otimes \cdots \otimes \mu_n\):
+- If \(s_1 = 1\): \((1, s_2, \dots, s_n) \in B_n\) for *all* \((s_2, \dots, s_n) \in \{0, 1\}^{n-1}\), so
+  \[
+  f_{n, 1}(1) = 1 \quad \text{for all } n \ge 2 \implies h_1(1) = \lim_{n \to \infty} f_{n, 1}(1) = 1.
+  \]
+- If \(s_1 = 0\): \((0, s_2, \dots, s_n) \in B_n\) only when \(s_2 = \cdots = s_n = 1\) (one word out of \(2^{n-1}\)), so
+  \[
+  f_{n, 1}(0) = 2^{-(n-1)} \quad \text{for all } n \ge 2 \implies h_1(0) = \lim_{n \to \infty} 2^{-(n-1)} = 0!
+  \]
+Notice that \(\int_{\{0,1\}} h_1(t) \, d\mu_1(t) = \frac{1}{2}h_1(0) + \frac{1}{2}h_1(1) = \frac{1}{2}(0) + \frac{1}{2}(1) = \frac{1}{2} = h_0\), confirming the DCT identity! Even though \(f_{n, 1}(0) = 2^{-(n-1)} > 0\) at every finite stage \(n\), its limit is \(h_1(0) = 0\), while \(h_1(1) = 1 > 0\). Thus Step 3 of Theorem 10.4 selects \(s_1 = 1\) (where \(h_1(s_1) > 0\)), and then any choice of \(s_2, s_3, \dots\) has \(h_k(1, s_2, \dots, s_k) = 1 > 0\), producing a point \((1, s_2, s_3, \dots) \in \bigcap_{n=1}^\infty A_n\)!
+
+** Exercise 5 (Checking Consistency for a Markov Chain / Random Walk)
+Let \(\mu_1\) be a Borel probability measure on \(\mathbb{R}\) (the law of an initial step \(Z_1\)), and for each \(n \ge 2\) let \(\mu_n\) be a Borel probability measure on \(\mathbb{R}\) (the law of the \(n\)-th independent increment \(Z_n\)). For each \(n \ge 1\), define the map \(T_n : \mathbb{R}^n \to \mathbb{R}^n\) by the cumulative sums
+\[
+T_n(z_1, z_2, \dots, z_n) := (z_1,\; z_1 + z_2,\; \dots,\; z_1 + z_2 + \cdots + z_n),
+\]
+and let \(\nu_n := (\mu_1 \otimes \cdots \otimes \mu_n) \circ T_n^{-1}\) be the image measure on \(\mathbb{R}^n\). Verify directly that the family \((\nu_n)_{n \ge 1}\) (and the induced laws \(\nu_J\) for all finite \(J \subseteq \mathbb{N}\)) is *consistent* in the sense of Section 10.3.
+
+** Solution
+First notice why \(T_n\) is Borel measurable: each coordinate of \(T_n\) is a continuous linear function \(z_1 + \cdots + z_k\), hence Borel measurable on \(\mathbb{R}^n\).
+To check consistency when we drop the \((n+1)\)-st coordinate from \(\mathbb{R}^{n+1}\) to \(\mathbb{R}^n\), let \(\pi_{n+1 \to n} : \mathbb{R}^{n+1} \to \mathbb{R}^n\) be the projection \(\pi_{n+1 \to n}(x_1, \dots, x_n, x_{n+1}) = (x_1, \dots, x_n)\). Observe how \(\pi_{n+1 \to n}\) interacts with \(T_{n+1}\):
+\[
+(\pi_{n+1 \to n} \circ T_{n+1})(z_1, \dots, z_n, z_{n+1}) = (z_1, z_1 + z_2, \dots, z_1 + \cdots + z_n) = T_n(z_1, \dots, z_n).
+\]
+That is, the first \(n\) cumulative sums do not depend on the \((n+1)\)-st increment \(z_{n+1}\) at all! Therefore, for any Borel set \(B \in \mathcal{B}(\mathbb{R}^n)\),
+\[
+T_{n+1}^{-1}\big(\pi_{n+1 \to n}^{-1}(B)\big) = \{(z_1, \dots, z_n, z_{n+1}) \in \mathbb{R}^{n+1} : T_n(z_1, \dots, z_n) \in B\} = T_n^{-1}(B) \times \mathbb{R}.
+\]
+Applying \(\mu_1 \otimes \cdots \otimes \mu_{n+1} = (\mu_1 \otimes \cdots \otimes \mu_n) \otimes \mu_{n+1}\) and using \(\mu_{n+1}(\mathbb{R}) = 1\) gives
+\[
+\nu_{n+1}(\{x \in \mathbb{R}^{n+1} : (x_1, \dots, x_n) \in B\}) = (\mu_1 \otimes \cdots \otimes \mu_{n+1})\big(T_n^{-1}(B) \times \mathbb{R}\big) = (\mu_1 \otimes \cdots \otimes \mu_n)(T_n^{-1}(B)) \cdot 1 = \nu_n(B).
+\]
+More generally, defining \(\nu_J\) for any finite \(J \subseteq \{1, \dots, n\}\) as the restriction of \(\nu_n\) to the coordinates in \(J\) is therefore independent of \(n \ge \max J\) and forms a consistent family on \(\mathbb{R}^{\mathbb{N}}\). By Kolmogorov's extension theorem (Theorem 10.5), there is a unique probability measure on \(\mathbb{R}^{\mathbb{N}}\) having the cumulative-sum distributions \(\nu_n\) as its finite-dimensional laws!
+
+** Exercise 6 (When a Family of Finite-Dimensional Laws Is NOT Consistent)
+For \(I = \{1, 2\}\), suppose someone proposes the 1D marginals \(\nu_{\{1\}} = \frac{1}{2}\delta_0 + \frac{1}{2}\delta_1\) and \(\nu_{\{2\}} = \frac{1}{2}\delta_0 + \frac{1}{2}\delta_1\), and the 2D law
+\[
+\nu_{\{1, 2\}} = \frac{1}{3}\delta_{(0, 0)} + \frac{1}{3}\delta_{(1, 0)} + \frac{1}{3}\delta_{(1, 1)} \qquad \text{on } \mathbb{R}^2.
+\]
+Is this family consistent? Check both marginal conditions explicitly.
+
+** Solution
+Let us compute the marginals of \(\nu_{\{1, 2\}}\) on coordinate \(1\) and coordinate \(2\):
+- *Coordinate 1 marginal:* The event \(\{x_1 = 0\}\) in \(\mathbb{R}^2\) is \(\{0\} \times \mathbb{R}\), which contains only the atom \((0, 0)\) of \(\nu_{\{1, 2\}}\). Thus
+  \[
+  \nu_{\{1, 2\}}(\{x \in \mathbb{R}^2 : x_1 = 0\}) = \frac{1}{3} \ne \frac{1}{2} = \nu_{\{1\}}(\{0\})!
+  \]
+  (And similarly \(\nu_{\{1, 2\}}(\{x_1 = 1\}) = \frac{1}{3} + \frac{1}{3} = \frac{2}{3} \ne \frac{1}{2}\).)
+- *Coordinate 2 marginal:* \(\nu_{\{1, 2\}}(\{x \in \mathbb{R}^2 : x_2 = 0\}) = \frac{1}{3} + \frac{1}{3} = \frac{2}{3} \ne \frac{1}{2} = \nu_{\{2\}}(\{0\})\).
+
+Thus the family is *not consistent*, and no probability measure on \(\mathbb{R}^{\{1, 2\}}\) can simultaneously have joint law \(\nu_{\{1, 2\}}\) and 1D marginals \(\nu_{\{1\}}, \nu_{\{2\}}\).
+
+* Summary
+
+#+caption: Chapter 10 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Initial cylinder \(C(a)\) | \(\{\omega \in \{0,1\}^{\mathbb{N}} : \omega_1 = a_1, \dots, \omega_n = a_n\}\), mass \(2^{-n}\)           | Building blocks of the fair-coin space                     |
+| Lemma 10.1              | Decreasing nonempty \(A_n \in \mathcal{A}\) in \(\{0,1\}^{\mathbb{N}}\) have \(\bigcap_n A_n \ne \emptyset\) | Proves continuity at \(\emptyset\) via bit-by-bit selection |
+| Example 10.2            | \(\mathbb{P}(\{\omega\}) = \lim_n 2^{-n} = 0\) for every singleton \(\{\omega\}\)                            | Uncountable union of null sets can have probability \(1\)  |
+| Example 10.3            | \(\mathbb{P}(\{\text{infinitely many } 1\text{'s}\}) = 1\)                                                   | First almost-sure tail property on \(\{0,1\}^{\mathbb{N}}\) |
+| Finite-coord. cylinders | \(\{\omega \in \prod_{j\ge1} S_j : (\omega_1, \dots, \omega_n) \in B\}\), \(B \in \bigotimes_{j=1}^n \mathcal{S}_j\) | Form an algebra generating \(\bigotimes_{j\ge1} \mathcal{S}_j\) |
+| Theorem 10.4            | Unique probability measure \(\bigotimes_{j\ge1} \mu_j\) on \(\bigotimes_{j\ge1} \mathcal{S}_j\) for any probability spaces | Constructs infinite sequences of independent random variables without any topology |
+| Consistency on \(\mathbb{R}^I\) | For \(J \subseteq K\) finite, \(\nu_K(\{x \in \mathbb{R}^K : x|_J \in B\}) = \nu_J(B)\)              | Necessary & sufficient condition for finite-dimensional marginals to fit together |
+| Theorem 10.5 (Kolmogorov) | Every consistent family \((\nu_J)\) on \(\mathbb{R}^J\) extends to a unique probability measure on \((\mathbb{R}^I, \mathcal{B}(\mathbb{R})^{\otimes I})\) | Constructs dependent sequences and stochastic processes via Theorem 8.1 (compactness) + diagonalization |
+| Example 10.6            | Constant paths \(\omega(t) = x\) with \(x \sim \nu\) form a consistent family                                | Consistency does NOT imply independence                    |
+| Remark 10.7             | Measure is defined on \(\mathcal{B}(\mathbb{R})^{\otimes I}\), not \(\mathcal{P}(\mathbb{R}^I)\)             | Whole-path sets on uncountable \(I\) may not be in \(\mathcal{B}(\mathbb{R})^{\otimes I}\) (Chapter 11) |
+
+*Key takeaways*
+
+- Extending a finitely additive cylinder prescription \(\mathbb{P}_0\) to a countably additive probability measure \(\mathbb{P}\) via Carathéodory's theorem always boils down to proving *continuity at the empty set*: if decreasing cylinders \(A_1 \supseteq A_2 \supseteq \cdots\) have \(\mathbb{P}_0(A_n) \ge \varepsilon > 0\), then \(\bigcap_{n=1}^\infty A_n \ne \emptyset\).
+- On the *fair-coin space* \(\{0, 1\}^{\mathbb{N}}\) (Section 10.1), \(\bigcap_{n=1}^\infty A_n \ne \emptyset\) holds for *any* decreasing sequence of nonempty finite-coordinate events (Lemma 10.1), proved by choosing a bit that occurs infinitely often at each coordinate.
+- On a *countable product of arbitrary probability spaces* \(\prod_{j \ge 1} S_j\) (Theorem 10.4), no topology is available; instead, we integrate out unused coordinates \(k+1, \dots, n\) using Tonelli's theorem and pass to the limit \(n \to \infty\) via the Dominated Convergence Theorem to select a sequence \((s_1, s_2, \dots)\) along which the asymptotic survival function \(h_k(s_1, \dots, s_k)\) stays strictly positive.
+- On \(\mathbb{R}^I\) for an arbitrary index set \(I\) and *consistent finite-dimensional Borel laws* \((\nu_J)\) (Kolmogorov's extension theorem, Theorem 10.5), we reduce a decreasing sequence of cylinders to countably many coordinates, approximate each Borel base \(B_n \subseteq \mathbb{R}^n\) from the inside by a *compact* set \(K_n \subseteq B_n\) with error \(< \varepsilon 2^{-n-1}\) (using Theorem 8.1!), and extract a point in \(\bigcap_{n=1}^\infty A_n\) by Cantor's diagonal subsequence trick.

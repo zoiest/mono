@@ -1,0 +1,896 @@
+:PROPERTIES:
+:ID:       8bc1d22c-93d2-45e0-af4d-120022bbccdd
+:ROAM_ALIASES: "MAST31051 Chapter 12" "Distributions and Lebesgue-Stieltjes Measures Notes"
+:END:
+#+title: Chapter 12: Distributions and Lebesgue–Stieltjes Measures
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch12:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch11-nonmeasurable-paths.org][← Chapter 11]] | [[file:ch13-independence.org][Chapter 13 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In Chapters 1–11 we built the general machinery of measure spaces, integration, and product spaces.
+Starting with this chapter, we put that machinery to work to study *real-valued random variables*
+systematically.
+
+A real-valued random variable \(X\) on a probability space \((\Omega, \mathcal F, \mathbb P)\) induces
+its *law* (or *distribution*) \(\mu_X = X_\# \mathbb P\), which is a Borel probability measure on
+\(\mathbb R\) defined by \(\mu_X(B) = \mathbb P(X \in B)\) for every \(B \in \mathcal B(\mathbb R)\)
+(Chapter 3). Dealing directly with a function on the uncountable \(\sigma\)-algebra \(\mathcal B(\mathbb R)\)
+sounds daunting, until we remember from Chapter 4 that a finite Borel measure on \(\mathbb R\) is
+uniquely determined by its values on half-lines \((-\infty, x]\). That single observation lets us
+compress the entire probability measure \(\mu_X\) into an ordinary real-valued function of one real
+variable: its *cumulative distribution function (CDF)*
+\[
+F_X(x) := \mathbb P(X \le x) = \mu_X((-\infty, x]), \qquad x \in \mathbb R.
+\]
+
+This chapter answers three fundamental questions about laws and CDFs on \(\mathbb R\):
+
+1. *From laws to CDFs (Section 12.1):* Which functions \(F : \mathbb R \to [0,1]\) can arise as the CDF
+   of a random variable? Proposition 12.1 shows that every CDF is nondecreasing, right-continuous, and
+   tends to \(0\) at \(-\infty\) and \(1\) at \(+\infty\), with jumps corresponding to point masses
+   (*atoms*).
+2. *From CDFs back to measures (Section 12.2):* Conversely, if we write down *any* nondecreasing,
+   right-continuous function \(F : \mathbb R \to \mathbb R\), does there exist a Borel measure \(\mu_F\)
+   on \(\mathbb R\) whose interval increments are \(\mu_F((a,b]) = F(b) - F(a)\)? Theorem 12.3
+   (Lebesgue–Stieltjes measure) proves that the answer is *yes*, and shows how integrating against
+   \(\mu_F\) unifies discrete sums, continuous density integrals, and mixed distributions under a single
+   integral \(\int g(x)\,dF(x)\).
+3. *From a CDF to an explicit random variable (Section 12.3):* Given a valid CDF \(F\), can we construct
+   an explicit random variable \(X\) having CDF \(F\) on a concrete probability space? Proposition 12.6
+   (the *quantile transform*) shows that if \(U\) is uniform on \((0,1)\) and \(Q(u) = \inf\{x : F(x) \ge u\}\)
+   is the generalized inverse of \(F\), then \(X = Q(U)\) has CDF \(F\).
+
+** Probability motivation
+
+In elementary probability courses, discrete random variables (specified by probability mass functions
+and summed with \(\sum_x g(x) p(x)\)) and continuous random variables (specified by probability density
+functions and integrated with \(\int g(x) f(x)\,dx\)) are treated as two separate worlds. Worse still,
+many real-world variables belong to *neither* world:
+- Insurance claims or daily rainfall equals \(0\) with positive probability (say \(1/2\), an *atom* at
+  \(0\)), and varies continuously over \((0, \infty)\) when positive (Example 12.2).
+- Singular distributions (such as the random ternary series in Example 13.7 of the next chapter) have
+  *no* atoms (continuous CDF) yet *no* density either!
+
+The Lebesgue–Stieltjes measure \(\mu_F\) and the quantile transform \(Q(U)\) handle *all* probability
+laws on \(\mathbb R\) on an equal footing. Note also what the law \(\mu_X\) (or \(F_X\)) does *and does
+not* record: it records the probabilities of all value events \(\{X \in B\}\), so it determines
+\(\mathbb E[g(X)]\) for every Borel function \(g\), but it does *not* retain how \(X\) is coupled to
+other random variables \(Y\) on \(\Omega\) (that is the subject of Chapter 13).
+
+** Roadmap
+
+- 12.1 Cumulative distribution functions: properties of \(F_X\) (Proposition 12.1), interval and point
+  probabilities, atoms (countably many jumps), and a mixed law (Example 12.2).
+- 12.2 Constructing a measure from interval increments: the Lebesgue–Stieltjes theorem (Theorem 12.3),
+  the Lebesgue–Stieltjes integral \(\int g\,dF\) (Example 12.4), and when a density exists (Remark 12.5).
+- 12.3 Quantiles and realizing a prescribed law: the quantile function \(Q(u)\), the fundamental
+  equivalence \(Q(u) \le x \iff u \le F(x)\) (Proposition 12.6), and explicit examples (Example 12.7).
+
+** What you need from earlier chapters
+
+- Measures, continuity from below and from above: [[file:ch02-measures.org][Chapter 2]].
+- Measurable functions, image measures \(\mu_X = X_\# \mathbb P\), and the image-measure integration
+  formula \(\mathbb E[g(X)] = \int g\,d\mu_X\): [[file:ch03-measurable-functions.org][Chapter 3]], [[file:ch06-integration.org][Chapter 6]].
+- Uniqueness of finite measures agreeing on a generating \(\pi\)-system (half-lines \((-\infty, x]\) or
+  half-open intervals \((a,b]\)): [[file:ch04-uniqueness.org][Chapter 4]].
+- Algebra of half-open intervals, continuity at \(\emptyset\), and Carathéodory's extension theorem:
+  [[file:ch05-construction.org][Chapter 5]].
+- Monotone Convergence Theorem (applied to counting measure on \(\mathbb N\) to swap \(\lim_m\) and
+  \(\sum_j\)): [[file:ch06-integration.org][Chapter 6]].
+
+* 12.1 Cumulative distribution functions
+
+** Intuition
+
+Think of a probability measure \(\mu_X\) on \(\mathbb R\) as one unit of "probability mass" (or sand)
+spread out along the real line. Some of the sand may be spread smoothly like a layer of dust, and some
+may be concentrated in heavy pebbles (*atoms*) at specific points.
+
+To describe this distribution of mass by a function of one variable \(x \in \mathbb R\), imagine
+sweeping a bulldozer from \(-\infty\) up to position \(x\), *including* the point \(x\) itself, and
+weighing all the mass collected in \((-\infty, x]\):
+\[
+F_X(x) = \mathbb P(X \le x) = \mu_X((-\infty, x]).
+\]
+What happens as we move \(x\) from left to right?
+- As \(x\) moves right, we only collect *more* mass, so \(F_X(x)\) never decreases.
+- If there is a heavy pebble of mass \(p > 0\) sitting at \(x_0\), then as \(x\) approaches \(x_0\) from
+   the *left* (\(y \uparrow x_0\)), the bulldozer \((-\infty, y]\) stops just short of the pebble,
+  measuring \(\mathbb P(X < x_0)\). The instant \(x\) reaches \(x_0\), the pebble is scooped up into
+  \((-\infty, x_0]\), so \(F_X\) jumps up by \(p = \mathbb P(X = x_0)\).
+- If \(x_n\) approaches \(x_0\) from the *right* (\(x_n \downarrow x_0\)), the pebble at \(x_0\) is
+  already inside every \((-\infty, x_n]\), and the extra interval \((x_0, x_n]\) shrinks to the empty
+  set, so \(F_X(x_n) \downarrow F_X(x_0)\) (*right-continuity*).
+
+** Definition and basic properties
+
+#+begin_quote
+*Definition (Cumulative distribution function).* Let \(X\) be a real-valued random variable on
+\((\Omega, \mathcal F, \mathbb P)\) with law \(\mu_X = X_\# \mathbb P\). The *cumulative distribution
+function* (abbreviated *CDF*) of \(X\) is the function \(F_X : \mathbb R \to [0,1]\) defined by
+\[
+F_X(x) := \mathbb P(X \le x) = \mu_X((-\infty, x]), \qquad x \in \mathbb R.
+\]
+#+end_quote
+
+#+begin_quote
+*Proposition 12.1.* Every CDF \(F_X\) is nondecreasing and right-continuous, with limits zero at
+\(-\infty\) and one at \(+\infty\):
+\[
+\lim_{x \to -\infty} F_X(x) = 0, \qquad \lim_{x \to +\infty} F_X(x) = 1.
+\]
+Furthermore, for every \(a < b\) and every \(x \in \mathbb R\),
+\[
+\mathbb P(a < X \le b) = F_X(b) - F_X(a), \qquad \mathbb P(X = x) = F_X(x) - F_X(x-),
+\]
+where \(F_X(x-) := \lim_{y \uparrow x} F_X(y)\) denotes the left-hand limit at \(x\).
+#+end_quote
+
+** Proof
+
+Every single statement translates a set operation on half-lines into a property of the probability
+measure \(\mathbb P\) (or \(\mu_X\)) from Chapter 2:
+
+1. *Nondecreasing:* If \(x_1 \le x_2\), then \((-\infty, x_1] \subseteq (-\infty, x_2]\), so
+   \(\{X \le x_1\} \subseteq \{X \le x_2\}\). By monotonicity of \(\mathbb P\),
+   \(F_X(x_1) \le F_X(x_2)\).
+2. *Right-continuity:* Fix \(x \in \mathbb R\) and let \(x_n \downarrow x\) (meaning \(x_1 \ge x_2 \ge \dots \ge x\)
+   and \(\lim_{n\to\infty} x_n = x\)). Then the events \(A_n := \{X \le x_n\}\) decrease (\(A_1 \supseteq A_2 \supseteq \dots\)),
+   and since \(X(\omega) \le x_n\) for all \(n\) holds if and only if \(X(\omega) \le x\), their
+   intersection is
+   \[
+   \bigcap_{n=1}^\infty \{X \le x_n\} = \{X \le x\}.
+   \]
+   Since \(\mathbb P(A_1) \le 1 < \infty\), continuity of \(\mathbb P\) from above (Chapter 2) gives
+   \(\lim_{n\to\infty} F_X(x_n) = F_X(x)\). Because \(F_X\) is monotone, checking sequential limits
+   \(x_n \downarrow x\) implies \(\lim_{y \downarrow x} F_X(y) = F_X(x)\).
+3. *Limits at \(\pm \infty\):* Since \(F_X\) is nondecreasing, its limits as \(x \to +\infty\) and
+   \(x \to -\infty\) exist and equal the sequential limits along \(n \to \infty\) and \(-n \to -\infty\).
+   - As \(n \uparrow \infty\), the events \(\{X \le n\}\) increase to \(\bigcup_{n=1}^\infty \{X \le n\} = \Omega\)
+     (since \(X\) is real-valued, every outcome \(X(\omega) \in \mathbb R\) is \(\le n\) for some integer
+     \(n\)). By continuity from below, \(\lim_{n\to\infty} F_X(n) = \mathbb P(\Omega) = 1\).
+   - As \(n \uparrow \infty\), the events \(\{X \le -n\}\) decrease to \(\bigcap_{n=1}^\infty \{X \le -n\} = \emptyset\)
+     (no real number is \(\le -n\) for all \(n\)). By continuity from above,
+     \(\lim_{n\to\infty} F_X(-n) = \mathbb P(\emptyset) = 0\).
+4. *Half-open interval formula:* For \(a < b\), we have the disjoint union
+   \(\{X \le b\} = \{X \le a\} \sqcup \{a < X \le b\}\). Subtracting \(\mathbb P(X \le a) < \infty\)
+   gives \(\mathbb P(a < X \le b) = F_X(b) - F_X(a)\).
+5. *Point-mass (jump) formula:* Fix \(x \in \mathbb R\). Since \(F_X\) is nondecreasing, the left limit
+   \(F_X(x-) = \lim_{y \uparrow x} F_X(y)\) exists and can be computed along \(y_n = x - 1/n \uparrow x\).
+   The events \(\{X \le x - 1/n\}\) increase as \(n \uparrow \infty\), and a real number satisfies
+   \(X(\omega) < x\) if and only if \(X(\omega) \le x - 1/n\) for some \(n \ge 1\):
+   \[
+   \bigcup_{n=1}^\infty \{X \le x - 1/n\} = \{X < x\}.
+   \]
+   By continuity from below, \(F_X(x-) = \lim_{n\to\infty} F_X(x - 1/n) = \mathbb P(X < x)\). Finally,
+   since \(\{X \le x\} = \{X < x\} \sqcup \{X = x\}\), subtracting gives
+   \(\mathbb P(X = x) = \mathbb P(X \le x) - \mathbb P(X < x) = F_X(x) - F_X(x-)\). \(\blacksquare\)
+
+** Atoms and discontinuities of a CDF
+
+#+begin_quote
+*Definition (Atom).* A point \(x \in \mathbb R\) with \(\mathbb P(X = x) = \mu_X(\{x\}) > 0\) is called
+an *atom* (or *point mass*) of the law \(\mu_X\).
+#+end_quote
+
+By Proposition 12.1, \(x\) is an atom of \(\mu_X\) if and only if \(F_X(x) - F_X(x-) > 0\), which means
+\(F_X\) has a jump discontinuity at \(x\) (since \(F_X\) is right-continuous, \(F_X\) is continuous at
+\(x\) iff \(F_X(x-) = F_X(x)\)).
+
+*Why can a probability law have at most countably many atoms?*
+Suppose we collect all atoms into the set \(A = \{x \in \mathbb R : \mathbb P(X = x) > 0\}\). Every
+positive real number exceeds \(1/m\) for some integer \(m \ge 1\), so we can write \(A\) as a countable
+union of threshold sets:
+\[
+A = \bigcup_{m=1}^\infty A_m, \qquad \text{where } A_m := \Big\{x \in \mathbb R : \mathbb P(X = x) \ge \frac{1}{m}\Big\}.
+\]
+How many points can belong to \(A_m\)? *At most \(m\)!* Indeed, if \(x_1, \dots, x_k \in A_m\) are distinct
+points, the singletons \(\{X = x_1\}, \dots, \{X = x_k\}\) are pairwise disjoint events, so finite
+additivity gives
+\[
+\frac{k}{m} \le \sum_{j=1}^k \mathbb P(X = x_j) = \mathbb P\big(X \in \{x_1, \dots, x_k\}\big) \le \mathbb P(\Omega) = 1 \quad \Longrightarrow \quad k \le m.
+\]
+Thus each \(A_m\) is a *finite* set (of size at most \(m\)), and \(A = \bigcup_{m=1}^\infty A_m\) is a
+countable union of finite sets, hence *countable* (finite or countably infinite). In particular:
+
+#+begin_quote
+*Corollary.* Every CDF has at most countably many discontinuities, and all of its discontinuities are
+jump discontinuities.
+#+end_quote
+
+** Example from the notes: a mixed law
+
+#+begin_quote
+*Example 12.2 (A law with an atom and a continuous part).* On \((\mathbb R, \mathcal B(\mathbb R))\),
+let
+\[
+\mu = \frac{1}{2}\delta_0 + \frac{1}{2}\lambda|_{(0,1)},
+\]
+where \(\delta_0\) is the Dirac point mass at \(0\) and \(\lambda|_{(0,1)}\) is the restriction of
+Lebesgue measure \(\lambda\) to \((0,1)\), defined by
+\[
+\lambda|_{(0,1)}(B) := \lambda\big(B \cap (0,1)\big), \qquad B \in \mathcal B(\mathbb R).
+\]
+Let us compute the CDF \(F(x) = \mu((-\infty, x])\) in three regimes:
+1. *For \(x < 0\):* \((-\infty, x]\) does not contain \(0\) and does not intersect \((0,1)\), so
+   \(F(x) = \frac{1}{2}(0) + \frac{1}{2}(0) = 0\).
+2. *For \(0 \le x \le 1\):* \((-\infty, x]\) contains \(0\) (so \(\delta_0((-\infty, x]) = 1\)) and its
+   intersection with \((0,1)\) is \((0,x]\) of length \(x\). Thus
+   \[
+   F(x) = \frac{1}{2}\cdot 1 + \frac{1}{2}\cdot x = \frac{1 + x}{2}.
+   \]
+3. *For \(x > 1\):* \((-\infty, x]\) contains \(0\) and all of \((0,1)\), so
+   \(F(x) = \frac{1}{2}(1) + \frac{1}{2}(1) = 1\).
+
+Thus \(\mu(\{0\}) = F(0) - F(0-) = 1/2 - 0 = 1/2\), while \(\mu((0, 1/2]) = F(1/2) - F(0) = 3/4 - 1/2 = 1/4\).
+The same CDF contains both a discrete jump at \(0\) and a continuous sloping ramp on \([0,1]\). A
+probability law need not be purely discrete or have a density!
+#+end_quote
+
+Here is the graph of \(F(x)\) from Example 12.2 (corresponding to Figure 12.1 in the lecture notes):
+
+#+begin_example
+      F(x)
+        1 |                   *----------------
+          |                 . :
+          |               .   :   slope = 1/2
+          |             .     :
+      1/2 |           *       :  <-- solid dot at (0, 1/2): F(0) = 1/2
+          |           :       :      (jump of size 1/2 at x = 0)
+          |           :       :
+        0 +-----------o-------+---------------> x
+                      0       1
+                      ^-- open circle: F(0-) = 0
+#+end_example
+
+** Additional worked examples
+
+*Example A (All four interval probabilities from \(F_X\)).* For \(a < b\), Proposition 12.1 gives
+\(\mathbb P(a < X \le b) = F_X(b) - F_X(a)\). What about the other three endpoint combinations
+\([a,b]\), \([a,b)\), and \((a,b)\)? Whenever you include or exclude an endpoint, simply add or subtract
+the point mass at that endpoint using \(\mathbb P(X = c) = F_X(c) - F_X(c-)\):
+- \(\mathbb P(a \le X \le b) = \mathbb P(X = a) + \mathbb P(a < X \le b) = F_X(b) - F_X(a-)\).
+- \(\mathbb P(a < X < b) = \mathbb P(a < X \le b) - \mathbb P(X = b) = F_X(b-) - F_X(a)\).
+- \(\mathbb P(a \le X < b) = F_X(b-) - F_X(a-)\).
+
+For instance, in Example 12.2 with \(a = 0\) and \(b = 1/2\):
+- \(\mu((0, 1/2]) = F(1/2) - F(0) = 3/4 - 1/2 = 1/4\),
+- \(\mu([0, 1/2]) = F(1/2) - F(0-) = 3/4 - 0 = 3/4\) (includes the atom of mass \(1/2\) at \(0\)!).
+
+* 12.2 Constructing a measure from interval increments
+
+** Intuition
+
+Proposition 12.1 showed that every Borel probability measure \(\mu\) on \(\mathbb R\) produces a
+nondecreasing, right-continuous function \(F\) with \(\mu((a,b]) = F(b) - F(a)\). Now we want to go
+*backwards*: given *any* nondecreasing, right-continuous function \(F : \mathbb R \to \mathbb R\), can
+we construct a locally finite Borel measure \(\mu_F\) on \(\mathbb R\) whose mass on every half-open
+interval \((a,b]\) is \(F(b) - F(a)\)?
+
+Wait — haven't we seen this story before? Yes! In Chapter 5, we constructed *Lebesgue measure* \(\lambda\)
+from the special function \(F(x) = x\), where \(\lambda((a,b]) = b - a\). The exact same blueprint works
+for a general nondecreasing right-continuous \(F\):
+1. Work first on a bounded half-open interval \((-m, m]\), on the algebra of finite unions of half-open
+   subintervals \((u, v]\), where we prescribe \(\mu_0((u,v]) := F(v) - F(u)\).
+2. Check that \(\mu_0\) is continuous at \(\emptyset\) by shrinking each \((u,v]\) slightly at its
+   *left* endpoint to \((u+\delta, v]\). Why does the lost mass \(\mu_0((u, u+\delta]) = F(u+\delta) - F(u)\)
+   become tiny as \(\delta \downarrow 0\)? *Because \(F\) is right-continuous at \(u\)!* (This is the
+   exact spot where right-continuity of \(F\) is used!)
+3. Apply Carathéodory's theorem on \((-m, m]\) to get a finite Borel measure \(\mu_F^{(m)}\), and then
+   let \(m \to \infty\).
+
+#+begin_example
+   Shrinking (u, v] at its left endpoint to get a compact K_n = [u+delta, v]:
+
+        u     u+delta                    v
+   -----o-------[------------------------]----->
+        \_______/\_______________________/
+        lost mass        compact interval
+   F(u+delta) - F(u)        [u+delta, v]
+      -> 0 as delta -> 0+
+      by RIGHT-CONTINUITY of F at u!
+#+end_example
+
+** The Lebesgue–Stieltjes theorem
+
+#+begin_quote
+*Theorem 12.3 (Lebesgue–Stieltjes measure).* Let \(F : \mathbb R \to \mathbb R\) be right-continuous and
+nondecreasing. There is a unique Borel measure \(\mu_F\) on \(\mathbb R\), finite on compact sets, such
+that
+\[
+\mu_F((a,b]) = F(b) - F(a) \qquad (a < b). \tag{12.1}
+\]
+If in addition \(F(-\infty) := \lim_{x\to-\infty} F(x) = 0\) and \(F(+\infty) := \lim_{x\to+\infty} F(x) = 1\),
+then \(\mu_F\) is a probability measure with CDF \(F\).
+#+end_quote
+
+** Proof
+
+We follow the four steps of the notes, unpacking every detail.
+
+*Step 1. Work on a bounded interval \((a,b]\) and define the premeasure on its algebra.*
+Fix \(a < b\) and take \(X = (a,b]\) as the underlying space. Let \(\mathcal A\) be the algebra of all
+finite unions of half-open intervals \((u,v] \subseteq (a,b]\) (recall from Chapter 5 that every
+\(E \in \mathcal A\) can be written as a finite union of *pairwise disjoint* intervals
+\(E = \bigsqcup_{i=1}^k (u_i, v_i]\)). Define \(\mu_0 : \mathcal A \to [0, \infty)\) by summing the
+increments over the disjoint pieces:
+\[
+\mu_0\Big(\bigsqcup_{i=1}^k (u_i, v_i]\Big) := \sum_{i=1}^k \big(F(v_i) - F(u_i)\big) \ge 0.
+\]
+Why is \(\mu_0\) well-defined and finitely additive? If a single interval \((u,v]\) is split at an
+interior point \(w \in (u,v)\) into \((u,w] \sqcup (w,v]\), the sum telescopes:
+\[
+\big(F(w) - F(u)\big) + \big(F(v) - F(w)\big) = F(v) - F(u).
+\]
+By induction, splitting \((u,v]\) at any finite number of points preserves the sum. Given any two
+representations of \(E \in \mathcal A\) as disjoint unions of half-open intervals, taking the common
+refinement formed by *all* endpoints of both representations splits each interval of either representation
+into finitely many subintervals, and both sums equal the sum over the common refinement. Finite additivity
+follows immediately, and the total mass \(\mu_0((a,b]) = F(b) - F(a) < \infty\) is finite.
+
+*Step 2. Prove continuity at the empty set on \(\mathcal A\).*
+By Chapter 5, a finitely additive finite measure \(\mu_0\) on an algebra \(\mathcal A\) is countably
+additive (a premeasure) if and only if whenever \(E_1 \supseteq E_2 \supseteq \dots\) in \(\mathcal A\)
+decrease to \(\bigcap_{n=1}^\infty E_n = \emptyset\), we have \(\lim_{n\to\infty} \mu_0(E_n) = 0\).
+
+Fix \(\varepsilon > 0\) and fix \(n \ge 1\). The algebra set \(E_n\) is a disjoint union of finitely
+many half-open intervals, say \(E_n = \bigsqcup_{i=1}^{k_n} (u_i, v_i]\) with \(u_i < v_i\). For each
+piece \((u_i, v_i]\), because \(F\) is *right-continuous* at \(u_i\), we have
+\[
+\lim_{\delta \downarrow 0} \mu_0((u_i, u_i + \delta]) = \lim_{\delta \downarrow 0} \big(F(u_i + \delta) - F(u_i)\big) = 0.
+\]
+Choose \(\delta_i \in (0, v_i - u_i)\) small enough that \(F(u_i + \delta_i) - F(u_i) < \varepsilon 2^{-n} / k_n\).
+Define the shrunken algebra set \(C_n \in \mathcal A\) and its closure \(K_n\) (which includes the new
+left endpoints \(u_i + \delta_i\)) by
+\[
+C_n := \bigsqcup_{i=1}^{k_n} (u_i + \delta_i, v_i] \in \mathcal A, \qquad
+K_n := \bigcup_{i=1}^{k_n} [u_i + \delta_i, v_i].
+\]
+Then \(K_n\) is a finite union of closed bounded intervals, hence *compact*, and
+\[
+C_n \subseteq K_n \subseteq E_n, \qquad
+\mu_0(E_n \setminus C_n) = \sum_{i=1}^{k_n} \mu_0((u_i, u_i + \delta_i]) < k_n \cdot \frac{\varepsilon 2^{-n}}{k_n} = \varepsilon 2^{-n}.
+\]
+(Notice the careful bookkeeping: \(\mu_0\) is only defined on the algebra \(\mathcal A\), so we never
+write "\(\mu_0(K_n)\)"; we only apply \(\mu_0\) to the algebra sets \(E_n\), \(C_n\), and \(E_n \setminus C_n\).)
+
+Now consider the compact sets \(K_n \subseteq E_n\). Since \(\bigcap_{n=1}^\infty E_n = \emptyset\), we
+also have \(\bigcap_{n=1}^\infty K_n = \emptyset\). By the finite intersection property of compact sets
+(Chapter 0 / Chapter 8: if every finite intersection \(\bigcap_{j=1}^N K_j\) were nonempty, the
+decreasing sequence of nonempty compact sets \(\widetilde K_N := \bigcap_{j=1}^N K_j \subseteq K_1\)
+would have a common point, contradicting \(\bigcap_{n=1}^\infty K_n = \emptyset\)), there is some finite
+index \(N \ge 1\) such that
+\[
+\bigcap_{j=1}^N K_j = \emptyset.
+\]
+Take any point \(x \in E_N\). Since \(E_1 \supseteq E_2 \supseteq \dots \supseteq E_N\), \(x\) belongs
+to \(E_j\) for every \(1 \le j \le N\). On the other hand, since \(\bigcap_{j=1}^N K_j = \emptyset\),
+\(x\) must fail to belong to \(K_j\) for at least one \(j \in \{1, \dots, N\}\). For that \(j\),
+\(x \in E_j \setminus K_j \subseteq E_j \setminus C_j\) (because \(C_j \subseteq K_j\)). This proves the
+set inclusion
+\[
+E_N \subseteq \bigcup_{j=1}^N (E_j \setminus C_j).
+\]
+Since \(E_N\) and all \(E_j \setminus C_j\) belong to the algebra \(\mathcal A\), finite subadditivity
+of \(\mu_0\) on \(\mathcal A\) applies and yields
+\[
+\mu_0(E_N) \le \sum_{j=1}^N \mu_0(E_j \setminus C_j) < \sum_{j=1}^N \varepsilon 2^{-j} < \varepsilon.
+\]
+Since \(\mu_0(E_n)\) is nonincreasing in \(n\), we have \(\mu_0(E_n) \le \mu_0(E_N) < \varepsilon\) for
+all \(n \ge N\). Because \(\varepsilon > 0\) was arbitrary, \(\lim_{n\to\infty} \mu_0(E_n) = 0\).
+
+*Step 3. Extend to Borel sets on \((-m, m]\) and glue across \(m \ge 1\).*
+By Carathéodory's extension theorem (Chapter 5), \(\mu_0\) extends to a finite measure on
+\(((a,b], \sigma(\mathcal A))\). Since every open interval \((u,v) \subseteq (a,b]\) is a countable union
+of half-open intervals \(\bigcup_{k} (u, v - 1/k]\), we have \(\sigma(\mathcal A) = \mathcal B((a,b])\).
+
+Apply this construction on \((-m, m]\) for each integer \(m \ge 1\) to obtain a finite Borel measure
+\(\mu_F^{(m)}\) on \((-m, m]\). For \(m' > m\), the restriction of \(\mu_F^{(m')}\) to \((-m, m]\)
+agrees with \(\mu_F^{(m)}\) on all half-open subintervals \((u,v] \subseteq (-m, m]\) (both give
+\(F(v) - F(u)\)), which form a \(\pi\)-system generating \(\mathcal B((-m,m])\). By the finite-measure
+uniqueness theorem (Chapter 4), \(\mu_F^{(m')}\) restricts to \(\mu_F^{(m)}\) on \((-m, m]\).
+
+Therefore, for any Borel set \(E \in \mathcal B(\mathbb R)\), the sequence \(\mu_F^{(m)}(E \cap (-m, m])\)
+is *nondecreasing* in \(m\) (since \(E \cap (-m, m] \subseteq E \cap (-(m+1), m+1]\) and the measures
+are compatible). We define
+\[
+\mu_F(E) := \lim_{m \to \infty} \mu_F^{(m)}\big(E \cap (-m, m]\big) \in [0, \infty].
+\]
+Clearly \(\mu_F(\emptyset) = 0\). To verify countable additivity of \(\mu_F\) on pairwise disjoint Borel
+sets \(E_1, E_2, \dots \in \mathcal B(\mathbb R)\):
+1. For each *fixed* \(m \ge 1\), countable additivity of the measure \(\mu_F^{(m)}\) gives
+   \[
+   \mu_F^{(m)}\Big(\Big(\bigsqcup_{j=1}^\infty E_j\Big) \cap (-m, m]\Big)
+   = \sum_{j=1}^\infty \mu_F^{(m)}\big(E_j \cap (-m, m]\big).
+   \]
+2. As \(m \uparrow \infty\), each non-negative summand \(a_m(j) := \mu_F^{(m)}(E_j \cap (-m, m])\)
+   increases monotonically to \(\mu_F(E_j)\). Viewing \(\sum_{j=1}^\infty a_m(j)\) as the integral of
+   \(j \mapsto a_m(j)\) with respect to *counting measure* on \(\mathbb N\) (which does not depend on
+   the measure \(\mu_F\) we are constructing!), the Monotone Convergence Theorem (Chapter 6) allows us
+   to swap \(\lim_{m\to\infty}\) and \(\sum_{j=1}^\infty\):
+   \[
+   \mu_F\Big(\bigsqcup_{j=1}^\infty E_j\Big)
+   = \lim_{m\to\infty} \sum_{j=1}^\infty \mu_F^{(m)}\big(E_j \cap (-m, m]\big)
+   = \sum_{j=1}^\infty \lim_{m\to\infty} \mu_F^{(m)}\big(E_j \cap (-m, m]\big)
+   = \sum_{j=1}^\infty \mu_F(E_j).
+   \]
+Thus \(\mu_F\) is a Borel measure on \(\mathbb R\). Every compact set \(K \subseteq \mathbb R\) is
+bounded, so \(K \subseteq (-m, m]\) for some \(m \ge 1\), giving \(\mu_F(K) = \mu_F^{(m)}(K) \le F(m) - F(-m) < \infty\)
+(locally finite). Similarly, any \((a,b]\) lies inside \((-m, m]\) for large \(m\), so
+\(\mu_F((a,b]) = F(b) - F(a)\). Finally, if any other Borel measure \(\nu\) satisfies (12.1), then
+\(\nu\) and \(\mu_F\) agree on each \((-m, m]\) by \(\pi\)-system uniqueness, hence on all of
+\(\mathcal B(\mathbb R)\) by continuity from below along \(E \cap (-m, m] \uparrow E\).
+
+*Step 4. Check the CDF case.*
+Suppose \(\lim_{x\to-\infty} F(x) = 0\) and \(\lim_{x\to+\infty} F(x) = 1\). Since \((-m, m] \uparrow \mathbb R\)
+as \(m \to \infty\), continuity from below gives
+\[
+\mu_F(\mathbb R) = \lim_{m\to\infty} \mu_F((-m, m]) = \lim_{m\to\infty} \big(F(m) - F(-m)\big) = 1 - 0 = 1,
+\]
+so \(\mu_F\) is a probability measure. And for any fixed \(x \in \mathbb R\), since \((-m, x] \uparrow (-\infty, x]\)
+for \(m > |x|\), continuity from below gives
+\[
+\mu_F((-\infty, x]) = \lim_{m\to\infty} \mu_F((-m, x]) = \lim_{m\to\infty} \big(F(x) - F(-m)\big) = F(x) - 0 = F(x). \quad \blacksquare
+\]
+
+#+begin_quote
+*Takeaway.* Combining Proposition 12.1 and Theorem 12.3 gives a *complete characterization of CDFs*: a
+function \(F : \mathbb R \to \mathbb R\) is the CDF of a Borel probability measure on \(\mathbb R\) if
+and only if \(F\) is nondecreasing, right-continuous, \(\lim_{x\to-\infty} F(x) = 0\), and
+\(\lim_{x\to+\infty} F(x) = 1\). Notice also why we used half-open intervals \((a,b]\) with the right
+endpoint included: the mass at \(b\) is retained in \((a,b]\) and reflected in \(F(b)\).
+#+end_quote
+
+** The Lebesgue–Stieltjes integral
+
+#+begin_quote
+*Definition (Lebesgue–Stieltjes integral).* For a nondecreasing right-continuous function
+\(F : \mathbb R \to \mathbb R\) and a Borel measurable function \(g : \mathbb R \to \mathbb R\) (either
+nonnegative, or integrable with respect to \(\mu_F\)), the *Lebesgue–Stieltjes integral* of \(g\) with
+respect to \(F\), written
+\[
+\int g\,dF \qquad \text{or} \qquad \int_{\mathbb R} g(x)\,dF(x),
+\]
+is simply another notation for the measure-theoretic integral \(\int_{\mathbb R} g\,d\mu_F\). It is *not*
+a separate definition of integration!
+#+end_quote
+
+In particular, if \(X\) is a real-valued random variable with law \(\mu_X = \mu_{F_X}\) and CDF \(F_X\),
+the image-measure integration formula (Chapter 6) states that
+\[
+\mathbb E[g(X)] = \int_{\Omega} g(X(\omega))\,d\mathbb P(\omega) = \int_{\mathbb R} g(x)\,d\mu_X(x) = \int_{\mathbb R} g(x)\,dF_X(x)
+\]
+whenever either side is defined (i.e. \(g \ge 0\) Borel, or \(g(X) \in L^1(\mathbb P)\)).
+
+** Examples and remarks from the notes
+
+#+begin_quote
+*Example 12.4 (Three kinds of integral).*
+1. *Lebesgue measure:* If \(F(x) = x\), then \(\mu_F((a,b]) = b - a\), so \(\mu_F = \lambda\) is
+   Lebesgue measure and \(\int g(x)\,dF(x) = \int g(x)\,dx\).
+2. *Point mass:* If \(F(x) = \mathbf 1_{[a, \infty)}(x)\) (which is \(0\) for \(x < a\) and \(1\) for
+   \(x \ge a\)), then \(\mu_F = \delta_a\) is the Dirac point mass at \(a\), and
+   \(\int g(x)\,dF(x) = g(a)\).
+3. *Mixed law:* For the mixed law \(\mu = \frac{1}{2}\delta_0 + \frac{1}{2}\lambda|_{(0,1)}\) of
+   Example 12.2, integrating any Borel function \(g \ge 0\) (or \(g \in L^1(\mu)\)) gives
+   \[
+   \int_{\mathbb R} g\,dF = \frac{1}{2} g(0) + \frac{1}{2} \int_0^1 g(x)\,dx.
+   \]
+   For instance, if \(X\) has this law:
+   - Its *mean* (\(g(x) = x\)) is \(\mathbb E[X] = \frac{1}{2}(0) + \frac{1}{2}\int_0^1 x\,dx = \frac{1}{2}\cdot\frac{1}{2} = \frac{1}{4}\).
+   - Its *second moment* (\(g(x) = x^2\)) is \(\mathbb E[X^2] = \frac{1}{2}(0^2) + \frac{1}{2}\int_0^1 x^2\,dx = \frac{1}{2}\cdot\frac{1}{3} = \frac{1}{6}\).
+   - What if we take \(g(x) = \mathbf 1_{\{0\}}(x)\) or \(g(x) = \cos x\)? Then \(\mathbb E[\cos X] = \frac{1}{2}\cos(0) + \frac{1}{2}\int_0^1 \cos x\,dx = \frac{1}{2} + \frac{\sin 1}{2}\).
+   Notice that if you naively tried to replace \(\int_{\mathbb R} g(x)\,dF(x)\) by \(\int_{\mathbb R} g(x) F'(x)\,dx\)
+   using the ordinary derivative \(F'(x) = \frac{1}{2}\mathbf 1_{(0,1)}(x)\) (where defined), you would
+   get \(\frac{1}{2}\int_0^1 g(x)\,dx\), *completely losing the atom of mass \(1/2\) at zero* (for
+   \(g \equiv 1\), it would give total probability \(1/2\) instead of \(1\)!).
+#+end_quote
+
+#+begin_quote
+*Remark 12.5 (Densities are an additional property).* A probability law \(\mu\) on \(\mathbb R\) is said
+to have a *density* (or *probability density function*, PDF) \(f\) with respect to Lebesgue measure if
+\(f : \mathbb R \to [0, \infty)\) is Borel measurable and
+\[
+\mu(B) = \int_B f(x)\,dx \qquad \text{for every } B \in \mathcal B(\mathbb R).
+\]
+When a density \(f\) exists:
+- Necessarily \(\int_{\mathbb R} f(x)\,dx = \mu(\mathbb R) = 1\), and the CDF is given by
+  \(F(x) = \mu((-\infty, x]) = \int_{-\infty}^x f(t)\,dt\).
+- Conversely, if \(f \ge 0\) is Borel measurable with \(\int_{\mathbb R} f(t)\,dt = 1\), then
+  \(F(x) := \int_{-\infty}^x f(t)\,dt\) defines a CDF whose Lebesgue–Stieltjes measure \(\mu_F\) agrees
+  with \(B \mapsto \int_B f(x)\,dx\) on all half-lines \((-\infty, x]\), hence on all Borel sets by
+  uniqueness.
+- *When can a law fail to have a density?*
+  1. *Any atom rules out a density:* If \(\mu(\{x_0\}) > 0\), then \(\mu\) cannot have a density,
+     because for any function \(f\), the Lebesgue integral over a singleton is always zero:
+     \(\int_{\{x_0\}} f(x)\,dx = 0 \ne \mu(\{x_0\})\).
+  2. *Even an atom-free law (continuous CDF) need not have a density!* In Section 13.3 (Example 13.7),
+     we will construct a random variable \(Z = \sum_{n=1}^\infty 2 B_n 3^{-n}\) (the Cantor distribution)
+     whose CDF is continuous everywhere (\(\mu_Z(\{x\}) = 0\) for all \(x\)), yet all of its probability
+     mass lives on a Borel set \(K\) of Lebesgue measure \(\lambda(K) = 0\)! Any density would assign
+     \(\int_K f(x)\,dx = 0\) to \(K\), so no density can exist.
+#+end_quote
+
+* 12.3 Quantiles and realizing a prescribed law
+
+** Intuition
+
+Suppose someone hands you a valid CDF \(F\) — say the mixed law of Example 12.2, or an exponential CDF
+\(F(x) = (1 - e^{-x})\mathbf 1_{[0,\infty)}(x)\). Does there actually exist a probability space
+\((\Omega, \mathcal F, \mathbb P)\) and a random variable \(X\) on it whose CDF is \(F\)?
+- Abstractly, yes: Theorem 12.3 gives the measure \(\mu_F\) on \((\mathbb R, \mathcal B(\mathbb R))\),
+  and the identity map \(X(x) = x\) on \((\mathbb R, \mathcal B(\mathbb R), \mu_F)\) has CDF \(F\).
+- Practically and probabilistically, we want much more: we want a single fixed probability space on
+  which we can manufacture random variables with *any* prescribed CDF \(F\) out of a single standard
+  \(\mathrm{Uniform}(0,1)\) random variable \(U\)!
+
+How do we transform \(U \sim \mathrm{Uniform}(0,1)\) into a random variable \(X\) with CDF \(F\)?
+First imagine the easy case where \(F : \mathbb R \to (0,1)\) is continuous and *strictly increasing*,
+so it has a true inverse function \(F^{-1} : (0,1) \to \mathbb R\). Then for every \(u \in (0,1)\) and
+\(x \in \mathbb R\),
+\[
+F^{-1}(u) \le x \quad \Longleftrightarrow \quad u \le F(x).
+\]
+Consequently, if \(X = F^{-1}(U)\), then \(\mathbb P(X \le x) = \mathbb P(F^{-1}(U) \le x) = \mathbb P(U \le F(x)) = F(x)\)!
+
+What if \(F\) is a general CDF with *jumps* (atoms, where \(F\) skips over vertical intervals of \(u\))
+and *flat spots* (empty regions of zero probability, where \(F(x) = u\) for a whole horizontal interval
+of \(x\))?
+
+#+begin_example
+      F(x)
+        1 |                         . '
+          |                     . '
+       u_2| - - - - - - - - - *        <-- At u_2 in a jump at x_0:
+          |                   :            {x : F(x) >= u_2} = [x_0, inf),
+          |                   :            so inf is x_0!
+       u_1| - - - - *=========*        <-- At u_1 on a flat spot [a, b]:
+          |       . :         :            {x : F(x) >= u_1} = [a, inf),
+          |     .   :         :            so inf is the LEFT endpoint a!
+        0 +---------a---------x_0-----> x
+#+end_example
+
+We replace \(F^{-1}(u)\) by the *quantile function* (or *generalized inverse*): for each threshold
+\(u \in (0,1)\), look at all \(x \in \mathbb R\) where \(F(x)\) has reached at least level \(u\), and
+take the *first* (infimum) such \(x\):
+\[
+Q(u) := \inf\{x \in \mathbb R : F(x) \ge u\}.
+\]
+Because \(F\) is *right-continuous*, the set \(\{x \in \mathbb R : F(x) \ge u\}\) is a closed half-line
+\([Q(u), \infty)\) that *contains* its infimum \(Q(u)\)! That single fact makes the magic equivalence
+\(Q(u) \le x \iff u \le F(x)\) hold for *every* CDF \(F\), jumps and flat spots included!
+
+** Definition and the quantile construction
+
+#+begin_quote
+*Definition (Quantile function).* Let \(F : \mathbb R \to [0,1]\) be a CDF. For \(0 < u < 1\), define
+its *quantile function* \(Q : (0,1) \to \mathbb R\) by
+\[
+Q(u) := \inf\{x \in \mathbb R : F(x) \ge u\}.
+\]
+#+end_quote
+
+Let us check that \(Q(u)\) is always a finite real number for every \(u \in (0,1)\):
+- *The set \(S_u := \{x \in \mathbb R : F(x) \ge u\}\) is nonempty:* Since \(\lim_{x\to+\infty} F(x) = 1 > u\),
+  there exists \(x_1 \in \mathbb R\) large enough that \(F(x_1) \ge u\), so \(x_1 \in S_u\) and
+  \(Q(u) \le x_1 < +\infty\).
+- *The set \(S_u\) is bounded below:* Since \(\lim_{x\to-\infty} F(x) = 0 < u\), there exists
+  \(x_0 \in \mathbb R\) negative enough that \(F(x) < u\) for all \(x \le x_0\). Thus every \(x \in S_u\)
+  satisfies \(x > x_0\), so \(Q(u) \ge x_0 > -\infty\).
+
+#+begin_quote
+*Proposition 12.6 (Quantile construction).* Let \(F\) be a CDF with quantile function \(Q\). For every
+\(x \in \mathbb R\) and \(u \in (0,1)\),
+\[
+Q(u) \le x \quad \Longleftrightarrow \quad u \le F(x). \tag{12.2}
+\]
+Consequently, \(Q : (0,1) \to \mathbb R\) is Borel measurable. If \(U : \Omega \to (0,1)\) is measurable
+and has the uniform law \(\lambda|_{(0,1)}\), then the random variable \(X = Q(U)\) has CDF \(F\).
+#+end_quote
+
+** Proof
+
+Fix \(u \in (0,1)\) and write \(q := Q(u) = \inf\{y \in \mathbb R : F(y) \ge u\}\).
+
+1. *Key step: \(F\) attains at least \(u\) at the infimum \(q\), i.e. \(F(q) \ge u\).*
+   For each integer \(n \ge 1\), since \(q + 1/n > q = \inf\{y : F(y) \ge u\}\), \(q + 1/n\) is not a
+   lower bound for \(\{y : F(y) \ge u\}\). Therefore there exists some \(y_n < q + 1/n\) with
+   \(F(y_n) \ge u\). Since \(F\) is nondecreasing and \(y_n < q + 1/n\), we have
+   \[
+   F(q + 1/n) \ge F(y_n) \ge u \qquad \text{for every } n \ge 1.
+   \]
+   Now let \(n \to \infty\). Since \(q + 1/n \downarrow q\) and \(F\) is *right-continuous* at \(q\),
+   \[
+   F(q) = \lim_{n\to\infty} F(q + 1/n) \ge u.
+   \]
+2. *Proof of (\(\Longrightarrow\)) in (12.2):* Suppose \(q = Q(u) \le x\). Since \(F\) is nondecreasing,
+   \(F(x) \ge F(q) \ge u\) by Step 1.
+3. *Proof of (\(\Longleftarrow\)) in (12.2):* Conversely, suppose \(u \le F(x)\). Then \(x\) belongs to
+   the set \(\{y \in \mathbb R : F(y) \ge u\}\) whose infimum defines \(q = Q(u)\). Since the infimum of
+   a set is \(\le\) every element of that set, \(Q(u) = q \le x\). This proves (12.2).
+4. *Measurability of \(Q\):* By the half-line test for measurability (Chapter 3), \(Q : (0,1) \to \mathbb R\)
+   is Borel measurable if and only if \(\{u \in (0,1) : Q(u) \le x\} \in \mathcal B((0,1))\) for every
+   \(x \in \mathbb R\). By (12.2),
+   \[
+   \{u \in (0,1) : Q(u) \le x\} = \{u \in (0,1) : u \le F(x)\} = (0,1) \cap (0, F(x)],
+   \]
+   which is a half-open interval (or \(\emptyset\) if \(F(x) = 0\)), hence a Borel subset of \((0,1)\).
+5. *CDF of \(Q(U)\):* Suppose \(U : \Omega \to (0,1)\) has uniform law on \((0,1)\), meaning
+   \(\mathbb P(U \in (0, c]) = c\) for every \(c \in [0,1]\). For any \(x \in \mathbb R\), since
+   \(F(x) \in [0,1]\), applying (12.2) at every outcome \(\omega \in \Omega\) gives
+   \[
+   \mathbb P(Q(U) \le x) = \mathbb P(U \le F(x)) = F(x). \quad \blacksquare
+   \]
+
+#+begin_quote
+*Technical remark on the range of \(U\).* In practice (for example in Section 13.3, where \(U = \sum_{n=1}^\infty 2^{-n} B_n\)
+is built from coin tosses), a random variable \(U : \Omega \to \mathbb R\) with the uniform law on
+\((0,1)\) might take values in \([0,1]\) (or \(\mathbb R\)) rather than strictly in \((0,1)\) at every
+single outcome \(\omega\), even though \(\mathbb P(U \notin (0,1)) = 0\). Because \(Q(u)\) is only
+defined on \((0,1)\), before composing \(U\) with \(Q\) we redefine \(U\) on the measurable null event
+\(N := \{U \notin (0,1)\} \in \mathcal F\) by setting
+\[
+\widetilde U(\omega) := \begin{cases} U(\omega) & \text{if } U(\omega) \in (0,1), \\ 1/2 & \text{if } U(\omega) \notin (0,1). \end{cases}
+\]
+This modification changes \(U\) only on the specified measurable null set \(N \in \mathcal F\), so it
+preserves measurability and the uniform law (without needing any completeness assumption on
+\((\Omega, \mathcal F, \mathbb P)\)!) and ensures \(\widetilde U(\omega) \in (0,1)\) for *every*
+\(\omega \in \Omega\), making \(Q(\widetilde U(\omega))\) well-defined everywhere.
+#+end_quote
+
+** Examples from the notes
+
+#+begin_quote
+*Example 12.7 (An atom becomes an interval of quantiles; exponential law).*
+1. *The mixed law of Example 12.2:* Recall that \(F(x) = 0\) for \(x < 0\), \(F(x) = (1+x)/2\) for
+   \(0 \le x \le 1\), and \(F(x) = 1\) for \(x > 1\). Fix \(u \in (0,1)\) and ask: when is \(F(x) \ge u\)?
+   - *Case 1: \(0 < u \le 1/2\).* For every \(x < 0\) we have \(F(x) = 0 < u\), whereas at \(x = 0\)
+     the jump already reaches \(F(0) = 1/2 \ge u\). Thus \(\{x : F(x) \ge u\} = [0, \infty)\), whose
+     infimum is \(Q(u) = 0\). Notice how the *entire half-interval* \(u \in (0, 1/2]\) of uniform
+     parameters is mapped to the *single atom* \(0\), giving \(\mathbb P(Q(U) = 0) = \mathbb P(U \in (0, 1/2]) = 1/2\)!
+   - *Case 2: \(1/2 < u < 1\).* Here \(F(x) \ge u\) requires \(x \in (0,1]\) with \((1+x)/2 \ge u\) (or
+     \(x > 1\)), which solves to \(x \ge 2u - 1\). Thus \(\{x : F(x) \ge u\} = [2u - 1, \infty)\), and
+     \(Q(u) = 2u - 1\).
+   In summary:
+   \[
+   Q(u) = \begin{cases} 0, & 0 < u \le 1/2, \\ 2u - 1, & 1/2 < u < 1. \end{cases}
+   \]
+   You can also check (12.2) directly by substitution: e.g. for \(0 \le x \le 1\), \(Q(u) \le x\) holds
+   for all \(u \in (0, 1/2]\) (since \(0 \le x\)) and for \(u \in (1/2, 1)\) with \(2u - 1 \le x \iff u \le (1+x)/2 = F(x)\).
+2. *The exponential distribution \(\mathrm{Exp}(1)\):* Let \(F(x) = 1 - e^{-x}\) for \(x \ge 0\) and
+   \(F(x) = 0\) for \(x < 0\). For \(0 < u < 1\), since \(F(x) = 0 < u\) on \((-\infty, 0)\) and \(F\)
+   is strictly increasing on \([0, \infty)\), we solve
+   \[
+   1 - e^{-x} \ge u \quad \Longleftrightarrow \quad e^{-x} \le 1 - u \quad \Longleftrightarrow \quad x \ge -\log(1 - u).
+   \]
+   Thus the quantile function is
+   \[
+   Q(u) = -\log(1 - u), \qquad 0 < u < 1.
+   \]
+   This is how computer random number generators simulate an exponential waiting time from a uniform
+   random number \(U \in (0,1)\)!
+#+end_quote
+
+** Historical remark (Stieltjes, 1894)
+
+In his 1894 memoir /Recherches sur les fractions continues/ (/Annales de la Faculté des Sciences de
+Toulouse/ 8 (1894), Section 38, pp. J70–J71), Thomas Joannes Stieltjes interpreted an increasing
+function \(F\) on the line as the accumulated mass of a rod, with its jumps representing point masses
+concentrated at individual points. Stieltjes defined integrals \(\int_a^b g(x)\,dF(x)\) of *continuous*
+functions \(g\) as limits of Riemann-type sums \(\sum_i g(\xi_i)(F(x_i) - F(x_{i-1}))\) weighted by
+increments of the accumulated mass, and explicitly discussed how the value chosen for \(F\) at a jump
+allocates the point mass between adjacent intervals. Our right-continuous convention \(F(x) = \mu((-\infty, x])\)
+makes this endpoint allocation canonical, and combining Stieltjes's interval increments with Carathéodory's
+extension and Lebesgue integration allows arbitrary Borel measurable integrands \(g\).
+
+** Classroom route (from the notes)
+
+Develop the CDF through interval masses and atoms (Proposition 12.1), including the mixed-law picture
+(Example 12.2 and Figure 12.1). Explain the Lebesgue–Stieltjes construction (Theorem 12.3) and highlight
+where right-continuity is used. Prove the quantile equivalence \(Q(u) \le x \iff u \le F(x)\)
+(Proposition 12.6) and work through the mixed and exponential examples (Example 12.7); the compact
+approximation details of the Carathéodory extension remain available in the notes for reference.
+
+* Worked Exercises
+
+** Exercise 1
+Let \(X\) have the CDF
+\[
+F_X(x) = \begin{cases}
+0, & x < 0, \\
+\frac{1}{4} + \frac{x}{4}, & 0 \le x < 1, \\
+\frac{3}{4}, & 1 \le x < 2, \\
+1, & x \ge 2.
+\end{cases}
+\]
+1. Verify that \(F_X\) is a valid CDF.
+2. Find all atoms of \(\mu_X\) and their probabilities.
+3. Compute \(\mathbb P(0 < X < 1)\), \(\mathbb P(0 \le X \le 1)\), and \(\mathbb P(X \in (1, 2))\).
+4. Write the Lebesgue–Stieltjes measure \(\mu_X\) explicitly in terms of Dirac masses and restricted
+   Lebesgue measure, and compute \(\mathbb E[X]\).
+
+** Solution
+1. \(F_X\) is clearly nondecreasing on each piece, and at the breakpoints:
+   - \(F_X(0-) = 0 \le 1/4 = F_X(0) = \lim_{x\downarrow 0}(1/4 + x/4)\),
+   - \(F_X(1-) = 1/4 + 1/4 = 1/2 \le 3/4 = F_X(1) = \lim_{x\downarrow 1} 3/4\),
+   - \(F_X(2-) = 3/4 \le 1 = F_X(2) = \lim_{x\downarrow 2} 1\).
+   Also \(\lim_{x\to-\infty} F_X(x) = 0\) and \(\lim_{x\to+\infty} F_X(x) = 1\). Thus \(F_X\) is a valid CDF.
+2. Jumps occur only at \(x = 0\), \(x = 1\), and \(x = 2\):
+   - \(\mathbb P(X = 0) = F_X(0) - F_X(0-) = 1/4 - 0 = 1/4\),
+   - \(\mathbb P(X = 1) = F_X(1) - F_X(1-) = 3/4 - 1/2 = 1/4\),
+   - \(\mathbb P(X = 2) = F_X(2) - F_X(2-) = 1 - 3/4 = 1/4\).
+3. Using Proposition 12.1:
+   - \(\mathbb P(0 < X < 1) = F_X(1-) - F_X(0) = 1/2 - 1/4 = 1/4\),
+   - \(\mathbb P(0 \le X \le 1) = F_X(1) - F_X(0-) = 3/4 - 0 = 3/4\),
+   - \(\mathbb P(X \in (1,2)) = F_X(2-) - F_X(1) = 3/4 - 3/4 = 0\) (\(F_X\) is flat on \([1,2)\)!).
+4. Comparing interval increments shows that
+   \[
+   \mu_X = \frac{1}{4}\delta_0 + \frac{1}{4}\lambda|_{(0,1)} + \frac{1}{4}\delta_1 + \frac{1}{4}\delta_2.
+   \]
+   Therefore
+   \[
+   \mathbb E[X] = \int_{\mathbb R} x\,dF_X(x) = \frac{1}{4}(0) + \frac{1}{4}\int_0^1 x\,dx + \frac{1}{4}(1) + \frac{1}{4}(2)
+   = 0 + \frac{1}{8} + \frac{1}{4} + \frac{1}{2} = \frac{7}{8}.
+   \]
+
+** Exercise 2
+Find the quantile function \(Q(u)\) for \(u \in (0,1)\) of the CDF \(F_X\) from Exercise 1, and explain
+what happens both at the atoms (\(x = 0, 1, 2\)) and along the flat spot \([1, 2)\).
+
+** Solution
+We find \(Q(u) = \inf\{x \in \mathbb R : F_X(x) \ge u\}\) for \(u \in (0,1)\):
+- For \(0 < u \le 1/4\): \(F_X(x) = 0 < u\) for \(x < 0\) and \(F_X(0) = 1/4 \ge u\), so \(Q(u) = 0\).
+- For \(1/4 < u \le 1/2\): \(F_X(x) \ge u\) on \([0,1)\) iff \(1/4 + x/4 \ge u \iff x \ge 4u - 1\), so
+  \(Q(u) = 4u - 1\).
+- For \(1/2 < u \le 3/4\): on \([0,1)\) we have \(F_X(x) < 1/2 < u\), whereas at \(x = 1\) the jump
+  gives \(F_X(1) = 3/4 \ge u\). Thus \(\{x : F_X(x) \ge u\} = [1, \infty)\), and \(Q(u) = 1\).
+- For \(3/4 < u < 1\): even on the flat spot \([1, 2)\) we only have \(F_X(x) = 3/4 < u\); the first
+  point where \(F_X(x) \ge u\) is \(x = 2\), where \(F_X(2) = 1 \ge u\). Thus \(Q(u) = 2\).
+
+In summary:
+\[
+Q(u) = \begin{cases}
+0, & 0 < u \le 1/4, \\
+4u - 1, & 1/4 < u \le 1/2, \\
+1, & 1/2 < u \le 3/4, \\
+2, & 3/4 < u < 1.
+\end{cases}
+\]
+Notice the duality between \(F_X\) and \(Q\):
+- Each *jump* of \(F_X\) (at \(x = 0, 1, 2\), each of size \(1/4\)) becomes a *flat spot* of \(Q\) (of
+  length \(1/4\)).
+- The *flat spot* of \(F_X\) on \([1, 2)\) (where \(\mu_X((1,2)) = 0\)) becomes a *jump* of \(Q\) at
+  \(u = 3/4\) (where \(Q\) jumps from \(1\) to \(2\), skipping over \((1,2)\)).
+
+** Exercise 3
+Is the quantile function \(Q : (0,1) \to \mathbb R\) of a general CDF \(F\) left-continuous or
+right-continuous? Prove your answer.
+
+** Solution
+Every quantile function \(Q : (0,1) \to \mathbb R\) is nondecreasing and *left-continuous*!
+- *Nondecreasing:* If \(0 < u_1 \le u_2 < 1\), then \(\{x : F(x) \ge u_2\} \subseteq \{x : F(x) \ge u_1\}\).
+  Taking the infimum of a smaller set gives a larger or equal number, so \(Q(u_1) \le Q(u_2)\).
+- *Left-continuous:* Fix \(u \in (0,1)\) and let \(u_n \uparrow u\) in \((0,1)\). Since \(Q\) is
+  nondecreasing, \(Q(u_n)\) is nondecreasing and bounded above by \(Q(u)\), so the limit
+  \(L := \lim_{n\to\infty} Q(u_n) \le Q(u)\) exists. To show \(L \ge Q(u)\), note that for every \(n\),
+  \(Q(u_n) \le L\), which by the quantile equivalence (12.2) means \(u_n \le F(L)\) for all \(n\).
+  Letting \(n \to \infty\) gives \(u = \lim_{n\to\infty} u_n \le F(L)\), and applying (12.2) again gives
+  \(Q(u) \le L\). Thus \(\lim_{n\to\infty} Q(u_n) = Q(u)\).
+
+(Notice in Exercise 2 that at the jump \(u = 3/4\), \(Q(3/4) = 1 = \lim_{u \uparrow 3/4} Q(u)\), while
+\(\lim_{u \downarrow 3/4} Q(u) = 2\), confirming left-continuity!)
+
+** Exercise 4
+Let \(X \ge 0\) be a nonnegative random variable on \((\Omega, \mathcal F, \mathbb P)\) with CDF \(F_X\).
+Using Tonelli's theorem (Chapter 9) and the Lebesgue–Stieltjes measure \(\mu_{F_X}\), prove the tail
+integral formula
+\[
+\mathbb E[X] = \int_0^\infty \mathbb P(X > t)\,dt = \int_0^\infty \big(1 - F_X(t)\big)\,dt.
+\]
+
+** Solution
+For every \(x \ge 0\), we can write \(x = \int_0^\infty \mathbf 1_{\{t < x\}}\,dt\). Since \(X \ge 0\)
+almost surely (\(\mu_{F_X}((-\infty, 0)) = F_X(0-) = 0\)), the image-measure integration formula and
+Tonelli's theorem on \([0, \infty) \times [0, \infty)\) with product measure \(\mu_{F_X} \otimes \lambda\)
+give
+\[
+\mathbb E[X] = \int_{[0,\infty)} x\,d\mu_{F_X}(x)
+= \int_{[0,\infty)} \Big(\int_0^\infty \mathbf 1_{\{t < x\}}\,dt\Big)\,d\mu_{F_X}(x)
+= \int_0^\infty \Big(\int_{[0,\infty)} \mathbf 1_{(t, \infty)}(x)\,d\mu_{F_X}(x)\Big)\,dt.
+\]
+The inner integral is \(\mu_{F_X}((t, \infty)) = \mathbb P(X > t) = 1 - \mathbb P(X \le t) = 1 - F_X(t)\),
+giving the desired identity.
+
+** Exercise 5
+Suppose \(X\) is a random variable whose CDF \(F\) is *continuous* on \(\mathbb R\) (i.e. \(\mu_X\) has
+no atoms). Show that the random variable \(Y := F(X)\) has the \(\mathrm{Uniform}(0,1)\) distribution!
+Where does this fail if \(F\) has a jump?
+
+** Solution
+Let \(Q\) be the quantile function of \(F\). First we note that because \(F\) is continuous on
+\(\mathbb R\) and \(\lim_{x\to-\infty} F(x) = 0\), \(\lim_{x\to+\infty} F(x) = 1\), the Intermediate
+Value Theorem guarantees that for every \(u \in (0,1)\) there is some \(x\) with \(F(x) = u\). In fact,
+at \(q = Q(u)\), we know \(F(q) \ge u\) by right-continuity, and for \(y < q\) we have \(F(y) < u\) so
+taking \(y \uparrow q\) and using left-continuity of \(F\) gives \(F(q) = F(q-) \le u\); hence
+\[
+F(Q(u)) = u \qquad \text{for every } u \in (0,1).
+\]
+Now fix \(u \in (0,1)\). We want to show \(\mathbb P(F(X) \le u) = u\). Let \(q = Q(u)\), so \(F(q) = u\).
+- By monotonicity of \(F\), if \(X(\omega) \le q\), then \(F(X(\omega)) \le F(q) = u\). Thus
+  \(\{X \le q\} \subseteq \{F(X) \le u\}\).
+- What if \(X(\omega) > q\) and yet \(F(X(\omega)) \le u = F(q)\)? Then by monotonicity \(F\) is
+  constant equal to \(u\) on the interval \([q, X(\omega)]\). Let \(r := \sup\{x \in \mathbb R : F(x) = u\}\).
+  By continuity of \(F\), \(F(r) = u\), and for \(x > r\) we have \(F(x) > u\), while for \(x \in (q, r]\)
+  we have \(F(x) = u\). Thus \(\{F(X) \le u\} = \{X \le r\}\), and since \(F(r) = F(q) = u\),
+  \[
+  \mathbb P(F(X) \le u) = \mathbb P(X \le r) = F(r) = u!
+  \]
+- *Why this fails when \(F\) has a jump:* If \(X \equiv 0\) is a constant random variable, then
+  \(F(x) = \mathbf 1_{[0,\infty)}(x)\) and \(F(0) = 1\), so \(Y = F(X) = F(0) = 1\) almost surely, which
+  is a point mass at \(1\), not \(\mathrm{Uniform}(0,1)\)!
+
+** Exercise 6
+Let \(F(x) = e^x\) for \(x \in \mathbb R\). Does Theorem 12.3 apply to \(F\)? Is \(\mu_F\) a probability
+measure? Compute \(\mu_F((a,b])\), \(\mu_F((-\infty, 0])\), and \(\int_0^1 x\,dF(x)\).
+
+** Solution
+- *Does Theorem 12.3 apply?* Yes! \(F(x) = e^x\) is continuous (hence right-continuous) and strictly
+  increasing (hence nondecreasing) on \(\mathbb R\). Thus there is a unique locally finite Borel measure
+  \(\mu_F\) on \(\mathbb R\) with \(\mu_F((a,b]) = e^b - e^a\).
+- *Is \(\mu_F\) a probability measure?* No: while \(\lim_{x\to-\infty} e^x = 0\), we have
+  \(\lim_{x\to+\infty} e^x = +\infty \ne 1\), so \(\mu_F(\mathbb R) = \infty\).
+- *Measures and integral:*
+  - \(\mu_F((a,b]) = e^b - e^a\).
+  - \(\mu_F((-\infty, 0]) = \lim_{m\to\infty} (e^0 - e^{-m}) = 1 - 0 = 1\).
+  - Since \(e^b - e^a = \int_a^b e^x\,dx\), \(\mu_F\) has density \(e^x\) with respect to Lebesgue
+    measure on \(\mathbb R\) (by uniqueness on each \((-m, m]\)). Therefore, integrating by parts,
+    \[
+    \int_0^1 x\,dF(x) = \int_0^1 x e^x\,dx = \big[x e^x - e^x\big]_0^1 = (e - e) - (0 - 1) = 1.
+    \]
+
+* Summary
+
+#+caption: Chapter 12 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| CDF \(F_X\)             | \(F_X(x) := \mathbb P(X \le x) = \mu_X((-\infty, x])\)                                                       | Encodes the entire Borel law \(\mu_X\) on \(\mathbb R\)    |
+| Proposition 12.1        | Nondecreasing, right-continuous, \(F_X(-\infty)=0\), \(F_X(+\infty)=1\); \(\mathbb P(X=x)=F_X(x)-F_X(x-)\)   | Necessary conditions for a CDF; jumps = atoms              |
+| Countably many atoms    | At most \(m\) points can have mass \(\ge 1/m\)                                                               | Every CDF has at most countably many discontinuities       |
+| Example 12.2            | \(\mu = \frac12\delta_0 + \frac12\lambda|_{(0,1)}\) has \(F(x) = (1+x)/2\) on \([0,1]\)                     | A single law can have both atoms and a continuous part     |
+| Theorem 12.3            | Right-continuous nondecreasing \(F \implies\) unique Borel measure \(\mu_F\) with \(\mu_F((a,b])=F(b)-F(a)\) | Complete characterization of CDFs & locally finite measures |
+| Lebesgue–Stieltjes int. | \(\int g\,dF := \int g\,d\mu_F\); \(\mathbb E[g(X)] = \int_{\mathbb R} g(x)\,dF_X(x)\)                       | Unifies sums, density integrals, and mixed expectations    |
+| Remark 12.5             | Density \(f \ge 0\): \(\mu(B) = \int_B f(x)\,dx \iff F(x) = \int_{-\infty}^x f(t)\,dt\)                      | Atoms rule out densities; continuous CDF \(\centernot\implies\) density |
+| Quantile \(Q(u)\)       | \(Q(u) := \inf\{x \in \mathbb R : F(x) \ge u\}\) for \(u \in (0,1)\)                                         | Generalized inverse of \(F\) that handles jumps/flat spots |
+| Proposition 12.6        | \(Q(u) \le x \iff u \le F(x)\); if \(U \sim \mathrm{Uniform}(0,1)\), then \(Q(U)\) has CDF \(F\)            | Realizes any prescribed 1D law from a single uniform \(U\) |
+
+*Key takeaways*
+
+- A Borel probability measure on \(\mathbb R\) is in one-to-one correspondence with its CDF
+  \(F(x) = \mu((-\infty, x])\), characterized by four properties: nondecreasing, right-continuous,
+  \(F(-\infty) = 0\), and \(F(+\infty) = 1\) (Proposition 12.1 and Theorem 12.3).
+- Right-continuity of \(F\) matches the half-open interval convention \(\mu_F((a,b]) = F(b) - F(a)\), and
+  is the exact analytical ingredient needed to shrink \((u,v]\) to a compact \([u+\delta, v]\) in the
+  Carathéodory extension proof.
+- The Lebesgue–Stieltjes integral \(\int g\,dF = \int g\,d\mu_F\) is simply the Lebesgue integral with
+  respect to \(\mu_F\); it automatically accounts for atoms \(\sum_x g(x)\mu_F(\{x\})\) as well as
+  continuous slopes (Example 12.4).
+- The quantile function \(Q(u) = \inf\{x : F(x) \ge u\}\) satisfies the clean Galois-style equivalence
+  \(Q(u) \le x \iff u \le F(x)\) (thanks again to right-continuity of \(F\)!), turning any
+  \(\mathrm{Uniform}(0,1)\) variable \(U\) into a random variable \(Q(U)\) with CDF \(F\)
+  (Proposition 12.6).

@@ -1,0 +1,958 @@
+:PROPERTIES:
+:ID:       9cd2e33d-04e3-46f1-bf5e-130033ccddee
+:ROAM_ALIASES: "MAST31051 Chapter 13" "Independence Notes"
+:END:
+#+title: Chapter 13: Independence
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch13:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch12-distributions.org][← Chapter 12]] | [[file:ch14-convergence.org][Chapter 14 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In Chapter 12 we saw that the individual law \(\mu_X\) (or CDF \(F_X\)) of a random variable \(X\)
+captures everything about \(X\) in isolation, but says nothing about how \(X\) interacts with another
+random variable \(Y\) on the same probability space.
+
+To see this concretely, consider two fair bits \(B_1, B_2 \in \{0,1\}\). They can be coupled in two
+completely different ways:
+- *Model 1 (Unrelated bits):* Take \(\Omega = \{0,1\}^2\) with the uniform probability measure (\(1/4\)
+  on each of the four pairs \((0,0), (0,1), (1,0), (1,1)\)), and let \(B_1, B_2\) be the two coordinates.
+- *Model 2 (Cloned bits):* Toss a single fair coin \(B_1 \in \{0,1\}\), and set \(B_2 := B_1\) always.
+
+In *both* models, \(B_1\) is a fair bit (\(\mathbb P(B_1 = 1) = 1/2\)) and \(B_2\) is a fair bit
+(\(\mathbb P(B_2 = 1) = 1/2\)): the individual marginal laws \(\mu_{B_1}\) and \(\mu_{B_2}\) are
+identical! Yet the joint event \(\{B_1 = 1,\ B_2 = 1\}\) has probability \(1/4 = \frac12 \cdot \frac12\)
+in Model 1, and probability \(1/2\) in Model 2.
+
+*Independence* is the mathematical property that distinguishes Model 1 from Model 2. It is a relation
+between events, \(\sigma\)-algebras, or random variables on a common probability space — *never* a
+property of their individual marginal laws alone.
+
+This chapter develops the measure-theoretic theory of independence in three stages:
+1. *Definitions and structural properties (Section 13.1):* How independence of events, \(\sigma\)-algebras,
+   and random variables are defined; why independence of random variables is equivalent to their joint
+   law factoring as the product measure \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\) (Proposition 13.1);
+   why pairwise independence is strictly weaker than joint independence (Example 13.2); and why functions
+   of disjoint groups of independent variables remain independent (Lemma 13.3, proved via Dynkin's
+   \(\pi\)-\(\lambda\) lemma).
+2. *Expectations and variances (Section 13.2):* Why independent integrable variables satisfy
+   \(\mathbb E[X_1 \cdots X_n] = (\mathbb E X_1)\cdots(\mathbb E X_n)\) (Proposition 13.4, proved via
+   Tonelli and Fubini on the product law), and why the variance of a sum of pairwise independent
+   variables is the sum of their variances: \(\operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\).
+3. *Constructing arbitrary independent random variables from fair bits (Section 13.3):* Using the fair-coin
+   space \(\{0,1\}^{\mathbb N}\) from Chapter 10, binary expansion turns fair bits into a
+   \(\mathrm{Uniform}[0,1]\) variable \(U\); partitioning \(\mathbb N\) into infinitely many disjoint
+   infinite subsets gives an infinite sequence of independent uniforms \(U_1, U_2, \dots\); and
+   applying the quantile transform \(Q_j(U_j)\) from Chapter 12 manufactures independent random
+   variables with *any* prescribed CDFs \(F_1, F_2, \dots\)! Changing the base from \(2\) to \(3\) yields
+   the famous *Cantor distribution* (Example 13.7): a continuous CDF with no atoms and no density.
+
+** Probability motivation
+
+Without independence, probability theory would merely be a dialect of general measure theory.
+Independence is the engine behind almost every classical limit theorem:
+- The variance identity \(\operatorname{var}(S_n / n) = \sigma^2 / n \to 0\) (Example 13.6) is the direct
+  cause of the Weak and Strong Laws of Large Numbers (Chapters 15 and 16).
+- Lemma 13.3 (grouping independent coordinates) allows us to combine blocks of random variables without
+  having to re-verify independence from scratch.
+- Section 13.3 solves the *existence problem* for infinite sequences of independent random variables
+  \(X_1, X_2, \dots\) with arbitrary distributions on \(\mathbb R\), using nothing more than the
+  fair-coin space of Chapter 10!
+
+** Roadmap
+
+- 13.1 Events, \(\sigma\)-algebras, and random variables: definitions, equivalence with product laws
+  (Proposition 13.1), pairwise vs. joint independence (Example 13.2), and grouping independent
+  coordinates (Lemma 13.3).
+- 13.2 Products of expectations and variances of sums: expectation of products (Proposition 13.4),
+  variance and covariance, additivity of variance under pairwise independence, uncorrelated vs.
+  independent variables (Example 13.5), and binomial successes (Example 13.6).
+- 13.3 Building random variables from fair bits: binary expansion to \(\mathrm{Uniform}[0,1]\), countably
+  many independent variables with prescribed CDFs, and the singular Cantor law (Example 13.7).
+
+** What you need from earlier chapters
+
+- Generated \(\sigma\)-algebras \(\sigma(X)\), product \(\sigma\)-algebras, image measures:
+  [[file:ch01-measurable-spaces.org][Chapter 1]], [[file:ch03-measurable-functions.org][Chapter 3]], [[file:ch09-product-measures.org][Chapter 9]].
+- \(\pi\)-systems, \(\lambda\)-systems, Dynkin's \(\pi\)-\(\lambda\) lemma, and uniqueness of probability
+  measures: [[file:ch04-uniqueness.org][Chapter 4]].
+- Hölder's inequality (\(L^2(\mathbb P) \subseteq L^1(\mathbb P)\)): [[file:ch07-lp-spaces.org][Chapter 7]].
+- Product measures \(\mu_1 \otimes \dots \otimes \mu_n\), Tonelli's and Fubini's theorems:
+  [[file:ch09-product-measures.org][Chapter 9]].
+- The fair-coin probability space \((\{0,1\}^{\mathbb N}, \mathcal F, \mathbb P)\):
+  [[file:ch10-infinite-products.org][Chapter 10]].
+- CDFs, densities, and the quantile transform \(Q(U)\): [[file:ch12-distributions.org][Chapter 12]].
+
+* 13.1 Events, \(\sigma\)-algebras, and random variables
+
+** Intuition
+
+What does it mean for two events \(A_1, A_2\) to be independent? In conditional probability (when
+\(\mathbb P(A_2) > 0\)), knowing that \(A_2\) occurred does not change the probability of \(A_1\):
+\(\mathbb P(A_1 \mid A_2) = \mathbb P(A_1)\), which clears denominators to the symmetric product rule
+\[
+\mathbb P(A_1 \cap A_2) = \mathbb P(A_1)\,\mathbb P(A_2).
+\]
+When we have \(n\) events \(A_1, \dots, A_n\), it is *not* enough to require that the single \(n\)-fold
+intersection \(\mathbb P(A_1 \cap \dots \cap A_n)\) factors, nor is it enough to require that every
+pair \(\mathbb P(A_i \cap A_j)\) factors (Example 13.2). We must require that the intersection of
+*every subcollection* \(J \subseteq \{1, \dots, n\}\) factors into the product of its individual
+probabilities!
+
+Once we have the definition for events, we scale it up in two natural steps:
+1. *\({\sigma}\)-algebras \(\mathcal G_1, \dots, \mathcal G_n\) are independent* if picking *any* one
+   event \(A_j \in \mathcal G_j\) from each \(\sigma\)-algebra produces independent events.
+2. *Random variables \(X_1, \dots, X_n\) are independent* if the information they carry — encoded by
+   their generated \(\sigma\)-algebras \(\sigma(X_1), \dots, \sigma(X_n)\) — is independent.
+
+Notice a nice simplification when we pass from individual events to \(\sigma\)-algebras or random
+variables: because every \(\sigma\)-algebra \(\mathcal G_j\) already contains the whole sample space
+\(\Omega\) (which corresponds to the trivial condition \(X_j \in \mathbb R\)), setting \(A_j = \Omega\)
+for \(j \notin J\) automatically drops those indices from both the intersection \(\bigcap_{j=1}^n A_j\)
+and the product \(\prod_{j=1}^n \mathbb P(A_j)\) (since \(\mathbb P(\Omega) = 1\))!
+
+** Definitions: independent events, \(\sigma\)-algebras, and random variables
+
+ throughout this chapter, let \((\Omega, \mathcal F, \mathbb P)\) be a probability space.
+
+#+begin_quote
+*Definition (Independent events).*
+1. Events \(A_1, \dots, A_n \in \mathcal F\) are *independent* if, for every subset
+   \(J \subseteq \{1, \dots, n\}\),
+   \[
+   \mathbb P\Big(\bigcap_{j \in J} A_j\Big) = \prod_{j \in J} \mathbb P(A_j).
+   \]
+   (By convention, for \(J = \emptyset\), the empty intersection is \(\Omega\) and the empty product is
+   \(1\), matching \(\mathbb P(\Omega) = 1\).)
+2. A possibly infinite family of events \((A_i)_{i \in I}\) is *independent* if every finite subfamily
+   is independent.
+#+end_quote
+
+#+begin_quote
+*Definition (Independent \(\sigma\)-algebras and random variables).*
+1. Sub-\(\sigma\)-algebras \(\mathcal G_1, \dots, \mathcal G_n \subseteq \mathcal F\) are *independent*
+   if the factorization
+   \[
+   \mathbb P\Big(\bigcap_{j=1}^n A_j\Big) = \prod_{j=1}^n \mathbb P(A_j)
+   \]
+   holds whenever \(A_j \in \mathcal G_j\) for each \(j = 1, \dots, n\). (Choosing \(A_j = \Omega \in \mathcal G_j\)
+   for \(j \notin J\) automatically recovers all subfamilies \(J \subseteq \{1, \dots, n\}\).) An
+   arbitrary family of sub-\(\sigma\)-algebras \((\mathcal G_i)_{i \in I}\) is *independent* if every
+   finite subfamily is independent.
+2. For a random variable \(X : \Omega \to (S, \mathcal S)\) taking values in a measurable space
+   \((S, \mathcal S)\), the *\(\sigma\)-algebra generated by \(X\)* is
+   \[
+   \sigma(X) := \{X^{-1}(B) : B \in \mathcal S\} \subseteq \mathcal F.
+   \]
+   (As checked in Chapter 3, \(\sigma(X)\) is a \(\sigma\)-algebra on \(\Omega\) because preimages
+   commute with complements and countable unions.)
+3. Random variables \((X_i)_{i \in I}\) (possibly taking values in different measurable spaces
+   \((S_i, \mathcal S_i)\)) are *independent* if their generated \(\sigma\)-algebras
+   \((\sigma(X_i))_{i \in I}\) are independent.
+#+end_quote
+
+In particular, for real-valued random variables \(X_1, \dots, X_n : \Omega \to \mathbb R\), every event
+in \(\sigma(X_j)\) has the form \(X_j^{-1}(B_j) = \{X_j \in B_j\}\) for some Borel set
+\(B_j \in \mathcal B(\mathbb R)\). Thus \(X_1, \dots, X_n\) are independent if and only if
+\[
+\mathbb P(X_1 \in B_1, \dots, X_n \in B_n) = \prod_{j=1}^n \mathbb P(X_j \in B_j) \qquad \text{for all } B_1, \dots, B_n \in \mathcal B(\mathbb R).
+\]
+Again, setting \(B_j = \mathbb R\) for \(j \notin J\) automatically includes all subfamilies \(J \subseteq \{1, \dots, n\}\).
+
+** Equivalence with product measures
+
+How does independence of \(X_1, \dots, X_n\) relate to the product measure construction of Chapter 9?
+They are the *exact same thing* viewed on the target space!
+
+#+begin_quote
+*Proposition 13.1 (Independence and product laws).* Random variables \(X_j : \Omega \to (S_j, \mathcal S_j)\),
+\(1 \le j \le n\), are independent if and only if the law of the measurable vector
+\(X = (X_1, \dots, X_n) : \Omega \to S_1 \times \dots \times S_n\) on the product \(\sigma\)-algebra
+\(\mathcal S_1 \otimes \dots \otimes \mathcal S_n\) is the product measure
+\[
+\mu_{(X_1, \dots, X_n)} = \mu_{X_1} \otimes \dots \otimes \mu_{X_n}.
+\]
+#+end_quote
+
+** Proof
+
+1. *Measurability of the vector \(X = (X_1, \dots, X_n)\):* The product \(\sigma\)-algebra
+   \(\mathcal S_1 \otimes \dots \otimes \mathcal S_n\) is generated by measurable rectangles
+   \(B_1 \times \dots \times B_n\) with \(B_j \in \mathcal S_j\). For any such rectangle,
+   \[
+   X^{-1}(B_1 \times \dots \times B_n) = \bigcap_{j=1}^n \{X_j \in B_j\} \in \mathcal F
+   \]
+   because each \(X_j\) is measurable. By the generator test (Chapter 3), \(X\) is measurable, so its
+   joint law \(\mu_X = X_\# \mathbb P\) is a well-defined probability measure on
+   \(\mathcal S_1 \otimes \dots \otimes \mathcal S_n\).
+2. *Evaluating both measures on rectangles:* On any measurable rectangle \(R = B_1 \times \dots \times B_n\),
+   the joint law assigns probability
+   \[
+   \mu_X(B_1 \times \dots \times B_n) = \mathbb P(X_1 \in B_1, \dots, X_n \in B_n),
+   \]
+   whereas the product measure assigns
+   \[
+   (\mu_{X_1} \otimes \dots \otimes \mu_{X_n})(B_1 \times \dots \times B_n) = \prod_{j=1}^n \mu_{X_j}(B_j) = \prod_{j=1}^n \mathbb P(X_j \in B_j).
+   \]
+   Thus the assertion that \(\mu_X\) agrees with \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\) on all
+   measurable rectangles is *literally identical* to the definition of independence of \(X_1, \dots, X_n\)!
+3. *Concluding by \(\pi\)-system uniqueness:*
+   - (\(\Longrightarrow\)) If \(X_1, \dots, X_n\) are independent, then \(\mu_X\) and
+     \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\) are two probability measures on
+     \(\mathcal S_1 \otimes \dots \otimes \mathcal S_n\) that agree on the collection of measurable
+     rectangles. Since measurable rectangles form a generating \(\pi\)-system, the uniqueness theorem
+     for probability measures (Chapter 4) implies \(\mu_X = \mu_{X_1} \otimes \dots \otimes \mu_{X_n}\).
+   - (\(\Longleftarrow\)) Conversely, if \(\mu_X = \mu_{X_1} \otimes \dots \otimes \mu_{X_n}\), evaluating
+     both sides on any rectangle \(B_1 \times \dots \times B_n\) gives the independence identity. \(\blacksquare\)
+
+#+begin_quote
+*Immediate payoff (Countable products and "iid").* In Chapter 10, we constructed a probability measure
+\(\mathbb P = \bigotimes_{n=1}^\infty \mu_n\) on \(\prod_{n=1}^\infty S_n\) whose finite-coordinate
+projections have law \(\mu_1 \otimes \dots \otimes \mu_n\). Proposition 13.1 tells us immediately that
+the coordinate maps \(\pi_1, \pi_2, \dots\) on that product space are *independent* random variables
+with prescribed marginal laws \(\mu_1, \mu_2, \dots\)!
+
+Random variables are said to be *identically distributed* if they have the same law (\(\mu_{X_i} = \mu_{X_j}\)).
+We abbreviate *independent and identically distributed* by *iid*.
+#+end_quote
+
+** Example from the notes: pairwise independence is strictly weaker
+
+#+begin_quote
+*Example 13.2 (Pairwise independence is weaker than joint independence).* Let \(\Omega = \{0,1\}^2\)
+with the uniform probability measure assigning probability \(1/4\) to each of the four pairs
+\((a,b) \in \{0,1\}^2\). Define three random variables \(X, Y, Z : \Omega \to \{0,1\}\):
+- \(X(a,b) = a\) (first bit),
+- \(Y(a,b) = b\) (second bit),
+- \(Z(a,b) = a + b \pmod 2\) (the parity / remainder of \(a+b\) on division by \(2\)).
+
+Listing the four equally likely outcomes \((a,b)\) and the resulting triples \((X, Y, Z)\) gives:
+\[
+(0, 0, 0), \qquad (0, 1, 1), \qquad (1, 0, 1), \qquad (1, 1, 0).
+\]
+Let us check:
+1. *Marginal laws:* Each of \(X, Y, Z\) takes the value \(0\) on two outcomes and \(1\) on two outcomes,
+   so \(\mathbb P(X = u) = \mathbb P(Y = u) = \mathbb P(Z = u) = 1/2\) for \(u \in \{0,1\}\).
+2. *Pairwise independence:* Look at any *pair* of coordinates — say \((X, Y)\), \((X, Z)\), or \((Y, Z)\) —
+   across the four triples above. Every pair visits each of the four possible bit patterns
+   \((0,0), (0,1), (1,0), (1,1)\) *exactly once*, hence with probability \(1/4 = \frac12 \cdot \frac12\)!
+   Therefore \(X, Y, Z\) are *pairwise independent* (\(X \perp\!\!\!\perp Y\), \(X \perp\!\!\!\perp Z\),
+   and \(Y \perp\!\!\!\perp Z\)).
+3. *Failure of joint independence:* Look at all three together:
+   \[
+   \mathbb P(X = 0,\ Y = 0,\ Z = 0) = \mathbb P(\{(0,0)\}) = \frac{1}{4},
+   \]
+   whereas the product of the three marginal probabilities is
+   \[
+   \mathbb P(X = 0)\,\mathbb P(Y = 0)\,\mathbb P(Z = 0) = \frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{8} \ne \frac{1}{4}.
+   \]
+   In fact, any two of the variables completely determine the third (since \(Z \equiv X + Y \pmod 2\)),
+   so knowing \(X = 0\) and \(Y = 0\) forces \(Z = 0\) with certainty!
+#+end_quote
+
+** Grouping independent coordinates (and why Dynkin's lemma is needed)
+
+Suppose \(X_1, X_2, X_3, X_4\) are independent random variables. Are \(X_1 + X_2\) and \(e^{X_3} \cos(X_4)\)
+automatically independent? Intuitively, yes: the first only uses \((X_1, X_2)\) and the second only
+uses \((X_3, X_4)\).
+
+Wait — why does this require a proof? Because the event \(\{X_1 + X_2 \in B\}\) is a *diagonal* event
+in \(\sigma(X_1, X_2)\), not a simple product rectangle \(\{X_1 \in B_1\} \cap \{X_2 \in B_2\}\)!
+The definition of independence of \(X_1, X_2, X_3, X_4\) only directly gives factorization for rectangle
+events \(\bigcap_{i=1}^4 \{X_i \in B_i\}\). To upgrade factorization from rectangles to *all* events in
+the grouped \(\sigma\)-algebras \(\sigma(X_i : i \in I_k)\), we use Dynkin's \(\pi\)-\(\lambda\) lemma
+one group at a time.
+
+#+begin_quote
+*Lemma 13.3 (Grouping independent coordinates).* Let \((X_i)_{i \in I}\) be an independent family of
+random variables on \((\Omega, \mathcal F, \mathbb P)\). If \(I_1, \dots, I_m\) are pairwise disjoint
+subsets of \(I\), then the \(\sigma\)-algebras
+\[
+\mathcal G_k := \sigma(X_i : i \in I_k), \qquad k = 1, \dots, m,
+\]
+generated by the coordinates in these respective groups are independent. In particular, if
+\(Y_k = f_k((X_i)_{i \in I_k})\) are measurable functions of disjoint groups of independent variables,
+then \(Y_1, \dots, Y_m\) are independent.
+#+end_quote
+
+** Proof
+
+*Step 1. Identify a generating \(\pi\)-system for each group \(\mathcal G_k\).*
+For each group \(k \in \{1, \dots, m\}\), let \(\mathcal P_k\) be the collection of all finite
+intersections of single-coordinate events from group \(I_k\), together with \(\Omega\):
+\[
+\mathcal P_k := \Big\{\bigcap_{i \in F} \{X_i \in B_i\} : F \subseteq I_k \text{ finite},\ B_i \in \mathcal S_i\Big\} \cup \{\Omega\}.
+\]
+Clearly \(\mathcal P_k\) is closed under finite intersections (a \(\pi\)-system), contains \(\Omega\),
+and generates \(\mathcal G_k = \sigma(X_i : i \in I_k)\).
+
+Moreover, if we pick one event \(A_k \in \mathcal P_k\) from each of the \(\pi\)-systems
+\(\mathcal P_1, \dots, \mathcal P_m\), then each \(A_k = \bigcap_{i \in F_k} \{X_i \in B_i\}\) involves
+a finite subset \(F_k \subseteq I_k\). Since the index sets \(I_1, \dots, I_m\) are *pairwise disjoint*,
+the finite subsets \(F_1, \dots, F_m\) are pairwise disjoint! Therefore, independence of the finite
+subfamily \((X_i)_{i \in F_1 \sqcup \dots \sqcup F_m}\) gives
+\[
+\mathbb P\Big(\bigcap_{k=1}^m A_k\Big) = \prod_{k=1}^m \prod_{i \in F_k} \mathbb P(X_i \in B_i) = \prod_{k=1}^m \mathbb P(A_k)
+\qquad \text{for all } A_1 \in \mathcal P_1, \dots, A_m \in \mathcal P_m.
+\]
+
+*Step 2. Extend from \(\mathcal P_r\) to \(\mathcal G_r = \sigma(\mathcal P_r)\) one group at a time using Dynkin's lemma.*
+We proceed in \(m\) stages, replacing \(\mathcal P_r\) by \(\mathcal G_r\) at stage \(r = 1, 2, \dots, m\).
+At stage \(r\), our inductive hypothesis is that the factorization
+\[
+\mathbb P(A_1 \cap \dots \cap A_m) = \prod_{j=1}^m \mathbb P(A_j)
+\]
+holds whenever the first \(r-1\) events \(A_1, \dots, A_{r-1}\) range over their *full* generated
+\(\sigma\)-algebras \(\mathcal G_1, \dots, \mathcal G_{r-1}\) and the remaining events
+\(A_r, \dots, A_m\) range over their generating \(\pi\)-systems \(\mathcal P_r, \dots, \mathcal P_m\).
+(For \(r=1\), this is precisely what we proved in Step 1.)
+
+Fix all events \(A_j\) for \(j \ne r\) (with \(A_j \in \mathcal G_j\) for \(j < r\) and
+\(A_j \in \mathcal P_j\) for \(j > r\)), and define their intersection
+\[
+H := \bigcap_{j \ne r} A_j \in \mathcal F.
+\]
+Notice that because \(\Omega \in \mathcal P_r\), we are allowed to plug \(A_r = \Omega\) into our stage
+assumption, which tells us right away that
+\[
+\mathbb P(H) = \mathbb P(H \cap \Omega) = \Big(\prod_{j \ne r} \mathbb P(A_j)\Big) \mathbb P(\Omega) = \prod_{j \ne r} \mathbb P(A_j).
+\]
+Consequently, extending the \(m\)-fold factorization to all \(A_r \in \mathcal G_r\) is equivalent to
+showing that the identity
+\[
+\mathbb P(H \cap A_r) = \mathbb P(H)\,\mathbb P(A_r)
+\]
+holds for all \(A_r \in \mathcal G_r\). Let \(\mathcal L_r\) be the collection of all events
+\(A_r \in \mathcal G_r\) satisfying \(\mathbb P(H \cap A_r) = \mathbb P(H)\,\mathbb P(A_r)\). Let us
+check that \(\mathcal L_r\) is a \(\lambda\)-system:
+1. *\(\Omega \in \mathcal L_r\):* \(\mathbb P(H \cap \Omega) = \mathbb P(H) = \mathbb P(H)\,\mathbb P(\Omega)\).
+2. *Closed under complements:* If \(A_r \in \mathcal L_r\), then since \(H = (H \cap A_r) \sqcup (H \cap A_r^c)\),
+   \[
+   \mathbb P(H \cap A_r^c) = \mathbb P(H) - \mathbb P(H \cap A_r) = \mathbb P(H) - \mathbb P(H)\,\mathbb P(A_r)
+   = \mathbb P(H)\big(1 - \mathbb P(A_r)\big) = \mathbb P(H)\,\mathbb P(A_r^c),
+   \]
+   so \(A_r^c \in \mathcal L_r\).
+3. *Closed under countable disjoint unions:* If \(E_1, E_2, \dots \in \mathcal L_r\) are pairwise
+   disjoint, then \(H \cap (\bigsqcup_{n=1}^\infty E_n) = \bigsqcup_{n=1}^\infty (H \cap E_n)\), so
+   countable additivity of \(\mathbb P\) gives
+   \[
+   \mathbb P\Big(H \cap \bigsqcup_{n=1}^\infty E_n\Big) = \sum_{n=1}^\infty \mathbb P(H \cap E_n)
+   = \sum_{n=1}^\infty \mathbb P(H)\,\mathbb P(E_n) = \mathbb P(H)\,\mathbb P\Big(\bigsqcup_{n=1}^\infty E_n\Big),
+   \]
+   so \(\bigsqcup_{n=1}^\infty E_n \in \mathcal L_r\).
+
+By the stage assumption, \(\mathcal L_r\) contains the \(\pi\)-system \(\mathcal P_r\). Therefore,
+Dynkin's \(\pi\)-\(\lambda\) lemma (Chapter 4) gives \(\mathcal G_r = \sigma(\mathcal P_r) \subseteq \mathcal L_r\).
+Since \(A_j\) (\(j \ne r\)) were arbitrary, this completes stage \(r\). After \(m\) stages, every group
+has been extended to its full \(\sigma\)-algebra \(\mathcal G_k\)!
+
+*Step 3. Measurable functions of disjoint groups.*
+Finally, if \(Y_k = f_k((X_i)_{i \in I_k})\) is a measurable function of the variables in group \(I_k\),
+then for every measurable set \(B_k\), the event \(\{Y_k \in B_k\} = \{(X_i)_{i \in I_k} \in f_k^{-1}(B_k)\}\)
+belongs to \(\mathcal G_k = \sigma(X_i : i \in I_k)\). That means \(\sigma(Y_k) \subseteq \mathcal G_k\)
+for each \(k = 1, \dots, m\). Since selecting events from smaller sub-\(\sigma\)-algebras preserves the
+factorization identity, \(\sigma(Y_1), \dots, \sigma(Y_m)\) are independent, so \(Y_1, \dots, Y_m\) are
+independent! \(\blacksquare\)
+
+* 13.2 Products of expectations and variances of sums
+
+** Intuition
+
+In general, the expectation of a product \(\mathbb E[XY]\) is *not* equal to \((\mathbb E X)(\mathbb E Y)\)
+(for instance, if \(X = Y\) is a standard normal or centered coin flip with \(\mathbb E X = 0\) and
+\(\mathbb E[X^2] = 1\), then \(\mathbb E[XY] = 1 \ne 0 \cdot 0\)).
+
+Why does independence make \(\mathbb E[X_1 \cdots X_n] = (\mathbb E X_1)\cdots(\mathbb E X_n)\) true?
+Because by Proposition 13.1, the joint law of \((X_1, \dots, X_n)\) on \(\mathbb R^n\) is the product
+measure \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\), and by Fubini's theorem (Chapter 9), an integral
+of a factored function \(x_1 \cdots x_n\) against a product measure splits into the product of the
+1D integrals!
+
+Once expectations of products factor, expanding the square of a centered sum \(\sum_{j=1}^n (X_j - \mathbb E X_j)\)
+causes all cross-terms \(\mathbb E[(X_i - \mathbb E X_i)(X_j - \mathbb E X_j)]\) (\(i \ne j\)) to vanish,
+yielding the clean Pythogorean-style identity \(\operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\).
+
+** Factorization of expectations
+
+#+begin_quote
+*Proposition 13.4.* If \(X_1, \dots, X_n\) are independent and integrable (\(X_j \in L^1(\mathbb P)\)),
+then their product \(X_1 \cdots X_n\) is integrable and
+\[
+\mathbb E\Big[\prod_{j=1}^n X_j\Big] = \prod_{j=1}^n \mathbb E[X_j].
+\]
+#+end_quote
+
+** Proof
+
+Let \(X = (X_1, \dots, X_n) : \Omega \to \mathbb R^n\). By Proposition 13.1, the law of \(X\) on
+\((\mathbb R^n, \mathcal B(\mathbb R^n))\) is the product measure \(\mu_X = \mu_{X_1} \otimes \dots \otimes \mu_{X_n}\).
+1. *Integrability via Tonelli's theorem:* Apply the image-measure integration formula (Chapter 6) to the
+   nonnegative Borel function \(g(x_1, \dots, x_n) = \prod_{j=1}^n |x_j|\) on \(\mathbb R^n\), and then
+   apply Tonelli's theorem (Chapter 9) to evaluate the iterated integral:
+   \[
+   \mathbb E\Big[\Big|\prod_{j=1}^n X_j\Big|\Big]
+   = \int_{\mathbb R^n} \Big(\prod_{j=1}^n |x_j|\Big)\,d(\mu_{X_1} \otimes \dots \otimes \mu_{X_n})(x_1, \dots, x_n)
+   = \prod_{j=1}^n \Big(\int_{\mathbb R} |x_j|\,d\mu_{X_j}(x_j)\Big)
+   = \prod_{j=1}^n \mathbb E|X_j| < \infty.
+   \]
+   Thus \(\prod_{j=1}^n X_j \in L^1(\mathbb P)\).
+2. *Signed expectation via Fubini's theorem:* Since \(h(x_1, \dots, x_n) = \prod_{j=1}^n x_j\) is now
+   known to be in \(L^1(\mu_{X_1} \otimes \dots \otimes \mu_{X_n})\), Fubini's theorem (Chapter 9)
+   applies. Integrating one coordinate at a time gives
+   \[
+   \mathbb E\Big[\prod_{j=1}^n X_j\Big]
+   = \int_{\mathbb R^n} \Big(\prod_{j=1}^n x_j\Big)\,d(\mu_{X_1} \otimes \dots \otimes \mu_{X_n})(x_1, \dots, x_n)
+   = \prod_{j=1}^n \Big(\int_{\mathbb R} x_j\,d\mu_{X_j}(x_j)\Big)
+   = \prod_{j=1}^n \mathbb E[X_j]. \quad \blacksquare
+   \]
+
+(Remark: The exact same Tonelli proof shows that if \(X_1, \dots, X_n \ge 0\) are independent nonnegative
+random variables, then \(\mathbb E[\prod_{j=1}^n X_j] = \prod_{j=1}^n \mathbb E[X_j]\) in \([0, \infty]\)
+without any integrability assumption, provided \(0 \cdot \infty = 0\).)
+
+** Variance, covariance, and sums of pairwise independent variables
+
+#+begin_quote
+*Definitions (Variance and Covariance).*
+1. For a square-integrable random variable \(X \in L^2(\mathbb P)\), its *variance* is
+   \[
+   \operatorname{var}(X) := \mathbb E\big[(X - \mathbb E X)^2\big] \ge 0.
+   \]
+   (Note that because \(\mathbb P(\Omega) = 1 < \infty\), Hölder's inequality with \(p = q = 2\) on
+   \(|X| \cdot 1\) gives \(\mathbb E|X| \le (\mathbb E[X^2])^{1/2} < \infty\), so \(L^2(\mathbb P) \subseteq L^1(\mathbb P)\)
+   and \(\mathbb E X\) is finite.) Expanding the square \((X - \mathbb E X)^2 = X^2 - 2(\mathbb E X)X + (\mathbb E X)^2\)
+   and using linearity of expectation gives the computational formula
+   \[
+   \operatorname{var}(X) = \mathbb E[X^2] - (\mathbb E X)^2.
+   \]
+2. For two square-integrable random variables \(X, Y \in L^2(\mathbb P)\), their *covariance* is
+   \[
+   \operatorname{cov}(X, Y) := \mathbb E\big[(X - \mathbb E X)(Y - \mathbb E Y)\big] = \mathbb E[XY] - (\mathbb E X)(\mathbb E Y).
+   \]
+   (Integrability of the product \((X - \mathbb E X)(Y - \mathbb E Y)\) is guaranteed by Hölder's /
+   Cauchy–Schwarz inequality: \(\mathbb E|XY| \le \|X\|_2 \|Y\|_2 < \infty\).) We say \(X\) and \(Y\)
+   are *uncorrelated* if \(\operatorname{cov}(X, Y) = 0\).
+#+end_quote
+
+What happens when \(X, Y \in L^2(\mathbb P)\) are *independent*? By Lemma 13.3, the centered variables
+\(X - \mathbb E X\) and \(Y - \mathbb E Y\) are measurable functions of \(X\) and \(Y\) respectively,
+so they are also independent (and integrable). Proposition 13.4 therefore gives
+\[
+\operatorname{cov}(X, Y) = \mathbb E\big[(X - \mathbb E X)(Y - \mathbb E Y)\big]
+= \mathbb E[X - \mathbb E X]\,\mathbb E[Y - \mathbb E Y] = 0 \cdot 0 = 0.
+\]
+In short: *independent square-integrable random variables are always uncorrelated*.
+
+Now let \(X_1, \dots, X_n \in L^2(\mathbb P)\) be *pairwise independent* (meaning \(X_i\) and \(X_j\)
+are independent whenever \(i \ne j\)). By linearity of expectation, the sum \(S_n = \sum_{j=1}^n X_j\)
+has mean \(\mathbb E S_n = \sum_{j=1}^n \mathbb E X_j\), so the centered sum is
+\(S_n - \mathbb E S_n = \sum_{j=1}^n (X_j - \mathbb E X_j)\). Expanding the square of this finite sum
+algebraically gives diagonal squares plus off-diagonal cross-terms:
+\[
+\Big(\sum_{j=1}^n (X_j - \mathbb E X_j)\Big)^2
+= \sum_{j=1}^n (X_j - \mathbb E X_j)^2 + 2 \sum_{1 \le i < j \le n} (X_i - \mathbb E X_i)(X_j - \mathbb E X_j).
+\]
+Take expectations on both sides. By pairwise independence, every mixed term has expectation
+\(\operatorname{cov}(X_i, X_j) = 0\)! This yields the fundamental identity:
+\[
+\operatorname{var}\Big(\sum_{j=1}^n X_j\Big) = \sum_{j=1}^n \operatorname{var}(X_j). \tag{13.1}
+\]
+
+#+begin_quote
+*Highlight.* Notice that (13.1) only requires *pairwise independence* (or even just
+\(\operatorname{cov}(X_i, X_j) = 0\) for all \(i < j\)), because every cross-term in the expanded square
+involves only two variables \(X_i\) and \(X_j\) at a time! This observation will allow us to prove the
+Weak and Strong Laws of Large Numbers in Chapters 15–16 assuming only pairwise independence.
+#+end_quote
+
+** Examples from the notes
+
+#+begin_quote
+*Example 13.5 (Uncorrelated need not mean independent).* Let \(X\) take the three values \(-1, 0, 1\)
+with equal probability \(1/3\) each, and set \(Y := X^2\).
+- *Means and covariance:* By symmetry, \(\mathbb E X = \frac13(-1 + 0 + 1) = 0\) and
+  \(\mathbb E[X^3] = \frac13((-1)^3 + 0^3 + 1^3) = 0\). Therefore
+  \[
+  \operatorname{cov}(X, Y) = \mathbb E[XY] - (\mathbb E X)(\mathbb E Y) = \mathbb E[X^3] - 0 \cdot \mathbb E[X^2] = 0,
+  \]
+  so \(X\) and \(Y\) are *uncorrelated*.
+- *Not independent:* Clearly \(Y = X^2\) is completely determined by \(X\)! Explicitly, the event
+  \(\{Y = 0\}\) is the exact same event as \(\{X = 0\}\), so
+  \[
+  \mathbb P(X = 0,\ Y = 0) = \mathbb P(X = 0) = \frac{1}{3},
+  \quad \text{whereas} \quad
+  \mathbb P(X = 0)\,\mathbb P(Y = 0) = \frac{1}{3} \cdot \frac{1}{3} = \frac{1}{9} \ne \frac{1}{3}.
+  \]
+Why? Because \(\operatorname{cov}(X,Y) = 0\) only tests *one* integral identity
+\(\mathbb E[XY] = (\mathbb E X)(\mathbb E Y)\) (linear correlation), whereas independence requires
+\(\mathbb E[f(X)g(Y)] = \mathbb E[f(X)]\,\mathbb E[g(Y)]\) for *all* bounded Borel functions \(f, g\)
+(here \(f(x) = g(x) = \mathbf 1_{\{0\}}(x)\) fails!).
+#+end_quote
+
+#+begin_quote
+*Example 13.6 (Counting successes).* Let \(X_1, X_2, \dots, X_n\) be iid indicator (Bernoulli) random
+variables with \(\mathbb P(X_j = 1) = p\) and \(\mathbb P(X_j = 0) = 1 - p\), where \(p \in [0,1]\).
+- For each single trial \(X_j\), since \(X_j^2 = X_j\), we have
+  \[
+  \mathbb E[X_j] = p, \qquad \operatorname{var}(X_j) = \mathbb E[X_j^2] - (\mathbb E X_j)^2 = p - p^2 = p(1 - p).
+  \]
+- Let \(S_n := \sum_{j=1}^n X_j\) be the total number of successes in \(n\) trials (which has the
+  \(\mathrm{Binomial}(n, p)\) distribution). By linearity of expectation and the variance formula (13.1),
+  \[
+  \mathbb E[S_n] = np, \qquad \operatorname{var}(S_n) = \sum_{j=1}^n p(1-p) = np(1 - p).
+  \]
+- Now consider the *sample average* (empirical frequency of successes) \(\overline X_n := \frac{1}{n} S_n\).
+  Since scaling a random variable by \(1/n\) scales its centered square \((S_n - \mathbb E S_n)^2\) by
+  \(1/n^2\), we get
+  \[
+  \mathbb E\Big[\frac{S_n}{n}\Big] = p, \qquad
+  \operatorname{var}\Big(\frac{S_n}{n}\Big) = \frac{1}{n^2}\operatorname{var}(S_n) = \frac{p(1 - p)}{n} \xrightarrow[n \to \infty]{} 0.
+  \]
+  This \(1/n\) decay of the variance of the sample average is the quantitative heart of the Law of Large
+  Numbers (Chapter 15)!
+#+end_quote
+
+* 13.3 Building random variables from fair bits
+
+** Intuition
+
+In Chapter 12 (Proposition 12.6), we learned how to manufacture a random variable \(X = Q(U)\) with any
+prescribed CDF \(F\) *assuming* we already have a \(\mathrm{Uniform}(0,1)\) random variable \(U\). And
+what if we need an infinite sequence \(X_1, X_2, \dots\) of *independent* random variables with
+prescribed CDFs \(F_1, F_2, \dots\)? We would need an infinite sequence \(U_1, U_2, \dots\) of
+independent \(\mathrm{Uniform}(0,1)\) random variables on a single probability space!
+
+Where do we get \(U_1, U_2, \dots\) from? From the *fair-coin space* \((\Omega, \mathcal F, \mathbb P) = (\{0,1\}^{\mathbb N}, \mathcal F, \mathbb P)\)
+constructed in Chapter 10!
+1. *Step 1 (One uniform from fair bits):* A real number \(u \in [0,1]\) has a binary expansion
+   \(u = 0.b_1 b_2 b_3 \dots_2 = \sum_{n=1}^\infty 2^{-n} b_n\). Choosing the binary digits
+   \(B_n(\omega) = \omega_n \in \{0,1\}\) by tossing a fair coin chooses each successive binary half
+   \([0, 1/2)\) or \([1/2, 1)\), quarter \([k/4, (k+1)/4)\), eighth \([k/8, (k+1)/8)\), etc., with
+   equal probability \(2^{-n}\) — which is the exact definition of the uniform distribution on \([0,1]\)!
+2. *Step 2 (Infinitely many independent uniforms from one sequence of bits):* Deal out the coin tosses
+   \(B_1, B_2, B_3, \dots\) into infinitely many disjoint infinite piles \(I_1, I_2, I_3, \dots\)
+   (for instance, using the prime factorization \(n = 2^{j-1}(2k-1)\)). Each pile \(I_j\) is an infinite
+   sequence of fair bits that builds its own uniform random variable \(U_j\), and since the piles
+   \(I_1, I_2, \dots\) are disjoint, Lemma 13.3 guarantees that \(U_1, U_2, \dots\) are *independent*!
+
+#+begin_example
+   Splitting one sequence of bits B_1, B_2, B_3, ... into disjoint infinite streams:
+
+   Stream 1 (odd indices 2k-1):      B_1, B_3, B_5, B_7, B_9, ...  --> builds U_1 --> Q_1(U_1) ~ F_1
+   Stream 2 (2 * odd = 2(2k-1)):     B_2, B_6, B_10, B_14, ...     --> builds U_2 --> Q_2(U_2) ~ F_2
+   Stream 3 (4 * odd = 4(2k-1)):     B_4, B_12, B_20, B_28, ...    --> builds U_3 --> Q_3(U_3) ~ F_3
+   ...
+   Stream j (2^{j-1}(2k-1)):         disjoint infinite bits        --> builds U_j --> Q_j(U_j) ~ F_j
+#+end_example
+
+** Constructing one uniform random variable via binary expansion
+
+On the fair-coin probability space \((\Omega, \mathcal F, \mathbb P) = (\{0,1\}^{\mathbb N}, \mathcal F, \mathbb P)\),
+let \(B_n(\omega) = \omega_n \in \{0,1\}\) be the \(n\)-th coordinate bit. Define
+\[
+U(\omega) := \sum_{n=1}^\infty 2^{-n} B_n(\omega).
+\]
+
+Let us verify carefully that \(U\) is a measurable random variable with the uniform law \(\lambda|_{[0,1]}\):
+
+1. *Convergence and measurability:* Since \(0 \le 2^{-n} B_n(\omega) \le 2^{-n}\) and \(\sum_{n=1}^\infty 2^{-n} = 1\),
+   the series converges at every outcome \(\omega \in \Omega\) to a number \(U(\omega) \in [0,1]\). Each
+   finite partial sum \(S_N = \sum_{n=1}^N 2^{-n} B_n\) is a finite linear combination of measurable
+   indicator functions, hence measurable, and \(U = \lim_{N\to\infty} S_N\) is the pointwise limit of
+   measurable functions, hence measurable (Chapter 3).
+2. *Prefix decomposition and the all-ones tail:* Fix an integer \(n \ge 1\). For the prefix
+   \((B_1, \dots, B_n) \in \{0,1\}^n\), let
+   \[
+   k := \sum_{j=1}^n 2^{n-j} B_j \in \{0, 1, \dots, 2^n - 1\}
+   \]
+   be the integer whose \(n\)-bit binary representation is \(B_1 B_2 \dots B_n\). Dividing by \(2^n\)
+   splits \(U\) into its \(n\)-bit dyadic prefix \(k 2^{-n}\) plus a tail series:
+   \[
+   U = k 2^{-n} + \sum_{j > n} 2^{-j} B_j, \qquad \text{where } 0 \le \sum_{j > n} 2^{-j} B_j \le \sum_{j > n} 2^{-j} = 2^{-n}.
+   \]
+   When can the tail \(\sum_{j > n} 2^{-j} B_j\) actually equal its upper bound \(2^{-n}\)? Since
+   \(2^{-j} B_j \le 2^{-j}\) for every \(j > n\), equality \(\sum_{j > n} 2^{-j} B_j = \sum_{j > n} 2^{-j}\)
+   holds *if and only if every later bit is one* (\(B_j = 1\) for all \(j > n\))!
+
+   For each fixed \(n\), the event \(E_n := \{\omega : B_j(\omega) = 1 \text{ for all } j > n\} = \bigcap_{j=n+1}^\infty \{B_j = 1\}\)
+   has probability \(\lim_{M\to\infty} 2^{-(M-n)} = 0\) (Chapter 10). Therefore the event
+   \[
+   N := \bigcup_{n=0}^\infty E_n = \{\omega \in \Omega : B_j(\omega) = 1 \text{ for all } j > n, \text{ for some } n \ge 0\}
+   \]
+   is a countable union of null events, so \(\mathbb P(N) = 0\).
+3. *Exact probabilities on dyadic half-open intervals:* For every outcome \(\omega \notin N\) and every
+   \(n \ge 1\), the tail \(\sum_{j > n} 2^{-j} B_j(\omega)\) is *strictly smaller* than \(2^{-n}\), so
+   \(U(\omega)\) lies in the half-open dyadic interval \([k 2^{-n}, (k+1) 2^{-n})\) if and only if the
+   first \(n\) bits \((B_1(\omega), \dots, B_n(\omega))\) are the unique binary digits of \(k\)! Since
+   that unique prefix cylinder has fair-coin probability \(2^{-n}\) and \(\mathbb P(N) = 0\), we get
+   \[
+   \mathbb P\big(U \in [k 2^{-n},\, (k+1) 2^{-n})\big) = 2^{-n} \qquad (0 \le k < 2^n).
+   \]
+   Also \(\{U = 1\} = E_0 = \{\omega : B_j(\omega) = 1 \text{ for all } j \ge 1\}\), so
+   \(\mathbb P(U = 1) = 0\) (and similarly \(\mathbb P(U = 0) = 0\)).
+4. *Uniqueness via the dyadic \(\pi\)-system:* Consider the collection \(\mathcal P\) of all dyadic
+   half-open intervals \([k 2^{-n}, (k+1) 2^{-n}) \subseteq [0,1)\) together with \(\emptyset\).
+   - *\(\mathcal P\) is a \(\pi\)-system:* Any two dyadic intervals are either disjoint or one is
+     contained in the other, so their intersection belongs to \(\mathcal P\).
+   - *\(\mathcal P\) generates \(\mathcal B([0,1))\):* Every open subset of \([0,1)\) is the union of
+     the dyadic intervals from \(\mathcal P\) that it contains, and since there are only countably many
+     dyadic intervals in total (\(\sum_{n \ge 1} 2^n\) is countable), that union is a *countable* union!
+   On every dyadic interval \(I = [k 2^{-n}, (k+1) 2^{-n}) \in \mathcal P\), the law of \(U\) assigns
+   \(\mathbb P(U \in I) = 2^{-n} = \lambda(I)\), agreeing with Lebesgue measure on \([0,1)\) (and both
+   assign \(0\) to \(\{1\}\)). By the finite-measure uniqueness theorem (Chapter 4), the law of \(U\) on
+   \([0,1]\) is \(\lambda|_{[0,1]}\)! Finally, since \(\mathbb P(U \in \{0,1\}) = 0\), redefining \(U\)
+   to equal \(1/2\) at the two all-zeros and all-ones outcomes gives a strictly \((0,1)\)-valued random
+   variable with the uniform law \(\lambda|_{(0,1)}\).
+
+** Countably many independent variables with prescribed laws
+
+Even better: a *single* sequence of fair coin tosses \((B_n)_{n \ge 1}\) on \(\{0,1\}^{\mathbb N}\) can
+supply *countably many* independent uniform random variables \(U_1, U_2, \dots\) at once!
+
+For each \(j \ge 1\), define the subset of positive integers
+\[
+I_j := \{2^{j-1}(2k - 1) : k \ge 1\} \subseteq \mathbb N.
+\]
+- *Why do \(I_1, I_2, \dots\) partition \(\mathbb N\) into pairwise disjoint infinite sets?* Every
+  positive integer \(n \in \mathbb N\) can be factored uniquely by pulling out the highest power of \(2\)
+  that divides \(n\): \(n = 2^{j-1} m\) where \(j - 1 \ge 0\) is the number of factors of \(2\) and
+  \(m = 2k - 1 \ge 1\) is odd. Thus every \(n \in \mathbb N\) belongs to \(I_j\) for a *unique* \(j \ge 1\),
+  and each \(I_j\) is indexed bijectively by \(k = 1, 2, \dots\).
+- For each \(j \ge 1\), define
+  \[
+  U_j := \sum_{k=1}^\infty 2^{-k} B_{2^{j-1}(2k-1)}.
+  \]
+  Since \((B_{2^{j-1}(2k-1)})_{k \ge 1}\) is a sequence of independent fair bits, the exact same binary
+  expansion argument shows that each \(U_j\) has the uniform law on \([0,1]\). And because the index
+  sets \(I_1, I_2, \dots\) are pairwise disjoint and \(U_j\) is a measurable function of
+  \((B_i)_{i \in I_j}\), Lemma 13.3 guarantees that \(U_1, U_2, \dots\) are *independent*!
+- Redefining each \(U_j\) to equal \(1/2\) on the null event \(\{U_j \in \{0,1\}\}\) (which still uses
+  only coordinates in \(I_j\), or modifies each \(U_j\) on a null event) preserves independence and all
+  finite joint laws, giving independent \((0,1)\)-valued uniform variables \(\widetilde U_1, \widetilde U_2, \dots\).
+- Finally, given *any* sequence of prescribed CDFs \(F_1, F_2, \dots\) with quantile functions
+  \(Q_1, Q_2, \dots\) (Proposition 12.6), define
+  \[
+  X_j := Q_j(\widetilde U_j), \qquad j \ge 1.
+  \]
+  By Proposition 12.6, each \(X_j\) has CDF \(F_j\), and by Lemma 13.3 (since \(Q_j\) is Borel measurable),
+  \(X_1, X_2, \dots\) are *independent*!
+
+#+begin_quote
+*Grand synthesis.* Together, the fair-coin space (Chapter 10), the quantile transform (Chapter 12), and
+the grouping lemma (Lemma 13.3) prove that on the single concrete probability space
+\((\{0,1\}^{\mathbb N}, \mathcal F, \mathbb P)\), there exists an independent sequence of random
+variables \(X_1, X_2, \dots\) with *any* prescribed sequence of 1D distributions \(F_1, F_2, \dots\)
+(for instance, an iid sequence of standard normal, exponential, or Cauchy random variables)!
+#+end_quote
+
+** Example from the notes: a continuous CDF without a density (the Cantor law)
+
+In Remark 12.5, we promised an example of a probability distribution on \(\mathbb R\) that has *no atoms*
+(so its CDF is continuous everywhere) and yet has *no density* with respect to Lebesgue measure. Using
+the exact same fair coin tosses \(B_1, B_2, \dots \in \{0,1\}\), we simply switch from base \(2\) to
+base \(3\) (with digits \(2 B_n \in \{0, 2\}\), skipping the middle digit \(1\))!
+
+#+begin_quote
+*Example 13.7 (A continuous CDF without a density — the Cantor distribution).* On the fair-coin space,
+define the random ternary series
+\[
+Z := \sum_{n=1}^\infty 2 B_n 3^{-n} \in [0,1].
+\]
+Let us analyze the support and continuity of the law \(\mu_Z\):
+
+1. *All mass of \(Z\) lives on a Borel set \(K\) of Lebesgue measure zero:*
+   Fix \(n \ge 1\). For each of the \(2^n\) possible prefixes \((b_1, \dots, b_n) \in \{0,1\}^n\), the
+   prefix sum is \(c_{b_1,\dots,b_n} := \sum_{j=1}^n 2 b_j 3^{-j}\), and the remaining tail satisfies
+   \[
+   0 \le \sum_{j > n} 2 B_j 3^{-j} \le \sum_{j > n} 2 \cdot 3^{-j} = 3^{-n}.
+   \]
+   Thus for a given prefix \((b_1, \dots, b_n)\), the value of \(Z\) must lie in the closed interval
+   \([c_{b_1,\dots,b_n},\, c_{b_1,\dots,b_n} + 3^{-n}]\) of length \(3^{-n}\). Let \(K_n \subseteq [0,1]\)
+   be the union of these \(2^n\) closed intervals (obtained at step \(n\) by deleting the open middle
+   third of each interval of \(K_{n-1}\)):
+
+   #+begin_example
+   K_0:  [-----------------------------------]   1 interval of length 1
+   K_1:  [-----------]           [-----------]   2 intervals of length 1/3  (total = 2/3)
+   K_2:  [---]   [---]           [---]   [---]   4 intervals of length 1/9  (total = 4/9)
+   #+end_example
+
+   The compact sets \(K_1 \supseteq K_2 \supseteq \dots\) are decreasing, \(Z(\omega) \in K_n\) at
+   *every* outcome \(\omega \in \Omega\), and by subadditivity the Lebesgue measure of \(K_n\) is at most
+   \[
+   \lambda(K_n) \le 2^n \cdot 3^{-n} = \Big(\frac{2}{3}\Big)^n.
+   \]
+   Therefore their intersection \(K := \bigcap_{n=1}^\infty K_n\) (the classical *middle-thirds Cantor
+   set*) is a compact (hence Borel) subset of \([0,1]\) with
+   \[
+   \lambda(K) = \lim_{n\to\infty} \lambda(K_n) = \lim_{n\to\infty} \Big(\frac{2}{3}\Big)^n = 0,
+   \qquad \text{while} \qquad
+   \mu_Z(K) = \mathbb P(Z \in K) = \mathbb P(\Omega) = 1!
+   \]
+
+2. *The map \(\omega \mapsto Z(\omega)\) is injective, so \(\mu_Z\) has NO atoms (continuous CDF):*
+   Suppose two bit sequences \(\omega \ne \eta\) in \(\{0,1\}^{\mathbb N}\) are distinct, and let
+   \(n \ge 1\) be the *first* index where they differ (say \(\omega_n = 1\) and \(\eta_n = 0\), while
+   \(\omega_j = \eta_j\) for all \(j < n\)). At index \(n\), the term \(2 \omega_n 3^{-n} - 2 \eta_n 3^{-n}\)
+   contributes \(+2 \cdot 3^{-n}\), whereas the largest possible opposing difference from *all* later
+   coordinates \(j > n\) combined is
+   \[
+   \sum_{j > n} 2|\omega_j - \eta_j| 3^{-j} \le \sum_{j > n} 2 \cdot 3^{-j} = 3^{-n} < 2 \cdot 3^{-n},
+   \]
+   with equality only if \(\omega_j = 0\) and \(\eta_j = 1\) for all \(j > n\), in which case
+   \(Z(\omega) - Z(\eta) \ge 2 \cdot 3^{-n} - 3^{-n} = 3^{-n} > 0\) is *still* strictly positive!
+   Thus distinct bit sequences always produce strictly distinct real numbers \(Z(\omega) \ne Z(\eta)\).
+   Consequently, for every real number \(x \in \mathbb R\), the event \(\{Z = x\}\) contains *at most
+   one* bit sequence \(\omega \in \{0,1\}^{\mathbb N}\), and since every single sequence in the fair-coin
+   space has probability \(0\), we have
+   \[
+   \mathbb P(Z = x) = 0 \qquad \text{for all } x \in \mathbb R.
+   \]
+   By Proposition 12.1, \(\mu_Z\) has no atoms, so its CDF \(F_Z(x) = \mathbb P(Z \le x)\) is *continuous*
+   on all of \(\mathbb R\) (its graph is the famous "devil's staircase", which climbs continuously from
+   \(0\) to \(1\) while staying flat on every deleted middle-third interval!).
+
+3. *Why \(\mu_Z\) cannot have a density:*
+   If \(\mu_Z\) had a density \(f\) with respect to Lebesgue measure \(\lambda\), then because
+   \(\lambda(K) = 0\), the integral of \(f\) over the Lebesgue-null set \(K\) would have to be zero:
+   \[
+   \mu_Z(K) = \int_K f(x)\,dx = 0,
+   \]
+   contradicting \(\mu_Z(K) = 1\)! A probability law like \(\mu_Z\) that assigns all of its mass
+   (\(\mu_Z(K) = 1\)) to a Borel set of Lebesgue measure zero (\(\lambda(K) = 0\)) is called a *singular*
+   law (and since \(F_Z\) is also continuous, a *singular continuous* law).
+#+end_quote
+
+** Historical remark (Bohlmann, 1908)
+
+In a paper presented at the 1908 International Congress of Mathematicians in Rome (published in 1909,
+/Die Grundbegriffe der Wahrscheinlichkeitsrechnung in ihrer Anwendung auf die Lebensversicherung/,
+Atti del IV Congresso Internazionale dei Matematici, Vol. III, pp. 257–258), the German mathematician
+Georg Bohlmann gave the earliest explicit example showing that pairwise independence of three events does
+not imply mutual (joint) independence. In Bohlmann's model, each of \(16\) equally likely capsules
+contained three numbered balls, each colored black or white. The event \(A_i\) that ball \(i\) was white
+had probability \(1/2\) for each \(i \in \{1,2,3\}\), and any two balls were both white with probability
+\(1/4 = \frac12 \cdot \frac12\). Yet all three balls were white in \(3\) of the \(16\) capsules, giving
+\(\mathbb P(A_1 \cap A_2 \cap A_3) = 3/16 \ne 1/8\)! (Unlike our parity Example 13.2, where only four of
+the eight bit triples occur, all eight color patterns have positive probability \(3/16\) or \(1/16\) in
+Bohlmann's model; both examples isolate the exact missing condition on the triple intersection.)
+
+** Classroom route (from the notes)
+
+Begin with the two couplings of fair bits and the pairwise-independent parity triple (Example 13.2).
+Translate independence into a product law (Proposition 13.1), prove factorization of expectations
+(Proposition 13.4), and compute variances of sums (Equation 13.1 and Example 13.6). Use the binary
+expansion \(U = \sum 2^{-n} B_n\) to connect the abstract countable product construction of Chapter 10
+with a uniform random variable and the quantile construction of Chapter 12. The Dynkin-lemma proof of the
+grouping lemma (Lemma 13.3) and the singular Cantor law (Example 13.7) provide further depth in the notes.
+
+* Worked Exercises
+
+** Exercise 1
+Let \(A\) and \(B\) be two independent events in \((\Omega, \mathcal F, \mathbb P)\). Prove directly from
+the definition of independent events that:
+1. \(A\) and \(B^c\) are independent;
+2. \(A^c\) and \(B^c\) are independent;
+3. the generated \(\sigma\)-algebras \(\sigma(\mathbf 1_A) = \{\emptyset, A, A^c, \Omega\}\) and
+   \(\sigma(\mathbf 1_B) = \{\emptyset, B, B^c, \Omega\}\) are independent.
+
+** Solution
+1. Since \(A = (A \cap B) \sqcup (A \cap B^c)\), finite additivity and \(\mathbb P(A \cap B) = \mathbb P(A)\mathbb P(B)\)
+   give
+   \[
+   \mathbb P(A \cap B^c) = \mathbb P(A) - \mathbb P(A \cap B) = \mathbb P(A) - \mathbb P(A)\mathbb P(B)
+   = \mathbb P(A)\big(1 - \mathbb P(B)\big) = \mathbb P(A)\,\mathbb P(B^c).
+   \]
+2. Applying Part 1 with the roles of \(A\) and \(B^c\) swapped shows that since \(B^c\) and \(A\) are
+   independent, \(B^c\) and \(A^c\) are also independent: \(\mathbb P(A^c \cap B^c) = \mathbb P(A^c)\,\mathbb P(B^c)\).
+3. To check independence of \(\sigma(\mathbf 1_A)\) and \(\sigma(\mathbf 1_B)\), we must verify
+   \(\mathbb P(E \cap F) = \mathbb P(E)\,\mathbb P(F)\) for all \(E \in \{\emptyset, A, A^c, \Omega\}\)
+   and \(F \in \{\emptyset, B, B^c, \Omega\}\). If either \(E\) or \(F\) is \(\emptyset\), both sides are
+   \(0\); if either is \(\Omega\), both sides equal the probability of the other event; and the four
+   nontrivial pairs \((A,B)\), \((A,B^c)\), \((A^c, B)\), \((A^c, B^c)\) hold by hypothesis and Parts 1–2.
+
+** Exercise 2
+Suppose \(X\) is a random variable on \((\Omega, \mathcal F, \mathbb P)\) that is independent of
+*itself* (\(X \perp\!\!\!\perp X\)). Prove that \(X\) is almost surely constant: there exists a real
+number \(c \in \mathbb R\) such that \(\mathbb P(X = c) = 1\).
+(/Hint:/ First show that for every \(B \in \mathcal B(\mathbb R)\), \(\mathbb P(X \in B) \in \{0, 1\}\),
+and then examine the CDF \(F_X(x) = \mathbb P(X \le x)\).)
+
+** Solution
+Since \(X\) is independent of \(X\), for every Borel set \(B \in \mathcal B(\mathbb R)\) we can take
+\(B_1 = B\) and \(B_2 = B\) in the definition of independence:
+\[
+\mathbb P(X \in B) = \mathbb P(X \in B,\ X \in B) = \mathbb P(X \in B)\,\mathbb P(X \in B) = \big(\mathbb P(X \in B)\big)^2.
+\]
+The only solutions to \(p = p^2\) in \(\mathbb R\) are \(p = 0\) and \(p = 1\). In particular, the CDF
+\(F_X(x) = \mathbb P(X \le x)\) can only take the values \(0\) and \(1\)!
+
+Since \(F_X\) is nondecreasing with \(\lim_{x\to-\infty} F_X(x) = 0\) and \(\lim_{x\to+\infty} F_X(x) = 1\),
+let \(c := Q(1/2) = \inf\{x \in \mathbb R : F_X(x) \ge 1/2\} = \inf\{x \in \mathbb R : F_X(x) = 1\} \in \mathbb R\).
+By right-continuity of \(F_X\) (or Proposition 12.6), \(F_X(c) = 1\), whereas for every \(y < c\) we have
+\(F_X(y) = 0\), so \(F_X(c-) = 0\). By Proposition 12.1,
+\[
+\mathbb P(X = c) = F_X(c) - F_X(c-) = 1 - 0 = 1.
+\]
+
+** Exercise 3
+Let \(X_1, \dots, X_n\) be independent real-valued random variables, and suppose that for every
+\(x_1, \dots, x_n \in \mathbb R\), the half-line events factor:
+\[
+\mathbb P(X_1 \le x_1, \dots, X_n \le x_n) = \prod_{j=1}^n \mathbb P(X_j \le x_j) = \prod_{j=1}^n F_{X_j}(x_j).
+\]
+Using Dynkin's \(\pi\)-\(\lambda\) lemma (or the uniqueness theorem of Chapter 4), prove that this
+half-line condition alone is *sufficient* to imply that \(X_1, \dots, X_n\) are independent!
+
+** Solution
+Consider the two probability measures \(\mu_{(X_1, \dots, X_n)}\) (the joint law of \((X_1, \dots, X_n)\))
+and \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\) (the product of the marginal laws) on
+\((\mathbb R^n, \mathcal B(\mathbb R^n))\). Let \(\mathcal P\) be the collection of all \(n\)-dimensional
+south-west orthants (products of half-lines):
+\[
+\mathcal P := \big\{(-\infty, x_1] \times \dots \times (-\infty, x_n] : x_1, \dots, x_n \in \mathbb R\big\}.
+\]
+- *\(\mathcal P\) is a \(\pi\)-system:* The intersection of two orthants is another orthant:
+  \[
+  \Big(\prod_{j=1}^n (-\infty, x_j]\Big) \cap \Big(\prod_{j=1}^n (-\infty, y_j]\Big)
+  = \prod_{j=1}^n (-\infty, \min(x_j, y_j)] \in \mathcal P.
+  \]
+- *\(\mathcal P\) generates \(\mathcal B(\mathbb R^n)\):* By taking differences and countable unions along
+  \(x_j \to \infty\), \(\sigma(\mathcal P)\) contains all half-open boxes \((a_1, b_1] \times \dots \times (a_n, b_n]\),
+  hence all open boxes, which generate \(\mathcal B(\mathbb R^n)\).
+By the assumed half-line factorization, \(\mu_{(X_1, \dots, X_n)}\) and \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\)
+agree on every set in \(\mathcal P\). By the uniqueness theorem for probability measures (Chapter 4),
+\(\mu_{(X_1, \dots, X_n)} = \mu_{X_1} \otimes \dots \otimes \mu_{X_n}\) on \(\mathcal B(\mathbb R^n)\),
+so Proposition 13.1 implies \(X_1, \dots, X_n\) are independent.
+
+** Exercise 4
+Let \(X\) and \(Y\) be independent real-valued random variables. Show that for every \(t \in \mathbb R\),
+the *characteristic function* (or Fourier transform) of their sum \(X + Y\) factors:
+\[
+\mathbb E\big[e^{it(X+Y)}\big] = \mathbb E\big[e^{itX}\big]\,\mathbb E\big[e^{itY}\big],
+\]
+by writing \(e^{itx} = \cos(tx) + i\sin(tx)\) in terms of its bounded real and imaginary parts, and
+similarly that if \(\mathbb E[e^{tX}] < \infty\) and \(\mathbb E[e^{tY}] < \infty\), the moment generating
+function satisfies \(\mathbb E[e^{t(X+Y)}] = \mathbb E[e^{tX}]\,\mathbb E[e^{tY}]\).
+
+** Solution
+1. *Moment generating function:* For fixed \(t \in \mathbb R\), the functions \(x \mapsto e^{tx}\) and
+   \(y \mapsto e^{ty}\) are continuous, hence Borel measurable. By Lemma 13.3, \(e^{tX}\) and \(e^{tY}\)
+   are independent nonnegative random variables. Since \(e^{t(X+Y)} = e^{tX} e^{tY}\), Proposition 13.4
+   gives \(\mathbb E[e^{t(X+Y)}] = \mathbb E[e^{tX}]\,\mathbb E[e^{tY}]\).
+2. *Characteristic function:* For fixed \(t \in \mathbb R\), \(\cos(tX), \sin(tX)\) are bounded Borel
+   functions of \(X\), and \(\cos(tY), \sin(tY)\) are bounded Borel functions of \(Y\). By Lemma 13.3
+   and Proposition 13.4, every product of a function of \(X\) with a function of \(Y\) has factored
+   expectation. Using the trigonometric addition formulas
+   \(\cos(t(X+Y)) = \cos(tX)\cos(tY) - \sin(tX)\sin(tY)\) and
+   \(\sin(t(X+Y)) = \sin(tX)\cos(tY) + \cos(tX)\sin(tY)\), linearity of expectation and Proposition 13.4
+   give
+   \begin{align*}
+   \mathbb E\big[e^{it(X+Y)}\big]
+   &= \big(\mathbb E[\cos(tX)]\mathbb E[\cos(tY)] - \mathbb E[\sin(tX)]\mathbb E[\sin(tY)]\big) \\
+   &\quad + i\big(\mathbb E[\sin(tX)]\mathbb E[\cos(tY)] + \mathbb E[\cos(tX)]\mathbb E[\sin(tY)]\big) \\
+   &= \big(\mathbb E[\cos(tX)] + i\mathbb E[\sin(tX)]\big)\big(\mathbb E[\cos(tY)] + i\mathbb E[\sin(tY)]\big)
+   = \mathbb E\big[e^{itX}\big]\,\mathbb E\big[e^{itY}\big].
+   \end{align*}
+
+** Exercise 5
+Let \(Z = \sum_{n=1}^\infty 2 B_n 3^{-n}\) be the Cantor random variable of Example 13.7, where
+\(B_1, B_2, \dots\) are independent fair bits (\(\mathbb P(B_n = 0) = \mathbb P(B_n = 1) = 1/2\)).
+Compute the mean \(\mathbb E[Z]\) and the variance \(\operatorname{var}(Z)\).
+(/Hint:/ First verify that the partial sums converge in \(L^2(\mathbb P)\) or use dominated convergence,
+together with \(\mathbb E[B_n] = 1/2\) and \(\operatorname{var}(B_n) = 1/4\).)
+
+** Solution
+For each bit \(B_n \in \{0,1\}\), we have \(\mathbb E[B_n] = 1/2\) and \(\operatorname{var}(B_n) = \frac12(1 - \frac12) = 1/4\).
+Let \(Z_N := \sum_{n=1}^N 2 B_n 3^{-n}\) be the \(N\)-th partial sum. Since \(0 \le Z_N \le Z \le 1\),
+both \(Z_N \to Z\) and \((Z_N - \mathbb E Z_N)^2 \to (Z - \mathbb E Z)^2\) are dominated by the constant
+\(1 \in L^1(\mathbb P)\), so the Dominated Convergence Theorem (Chapter 6) allows us to pass to the
+limit as \(N \to \infty\):
+1. *Mean:*
+   \[
+   \mathbb E[Z] = \lim_{N\to\infty} \sum_{n=1}^N 2 \cdot 3^{-n} \mathbb E[B_n]
+   = \sum_{n=1}^\infty 2 \cdot 3^{-n} \cdot \frac{1}{2} = \sum_{n=1}^\infty 3^{-n} = \frac{1/3}{1 - 1/3} = \frac{1}{2}.
+   \]
+   (This also follows by symmetry: replacing \(B_n\) by \(1 - B_n\) turns \(Z\) into \(1 - Z\) and has
+   the same distribution!)
+2. *Variance:* By Equation (13.1) applied to the independent variables \(2 B_n 3^{-n}\),
+   \(\operatorname{var}(2 B_n 3^{-n}) = 4 \cdot 9^{-n} \operatorname{var}(B_n) = 4 \cdot 9^{-n} \cdot \frac{1}{4} = 9^{-n}\),
+   so
+   \[
+   \operatorname{var}(Z) = \lim_{N\to\infty} \operatorname{var}(Z_N) = \sum_{n=1}^\infty 9^{-n}
+   = \frac{1/9}{1 - 1/9} = \frac{1}{8}.
+   \]
+
+** Exercise 6
+Let \(X_1, X_2, X_3, X_4\) be independent standard normal (or exponential) random variables. Are the two
+random variables
+\[
+Y_1 = \max(X_1, X_2) - \min(X_1, X_2) \qquad \text{and} \qquad Y_2 = \frac{X_3}{1 + X_3^2 + X_4^2}
+\]
+independent? What about \(W_1 = X_1 + X_2\) and \(W_2 = X_2 + X_3\) (assuming \(\operatorname{var}(X_j) = 1\))?
+
+** Solution
+- *\(Y_1\) and \(Y_2\) ARE independent:* Partition \(\{1,2,3,4\}\) into the two disjoint groups
+  \(I_1 = \{1, 2\}\) and \(I_2 = \{3, 4\}\). The functions \(f_1(x_1, x_2) = \max(x_1, x_2) - \min(x_1, x_2) = |x_1 - x_2|\)
+  and \(f_2(x_3, x_4) = x_3 / (1 + x_3^2 + x_4^2)\) are continuous on \(\mathbb R^2\), hence Borel
+  measurable. Since \(Y_1 = f_1(X_1, X_2)\) and \(Y_2 = f_2(X_3, X_4)\) are measurable functions of
+  *disjoint* groups of independent random variables, Lemma 13.3 guarantees immediately that \(Y_1\) and
+  \(Y_2\) are independent!
+- *\(W_1 = X_1 + X_2\) and \(W_2 = X_2 + X_3\) are NOT independent:* Their index groups \(\{1, 2\}\) and
+  \(\{2, 3\}\) overlap at coordinate \(2\)! Indeed, we can compute their covariance using bilinearity and
+  \(\operatorname{cov}(X_i, X_j) = 0\) for \(i \ne j\):
+  \[
+  \operatorname{cov}(W_1, W_2) = \operatorname{cov}(X_1 + X_2,\ X_2 + X_3) = \operatorname{cov}(X_2, X_2) = \operatorname{var}(X_2) = 1 \ne 0.
+  \]
+  Since independent square-integrable random variables must have covariance \(0\), \(W_1\) and \(W_2\)
+  cannot be independent.
+
+* Summary
+
+#+caption: Chapter 13 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Independent events      | \(\mathbb P(\bigcap_{j \in J} A_j) = \prod_{j \in J} \mathbb P(A_j)\) for *every* \(J \subseteq \{1,\dots,n\}\) | Must hold for all subfamilies, not just pairs or all \(n\) |
+| Independent RVs         | \(\sigma(X_1), \dots, \sigma(X_n)\) independent \(\iff \mathbb P(X_j \in B_j\ \forall j) = \prod_j \mathbb P(X_j \in B_j)\) | Setting \(B_j = \mathbb R\) includes all subfamilies       |
+| Proposition 13.1        | \(X_1, \dots, X_n\) independent \(\iff \mu_{(X_1,\dots,X_n)} = \mu_{X_1} \otimes \dots \otimes \mu_{X_n}\)   | Connects independence with product measures and Fubini     |
+| Example 13.2            | Parity triple \((X, Y, X+Y \bmod 2)\) on \(\{0,1\}^2\)                                                       | Pairwise independent does NOT imply jointly independent    |
+| Lemma 13.3              | Disjoint groups \(I_1, \dots, I_m \implies \sigma(X_i : i \in I_k)\) are independent                         | Functions of disjoint blocks of independent RVs are indep. |
+| Proposition 13.4        | Independent \(X_j \in L^1 \implies \prod_j X_j \in L^1\) and \(\mathbb E[\prod_j X_j] = \prod_j \mathbb E X_j\) | Proved via Tonelli + Fubini on the product law             |
+| Variance of sum (13.1)  | Pairwise independent \(X_j \in L^2 \implies \operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\) | Cross-terms \(\operatorname{cov}(X_i, X_j) = 0\) vanish    |
+| Example 13.5            | \(X \in \{-1,0,1\}\) uniform, \(Y = X^2\): \(\operatorname{cov}(X,Y) = 0\)                                   | Uncorrelated (\(\operatorname{cov}=0\)) \(\centernot\implies\) independent |
+| Binary uniform \(U\)    | \(U = \sum_{n=1}^\infty 2^{-n} B_n \sim \mathrm{Uniform}[0,1]\); split \(\mathbb N = \bigsqcup_j I_j\)       | Builds countably many independent RVs \(Q_j(U_j) \sim F_j\) |
+| Example 13.7            | Cantor series \(Z = \sum_{n=1}^\infty 2 B_n 3^{-n}\) supported on Cantor set \(K\) (\(\lambda(K)=0\))        | Singular continuous law: no atoms, yet no Lebesgue density |
+
+*Key takeaways*
+
+- Independence is a statement about how events or random variables are *coupled* on a common probability
+  space; for random variables \(X_1, \dots, X_n\), it is equivalent to their joint law being the product
+  measure \(\mu_{X_1} \otimes \dots \otimes \mu_{X_n}\) (Proposition 13.1).
+- Keep the hierarchy of conditions straight:
+  \[
+  \text{Joint independence} \;\Longrightarrow\; \text{Pairwise independence} \;\Longrightarrow\; \text{Uncorrelated } (\operatorname{cov} = 0),
+  \]
+  and *neither* arrow reverses (Examples 13.2 and 13.5)!
+- Disjoint groups of independent random variables generate independent \(\sigma\)-algebras (Lemma 13.3,
+  proved by extending from cylinder \(\pi\)-systems via Dynkin's \(\pi\)-\(\lambda\) lemma).
+- For pairwise independent square-integrable variables, \(\operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\),
+  so the sample mean \(\frac{1}{n}\sum_{j=1}^n X_j\) of iid variables has variance \(\sigma^2 / n \to 0\)
+  (Example 13.6).
+- Splitting a single sequence of fair coin tosses into disjoint streams \(I_j\) and applying binary
+  expansion plus the quantile transform realizes any countable family of independent random variables on
+  the fair-coin space; replacing base \(2\) by base \(3\) produces the singular continuous Cantor law
+  (Example 13.7).
