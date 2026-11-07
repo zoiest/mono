@@ -1,0 +1,596 @@
+:PROPERTIES:
+:ID:       5d4cb8f5-1458-4a76-90b9-4937039b793f
+:ROAM_ALIASES: "MAST31051 Chapter 0" "Toolkit and Prerequisites Notes"
+:END:
+#+title: Chapter 0: Toolkit and Prerequisites
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch00:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch01-measurable-spaces.org][Chapter 1 →]]
+
+* Overview
+
+This chapter is *not* part of the original lecture notes. It collects the background that the
+lecture notes use silently, so that a reader who has never seen measure theory can follow every
+step of Chapters 1--16.
+
+Measure theory is, at heart, a careful bookkeeping of *sets*: which sets we may measure, how big they
+are, and how sizes behave when we take unions, intersections and limits of sets. Probability theory
+uses exactly the same bookkeeping: events are sets of outcomes, and "the probability that at least
+one of the events happens" is the size of a union. So the tools below are the vocabulary of the whole
+course.
+
+*Roadmap.*
+- 0.1 Sets and the algebra of sets (unions, intersections, complements, De Morgan's laws, indexed families).
+- 0.2 Functions, images and preimages --- and why preimages are the "good" operation.
+- 0.3 Countable versus uncountable sets (\(\mathbb{N}\), \(\mathbb{Q}\) countable; \(\mathbb{R}\) uncountable).
+- 0.4 The extended half-line \([0,\infty]\) and its arithmetic.
+- 0.5 Supremum and infimum.
+- 0.6 \(\limsup\) and \(\liminf\) of sequences of numbers and of sequences of sets.
+- 0.7 Series of nonnegative terms (the order of summation does not matter).
+- 0.8 Basic topology of \(\mathbb{R}\): open and closed sets.
+- 0.9 Indicator functions.
+
+*What you need from earlier chapters.* Nothing: this is the starting point. You should be comfortable
+with calculus-level limits and with reading simple proofs.
+
+* 0.1 Sets and the algebra of sets
+
+** Membership and inclusion
+
+A *set* is a collection of objects, called its *elements*. We write \(\omega\in A\) for "\(\omega\) is an
+element of \(A\)" and \(\omega\notin A\) for the opposite. We write \(A\subseteq B\) ("\(A\) is a subset of \(B\)")
+if every element of \(A\) is also an element of \(B\); equality \(A=B\) is allowed. Two sets are equal
+exactly when \(A\subseteq B\) and \(B\subseteq A\). This gives the standard way to prove that two sets are equal:
+
+#+begin_quote
+*Method (double inclusion).* To prove \(A=B\), take an arbitrary \(x\in A\) and show \(x\in B\); then take an
+arbitrary \(x\in B\) and show \(x\in A\).
+#+end_quote
+
+The *empty set* \(\emptyset\) has no elements; it is a subset of every set (there is nothing to check).
+A *singleton* \(\{\omega\}\) is a set with exactly one element. Note the difference: \(\omega\) is an element,
+\(\{\omega\}\) is a set.
+
+Throughout we fix an *underlying set* \(\Omega\) (in probability: the *sample space*, the set of all
+possible outcomes) and consider subsets \(A,B,\dots\subseteq\Omega\).
+
+The *power set* \(2^{\Omega}\) is the set of all subsets of \(\Omega\). If \(\Omega\) has \(n\) elements, then
+\(2^\Omega\) has \(2^n\) elements (each element is either in or out of a subset).
+
+*Example 0.1.* For \(\Omega=\{1,2,3\}\):
+\[
+2^{\Omega}=\bigl\{\emptyset,\{1\},\{2\},\{3\},\{1,2\},\{1,3\},\{2,3\},\{1,2,3\}\bigr\},
+\]
+which has \(2^3=8\) members. Note \(1\in\Omega\), \(\{1\}\subseteq\Omega\), \(\{1\}\in 2^\Omega\), but \(1\notin 2^\Omega\).
+
+** Set operations
+
+For \(A,B\subseteq\Omega\):
+- *union* \(A\cup B=\{\omega:\omega\in A\text{ or }\omega\in B\}\) (at least one);
+- *intersection* \(A\cap B=\{\omega:\omega\in A\text{ and }\omega\in B\}\);
+- *difference* \(A\setminus B=\{\omega\in A:\omega\notin B\}\);
+- *complement* \(A^c=\Omega\setminus A\) (always relative to the fixed \(\Omega\));
+- *symmetric difference* \(A\,\triangle\,B=(A\setminus B)\cup(B\setminus A)\) (in exactly one of them).
+
+\(A\) and \(B\) are *disjoint* if \(A\cap B=\emptyset\). Note \(A\setminus B=A\cap B^c\).
+
+In probability language: if the outcome is \(\omega\), the event \(A\) "occurs" when \(\omega\in A\). Then
+\(A\cup B\) = "\(A\) or \(B\) occurs", \(A\cap B\) = "both occur", \(A^c\) = "\(A\) does not occur".
+
+*Example 0.2 (one die).* \(\Omega=\{1,\dots,6\}\), \(E=\{2,4,6\}\) (even), \(L=\{1,2,3\}\) (low). Then
+\(E\cup L=\{1,2,3,4,6\}\), \(E\cap L=\{2\}\), \(E\setminus L=\{4,6\}\), \(L\setminus E=\{1,3\}\), \(E^c=\{1,3,5\}\),
+\(E\,\triangle\, L=\{1,3,4,6\}\).
+
+** Laws of set algebra
+
+#+begin_quote
+*Proposition 0.3 (basic laws).* For \(A,B,C\subseteq\Omega\):
+1. Commutativity and associativity of \(\cup\) and \(\cap\).
+2. Distributivity: \(A\cap(B\cup C)=(A\cap B)\cup(A\cap C)\) and \(A\cup(B\cap C)=(A\cup B)\cap(A\cup C)\).
+3. *De Morgan's laws:* \((A\cup B)^c=A^c\cap B^c\) and \((A\cap B)^c=A^c\cup B^c\).
+4. \((A^c)^c=A\), \(\emptyset^c=\Omega\), \(\Omega^c=\emptyset\).
+#+end_quote
+
+/Proof of the first De Morgan law./ \(\omega\in(A\cup B)^c\) iff \(\omega\) is not in \(A\cup B\) iff \(\omega\) is in
+neither \(A\) nor \(B\) iff \(\omega\in A^c\) and \(\omega\in B^c\) iff \(\omega\in A^c\cap B^c\). The second law follows by
+applying the first to \(A^c,B^c\) and taking complements. \(\square\)
+
+In words: "not (at least one)" = "none"; "not (all)" = "at least one fails".
+
+** Indexed families
+
+Often we have infinitely many sets \(A_1,A_2,\dots\) (a *sequence of sets*), or more generally a
+family \((A_i)_{i\in I}\) indexed by any set \(I\). We define
+\[
+\bigcup_{i\in I}A_i=\{\omega:\ \omega\in A_i\text{ for at least one } i\in I\},\qquad
+\bigcap_{i\in I}A_i=\{\omega:\ \omega\in A_i\text{ for every } i\in I\}.
+\]
+Convention: a union over an empty index set is \(\emptyset\) (and an intersection over an empty index set
+is \(\Omega\)). A sequence is *pairwise disjoint* if \(A_m\cap A_n=\emptyset\) whenever \(m\neq n\).
+
+#+begin_quote
+*Proposition 0.4 (De Morgan, general form).* For any family \((A_i)_{i\in I}\),
+\[
+\Bigl(\bigcup_{i\in I}A_i\Bigr)^c=\bigcap_{i\in I}A_i^c,\qquad
+\Bigl(\bigcap_{i\in I}A_i\Bigr)^c=\bigcup_{i\in I}A_i^c .
+\]
+Also \(B\cap\bigcup_i A_i=\bigcup_i (B\cap A_i)\) and \(B\cup\bigcap_i A_i=\bigcap_i(B\cup A_i)\).
+#+end_quote
+
+The proof is identical to the two-set case: "\(\omega\) is in no \(A_i\)" means "\(\omega\) is in every \(A_i^c\)".
+
+*Example 0.5 (unions and intersections of intervals).* Work in \(\Omega=\mathbb{R}\).
+1. \(\bigcup_{n=1}^\infty[1/n,1]=(0,1]\). If \(0<x\le 1\), pick \(n\) with \(1/n\le x\); then \(x\in[1/n,1]\).
+   Conversely each \([1/n,1]\subseteq(0,1]\). Note the point \(0\) is never reached: a union of closed
+   intervals need not be closed.
+2. \(\bigcap_{n=1}^\infty(-1/n,1/n)=\{0\}\). Clearly \(0\) is in every interval. If \(x\neq 0\), choose \(n\) with
+   \(1/n<|x|\); then \(x\notin(-1/n,1/n)\). An intersection of open intervals need not be open.
+3. \(\bigcap_{n=1}^\infty(0,1/n)=\emptyset\). No positive number is below every \(1/n\). Decreasing nonempty sets
+   can have empty intersection.
+4. \(\bigcup_{n=1}^\infty[0,n]=[0,\infty)\) and \(\bigcap_{n=1}^\infty[n,\infty)=\emptyset\).
+
+*Example 0.6 (making a sequence disjoint).* Given any sets \(A_1,A_2,\dots\), define \(B_1=A_1\) and
+\(B_n=A_n\setminus(A_1\cup\dots\cup A_{n-1})\). Then the \(B_n\) are pairwise disjoint, \(B_n\subseteq A_n\), and
+\(\bigcup_n B_n=\bigcup_n A_n\): each point of the union is placed in \(B_n\) for the /first/ \(n\) with
+\(\omega\in A_n\). This trick is used repeatedly in Chapter 2.
+
+*Common confusions.*
+- \(\in\) versus \(\subseteq\): \(\{2\}\subseteq\{1,2\}\) but \(\{2\}\notin\{1,2\}\).
+- Complements depend on \(\Omega\): the complement of \(\{2,4,6\}\) is \(\{1,3,5\}\) inside \(\{1,\dots,6\}\), but
+  would be different inside \(\mathbb{N}\).
+- "Infinitely many operations" can produce sets of a different nature (Example 0.5): this is exactly why
+  measure theory insists on *countable* operations.
+
+* 0.2 Functions, images and preimages
+
+A *function* (or *map*) \(f:X\to Y\) assigns to every \(x\in X\) exactly one value \(f(x)\in Y\). \(X\) is the
+*domain*, \(Y\) the *target* (codomain).
+
+#+begin_quote
+*Definition 0.7 (image and preimage).* For \(A\subseteq X\) and \(B\subseteq Y\):
+\[
+f(A)=\{f(x): x\in A\}\subseteq Y,\qquad f^{-1}(B)=\{x\in X: f(x)\in B\}\subseteq X .
+\]
+#+end_quote
+
+The notation \(f^{-1}(B)\) does *not* require \(f\) to have an inverse function; it is defined for every \(f\)
+and every \(B\subseteq Y\). It is the set of inputs that land in \(B\).
+
+*Example 0.8.* Let \(f:\mathbb{R}\to\mathbb{R}\), \(f(x)=x^2\).
+- \(f^{-1}([0,4])=[-2,2]\), \(f^{-1}([-5,-1])=\emptyset\), \(f^{-1}(\{1\})=\{-1,1\}\).
+- \(f([-1,2])=[0,4]\).
+
+*Example 0.9 (die).* \(\Omega=\{1,\dots,6\}\), \(X(\omega)=\omega \bmod 2\) (\(1\) if odd, \(0\) if even). Then
+\(X^{-1}(\{0\})=\{2,4,6\}\), \(X^{-1}(\{1\})=\{1,3,5\}\), \(X^{-1}(\{0,1\})=\Omega\), \(X^{-1}(\{7\})=\emptyset\).
+
+** Preimages respect every set operation
+
+#+begin_quote
+*Proposition 0.10.* For any \(f:X\to Y\), any \(B,C\subseteq Y\) and any family \((B_i)_{i\in I}\) of subsets of \(Y\):
+\[
+f^{-1}\Bigl(\bigcup_i B_i\Bigr)=\bigcup_i f^{-1}(B_i),\quad
+f^{-1}\Bigl(\bigcap_i B_i\Bigr)=\bigcap_i f^{-1}(B_i),\quad
+f^{-1}(Y\setminus B)=X\setminus f^{-1}(B),
+\]
+and \(f^{-1}(Y)=X\), \(f^{-1}(\emptyset)=\emptyset\). In particular, if \(B\cap C=\emptyset\) then
+\(f^{-1}(B)\cap f^{-1}(C)=\emptyset\).
+#+end_quote
+
+/Proof./ Each identity is a translation of the definition. For example, \(x\in f^{-1}(\bigcup_i B_i)\) iff
+\(f(x)\in B_i\) for some \(i\) iff \(x\in f^{-1}(B_i)\) for some \(i\). And \(x\in f^{-1}(Y\setminus B)\) iff \(f(x)\notin B\)
+iff \(x\notin f^{-1}(B)\). The others are similar. \(\square\)
+
+** Images do not behave as well
+
+#+begin_quote
+*Proposition 0.11.* \(f(\bigcup_i A_i)=\bigcup_i f(A_i)\) always holds, but in general only
+\(f(A\cap B)\subseteq f(A)\cap f(B)\), and \(f(X\setminus A)\) need not equal \(Y\setminus f(A)\).
+#+end_quote
+
+*Counterexample.* With \(f(x)=x^2\), \(A=[-1,0]\), \(B=[0,1]\): \(A\cap B=\{0\}\), so \(f(A\cap B)=\{0\}\), but
+\(f(A)\cap f(B)=[0,1]\cap[0,1]=[0,1]\). Also \(f(\mathbb{R}\setminus A)=f((0,\infty))=(0,\infty)\), while
+\(\mathbb{R}\setminus f(A)=\mathbb{R}\setminus[0,1]\). The trouble: two different inputs can share an output, and
+some outputs are never hit.
+
+*Why this matters.* Because preimages commute with complements and countable unions, the definition of
+a *measurable function* (Chapter 3) is phrased with preimages: "the preimage of every measurable set is
+measurable". With images, nothing would work.
+
+#+begin_quote
+*Proposition 0.12 (composition).* If \(f:X\to Y\) and \(g:Y\to Z\), then for \(C\subseteq Z\),
+\((g\circ f)^{-1}(C)=f^{-1}\bigl(g^{-1}(C)\bigr)\).
+#+end_quote
+
+/Proof./ \(x\in(g\circ f)^{-1}(C)\) iff \(g(f(x))\in C\) iff \(f(x)\in g^{-1}(C)\) iff \(x\in f^{-1}(g^{-1}(C))\). \(\square\)
+
+*Common confusions.*
+- \(f^{-1}(f(A))\supseteq A\), and it can be strictly larger: with \(f(x)=x^2\), \(f^{-1}(f(\{1\}))=\{-1,1\}\).
+- \(f(f^{-1}(B))\subseteq B\), and it can be strictly smaller: \(f(f^{-1}([-1,1]))=[0,1]\).
+
+* 0.3 Countable and uncountable sets
+
+#+begin_quote
+*Definition 0.13.* A set \(A\) is *countable* if it is finite or its elements can be listed in a sequence
+\(a_1,a_2,a_3,\dots\) (equivalently: there is a surjection \(\mathbb{N}\to A\), or \(A=\emptyset\)). A set that is not
+countable is *uncountable*. Here \(\mathbb{N}=\{1,2,3,\dots\}\).
+#+end_quote
+
+In these notes (as in the lecture notes) "countable" *includes* "finite".
+
+*Example 0.14 (countable sets).*
+1. \(\mathbb{N}\) itself; any subset of \(\mathbb{N}\) (list its elements in increasing order); in fact any subset of a
+   countable set is countable.
+2. \(\mathbb{Z}\): list it as \(0,1,-1,2,-2,3,-3,\dots\).
+3. \(\mathbb{N}\times\mathbb{N}\): list pairs by increasing sum \(m+n\):
+   \((1,1);\ (1,2),(2,1);\ (1,3),(2,2),(3,1);\ \dots\). Each sum-level is finite, so every pair appears.
+#+begin_example
+   (1,1) (1,2) (1,3) (1,4) ...
+     /     /     /
+   (2,1) (2,2) (2,3) ...
+     /     /
+   (3,1) (3,2) ...          walk the anti-diagonals in order
+     /
+   (4,1) ...
+#+end_example
+4. \(\mathbb{Q}\): every rational is \(p/q\) with \(p\in\mathbb{Z}\), \(q\in\mathbb{N}\); the map \((p,q)\mapsto p/q\) from the countable
+   set \(\mathbb{Z}\times\mathbb{N}\) onto \(\mathbb{Q}\) gives a listing (skip repetitions).
+5. The set of all pairs \((p,q)\) of rationals, and the set of all intervals with rational endpoints.
+
+#+begin_quote
+*Proposition 0.15.* A countable union of countable sets is countable.
+#+end_quote
+
+/Proof sketch./ If \(A_m=\{a_{m,1},a_{m,2},\dots\}\) for \(m\in\mathbb{N}\), then \((m,n)\mapsto a_{m,n}\) maps the countable set
+\(\mathbb{N}\times\mathbb{N}\) onto \(\bigcup_m A_m\). (Finite \(A_m\) can be padded by repetition; empty ones skipped.) \(\square\)
+
+#+begin_quote
+*Theorem 0.16 (Cantor).* The interval \([0,1)\), and hence \(\mathbb{R}\), is uncountable.
+#+end_quote
+
+/Proof sketch (diagonal argument)./ Suppose \(x_1,x_2,\dots\) were a list of all numbers in \([0,1)\). Write
+each in decimal: \(x_n=0.d_{n1}d_{n2}d_{n3}\dots\). Build a new number \(y=0.e_1e_2e_3\dots\) by
+\(e_n=5\) if \(d_{nn}\neq 5\) and \(e_n=4\) if \(d_{nn}=5\). Then \(y\in[0,1)\), but \(y\) differs from \(x_n\) in the
+\(n\)-th digit for every \(n\). Because \(y\) uses only digits \(4\) and \(5\), it has a unique decimal expansion
+(no trailing \(9\)'s or \(0\)'s ambiguity), so \(y\neq x_n\) for all \(n\): the list missed \(y\). Contradiction. \(\square\)
+
+#+begin_example
+ x1 = 0. [3] 1  4  1  5 ...      e1 = 5   (3 != 5)
+ x2 = 0.  5 [5] 5  5  5 ...      e2 = 4   (5 = 5)
+ x3 = 0.  0  0 [0] 0  0 ...      e3 = 5
+ x4 = 0.  9  9  9 [9] 9 ...      e4 = 5
+  y = 0.  5  4  5  5  ...        differs from every x_n on the diagonal
+#+end_example
+
+*Example 0.17 (infinite coin tossing is uncountable).* The set \(\{0,1\}^{\mathbb{N}}\) of all infinite 0--1
+sequences is uncountable: the same diagonal trick (flip the \(n\)-th digit of the \(n\)-th sequence) produces
+a sequence not in any proposed list. Equivalently, the power set \(2^{\mathbb{N}}\) is uncountable (identify a
+subset \(S\subseteq\mathbb{N}\) with the sequence whose \(n\)-th digit is \(1\) iff \(n\in S\)). This space appears in
+Chapter 4 as the sample space of infinitely many coin tosses.
+
+*Why this matters.* Measures are *countably* additive. The interval \([0,1]\) is an uncountable union of
+singletons, each of length zero, yet its length is one. There is no contradiction, precisely because
+uncountable unions are not covered by the axioms (Chapter 2, Example 2.8).
+
+* 0.4 The extended half-line \([0,\infty]\)
+
+Measures can be infinite (the length of \(\mathbb{R}\) is infinite). So we work in
+\([0,\infty]=[0,\infty)\cup\{\infty\}\), where \(\infty\) is a new symbol, larger than every real number.
+
+#+begin_quote
+*Conventions in \([0,\infty]\).* For \(a\in[0,\infty]\):
+- order: \(a\le\infty\);
+- addition: \(a+\infty=\infty+a=\infty\);
+- multiplication: \(a\cdot\infty=\infty\cdot a=\infty\) if \(a>0\), and \(0\cdot\infty=\infty\cdot 0=0\);
+- \(\infty-\infty\) is *undefined*; \(\infty-a=\infty\) for finite \(a\) is allowed but we avoid subtraction whenever
+  an infinite quantity could be involved.
+#+end_quote
+
+*Why \(0\cdot\infty=0\)?* In integration (Chapter 6), the integral of the function that is \(0\) on all of
+\(\mathbb{R}\) should be \(0\), and \(0\cdot\lambda(\mathbb{R})=0\cdot\infty\). Similarly, the function equal to \(\infty\) on a set of length
+\(0\) should have integral \(\infty\cdot 0=0\). The convention makes "area = height \(\times\) width" consistent.
+
+*Why is \(\infty-\infty\) undefined?* Because cancellation fails: \(1+\infty=2+\infty\), but \(1\neq 2\). Any value we
+assigned to \(\infty-\infty\) would contradict some reasonable identity. This is why, e.g., the proof of
+continuity from above (Proposition 2.6) needs a finiteness assumption before subtracting.
+
+*Facts that do hold.* Addition in \([0,\infty]\) is commutative and associative; if \(a\le b\) then \(a+c\le b+c\);
+every subset of \([0,\infty]\) has a supremum in \([0,\infty]\) (Section 0.5); every increasing sequence in
+\([0,\infty]\) converges in \([0,\infty]\) to its supremum.
+
+*Common confusions.* \(a+c=b+c\) does *not* imply \(a=b\) if \(c=\infty\). \(\infty\) is not a real number; "\(x_n\to\infty\)"
+in \([0,\infty]\) is genuine convergence to the element \(\infty\).
+
+* 0.5 Supremum and infimum
+
+#+begin_quote
+*Definition 0.18.* Let \(S\subseteq\mathbb{R}\). A number \(u\) is an *upper bound* of \(S\) if \(s\le u\) for all \(s\in S\). The
+*supremum* \(\sup S\) is the least upper bound: an upper bound \(u\) such that no smaller number is an upper
+bound. Similarly the *infimum* \(\inf S\) is the greatest lower bound.
+#+end_quote
+
+*Completeness axiom of \(\mathbb{R}\):* every nonempty set bounded above has a supremum in \(\mathbb{R}\). We extend:
+\(\sup S=\infty\) if \(S\) is not bounded above, \(\inf S=-\infty\) if not bounded below. For subsets of \([0,\infty]\)
+the supremum always exists in \([0,\infty]\), and we use the convention \(\sup\emptyset=0\) there (e.g. "a sum
+with no terms is zero").
+
+#+begin_quote
+*Proposition 0.19 (\(\varepsilon\)-characterization).* For \(S\subseteq\mathbb{R}\) nonempty and bounded above, \(u=\sup S\) iff
+(a) \(s\le u\) for all \(s\in S\), and (b) for every \(\varepsilon>0\) there is \(s\in S\) with \(s>u-\varepsilon\).
+#+end_quote
+
+(b) says that \(u-\varepsilon\) is not an upper bound, i.e. no smaller number works.
+
+*Example 0.20.*
+1. \(S=\{1-1/n:n\in\mathbb{N}\}\): \(\sup S=1\) (not attained, not a maximum), \(\inf S=\min S=0\).
+2. \(S=(0,1)\): \(\sup S=1\), \(\inf S=0\), neither attained.
+3. \(S=\mathbb{N}\): \(\sup S=\infty\), \(\inf S=1\).
+4. \(S=\{x\in\mathbb{Q}: x^2<2\}\): \(\sup S=\sqrt2\notin\mathbb{Q}\) --- the supremum need not lie in \(S\), nor even in \(\mathbb{Q}\).
+
+#+begin_quote
+*Proposition 0.21 (monotone convergence for numbers).* An increasing sequence \(x_1\le x_2\le\cdots\) of
+real numbers converges to \(\sup_n x_n\) (which may be \(\infty\)). A decreasing sequence converges to \(\inf_n x_n\).
+#+end_quote
+
+/Proof./ Let \(u=\sup_n x_n<\infty\) and \(\varepsilon>0\). By Proposition 0.19 there is \(N\) with \(x_N>u-\varepsilon\), and then
+\(u-\varepsilon<x_N\le x_n\le u\) for all \(n\ge N\). If \(u=\infty\), for every \(M\) some \(x_N>M\), hence all later terms
+exceed \(M\). \(\square\)
+
+* 0.6 \(\limsup\) and \(\liminf\)
+
+** For sequences of numbers
+
+A sequence need not converge, but we can always record its "eventual highest" and "eventual lowest"
+levels. For a real sequence \((x_n)\) put \(s_n=\sup_{k\ge n}x_k\) (decreasing in \(n\)) and \(i_n=\inf_{k\ge n}x_k\)
+(increasing in \(n\)).
+
+#+begin_quote
+*Definition 0.22.*
+\[
+\limsup_{n\to\infty}x_n=\inf_{n\ge1}\,\sup_{k\ge n}x_k=\lim_{n\to\infty}s_n,\qquad
+\liminf_{n\to\infty}x_n=\sup_{n\ge1}\,\inf_{k\ge n}x_k=\lim_{n\to\infty}i_n ,
+\]
+with values in \([-\infty,\infty]\).
+#+end_quote
+
+Both always exist (monotone sequences converge, Proposition 0.21). Always \(\liminf x_n\le\limsup x_n\), and
+\((x_n)\) converges to \(L\in[-\infty,\infty]\) iff \(\liminf x_n=\limsup x_n=L\).
+
+*Example 0.23.*
+1. \(x_n=(-1)^n\): \(s_n=1\), \(i_n=-1\), so \(\limsup=1\), \(\liminf=-1\): no limit.
+2. \(x_n=(-1)^n(1+1/n)\): \(\limsup=1\), \(\liminf=-1\) (the values approach \(\pm1\) from outside).
+3. \(x_n=1/n\): \(\limsup=\liminf=0\), the limit.
+4. \(x_n=n\) for even \(n\), \(x_n=0\) for odd \(n\): \(\limsup=\infty\), \(\liminf=0\).
+
+Interpretation: \(\limsup x_n\) is the largest value that the sequence approaches along some subsequence; for
+every \(\varepsilon>0\), \(x_n>\limsup x_n-\varepsilon\) infinitely often, and \(x_n<\limsup x_n+\varepsilon\) eventually.
+
+** For sequences of sets
+
+#+begin_quote
+*Definition 0.24.* For sets \(A_1,A_2,\dots\subseteq\Omega\):
+\[
+\limsup_{n\to\infty}A_n=\bigcap_{n=1}^\infty\bigcup_{k=n}^\infty A_k,\qquad
+\liminf_{n\to\infty}A_n=\bigcup_{n=1}^\infty\bigcap_{k=n}^\infty A_k .
+\]
+#+end_quote
+
+Unpack: \(\omega\in\limsup A_n\) iff for every \(n\) there is \(k\ge n\) with \(\omega\in A_k\) iff \(\omega\) belongs to
+*infinitely many* \(A_k\) ("\(A_n\) infinitely often", abbreviated \(A_n\) i.o.). And \(\omega\in\liminf A_n\) iff there is
+\(n\) with \(\omega\in A_k\) for all \(k\ge n\) iff \(\omega\) belongs to *all but finitely many* \(A_k\) ("\(A_n\) eventually").
+
+Properties:
+- \(\liminf A_n\subseteq\limsup A_n\) (eventually implies infinitely often).
+- \((\limsup A_n)^c=\liminf A_n^c\) (by De Morgan: "not infinitely often in \(A_n\)" = "eventually in \(A_n^c\)").
+- If \(A_n\) is increasing, both equal \(\bigcup_n A_n\); if decreasing, both equal \(\bigcap_n A_n\).
+- \(\mathbf 1_{\limsup A_n}=\limsup\mathbf 1_{A_n}\) and \(\mathbf 1_{\liminf A_n}=\liminf\mathbf 1_{A_n}\) pointwise (Section 0.9).
+
+*Example 0.25.*
+1. Alternating sets: \(A_n=A\) for odd \(n\), \(A_n=B\) for even \(n\). Then \(\limsup A_n=A\cup B\),
+   \(\liminf A_n=A\cap B\).
+2. Coin tossing: let \(\Omega=\{0,1\}^{\mathbb{N}}\) and \(A_n=\{\omega:\omega_n=1\}\) (toss \(n\) is heads). Then \(\limsup A_n\) is the
+   set of sequences with infinitely many ones, and \(\liminf A_n\) the set of sequences that are eventually
+   all ones. (Chapter 4 shows the first has probability one for fair coins.)
+3. \(A_n=[0,1/n]\subseteq\mathbb{R}\): decreasing, so \(\limsup A_n=\liminf A_n=\{0\}\).
+4. \(A_n=\{n\}\subseteq\mathbb{N}\): every \(m\) lies in only one \(A_n\), so \(\limsup A_n=\liminf A_n=\emptyset\).
+
+* 0.7 Series of nonnegative terms
+
+#+begin_quote
+*Definition 0.26.* For \(a_n\in[0,\infty]\),
+\(\displaystyle\sum_{n=1}^\infty a_n:=\sup_{N\in\mathbb{N}}\sum_{n=1}^N a_n\in[0,\infty]\).
+#+end_quote
+
+Since the terms are \(\ge0\), the partial sums increase, so the supremum is also their limit. The sum is
+*always defined* (possibly \(\infty\)); there are no convergence issues to worry about.
+
+*Example 0.27.* \(\sum_{n\ge1}2^{-n}=1\) (partial sums \(1-2^{-N}\)); \(\sum_{n\ge1}1/n=\infty\) (harmonic series);
+\(\sum_{n\ge1}1/n^2=\pi^2/6<\infty\); \(\sum_{n\ge1}0=0\); \(\sum_n a_n=\infty\) if some \(a_n=\infty\).
+
+#+begin_quote
+*Proposition 0.28 (order does not matter).* Let \(a_n\in[0,\infty]\) and let \(\pi:\mathbb{N}\to\mathbb{N}\) be a bijection
+(a rearrangement). Then \(\sum_n a_{\pi(n)}=\sum_n a_n\). More generally, for a countable index set \(I\) and
+\(a_i\ge0\), the value
+\[
+\sum_{i\in I}a_i:=\sup\Bigl\{\sum_{i\in F}a_i:\ F\subseteq I\text{ finite}\Bigr\}
+\]
+equals \(\sum_n a_{i_n}\) for any listing \(i_1,i_2,\dots\) of \(I\) without repetitions.
+#+end_quote
+
+/Proof./ Fix a listing. Every partial sum \(\sum_{n\le N}a_{i_n}\) is a sum over a finite set, so it is at most the
+supremum over finite sets. Conversely, every finite \(F\subseteq I\) is contained in \(\{i_1,\dots,i_N\}\) for \(N\) large;
+since terms are nonnegative, \(\sum_{i\in F}a_i\le\sum_{n\le N}a_{i_n}\). So both suprema coincide, and the value does
+not depend on the listing. \(\square\)
+
+*Contrast (signed terms).* For the alternating harmonic series \(1-\tfrac12+\tfrac13-\cdots=\ln2\), a rearrangement
+can produce any real value (Riemann's rearrangement theorem). Nonnegativity is what makes order irrelevant.
+This is why measures (which add nonnegative numbers) cause no ordering problems.
+
+#+begin_quote
+*Proposition 0.29 (double series, nonnegative terms).* If \(a_{m,n}\in[0,\infty]\), then
+\(\sum_m\sum_n a_{m,n}=\sum_n\sum_m a_{m,n}=\sum_{(m,n)\in\mathbb{N}^2}a_{m,n}\).
+#+end_quote
+
+/Proof sketch./ Each iterated sum is a supremum of finite sums over rectangles \(\{1..M\}\times\{1..N\}\), and
+every finite subset of \(\mathbb{N}^2\) lies in such a rectangle; apply Proposition 0.28. \(\square\)
+
+* 0.8 Basic topology of \(\mathbb{R}\)
+
+#+begin_quote
+*Definition 0.30.* A set \(U\subseteq\mathbb{R}\) is *open* if for every \(x\in U\) there is \(\varepsilon>0\) with
+\((x-\varepsilon,x+\varepsilon)\subseteq U\). A set \(C\subseteq\mathbb{R}\) is *closed* if its complement is open. Equivalently, \(C\) is closed iff
+it contains the limit of every convergent sequence of its points.
+#+end_quote
+
+*Examples.* Open: \((a,b)\), \((a,\infty)\), \(\mathbb{R}\), \(\emptyset\), \((0,1)\cup(2,3)\). Closed: \([a,b]\), \([a,\infty)\), \(\{x\}\),
+\(\mathbb{Z}\), \(\mathbb{R}\), \(\emptyset\). Neither: \([0,1)\) (not open at \(0\); not closed since \(1-1/n\to1\notin[0,1)\)), \(\mathbb{Q}\) (every
+interval contains irrationals and rationals). \(\mathbb{R}\) and \(\emptyset\) are both open and closed.
+
+Facts: any union of open sets is open; a *finite* intersection of open sets is open; an infinite
+intersection need not be (Example 0.5(2)). Dually for closed sets.
+
+*Density of the rationals.* Between any two reals \(a<b\) there is a rational \(q\) with \(a<q<b\). (Choose \(n\)
+with \(1/n<b-a\); some multiple \(m/n\) lands in \((a,b)\).)
+
+#+begin_quote
+*Theorem 0.31.* Every open set \(U\subseteq\mathbb{R}\) is a countable union of open intervals; in fact
+\[
+U=\bigcup\{(p,q):\ p,q\in\mathbb{Q},\ p<q,\ (p,q)\subseteq U\}.
+\]
+#+end_quote
+
+/Proof./ "\(\supseteq\)": each interval in the union lies in \(U\). "\(\subseteq\)": let \(x\in U\). Openness gives \(\varepsilon>0\) with
+\((x-\varepsilon,x+\varepsilon)\subseteq U\). By density pick rationals \(p\in(x-\varepsilon,x)\) and \(q\in(x,x+\varepsilon)\); then
+\(x\in(p,q)\subseteq U\). The family of rational pairs is countable (Example 0.14(5)), so the union is countable. \(\square\)
+
+(One can even take the intervals pairwise disjoint --- the "connected components" of \(U\) --- but we do not
+need this.) This theorem is the reason the Borel \(\sigma\)-algebra can be generated by countably many sets
+(Chapter 1, Section 1.4).
+
+*Continuity via preimages.* \(f:\mathbb{R}\to\mathbb{R}\) is continuous iff \(f^{-1}(U)\) is open for every open \(U\). This preimage
+formulation is the model for the definition of measurable functions (Chapter 3).
+
+* 0.9 Indicator functions
+
+#+begin_quote
+*Definition 0.32.* For \(A\subseteq\Omega\), the *indicator function* \(\mathbf 1_A:\Omega\to\mathbb{R}\) is
+\[
+\mathbf 1_A(\omega)=\begin{cases}1,&\omega\in A,\\0,&\omega\notin A.\end{cases}
+\]
+#+end_quote
+
+Indicators turn set operations into arithmetic:
+\[
+\begin{aligned}
+\mathbf 1_{A\cap B}&=\mathbf 1_A\mathbf 1_B=\min(\mathbf 1_A,\mathbf 1_B), &
+\mathbf 1_{A^c}&=1-\mathbf 1_A, \\
+\mathbf 1_{A\cup B}&=\mathbf 1_A+\mathbf 1_B-\mathbf 1_{A\cap B}=\max(\mathbf 1_A,\mathbf 1_B), &
+A\subseteq B&\iff \mathbf 1_A\le\mathbf 1_B .
+\end{aligned}
+\]
+If \(A_1,A_2,\dots\) are pairwise disjoint, \(\mathbf 1_{\bigcup_n A_n}=\sum_n\mathbf 1_{A_n}\) (at each point at most one term
+is \(1\)). For arbitrary sets, \(\sum_n\mathbf 1_{A_n}(\omega)\) *counts* how many \(A_n\) contain \(\omega\); thus
+\(\omega\in\limsup A_n\) iff \(\sum_n\mathbf 1_{A_n}(\omega)=\infty\).
+
+*Preimages of an indicator.* For \(B\subseteq\mathbb{R}\), \(\mathbf 1_A^{-1}(B)\) is \(\emptyset\), \(A\), \(A^c\) or \(\Omega\), according as \(B\)
+contains neither, only \(1\), only \(0\), or both of the values \(0,1\).
+
+*Example 0.33 (verifying a set identity with indicators).* To check De Morgan:
+\(\mathbf 1_{(A\cup B)^c}=1-\max(\mathbf 1_A,\mathbf 1_B)=\min(1-\mathbf 1_A,1-\mathbf 1_B)=\mathbf 1_{A^c\cap B^c}\).
+
+*Example 0.34 (probability preview).* For a fair die and \(E=\{2,4,6\}\), the random quantity \(\mathbf 1_E\) is
+\(1\) if the roll is even and \(0\) otherwise; its average value is \(\tfrac16(0+1+0+1+0+1)=\tfrac12=P(E)\). In
+general \(\mathbb E[\mathbf 1_A]=P(A)\) (Chapter 3).
+
+* Worked Exercises
+
+** Exercise 1
+Show that \(A\setminus(B\cup C)=(A\setminus B)\cap(A\setminus C)\).
+
+*** Solution
+\(A\setminus(B\cup C)=A\cap(B\cup C)^c=A\cap B^c\cap C^c=(A\cap B^c)\cap(A\cap C^c)\), using De Morgan and \(A\cap A=A\).
+
+** Exercise 2
+Compute \(\bigcup_{n\ge1}[0,1-1/n]\) and \(\bigcap_{n\ge1}[0,1+1/n)\).
+
+*** Solution
+The union is \([0,1)\): every \(x\in[0,1)\) satisfies \(x\le 1-1/n\) for large \(n\), and \(1\) is never included.
+The intersection is \([0,1]\): \(1<1+1/n\) for all \(n\), while any \(x>1\) fails \(x<1+1/n\) for large \(n\); and
+negative numbers are never included.
+
+** Exercise 3
+Let \(f:\{1,\dots,6\}\to\mathbb{R}\), \(f(\omega)=(\omega-3)^2\). Find \(f^{-1}(\{1\})\), \(f^{-1}((-\infty,1])\), \(f(\{2,4\})\),
+and check that \(f(\{2\}\cap\{4\})\neq f(\{2\})\cap f(\{4\})\).
+
+*** Solution
+Values: \(f(1)=4,f(2)=1,f(3)=0,f(4)=1,f(5)=4,f(6)=9\). So \(f^{-1}(\{1\})=\{2,4\}\),
+\(f^{-1}((-\infty,1])=\{2,3,4\}\), \(f(\{2,4\})=\{1\}\). And \(f(\emptyset)=\emptyset\neq\{1\}=f(\{2\})\cap f(\{4\})\).
+
+** Exercise 4
+Show that the set of all finite subsets of \(\mathbb{N}\) is countable, whereas \(2^{\mathbb{N}}\) is not.
+
+*** Solution
+For each \(n\), the subsets of \(\{1,\dots,n\}\) form a finite family \(\mathcal F_n\) (with \(2^n\) members). Every finite
+subset of \(\mathbb{N}\) lies in some \(\mathcal F_n\), so the family of finite subsets is \(\bigcup_n\mathcal F_n\), a countable union
+of finite sets, hence countable (Proposition 0.15). For \(2^{\mathbb{N}}\) see Example 0.17: given a list
+\(S_1,S_2,\dots\), the set \(T=\{n: n\notin S_n\}\) differs from every \(S_n\) at the element \(n\).
+
+** Exercise 5
+Let \(A_n=[0,1]\) for even \(n\) and \(A_n=[1,2]\) for odd \(n\). Find \(\limsup A_n\) and \(\liminf A_n\). Also compute
+\(\limsup x_n\) and \(\liminf x_n\) for \(x_n=\sin(n\pi/2)\).
+
+*** Solution
+By Example 0.25(1), \(\limsup A_n=[0,2]\), \(\liminf A_n=\{1\}\). The sequence \(x_n\) is \(1,0,-1,0,1,0,-1,\dots\), so
+\(\sup_{k\ge n}x_k=1\) and \(\inf_{k\ge n}x_k=-1\) for every \(n\): \(\limsup x_n=1\), \(\liminf x_n=-1\).
+
+** Exercise 6
+In \([0,\infty]\), evaluate (or explain why undefined): \(3+\infty\), \(0\cdot\infty\), \(\sum_{n\ge1}\infty\cdot 2^{-n}\),
+\(\sum_{n\ge1}0\cdot\infty\), \(\infty-\infty\).
+
+*** Solution
+\(3+\infty=\infty\); \(0\cdot\infty=0\); each term \(\infty\cdot2^{-n}=\infty\), so the sum is \(\infty\); each term \(0\cdot\infty=0\), so the
+sum is \(0\); \(\infty-\infty\) is undefined (cancellation fails: \(1+\infty=2+\infty\)).
+
+** Exercise 7
+Show that \(\mathbf 1_{A\triangle B}=|\mathbf 1_A-\mathbf 1_B|=\mathbf 1_A+\mathbf 1_B-2\mathbf 1_A\mathbf 1_B\).
+
+*** Solution
+Check the four cases \((\mathbf 1_A,\mathbf 1_B)\in\{(0,0),(0,1),(1,0),(1,1)\}\): all three expressions give \(0,1,1,0\)
+respectively, which is exactly "in exactly one of \(A,B\)".
+
+* Summary
+
+#+caption: Toolkit cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.32\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                | Statement                                                                          | Why it matters                                             |
+|------------------------+------------------------------------------------------------------------------------+------------------------------------------------------------|
+| De Morgan              | \((\bigcup A_i)^c=\bigcap A_i^c\), \((\bigcap A_i)^c=\bigcup A_i^c\)                     | Turns unions into intersections; used in every chapter     |
+| Preimage               | \(f^{-1}(B)=\{x: f(x)\in B\}\) commutes with all set operations                      | Basis of measurable functions                              |
+| Image                  | \(f(A\cap B)\subseteq f(A)\cap f(B)\), equality may fail                             | Why we never define measurability by images                |
+| Countable              | finite or listable; \(\mathbb{N},\mathbb{Z},\mathbb{Q},\mathbb{N}^2\) countable                              | Measures add countably many pieces                         |
+| Uncountable            | \(\mathbb{R}\), \([0,1]\), \(\{0,1\}^{\mathbb{N}}\) (diagonal argument)                               | Points of length zero can fill a set of length one         |
+| \([0,\infty]\)         | \(a+\infty=\infty\), \(0\cdot\infty=0\), \(\infty-\infty\) undefined                               | Values of measures and integrals                           |
+| sup / inf              | least upper / greatest lower bound; increasing sequences converge to sup           | Series, limits, outer measure                              |
+| limsup of sets         | \(\bigcap_n\bigcup_{k\ge n}A_k\) = infinitely often                                    | Borel--Cantelli, strong law                                |
+| liminf of sets         | \(\bigcup_n\bigcap_{k\ge n}A_k\) = eventually                                          | Complement of limsup of complements                        |
+| Nonnegative series     | sum = sup of partial sums, order irrelevant                                        | Countable additivity is well-defined                       |
+| Open sets of \(\mathbb{R}\)    | countable unions of rational open intervals                                        | Borel sets are countably generated                         |
+| Indicator              | \(\mathbf 1_{A\cap B}=\mathbf 1_A\mathbf 1_B\), \(\mathbf 1_{A^c}=1-\mathbf 1_A\)                     | Events become random variables; \(\mathbb E\mathbf 1_A=P(A)\)  |
+
+*Key takeaways.*
+- Prove set identities by double inclusion or with indicators.
+- Preimages are perfectly behaved; images are not.
+- "Countable" includes finite; \(\mathbb{Q}\) is countable, \(\mathbb{R}\) is not.
+- In \([0,\infty]\) we may add freely but must not subtract infinities; \(0\cdot\infty=0\).
+- Nonnegative series always have a value in \([0,\infty]\), independent of the order of terms.
+- \(\limsup A_n\) = "infinitely often", \(\liminf A_n\) = "eventually".

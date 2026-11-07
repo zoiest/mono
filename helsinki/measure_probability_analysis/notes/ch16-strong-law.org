@@ -1,0 +1,957 @@
+:PROPERTIES:
+:ID:       16c0e5f3-9d4a-4b1c-8e3f-7a8b9c0d1e2f
+:ROAM_ALIASES: "MAST31051 Chapter 16" "The Strong Law of Large Numbers Notes"
+:END:
+#+title: Chapter 16: The Strong Law of Large Numbers
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch16:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch15-weak-law.org][← Chapter 15]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+The Weak Law of Large Numbers ([[file:ch15-weak-law.org][Chapter 15]]) tells us that at any *single* large sample size \(n\),
+the sample average \(\overline X_n = \frac{1}{n}\sum_{j=1}^n X_j\) is very likely to be close to the
+true mean \(\mathbb E X_1\). However, as we saw with the typewriter sequence in [[file:ch14-convergence.org][Chapter 14]], convergence
+in probability does *not* by itself rule out the nightmare scenario where, as you keep adding new
+observations \(X_{n+1}, X_{n+2}, \dots\), every individual simulation trajectory \(\omega\) keeps
+experiencing occasional wild swings away from \(\mathbb E X_1\) forever!
+
+The *Strong Law of Large Numbers (SLLN)* rules out that nightmare completely: for independent and
+identically distributed (iid) random variables with \(\mathbb E|X_1| < \infty\),
+\[
+\frac{1}{n}\sum_{j=1}^n X_j \longrightarrow \mathbb E X_1 \quad \text{almost surely} .
+\]
+Once the outcome \(\omega\) is fixed outside a single probability-zero exceptional set, the infinite
+sequence of numbers \(\frac{1}{n}\sum_{j=1}^n X_j(\omega)\) converges to \(\mathbb E X_1\) in the
+ordinary sense of first-year calculus.
+
+** Two proofs at two levels of generality
+
+Following the lecture notes, we prove the Strong Law in two stages:
+1. *Finite variance (Section 16.1, Theorem 16.1):* Using *only* Chebyshev's inequality, Borel–Cantelli,
+   and a clever trick (evaluate along the square indices \(n = k^2\) where \(\sum_k 1/k^2 < \infty\),
+   and use monotonicity of nonnegative partial sums to sandwich all intermediate indices
+   \(k^2 \le n < (k+1)^2\)), we get a short, completely elementary proof when \(\mathbb E[X_1^2] < \infty\).
+2. *Integrable variables (Sections 16.2–16.3, Theorem 16.6):* To remove the finite-variance hypothesis
+   and assume only \(\mathbb E|X_1| < \infty\) (Kolmogorov's Strong Law), we introduce three classic
+   tools:
+   - *Kolmogorov's maximal inequality* (Lemma 16.3), which controls the *entire running maximum*
+     \(\max_{1 \le k \le n} |T_k|\) of a random walk for the same price as Chebyshev's bound on the
+     final position \(|T_n|\);
+   - *Almost-sure convergence of random series* \(\sum_j Z_j\) with summable variances (Lemma 16.4);
+   - *Kronecker's lemma* (Lemma 16.5) and index-dependent truncation \(Y_j = X_j \mathbf 1_{\{|X_j| \le j\}}\).
+
+Finally, Section 16.4 harvests two flagship applications: *Monte Carlo integration* (Example 16.7) and
+the simultaneous almost-sure convergence of *empirical distribution functions* \(F_n(x) \to F(x)\)
+(Example 16.8).
+
+** Roadmap
+
+- 16.1 The square-subsequence and monotonicity proof of the finite-variance Strong Law (Theorem 16.1)
+  and empirical frequencies (Example 16.2).
+- 16.2 Kolmogorov's maximal inequality (Lemma 16.3), random series with summable variances (Lemma 16.4),
+  and Kronecker's deterministic lemma (Lemma 16.5).
+- 16.3 Kolmogorov's Strong Law for integrable iid variables via truncation at index \(j\) (Theorem 16.6).
+- 16.4 Averages as integrals: Monte Carlo integration (Example 16.7), empirical CDFs (Example 16.8),
+  and a closing reflection on the entire course.
+
+** What you need from earlier chapters
+
+- Countable unions/intersections and continuity of measure from below/above: [[file:ch02-measures.org][Chapter 2]].
+- Image-measure integration formula: [[file:ch03-measurable-functions.org][Chapter 3]], [[file:ch06-integration.org][Chapter 6]].
+- Monotone convergence, dominated convergence, and Tonelli's theorem for nonnegative series: [[file:ch06-integration.org][Chapter 6]], [[file:ch09-product-measures.org][Chapter 9]].
+- Completeness of \(\mathbb R\) (every Cauchy sequence of real numbers converges): [[file:ch00-toolkit.org][Chapter 0]], [[file:ch07-lp-spaces.org][Chapter 7]].
+- Independence (Lemma 13.3, Proposition 13.4, variance of sums (13.1)): [[file:ch13-independence.org][Chapter 13]].
+- Borel–Cantelli (Theorem 15.1), summable error bounds (Corollary 15.3), Chebyshev (Proposition 15.4): [[file:ch15-weak-law.org][Chapter 15]].
+
+* 16.1 A square subsequence and monotonicity
+
+** Intuition
+
+Why did our proof of the finite-variance Weak Law (Theorem 15.6) stop short of almost-sure convergence?
+Because for \(S_n = \sum_{j=1}^n X_j\), Chebyshev gave
+\[
+\mathbb P\Big(\Big|\frac{S_n}{n} - m\Big| > \varepsilon\Big) \le \frac{\sigma^2}{n\varepsilon^2} ,
+\]
+and the harmonic series \(\sum_{n=1}^\infty \frac{1}{n} = \infty\) diverges!
+
+How can we make the series converge without assuming higher moments?
+- *Idea 1 (Sample along the squares \(n = k^2\)):* If we only check the sample average at perfect square
+  times \(n = 1, 4, 9, 16, \dots, k^2, \dots\), the Chebyshev bound becomes \(\frac{\sigma^2}{k^2 \varepsilon^2}\).
+  Since \(\sum_{k=1}^\infty \frac{1}{k^2} < \infty\), Corollary 15.3 immediately tells us that
+  \(S_{k^2} / k^2 \to m\) *almost surely* as \(k \to \infty\)!
+- *Idea 2 (Sandwich the intermediate indices using monotonicity):* What happens at the non-square times
+  \(n\) between \(k^2\) and \((k+1)^2\)? If the variables \(X_j \ge 0\) are *nonnegative*, then the
+  partial sums \(S_n = \sum_{j=1}^n X_j\) can only grow as \(n\) increases:
+  \[
+  S_{k^2} \le S_n \le S_{(k+1)^2} \quad \text{for all } k^2 \le n < (k+1)^2 .
+  \]
+  Dividing by \(n\) (where \(k^2 \le n < (k+1)^2\)) traps \(S_n / n\) between two square averages:
+
+#+begin_example
+   k^2 <= n < (k+1)^2   ==>   1/(k+1)^2  <  1/n  <=  1/k^2
+                        ==>   S_{k^2}       <= S_n <= S_{(k+1)^2}
+
+           S_{k^2}           S_n          S_{(k+1)^2}
+         -----------  <=  ---------  <=  -------------
+          (k+1)^2             n               k^2
+             |                                 |
+             v                                 v
+      m * (k/(k+1))^2  --->   m   <---  m * ((k+1)/k)^2
+#+end_example
+
+Because the gap between consecutive squares \((k+1)^2 - k^2 = 2k + 1\) is tiny compared to \(k^2\), the
+ratio \(\frac{(k+1)^2}{k^2} = (1 + \frac{1}{k})^2 \to 1\), so both ends of the sandwich converge to \(m\)!
+Finally, for general signed variables \(X_j\), we simply split \(X_j = X_j^+ - X_j^-\) into nonnegative
+parts.
+
+** The finite-variance Strong Law
+
+#+begin_quote
+*Theorem 16.1 (Strong law, finite variance).* Let \(X_j\) be iid and square-integrable. Then
+\[
+\frac{1}{n}\sum_{j=1}^n X_j \longrightarrow \mathbb E X_1 \quad \text{almost surely} .
+\]
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*** Step 1. Converge along the squares
+
+Write \(S_n := \sum_{j=1}^n X_j\), \(m := \mathbb E X_1\), and \(\sigma^2 := \operatorname{var}(X_1) < \infty\).
+For each positive integer \(k \ge 1\), the square-index average \(S_{k^2} / k^2\) has mean \(m\) and
+variance \(\sigma^2 / k^2\). For any \(\varepsilon > 0\), Chebyshev's inequality (Proposition 15.4) gives
+\[
+\mathbb P\Big(\Big|\frac{S_{k^2}}{k^2} - m\Big| > \varepsilon\Big) \le \frac{\sigma^2}{k^2 \varepsilon^2} .
+\]
+Since \(\sum_{k=1}^\infty \frac{\sigma^2}{k^2 \varepsilon^2} = \frac{\sigma^2}{\varepsilon^2}\sum_{k=1}^\infty \frac{1}{k^2} < \infty\),
+Corollary 15.3 gives a probability-one event \(\Omega_{\text{sq}}\) on which
+\[
+\frac{S_{k^2}}{k^2} \xrightarrow[k\to\infty]{} m \quad \text{almost surely} .
+\]
+
+*** Step 2. Fill the gaps for nonnegative variables
+
+Suppose first that \(X_j \ge 0\) for all \(j\).
+- Because we add nonnegative terms \(X_{n+1} \ge 0\), the partial sums \(S_n(\omega)\) are nondecreasing
+  in \(n\) at every outcome \(\omega\).
+- Given any integer \(n \ge 1\), let \(k = \lfloor \sqrt{n} \rfloor \ge 1\) be the unique integer such that
+  \[
+  k^2 \le n < (k+1)^2 .
+  \]
+- Because \(S_{k^2} \le S_n \le S_{(k+1)^2}\) are nonnegative and \(\frac{1}{(k+1)^2} < \frac{1}{n} \le \frac{1}{k^2}\),
+  we have the pointwise sandwich
+  \[
+  \frac{k^2}{(k+1)^2} \cdot \frac{S_{k^2}}{k^2} = \frac{S_{k^2}}{(k+1)^2}
+    \le \frac{S_n}{n}
+    \le \frac{S_{(k+1)^2}}{k^2} = \frac{(k+1)^2}{k^2} \cdot \frac{S_{(k+1)^2}}{(k+1)^2} .
+  \]
+- Fix any outcome \(\omega \in \Omega_{\text{sq}}\) from Step 1. As \(n \to \infty\), the corresponding
+  \(k = \lfloor \sqrt{n} \rfloor \to \infty\). On \(\Omega_{\text{sq}}\), both \(\frac{S_{k^2}(\omega)}{k^2} \to m\)
+  and \(\frac{S_{(k+1)^2}(\omega)}{(k+1)^2} \to m\), while \(\frac{(k+1)^2}{k^2} = (1 + \frac{1}{k})^2 \to 1\).
+- Thus both the left bound and the right bound converge to \(1 \cdot m = m\). By the ordinary squeeze
+  theorem for real sequences, \(\frac{S_n(\omega)}{n} \to m\) as \(n \to \infty\).
+
+*** Step 3. Separate positive and negative parts
+
+Now drop the assumption \(X_j \ge 0\). For general square-integrable iid variables \(X_j\), decompose
+each \(X_j = X_j^+ - X_j^-\) into its positive part \(X_j^+ = \max(X_j, 0) \ge 0\) and negative part
+\(X_j^- = \max(-X_j, 0) \ge 0\).
+- Because \(x \mapsto \max(x, 0)\) and \(x \mapsto \max(-x, 0)\) are Borel measurable functions on
+  \(\mathbb R\), Lemma 13.3 guarantees that \((X_j^+)_{j\ge 1}\) is an iid sequence of nonnegative
+  variables, and \((X_j^-)_{j\ge 1}\) is also an iid sequence of nonnegative variables.
+- Since \(0 \le X_j^\pm \le |X_j|\), both sequences are square-integrable (\(\mathbb E[(X_1^\pm)^2] \le \mathbb E[X_1^2] < \infty\)).
+- Applying Steps 1–2 to \((X_j^+)_{j\ge 1}\) gives a probability-one set \(\Omega_+\) on which
+  \(\frac{1}{n}\sum_{j=1}^n X_j^+ \to \mathbb E[X_1^+]\).
+- Applying Steps 1–2 to \((X_j^-)_{j\ge 1}\) gives a probability-one set \(\Omega_-\) on which
+  \(\frac{1}{n}\sum_{j=1}^n X_j^- \to \mathbb E[X_1^-]\).
+- On the intersection \(\Omega_+ \cap \Omega_-\) (which still has probability \(1\)), subtracting the two
+  convergent numerical sequences gives
+  \[
+  \frac{1}{n}\sum_{j=1}^n X_j = \frac{1}{n}\sum_{j=1}^n X_j^+ - \frac{1}{n}\sum_{j=1}^n X_j^-
+    \xrightarrow[n\to\infty]{} \mathbb E[X_1^+] - \mathbb E[X_1^-] = \mathbb E X_1 . \quad \blacksquare
+  \]
+
+*Why couldn't we skip Step 3 and interpolate signed sums directly?* Because when \(X_j\) takes both
+positive and negative values, \(S_n\) can go both up and down between \(k^2\) and \((k+1)^2\), so
+\(S_{k^2} \le S_n \le S_{(k+1)^2}\) is false! Splitting into \(X_j^+\) and \(X_j^-\) is what supplies
+the monotonicity used in Step 2.
+
+** Application: Empirical frequencies
+
+#+begin_quote
+*Example 16.2 (Empirical frequencies).* For iid observations \(X_j\) with law \(\mu\) and a fixed Borel
+set \(B\), the indicators \(\mathbf 1_{\{X_j \in B\}}\) are iid and bounded. The strong law gives
+\[
+\frac{1}{n}\,\#\{1 \le j \le n : X_j \in B\} \longrightarrow \mu(B) \quad \text{almost surely} ,
+\]
+where \(\#\) denotes the number of elements of a finite set. For a countable specified family of sets
+\(B\), intersect the corresponding probability-one events to obtain simultaneous convergence. One must
+not silently make this intersection over an arbitrary uncountable family.
+#+end_quote
+
+Let's unpack Example 16.2:
+- For a fixed Borel set \(B \subseteq \mathbb R\), let \(I_j := \mathbf 1_{\{X_j \in B\}} = \mathbf 1_B(X_j)\).
+  Since \(I_j \in \{0,1\}\), the variables \(I_j\) are iid, bounded (hence square-integrable!), with
+  mean \(\mathbb E I_1 = \mathbb P(X_1 \in B) = \mu(B)\).
+- The sum \(\sum_{j=1}^n I_j = \#\{1 \le j \le n : X_j \in B\}\) is the number of observations among the
+  first \(n\) that land in \(B\). Theorem 16.1 says that on a probability-one event \(\Omega_B\), the
+  empirical relative frequency converges to the theoretical probability \(\mu(B)\).
+- *Countable vs. uncountable families of sets \(B\):*
+  - If we specify a *countable* collection of sets \(\mathcal C = \{B_1, B_2, \dots\}\) in advance, then
+    \(\bigcap_{m=1}^\infty \Omega_{B_m}\) is a countable intersection of probability-one events, so it
+    still has probability \(1\). On this single event, empirical frequencies converge to \(\mu(B_m)\) for
+    all \(m\) simultaneously.
+  - Why must we *never* take an intersection \(\bigcap_{B \in \mathcal B(\mathbb R)} \Omega_B\) over all
+    Borel sets (or even over all singletons \(B = \{x\}\), \(x \in \mathbb R\))? Suppose \(\mu\) is the
+    uniform distribution on \([0,1]\), so \(\mu(\{x\}) = 0\) for every \(x \in [0,1]\). Yet for any fixed
+    outcome \(\omega\), the sample sequence \(X_1(\omega), X_2(\omega), \dots\) is a countable set of points
+    \(B(\omega) := \{X_1(\omega), X_2(\omega), \dots\}\). For this set \(B(\omega)\), every \(X_j(\omega) \in B(\omega)\),
+    so the empirical frequency is \(1\) for all \(n\), while \(\mu(B(\omega)) = 0\)! Each individual
+    \(B\) has a null exceptional set \(\Omega_B^c\), but the uncountable union \(\bigcup_{B} \Omega_B^c\)
+    covers the entire sample space \(\Omega\).
+
+** Additional worked examples
+
+*Example A (Borel's normal number theorem).* Let \(\omega \in [0,1)\) be chosen uniformly at random, and
+let \(\omega = 0.d_1 d_2 d_3 \dots\) be its base-\(10\) decimal expansion. In [[file:ch10-infinite-products.org][Chapter 10]], we saw that the
+digits \(d_1, d_2, \dots\) are iid uniform on \(\{0, 1, \dots, 9\}\). Applying Example 16.2 to each of
+the \(10\) sets \(B_k = \{k\}\) (\(k = 0, \dots, 9\)) and intersecting the \(10\) probability-one events
+shows that for Lebesgue-almost every real number \(\omega \in [0,1)\), every digit \(0, 1, \dots, 9\)
+appears with asymptotic frequency exactly \(1/10\)!
+
+* 16.2 A maximal inequality
+
+** Intuition
+
+In Section 16.3 we will prove the Strong Law assuming only \(\mathbb E|X_1| < \infty\). Why didn't our
+square-subsequence trick from Section 16.1 immediately solve the general case? Because when
+\(\mathbb E[X_1^2] = \infty\), we have to truncate \(X_j\) at a threshold that grows with \(j\), which
+destroys identical distribution and forces us to control partial sums of independent variables with
+*different* variances.
+
+To control all partial sums \(T_k = \sum_{j=1}^k Z_j\) simultaneously, we need a much stronger version
+of Chebyshev's inequality. Look at the difference between the two questions for a centered random walk
+\(T_k = Z_1 + \dots + Z_k\) (\(\mathbb E Z_j = 0\)):
+- *Chebyshev's question:* What is the probability that at the *final step \(n\)*, \(|T_n| \ge a\)?
+  Answer: \(\mathbb P(|T_n| \ge a) \le \frac{1}{a^2} \mathbb E[T_n^2] = \frac{1}{a^2}\sum_{j=1}^n \mathbb E[Z_j^2]\).
+- *Kolmogorov's question:* What is the probability that the walk *ever* reaches \(\ge a\) at *any*
+  intermediate step \(k \in \{1, 2, \dots, n\}\), even if it later wanders back below \(a\) by time \(n\)?
+
+#+begin_example
+   |T_k|
+     |            * (first time |T_k| >= a happens at step k!)
+   a |-----------/-\-----------------------
+     |          /   \          * (at final step n, |T_n| might be < a,
+     |    *    /     \   *    /   yet E[(T_n - T_k)^2] >= 0 means on average
+     |   / \  /       \ / \  /    T_n^2 is AT LEAST as big as T_k^2 >= a^2!)
+   0 +--*---*----------*---*--------------> step index
+        1   2     k        n
+#+end_example
+
+Astonishingly, *Kolmogorov's maximal inequality* says the upper bound for \(\mathbb P(\max_{1 \le k \le n} |T_k| \ge a)\)
+is the *exact same formula* \(\frac{1}{a^2}\sum_{j=1}^n \mathbb E[Z_j^2]\) as Chebyshev's bound for the
+single term \(|T_n|\)!
+
+Why does this miracle happen? Suppose the walk first crosses level \(a\) at step \(k\) (the event \(A_k\)).
+After step \(k\), the future increment \(T_n - T_k = Z_{k+1} + \dots + Z_n\) is *independent* of the past
+\(Z_1, \dots, Z_k\) and has mean \(0\). When you square \(T_n = T_k + (T_n - T_k)\) on the event \(A_k\),
+the cross-term has expectation \(0\), and the future squared increment \((T_n - T_k)^2 \ge 0\) only
+*adds* to the second moment: \(\mathbb E[T_n^2 \mathbf 1_{A_k}] \ge \mathbb E[T_k^2 \mathbf 1_{A_k}] \ge a^2 \mathbb P(A_k)\)!
+
+** Kolmogorov's maximal inequality
+
+#+begin_quote
+*Lemma 16.3 (Kolmogorov's maximal inequality).* Let \(Z_1, \dots, Z_n\) be independent square-integrable
+variables with \(\mathbb E Z_j = 0\). Put \(T_k = \sum_{j=1}^k Z_j\). For \(a > 0\),
+\[
+\mathbb P\Big(\max_{1 \le k \le n} |T_k| \ge a\Big) \le \frac{1}{a^2} \sum_{j=1}^n \mathbb E[Z_j^2] .
+\]
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*Step 1. Decompose the maximum event by the time of the FIRST crossing.*
+The event \(M := \{\max_{1 \le k \le n} |T_k| \ge a\}\) means that \(|T_k| \ge a\) for at least one
+\(k \in \{1, \dots, n\}\). Partition \(M\) according to the *first* index \(k\) where \(|T_k| \ge a\):
+\[
+A_k := \big\{|T_1| < a,\, \dots,\, |T_{k-1}| < a,\, |T_k| \ge a\big\}, \qquad k = 1, \dots, n .
+\]
+(For \(k = 1\), \(A_1 = \{|T_1| \ge a\}\).)
+- The events \(A_1, \dots, A_n\) are *pairwise disjoint* (a trajectory can only have one "first" crossing
+  time!), and their union is \(\bigsqcup_{k=1}^n A_k = \{\max_{1 \le k \le n} |T_k| \ge a\}\).
+- Crucially, the event \(A_k\) depends *only* on the first \(k\) variables \((Z_1, \dots, Z_k)\).
+
+*Step 2. Use independence of the future increment \(T_n - T_k\) from the past up to \(k\).*
+Fix \(k \in \{1, \dots, n\}\). The future increment after time \(k\) is
+\[
+T_n - T_k = \sum_{j=k+1}^n Z_j
+\]
+(for \(k = n\), \(T_n - T_n = 0\)).
+- Because \(T_k \mathbf 1_{A_k}\) is a measurable function of \((Z_1, \dots, Z_k)\) and \(T_n - T_k\) is a
+  measurable function of \((Z_{k+1}, \dots, Z_n)\), Lemma 13.3 implies that \(T_k \mathbf 1_{A_k}\) and
+  \(T_n - T_k\) are *independent*.
+- Both are integrable (since \(Z_j \in L^2 \subseteq L^1\)), and \(\mathbb E[T_n - T_k] = \sum_{j=k+1}^n \mathbb E Z_j = 0\).
+  By Proposition 13.4 (expectation of a product of independent integrable variables),
+  \[
+  \mathbb E\big[T_k \mathbf 1_{A_k} (T_n - T_k)\big] = \mathbb E[T_k \mathbf 1_{A_k}]\,\mathbb E[T_n - T_k] = 0 .
+  \]
+- Likewise, \(\mathbf 1_{A_k}\) and \((T_n - T_k)^2\) are independent by Lemma 13.3.
+
+*Step 3. Expand \(T_n^2\) on \(A_k\) and sum over \(k\).*
+Write \(T_n = T_k + (T_n - T_k)\), square both sides, and multiply by \(\mathbf 1_{A_k}\) (noting that
+\(\mathbf 1_{A_k}^2 = \mathbf 1_{A_k}\)):
+\[
+T_n^2 \mathbf 1_{A_k} = T_k^2 \mathbf 1_{A_k} + 2 T_k \mathbf 1_{A_k} (T_n - T_k) + \mathbf 1_{A_k} (T_n - T_k)^2 .
+\]
+Take expectations using Step 2: the middle term vanishes, and the third term is \(\mathbb P(A_k)\mathbb E[(T_n - T_k)^2] \ge 0\).
+On the event \(A_k\), we have \(|T_k| \ge a\), so \(T_k^2 \mathbf 1_{A_k} \ge a^2 \mathbf 1_{A_k}\). Therefore:
+\[
+\mathbb E[T_n^2 \mathbf 1_{A_k}]
+  = \mathbb E[T_k^2 \mathbf 1_{A_k}] + 0 + \mathbb P(A_k)\mathbb E[(T_n - T_k)^2]
+  \ge \mathbb E[T_k^2 \mathbf 1_{A_k}]
+  \ge a^2 \mathbb P(A_k) .
+\]
+Now sum this inequality over \(k = 1, \dots, n\). Because \(A_1, \dots, A_n\) are disjoint,
+\(\sum_{k=1}^n \mathbf 1_{A_k} = \mathbf 1_{\bigcup_{k=1}^n A_k} \le 1\), and because \(T_n^2 \ge 0\),
+\[
+a^2 \mathbb P\Big(\max_{1 \le k \le n} |T_k| \ge a\Big)
+  = a^2 \sum_{k=1}^n \mathbb P(A_k)
+  \le \sum_{k=1}^n \mathbb E[T_n^2 \mathbf 1_{A_k}]
+  = \mathbb E\Big[T_n^2 \mathbf 1_{\bigcup_{k=1}^n A_k}\Big]
+  \le \mathbb E[T_n^2] .
+\]
+Finally, since \(Z_1, \dots, Z_n\) are independent with mean \(0\), \(\mathbb E[T_n^2] = \operatorname{var}(T_n) = \sum_{j=1}^n \mathbb E[Z_j^2]\).
+Dividing by \(a^2\) completes the proof. \(\blacksquare\)
+
+** Convergence of random series with summable variances
+
+Using Kolmogorov's maximal inequality, we can now prove that if independent mean-zero variables \(Z_j\)
+have *summable variances* \(\sum_{j=1}^\infty \mathbb E[Z_j^2] < \infty\), then the random infinite series
+\(\sum_{j=1}^\infty Z_j(\omega)\) converges almost surely!
+
+#+begin_quote
+*Lemma 16.4 (Convergence of a series with summable variances).* If \(Z_j\) are independent centered
+square-integrable variables and \(\sum_j \mathbb E[Z_j^2] < \infty\), then \(\sum_j Z_j\) converges almost
+surely to a finite real number.
+#+end_quote
+
+** Proof (unpacked step by step)
+
+Recall from real analysis ([[file:ch00-toolkit.org][Chapter 0]]) that a series \(\sum_{j=1}^\infty Z_j(\omega)\) of real numbers
+converges to a finite limit if and only if its sequence of partial sums is *Cauchy*, meaning that the tail
+partial sums \(\big|\sum_{j=\ell+1}^n Z_j(\omega)\big|\) become arbitrarily small for all \(n > \ell\)
+sufficiently large.
+
+*Step 1. Choose tail cutoffs \(m_k\) where the remaining variance is tiny.*
+Because the series \(\sum_{j=1}^\infty \mathbb E[Z_j^2] < \infty\) converges, its tail
+\(\sum_{j \ge m} \mathbb E[Z_j^2] \to 0\) as \(m \to \infty\). Thus for each integer \(k \ge 1\), we can
+choose increasing integers \(m_1 < m_2 < m_3 < \dots\) such that
+\[
+\sum_{j \ge m_k} \mathbb E[Z_j^2] \le 2^{-3k} .
+\]
+
+*Step 2. Apply Kolmogorov's maximal inequality to the tail block \(Z_{m_k}, \dots, Z_N\).*
+Fix \(k \ge 1\) and any finite upper index \(N \ge m_k\). Apply Lemma 16.3 to the independent mean-zero
+variables \(Z_{m_k}, Z_{m_k+1}, \dots, Z_N\) with threshold \(a = 2^{-k}\):
+\[
+\mathbb P\Big(\max_{m_k \le n \le N} \Big|\sum_{j=m_k}^n Z_j\Big| > 2^{-k}\Big)
+  \le \frac{1}{(2^{-k})^2} \sum_{j=m_k}^N \mathbb E[Z_j^2]
+  \le 2^{2k} \cdot 2^{-3k} = 2^{-k} .
+\]
+Now let \(N \to \infty\). The events \(B_N := \big\{\max_{m_k \le n \le N} \big|\sum_{j=m_k}^n Z_j\big| > 2^{-k}\big\}\)
+increase with \(N\), and their union over all \(N \ge m_k\) is the event that *at least one* partial sum
+starting at \(m_k\) exceeds \(2^{-k}\):
+\[
+\bigcup_{N \ge m_k} B_N = \Big\{\sup_{n \ge m_k} \Big|\sum_{j=m_k}^n Z_j\Big| > 2^{-k}\Big\} .
+\]
+By *continuity of measure from below* (Proposition 2.3),
+\[
+\mathbb P\Big(\sup_{n \ge m_k} \Big|\sum_{j=m_k}^n Z_j\Big| > 2^{-k}\Big)
+  = \lim_{N\to\infty} \mathbb P(B_N) \le 2^{-k} .
+\]
+
+*Step 3. Apply Borel–Cantelli and check the Cauchy criterion.*
+Because \(\sum_{k=1}^\infty 2^{-k} = 1 < \infty\), the First Borel–Cantelli Lemma (Theorem 15.1) implies
+that outside a single null set \(E\) (\(\mathbb P(E) = 0\)), the event
+\(\big\{\sup_{n \ge m_k} \big|\sum_{j=m_k}^n Z_j\big| > 2^{-k}\big\}\) occurs for only *finitely many* \(k\).
+- Fix any outcome \(\omega \in \Omega \setminus E\). There is an integer \(K(\omega)\) such that for all
+  \(k \ge K(\omega)\) and all \(n \ge m_k\),
+  \[
+  \Big|\sum_{j=m_k}^n Z_j(\omega)\Big| \le 2^{-k} .
+  \]
+- Then for any two indices \(n > \ell \ge m_k\), we can write \(\sum_{j=\ell+1}^n Z_j = \sum_{j=m_k}^n Z_j - \sum_{j=m_k}^\ell Z_j\),
+  so the triangle inequality gives
+  \[
+  \Big|\sum_{j=\ell+1}^n Z_j(\omega)\Big|
+    \le \Big|\sum_{j=m_k}^n Z_j(\omega)\Big| + \Big|\sum_{j=m_k}^\ell Z_j(\omega)\Big|
+    \le 2^{-k} + 2^{-k} = 2^{1-k} .
+  \]
+- Given any tolerance \(\varepsilon > 0\), choose \(k \ge K(\omega)\) with \(2^{1-k} < \varepsilon\). Then
+  for all \(n > \ell \ge m_k\), \(\big|\sum_{j=\ell+1}^n Z_j(\omega)\big| < \varepsilon\).
+  Thus the partial sums at \(\omega\) form a Cauchy sequence in \(\mathbb R\), which converges to a finite
+  real number by completeness of \(\mathbb R\). \(\blacksquare\)
+
+** Kronecker's lemma: turning convergent series into vanishing averages
+
+Lemma 16.4 gives convergence of the weighted series \(\sum_{j=1}^\infty \frac{Y_j - \mathbb E Y_j}{j}\).
+How do we pass from convergence of \(\sum_{j=1}^\infty \frac{a_j}{j}\) to the conclusion that the
+unweighted average \(\frac{1}{n}\sum_{j=1}^n a_j \to 0\)? That is a purely deterministic fact of real
+analysis called *Kronecker's lemma*.
+
+#+begin_quote
+*Lemma 16.5 (Kronecker's lemma for arithmetic averages).* If a real sequence \((a_j)\) satisfies
+convergence of \(\sum_{j \ge 1} a_j / j\), then \(n^{-1} \sum_{j=1}^n a_j \to 0\).
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*Step 1. Summation by parts (Abel's transformation).*
+Let \(b_0 := 0\) and let \(b_n := \sum_{j=1}^n \frac{a_j}{j}\) be the partial sums of the convergent
+series, so \(b_n \to b \in \mathbb R\) as \(n \to \infty\).
+Notice that \(\frac{a_j}{j} = b_j - b_{j-1}\), so we can recover \(a_j\) from the partial sums \(b_j\):
+\[
+a_j = j(b_j - b_{j-1}) .
+\]
+Sum this identity from \(j = 1\) to \(n\) and regroup the coefficients of each \(b_j\) (write out \(n = 3\)
+to see the telescoping pattern: \(1(b_1 - b_0) + 2(b_2 - b_1) + 3(b_3 - b_2) = 3b_3 - b_1 - b_2\)):
+\[
+\sum_{j=1}^n a_j = \sum_{j=1}^n j b_j - \sum_{j=1}^n j b_{j-1}
+  = n b_n + \sum_{j=1}^{n-1} j b_j - \sum_{j=1}^{n-1} (j+1) b_j
+  = n b_n - \sum_{j=1}^{n-1} b_j .
+\]
+Dividing both sides by \(n\) gives the exact identity
+\[
+\frac{1}{n}\sum_{j=1}^n a_j = b_n - \frac{1}{n}\sum_{j=1}^{n-1} b_j .
+\]
+
+*Step 2. Show that the arithmetic (Cesàro) averages \(\frac{1}{n}\sum_{j=1}^{n-1} b_j\) also converge to \(b\).*
+Fix any \(\varepsilon > 0\). Since \(b_j \to b\), there is an index \(J\) such that \(|b_j - b| < \varepsilon\)
+for all \(j > J\). For \(n > J + 1\), split the sum \(\sum_{j=1}^{n-1} (b_j - b)\) at \(J\):
+\[
+\Big|\frac{1}{n}\sum_{j=1}^{n-1} b_j - b\Big|
+  \le \frac{|b|}{n} + \frac{1}{n}\sum_{j=1}^J |b_j - b| + \frac{1}{n}\sum_{j=J+1}^{n-1} |b_j - b|
+  \le \frac{|b| + \sum_{j=1}^J |b_j - b|}{n} + \frac{n - 1 - J}{n}\,\varepsilon .
+\]
+Keeping \(J\) fixed and letting \(n \to \infty\), the first fraction has a fixed numerator divided by
+\(n \to \infty\), so it tends to \(0\), leaving \(\limsup_{n\to\infty} \big|\frac{1}{n}\sum_{j=1}^{n-1} b_j - b\big| \le \varepsilon\).
+Since \(\varepsilon > 0\) was arbitrary, \(\frac{1}{n}\sum_{j=1}^{n-1} b_j \to b\).
+
+*Step 3. Subtract the two equal limits.*
+In our summation-by-parts identity \(\frac{1}{n}\sum_{j=1}^n a_j = b_n - \frac{1}{n}\sum_{j=1}^{n-1} b_j\),
+both \(b_n \to b\) and \(\frac{1}{n}\sum_{j=1}^{n-1} b_j \to b\). Therefore their difference tends to
+\(b - b = 0\). \(\blacksquare\)
+
+** Additional worked examples
+
+*Example B (Random signs and the random harmonic series).* Let \(\varepsilon_1, \varepsilon_2, \dots\) be
+iid Rademacher random variables (\(\mathbb P(\varepsilon_j = +1) = \mathbb P(\varepsilon_j = -1) = 1/2\)).
+Recall from calculus that the deterministic harmonic series \(\sum_{j=1}^\infty \frac{1}{j} = \infty\)
+diverges, and more generally \(\sum_{j=1}^\infty \frac{1}{j^p}\) converges deterministically only for
+\(p > 1\). What if we attach random signs \(\varepsilon_j\)?
+- Let \(Z_j = \frac{\varepsilon_j}{j^p}\). Then \(Z_j\) are independent with \(\mathbb E Z_j = 0\) and
+  \(\mathbb E[Z_j^2] = \frac{1}{j^{2p}}\).
+- Whenever \(p > 1/2\), we have \(2p > 1\), so \(\sum_{j=1}^\infty \mathbb E[Z_j^2] = \sum_{j=1}^\infty \frac{1}{j^{2p}} < \infty\)!
+- By Lemma 16.4, the *random harmonic series* \(\sum_{j=1}^\infty \frac{\varepsilon_j}{j}\) (\(p = 1\)),
+  and even \(\sum_{j=1}^\infty \frac{\varepsilon_j}{\sqrt{j}\,\log(j+1)}\), converges almost surely to a
+  finite real number because of random cancellations!
+
+* 16.3 Removing the finite-variance assumption
+
+** Intuition
+
+Now we assemble Lemmas 16.3–16.5 to prove Kolmogorov's Strong Law of Large Numbers assuming only
+\(\mathbb E|X_1| < \infty\).
+
+Look at how we truncate \(X_j\): instead of a fixed threshold \(K\) (as in Theorem 15.7), we truncate the
+\(j\)-th variable at threshold \(j\):
+\[
+Y_j := X_j \mathbf 1_{\{|X_j| \le j\}} .
+\]
+Why is truncating at \(|X_j| \le j\) the magic choice? Because of two identities:
+1. *Tail probabilities are summable:* \(\sum_{j=1}^\infty \mathbb P(X_j \ne Y_j) = \sum_{j=1}^\infty \mathbb P(|X_1| > j) \le \mathbb E|X_1| < \infty\).
+   By Borel–Cantelli, \(X_j(\omega) = Y_j(\omega)\) for all sufficiently large \(j\) almost surely!
+2. *Weighted variances are summable:* Even though \(\operatorname{var}(Y_j)\) can grow with \(j\), dividing
+   by \(j^2\) gives \(\sum_{j=1}^\infty \frac{\operatorname{var}(Y_j)}{j^2} \le 2\mathbb E|X_1| < \infty\).
+   Then Lemma 16.4 says \(\sum_{j=1}^\infty \frac{Y_j - \mathbb E Y_j}{j}\) converges a.s., and Kronecker's
+   Lemma 16.5 immediately turns this into \(\frac{1}{n}\sum_{j=1}^n (Y_j - \mathbb E Y_j) \to 0\) a.s.!
+
+#+begin_example
+   X_j  --(truncate at |X_j| <= j)-->  Y_j = X_j 1_{|X_j| <= j}
+    |                                   |
+    | sum_j P(X_j != Y_j) <= E|X_1|     | sum_j var(Y_j)/j^2 <= 2 E|X_1| < infinity
+    | Borel-Cantelli:                   | Lemma 16.4: sum_j (Y_j - E Y_j)/j converges a.s.
+    v                                   v
+   X_j = Y_j eventually a.s.          Kronecker (Lemma 16.5):
+    |                                   (1/n) sum_{j=1}^n (Y_j - E Y_j) -> 0 a.s.
+    +-----------------+-----------------+
+                      |
+                      v  (since E Y_j -> E X_1 by DCT)
+             (1/n) sum_{j=1}^n X_j -> E X_1 a.s.
+#+end_example
+
+** Kolmogorov's Strong Law
+
+#+begin_quote
+*Theorem 16.6 (Strong law, integrable iid variables).* If \(X_j\) are iid and \(\mathbb E|X_1| < \infty\),
+then
+\[
+\frac{1}{n}\sum_{j=1}^n X_j \longrightarrow \mathbb E X_1 \quad \text{almost surely} .
+\]
+#+end_quote
+
+** Proof (unpacked step by step)
+
+*** Step 1. Truncate at the index \(j\) and show \(X_j = Y_j\) eventually a.s.
+
+Define \(Y_j := X_j \mathbf 1_{\{|X_j| \le j\}}\) for each \(j \ge 1\).
+- By Lemma 13.3, the variables \(Y_1, Y_2, \dots\) are still *independent* (though their laws now depend on
+  \(j\) because the cutoff \(j\) grows).
+- What is the sum of the probabilities that \(X_j\) differs from \(Y_j\)? Since \(X_j\) has the same law as
+  \(X_1\), \(\mathbb P(X_j \ne Y_j) = \mathbb P(|X_j| > j) = \mathbb P(|X_1| > j)\). By Tonelli's theorem
+  for nonnegative series (Proposition 6.6), we can swap \(\sum_{j=1}^\infty\) and \(\mathbb E\):
+  \[
+  \sum_{j=1}^\infty \mathbb P(X_j \ne Y_j)
+    = \sum_{j=1}^\infty \mathbb P(|X_1| > j)
+    = \mathbb E\Big[\sum_{j=1}^\infty \mathbf 1_{\{|X_1| > j\}}\Big]
+    \le \mathbb E|X_1| < \infty .
+  \]
+  Why does \(\sum_{j=1}^\infty \mathbf 1_{\{|X_1| > j\}} \le |X_1|\) hold pointwise at every outcome?
+  Because for any real number \(x = |X_1(\omega)| \ge 0\), the indicator \(\mathbf 1_{\{x > j\}}\) is \(1\)
+  for \(j = 1, 2, \dots, \lfloor x \rfloor\) (or \(\lceil x \rceil - 1\)) and \(0\) for larger \(j\); it
+  simply counts how many positive integers \(j\) are strictly less than \(x\), which is at most \(x\)!
+- By the First Borel–Cantelli Lemma (Theorem 15.1), \(\mathbb P(X_j \ne Y_j \text{ i.o.}) = 0\). That means
+  on a probability-one event \(\Omega_1\), there is a random index \(J(\omega)\) such that
+  \(X_j(\omega) = Y_j(\omega)\) for all \(j \ge J(\omega)\).
+- Consequently, on \(\Omega_1\), the difference \(\sum_{j=1}^n (X_j(\omega) - Y_j(\omega)) = \sum_{j=1}^{J(\omega)} (X_j(\omega) - Y_j(\omega))\)
+  stops changing once \(n \ge J(\omega)\)! Dividing this fixed finite sum by \(n \to \infty\) gives
+  \[
+  \frac{1}{n}\sum_{j=1}^n (X_j - Y_j) \xrightarrow[n\to\infty]{} 0 \quad \text{almost surely} .
+  \]
+
+*** Step 2. Sum the truncated variances \(\sum_j \operatorname{var}(Y_j) / j^2\)
+
+Since \(\operatorname{var}(Y_j) = \mathbb E[Y_j^2] - (\mathbb E Y_j)^2 \le \mathbb E[Y_j^2] = \mathbb E[|X_1|^2 \mathbf 1_{\{|X_1| \le j\}}]\)
+(using identical distribution of \(X_j\) and \(X_1\)), Tonelli's theorem gives
+\[
+\sum_{j=1}^\infty \frac{\operatorname{var}(Y_j)}{j^2}
+  \le \sum_{j=1}^\infty \mathbb E\Big[\frac{|X_1|^2}{j^2}\,\mathbf 1_{\{|X_1| \le j\}}\Big]
+  = \mathbb E\Big[|X_1|^2 \sum_{j=1}^\infty \frac{1}{j^2}\,\mathbf 1_{\{|X_1| \le j\}}\Big] .
+\]
+Let us prove the pointwise scalar inequality
+\[
+x^2 \sum_{j=1}^\infty \frac{1}{j^2}\,\mathbf 1_{\{x \le j\}} \le 2x \quad \text{for all } x \ge 0 .
+\]
+We check two cases:
+- *Case 1: \(0 \le x \le 1\).* Here \(x^2 \le x\), and \(\sum_{j=1}^\infty \frac{1}{j^2} = 1 + \sum_{j=2}^\infty \frac{1}{j^2} \le 1 + \int_1^\infty \frac{dt}{t^2} = 2\).
+  Multiplying gives \(x^2 \sum_{j=1}^\infty j^{-2} \mathbf 1_{\{x \le j\}} \le 2x^2 \le 2x\).
+- *Case 2: \(x > 1\).* Let \(r := \lceil x \rceil \ge 2\) be the smallest integer \(\ge x\). Then
+  \(\mathbf 1_{\{x \le j\}}\) is \(0\) for \(j < r\) and \(1\) for \(j \ge r\). Comparing the tail sum
+  \(\sum_{j=r}^\infty \frac{1}{j^2}\) with the integral of \(t^{-2}\) (after separating the first term
+  \(j = r\)) gives
+  \[
+  \sum_{j=r}^\infty \frac{1}{j^2}
+    = \frac{1}{r^2} + \sum_{j=r+1}^\infty \frac{1}{j^2}
+    \le \frac{1}{r^2} + \int_r^\infty \frac{dt}{t^2}
+    = \frac{1}{r^2} + \frac{1}{r}
+    \le \frac{2}{r} \le \frac{2}{x} ,
+  \]
+  where the last step used \(r = \lceil x \rceil \ge x\). Multiplying both sides by \(x^2\) gives
+  \(x^2 \sum_{j=r}^\infty j^{-2} \le x^2 \cdot \frac{2}{x} = 2x\).
+Applying this scalar inequality to \(x = |X_1(\omega)|\) and taking expectations yields
+\[
+\sum_{j=1}^\infty \frac{\operatorname{var}(Y_j)}{j^2} \le 2\mathbb E|X_1| < \infty .
+\]
+
+*** Step 3. Center, sum the weighted series, and apply Kronecker's lemma
+
+Define the centered weighted variables
+\[
+Z_j := \frac{Y_j - \mathbb E Y_j}{j}, \qquad j = 1, 2, \dots
+\]
+The variables \(Z_j\) are independent, have mean \(\mathbb E Z_j = 0\), and satisfy
+\[
+\sum_{j=1}^\infty \mathbb E[Z_j^2] = \sum_{j=1}^\infty \frac{\operatorname{var}(Y_j)}{j^2} \le 2\mathbb E|X_1| < \infty
+\]
+by Step 2. Therefore, Lemma 16.4 applies: on a probability-one event \(\Omega_2\), the numerical series
+\(\sum_{j=1}^\infty \frac{Y_j(\omega) - \mathbb E Y_j}{j}\) converges!
+For each fixed outcome \(\omega \in \Omega_2\), apply Kronecker's Lemma (Lemma 16.5) to the real sequence
+\(a_j := Y_j(\omega) - \mathbb E Y_j\): we obtain
+\[
+\frac{1}{n}\sum_{j=1}^n (Y_j - \mathbb E Y_j) \xrightarrow[n\to\infty]{} 0 \quad \text{almost surely} .
+\]
+
+*** Step 4. Restore the mean \(\mathbb E X_1\) and the original variables \(X_j\)
+
+- Because \(X_j\) has the same law as \(X_1\), we have \(\mathbb E Y_j = \mathbb E[X_1 \mathbf 1_{\{|X_1| \le j\}}]\).
+  As \(j \to \infty\), \(X_1 \mathbf 1_{\{|X_1| \le j\}} \to X_1\) pointwise and is dominated by \(|X_1| \in L^1(\mathbb P)\).
+  By the Dominated Convergence Theorem, \(\mathbb E Y_j \to \mathbb E X_1\) as \(j \to \infty\).
+- As shown in Step 2 of the proof of Lemma 16.5, if a deterministic sequence \(\mathbb E Y_j\) converges
+  to \(\mathbb E X_1\), then its arithmetic averages also converge to the same limit:
+  \[
+  \frac{1}{n}\sum_{j=1}^n \mathbb E Y_j \xrightarrow[n\to\infty]{} \mathbb E X_1 .
+  \]
+- Adding this deterministic limit to Step 3 gives \(\frac{1}{n}\sum_{j=1}^n Y_j \to \mathbb E X_1\) almost
+  surely. Finally, adding the almost-sure zero limit \(\frac{1}{n}\sum_{j=1}^n (X_j - Y_j) \to 0\) from
+  Step 1 gives
+  \[
+  \frac{1}{n}\sum_{j=1}^n X_j \xrightarrow[n\to\infty]{} \mathbb E X_1 \quad \text{almost surely} . \quad \blacksquare
+  \]
+
+*** Comparing the two truncation schemes (Theorem 15.7 vs. Theorem 16.6)
+
+Notice how the lecture notes contrast our two uses of truncation:
+- For the *Weak Law* (Theorem 15.7), we only needed to control one large \(n\) at a time for a fixed
+  tolerance \(\varepsilon, \delta\), so a *fixed cutoff* \(|X_j| \le K\) sufficed: \(K\) was chosen first
+  to make \(\mathbb E|R_1|\) uniformly small.
+- For the *Strong Law* (Theorem 16.6), any fixed cutoff \(K\) would leave a positive probability
+  \(\mathbb P(|X_j| > K) > 0\) of truncation at every step \(j\), so by Second Borel–Cantelli infinitely
+  many \(X_j\) would be altered! Letting the *cutoff grow with the index* (\(|X_j| \le j\)) makes the tail
+  probabilities \(\mathbb P(|X_j| > j)\) summable over \(j\), so almost surely only *finitely many* variables
+  are ever modified.
+
+* 16.4 Averages as integrals
+
+** Intuition
+
+The Strong Law of Large Numbers turns expectations \(\mathbb E[f(X_1)] = \int f\,d\mu_{X_1}\) and
+probabilities \(\mathbb P(X_1 \le x) = F(x)\) into limits of *sample averages*. This gives two foundational
+tools of applied mathematics and statistics:
+1. *Monte Carlo integration (Example 16.7):* To compute a definite integral \(\int_0^1 f(x)\,dx\), draw iid
+   uniform points \(U_1, U_2, \dots \in (0,1)\) and average the function values \(\frac{1}{n}\sum_{j=1}^n f(U_j)\).
+2. *Empirical distribution functions (Example 16.8):* From an iid sample \(X_1, X_2, \dots\) with unknown
+   CDF \(F\), form the step-function CDF \(F_n(x) = \frac{1}{n}\sum_{j=1}^n \mathbf 1_{\{X_j \le x\}}\) of
+   the first \(n\) data points. Using a countable rational grid \(\mathbb Q\) and monotonicity, we prove
+   that on a *single* probability-one event, \(F_n(x)\) converges to \(F(x)\) at *every* continuity point
+   \(x\) of \(F\) simultaneously!
+
+** Monte Carlo integration
+
+#+begin_quote
+*Example 16.7 (Monte Carlo integration).* Let \(U_j : \Omega \to (0,1)\) be iid uniform variables and let
+\(f : (0,1) \to \mathbb R\) be Borel measurable with \(\int_0^1 |f(x)|\,dx < \infty\). The specified range
+makes every \(f(U_j)\) defined at every outcome. They are independent by Lemma 13.3; the image-measure
+formula gives their common law and integrability. Therefore
+\[
+\frac{1}{n}\sum_{j=1}^n f(U_j) \longrightarrow \int_0^1 f(x)\,dx \quad \text{almost surely} .
+\]
+For \(f(x) = x^{-2/3}\), the integral is three but the second moment is infinite. The integrable strong
+law still applies; the finite-variance error bound does not. The almost-sure limit itself supplies no
+rate of approximation.
+#+end_quote
+
+Let's check every detail of Example 16.7:
+- Because \(U_j\) has law \(\lambda|_{(0,1)}\) (Lebesgue measure on \((0,1)\)), the image-measure formula
+  ([[file:ch06-integration.org][Chapter 6]]) gives
+  \[
+  \mathbb E|f(U_1)| = \int_0^1 |f(x)|\,dx < \infty, \qquad \mathbb E[f(U_1)] = \int_0^1 f(x)\,dx .
+  \]
+- By Lemma 13.3, \(f(U_1), f(U_2), \dots\) are iid integrable random variables, so Theorem 16.6 applies
+  immediately!
+- Look at the singular integrand \(f(x) = x^{-2/3}\) on \((0,1)\):
+  - *First moment:* \(\int_0^1 x^{-2/3}\,dx = \big[3 x^{1/3}\big]_0^1 = 3 < \infty\).
+  - *Second moment:* \(\mathbb E[f(U_1)^2] = \int_0^1 x^{-4/3}\,dx = \big[-3 x^{-1/3}\big]_0^1 = +\infty\).
+  Here the finite-variance Strong Law (Theorem 16.1) and Chebyshev's \(O(n^{-1/2})\) error bound do *not*
+  apply, because occasional draws of \(U_j\) very close to \(0\) produce huge spikes \(U_j^{-2/3}\). Yet
+  Kolmogorov's integrable Strong Law (Theorem 16.6) still guarantees that \(\frac{1}{n}\sum_{j=1}^n U_j^{-2/3} \to 3\)
+  almost surely!
+
+** Empirical distribution functions
+
+#+begin_quote
+*Example 16.8 (Empirical distribution functions).* For iid \(X_j\) with CDF \(F\), define
+\[
+F_n(x) := \frac{1}{n}\sum_{j=1}^n \mathbf 1_{\{X_j \le x\}} .
+\]
+For each rational \(q\), the strong law gives \(F_n(q) \to F(q)\) almost surely. Countably many
+intersections give one probability-one set on which this holds for every rational \(q\). Fix an outcome in
+that set, a continuity point \(x\) of \(F\), and rational numbers \(q < x < r\). Monotonicity gives
+\(F_n(q) \le F_n(x) \le F_n(r)\), and hence
+\[
+F(q) \le \liminf_n F_n(x) \le \limsup_n F_n(x) \le F(r) .
+\]
+Let \(q \uparrow x\) and \(r \downarrow x\) through rational values. Continuity at \(x\) squeezes both
+limits to \(F(x)\). The probability-one set was chosen using only rational points, and the subsequent
+argument works at every continuity point on that same set. Thus the convergence holds simultaneously at
+all continuity points; no uncountable intersection of probability-one events was taken. This is a
+pointwise conclusion, not a uniform convergence theorem.
+#+end_quote
+
+Let's admire the countable-grid technique in Example 16.8—a technique you will see throughout probability
+and analysis:
+1. There are *uncountably many* real numbers \(x \in \mathbb R\). If we applied Example 16.2 to each
+   \(B_x = (-\infty, x]\), we would get an exceptional null set \(N_x\) for each \(x \in \mathbb R\), and
+   we could not union \(\bigcup_{x \in \mathbb R} N_x\) without potentially losing measurability or getting
+   a set of positive probability.
+2. Instead, we restrict first to the *countable* dense set of rational numbers \(q \in \mathbb Q\). Since
+   \(\mathbb Q\) is countable, the intersection
+   \[
+   \Omega_{\mathbb Q} := \bigcap_{q \in \mathbb Q} \{\omega : F_n(q)(\omega) \to F(q)\}
+   \]
+   has \(\mathbb P(\Omega_{\mathbb Q}) = 1\)!
+3. Once \(\omega \in \Omega_{\mathbb Q}\) is fixed, *no more probability is needed*: for *any* real
+   continuity point \(x \in \mathbb R\) of \(F\) and any rationals \(q < x < r\), the indicator inequality
+   \(\mathbf 1_{\{X_j \le q\}} \le \mathbf 1_{\{X_j \le x\}} \le \mathbf 1_{\{X_j \le r\}}\) makes
+   \(F_n(q)(\omega) \le F_n(x)(\omega) \le F_n(r)(\omega)\) hold deterministically. Letting \(n \to \infty\)
+   and then squeezing \(q \uparrow x\) and \(r \downarrow x\) through \(\mathbb Q\) proves
+   \(F_n(x)(\omega) \to F(x)\) simultaneously for all continuity points \(x\) of \(F\) on \(\Omega_{\mathbb Q}\)!
+   (In fact, with a bit more work using a finite quantile grid, the *Glivenko–Cantelli theorem* shows
+   that \(\sup_{x \in \mathbb R} |F_n(x) - F(x)| \to 0\) almost surely; see Exercise 6 below.)
+
+** Looking back at the whole course (from the notes)
+
+The lecture notes close with a unifying reflection on the journey from Chapter 1 to Chapter 16:
+- The course began in [[file:ch01-measurable-spaces.org][Chapter 1]] by choosing which subsets of a space can be measured (\(\sigma\)-algebras,
+  closed under *countable* set operations).
+- Those exact same choices remain visible in the final applications of Chapter 16:
+  - *Image measures* ([[file:ch03-measurable-functions.org][Chapter 3]], [[file:ch06-integration.org][Chapter 6]]) identify the integral \(\int_0^1 f(x)\,dx\) being approximated
+    by Monte Carlo averages;
+  - *Product measures* ([[file:ch09-product-measures.org][Chapter 9]], [[file:ch10-infinite-products.org][Chapter 10]]) construct the infinite sequence of independent observations;
+  - *Countability* controls the simultaneous almost-sure assertions (from \(\limsup_n A_n\) in Borel–Cantelli
+    to the rational grid \(\mathbb Q\) in Example 16.8).
+
+** Historical remark (Kolmogorov, 1933)
+
+Andrey Nikolaevich Kolmogorov's 1933 monograph /Grundbegriffe der Wahrscheinlichkeitsrechnung/ (Springer,
+Berlin) stated the iid Strong Law of Large Numbers assuming only a finite expectation (p. 59) and attached
+a striking footnote (p. 59, footnote 2): *the proof had not yet been published!*
+- Kolmogorov's definition of expectation required absolute integrability \(\mathbb E|X_1| < \infty\) (p. 36),
+  so his statement was the full integrable Strong Law of Theorem 16.6, not merely a finite-variance version.
+- On the exact same page, Kolmogorov carefully distinguished the two: he stated his 1930 sufficient
+  condition \(\sum_{j=1}^\infty \frac{\operatorname{var}(X_j)}{j^2} < \infty\) (which comes directly from
+  Lemmas 16.4 and 16.5!) for independent variables that *need not have the same law*, alongside the iid
+  theorem requiring only \(\mathbb E|X_1| < \infty\). These are different hypotheses serving different
+  results, and our proof of Theorem 16.6 bridges the two via truncation at \(j\).
+
+** Classroom route (from the notes)
+
+Prove the square-subsequence strong law (Theorem 16.1), including the monotonicity step and the reduction
+to signed variables. Apply it to empirical frequencies (Example 16.2) and bounded Monte Carlo integrands
+(Example 16.7). State the integrable theorem (Theorem 16.6) and explain its truncation scheme. The maximal
+inequality (Lemma 16.3), series argument (Lemma 16.4), and Kronecker lemma (Lemma 16.5) form a complete
+reference proof, not an additional classroom sequence of theorems.
+
+* Worked Exercises
+
+** Exercise 1 (Kolmogorov's SLLN for non-identically distributed variables)
+Let \(X_1, X_2, \dots\) be independent (not necessarily identically distributed) square-integrable random
+variables with means \(m_j = \mathbb E X_j\) and variances \(\sigma_j^2 = \operatorname{var}(X_j)\).
+Suppose that
+\[
+\sum_{j=1}^\infty \frac{\sigma_j^2}{j^2} < \infty .
+\]
+Use Lemmas 16.4 and 16.5 directly to prove that
+\[
+\frac{1}{n}\sum_{j=1}^n (X_j - m_j) \longrightarrow 0 \quad \text{almost surely} .
+\]
+
+** Solution
+Define \(Z_j := \frac{X_j - m_j}{j}\) for \(j \ge 1\). Then \(Z_1, Z_2, \dots\) are independent, centered
+(\(\mathbb E Z_j = 0\)), and square-integrable with
+\[
+\sum_{j=1}^\infty \mathbb E[Z_j^2] = \sum_{j=1}^\infty \frac{\operatorname{var}(X_j)}{j^2} = \sum_{j=1}^\infty \frac{\sigma_j^2}{j^2} < \infty .
+\]
+By Lemma 16.4, the series \(\sum_{j=1}^\infty \frac{X_j - m_j}{j}\) converges almost surely. At every
+outcome \(\omega\) where this series converges, Kronecker's Lemma (Lemma 16.5) applied to
+\(a_j = X_j(\omega) - m_j\) gives \(\frac{1}{n}\sum_{j=1}^n (X_j(\omega) - m_j) \to 0\).
+
+** Exercise 2 (Converse to the Strong Law when \(\mathbb E|X_1| = \infty\))
+Let \(X_1, X_2, \dots\) be iid with \(\mathbb E|X_1| = \infty\).
+1. Using the layer-cake bound \(\mathbb E|X_1| \le 1 + \sum_{j=1}^\infty \mathbb P(|X_1| \ge j)\) and the
+   Second Borel–Cantelli Lemma, show that \(\mathbb P(|X_n| \ge n \text{ infinitely often}) = 1\).
+2. Deduce that \(\frac{1}{n}\sum_{j=1}^n X_j\) cannot converge to any finite real number almost surely.
+   (/Hint:/ Express \(\frac{X_n}{n}\) in terms of \(\overline X_n = \frac{S_n}{n}\) and \(\overline X_{n-1} = \frac{S_{n-1}}{n-1}\).)
+
+** Solution
+1. For any \(x \ge 0\), \(x \le 1 + \sum_{j=1}^\infty \mathbf 1_{\{x \ge j\}}\). Taking \(x = |X_1|\) and
+   integrating via Tonelli gives
+   \[
+   \infty = \mathbb E|X_1| \le 1 + \sum_{j=1}^\infty \mathbb P(|X_1| \ge j) = 1 + \sum_{j=1}^\infty \mathbb P(|X_j| \ge j) .
+   \]
+   Thus \(\sum_{j=1}^\infty \mathbb P(|X_j| \ge j) = \infty\). Since the events \(A_j := \{|X_j| \ge j\}\)
+   are independent, the Second Borel–Cantelli Lemma (Theorem 15.1) gives \(\mathbb P(|X_n| \ge n \text{ i.o.}) = 1\).
+2. Write \(S_n = \sum_{j=1}^n X_j\). Then \(X_n = S_n - S_{n-1}\), so dividing by \(n\) gives
+   \[
+   \frac{X_n}{n} = \frac{S_n}{n} - \frac{n-1}{n}\,\frac{S_{n-1}}{n-1} .
+   \]
+   If \(S_n(\omega) / n \to L \in \mathbb R\) at an outcome \(\omega\), then the right-hand side converges
+   to \(L - 1 \cdot L = 0\), which forces \(X_n(\omega) / n \to 0\). By Part 1, \(|X_n(\omega)| / n \ge 1\)
+   for infinitely many \(n\) almost surely, so \(\mathbb P(S_n / n \text{ converges to a finite limit}) = 0\)!
+
+** Exercise 3 (Fourth-moment proof of the Strong Law without subsequences)
+Suppose \(X_1, X_2, \dots\) are iid with mean \(0\) and finite fourth moment \(\mathbb E[X_1^4] = M < \infty\).
+1. Expand \(S_n^4 = (\sum_{j=1}^n X_j)^4\) and use independence and \(\mathbb E X_j = 0\) to show that
+   \[
+   \mathbb E[S_n^4] = n \mathbb E[X_1^4] + 3n(n-1)(\mathbb E[X_1^2])^2 \le 3 M n^2 .
+   \]
+2. Use Markov's inequality on \(|S_n / n|^4\) and Corollary 15.3 to give a 3-line proof that
+   \(S_n / n \to 0\) almost surely (without needing the square subsequence \(k^2\)).
+
+** Solution
+1. When we expand \((\sum_{j=1}^n X_j)^4 = \sum_{i,j,k,\ell} X_i X_j X_k X_\ell\), any term where at least
+   one index appears with exponent \(1\) (such as \(X_1^3 X_2\), \(X_1^2 X_2 X_3\), or \(X_1 X_2 X_3 X_4\))
+   factors by independence (Proposition 13.4) to include \(\mathbb E X_r = 0\), and therefore has expectation
+   \(0\)! The only surviving terms are:
+   - \(n\) terms of the form \(X_j^4\), each with expectation \(\mathbb E[X_1^4] = M\);
+   - \(\binom{n}{2} \binom{4}{2} = \frac{n(n-1)}{2} \cdot 6 = 3n(n-1)\) terms of the form \(X_i^2 X_j^2\)
+     (\(i \ne j\)), each with expectation \(\mathbb E[X_i^2]\mathbb E[X_j^2] = (\mathbb E[X_1^2])^2 \le \mathbb E[X_1^4] = M\)
+     (by Cauchy–Schwarz/Jensen).
+   Adding these gives \(\mathbb E[S_n^4] \le nM + 3n(n-1)M \le 3Mn^2\).
+2. For any \(\varepsilon > 0\), Markov's inequality gives
+   \[
+   \mathbb P\Big(\Big|\frac{S_n}{n}\Big| > \varepsilon\Big)
+     = \mathbb P(S_n^4 > n^4 \varepsilon^4)
+     \le \frac{\mathbb E[S_n^4]}{n^4 \varepsilon^4}
+     \le \frac{3M}{\varepsilon^4}\,\frac{1}{n^2} .
+   \]
+   Since \(\sum_{n=1}^\infty n^{-2} < \infty\), Corollary 15.3 immediately yields \(S_n / n \to 0\) a.s.
+
+** Exercise 4 (Monte Carlo estimation of \(\pi\))
+Let \((U_j, V_j)_{j\ge 1}\) be an iid sequence of points uniformly distributed on the unit square
+\((0,1)^2\) (constructed by grouping an iid sequence of uniform \((0,1)\) variables into pairs). Show that
+\[
+\frac{4}{n}\,\#\{1 \le j \le n : U_j^2 + V_j^2 \le 1\} \longrightarrow \pi \quad \text{almost surely} ,
+\]
+and bound the probability that this estimator differs from \(\pi\) by \(\ge 0.01\) when \(n = 10^6\).
+
+** Solution
+Let \(I_j := \mathbf 1_{\{U_j^2 + V_j^2 \le 1\}}\). Since \((U_j, V_j)\) has law \(\lambda^2|_{(0,1)^2}\),
+\[
+p := \mathbb E I_1 = \mathbb P(U_1^2 + V_1^2 \le 1) = \text{area of the quarter-disk in } (0,1)^2 = \frac{\pi}{4} .
+\]
+By Theorem 16.1 (Example 16.2), \(\overline I_n = \frac{1}{n}\sum_{j=1}^n I_j \to \frac{\pi}{4}\) a.s.,
+so \(4\overline I_n \to \pi\) a.s.
+For \(n = 10^6\), Chebyshev's inequality (Example 15.5) gives
+\[
+\mathbb P(|4\overline I_n - \pi| \ge 0.01)
+  = \mathbb P(|\overline I_n - p| \ge 0.0025)
+  \le \frac{p(1-p)}{n (0.0025)^2}
+  = \frac{(\pi/4)(1 - \pi/4)}{10^6 \times 6.25 \times 10^{-6}} \approx 0.027 .
+\]
+
+** Exercise 5 (Renewal / waiting times via the Strong Law)
+Let \(T_1, T_2, \dots\) be iid strictly positive waiting times between consecutive bus arrivals, with
+mean \(\mathbb E T_1 = \mu \in (0, \infty)\). The arrival time of the \(n\)-th bus is \(S_n = \sum_{j=1}^n T_j\),
+and the number of buses that have arrived by time \(t > 0\) is
+\[
+N_t := \max\{n \ge 0 : S_n \le t\} \quad (S_0 := 0) .
+\]
+Prove that \(\frac{N_t}{t} \to \frac{1}{\mu}\) almost surely as \(t \to \infty\).
+(/Hint:/ Notice that \(S_{N_t} \le t < S_{N_t + 1}\) by definition of \(N_t\).)
+
+** Solution
+By Theorem 16.6, \(\frac{S_n}{n} \to \mu > 0\) almost surely as \(n \to \infty\). In particular,
+\(S_n \to \infty\) a.s., so for each fixed \(t\), \(N_t < \infty\) a.s., and \(N_t \to \infty\) a.s. as
+\(t \to \infty\).
+By definition of \(N_t\), the \(N_t\)-th bus arrived at or before time \(t\), and the \((N_t + 1)\)-st bus
+arrived strictly after time \(t\):
+\[
+S_{N_t} \le t < S_{N_t + 1} .
+\]
+For \(N_t \ge 1\), divide through by \(N_t\):
+\[
+\frac{S_{N_t}}{N_t} \le \frac{t}{N_t} < \frac{S_{N_t + 1}}{N_t + 1} \cdot \frac{N_t + 1}{N_t} .
+\]
+On the probability-one event where \(S_n / n \to \mu\) and \(N_t \to \infty\), both outer bounds converge
+to \(\mu \cdot 1 = \mu\) as \(t \to \infty\). Taking reciprocals gives \(\frac{N_t}{t} \to \frac{1}{\mu}\)
+almost surely.
+
+** Exercise 6 (Uniform convergence of empirical CDFs when \(F\) is continuous)
+In Example 16.8, suppose the true CDF \(F : \mathbb R \to [0,1]\) is *continuous*. Given any integer
+\(m \ge 1\), pick finite grid points \(-\infty = x_0 < x_1 < \dots < x_{m-1} < x_m = +\infty\) such that
+\(F(x_k) - F(x_{k-1}) = 1/m\) for \(k = 1, \dots, m\). Show that for every \(x \in \mathbb R\), if
+\(x_{k-1} \le x \le x_k\), then
+\[
+\lvert F_n(x) - F(x)\rvert \le \max_{1 \le j \le m-1} \lvert F_n(x_j) - F(x_j)\rvert + \frac{1}{m} ,
+\]
+and deduce the *Glivenko–Cantelli theorem* for continuous \(F\):
+\(\sup_{x \in \mathbb R} |F_n(x) - F(x)| \to 0\) almost surely.
+
+** Solution
+For \(x \in [x_{k-1}, x_k]\), monotonicity of \(F_n\) and \(F\) gives
+\[
+F_n(x_{k-1}) - F(x_k) \le F_n(x) - F(x) \le F_n(x_k) - F(x_{k-1}) .
+\]
+Since \(F(x_k) - F(x_{k-1}) = 1/m\), we can substitute \(F(x_k) = F(x_{k-1}) + 1/m\) on the left and
+\(F(x_{k-1}) = F(x_k) - 1/m\) on the right:
+\[
+\big(F_n(x_{k-1}) - F(x_{k-1})\big) - \frac{1}{m}
+  \le F_n(x) - F(x)
+  \le \big(F_n(x_k) - F(x_k)\big) + \frac{1}{m}
+\]
+(with \(F_n(\pm\infty) = F(\pm\infty) \in \{0,1\}\)). Taking absolute values and the supremum over all
+\(x \in \mathbb R\) gives
+\[
+\sup_{x \in \mathbb R} |F_n(x) - F(x)| \le \max_{1 \le j \le m-1} |F_n(x_j) - F(x_j)| + \frac{1}{m} .
+\]
+For each fixed \(m\), the maximum on the right is over *finitely many* points \(x_1, \dots, x_{m-1}\), so
+by the Strong Law it tends to \(0\) as \(n \to \infty\) on a probability-one set \(\Omega_m\). On the
+countable intersection \(\bigcap_{m=1}^\infty \Omega_m\), we have
+\(\limsup_{n\to\infty} \sup_{x \in \mathbb R} |F_n(x) - F(x)| \le 1/m\) for every \(m \ge 1\), hence \(0\).
+
+* Summary
+
+#+caption: Chapter 16 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Theorem 16.1            | SLLN (\(\sigma^2 < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) a.s.                         | Elementary proof via square subsequence \(k^2\) + monotonicity |
+| Example 16.2            | \(\frac{1}{n}\,\#\{j \le n : X_j \in B\} \to \mu(B)\) a.s.                                                   | Empirical frequencies converge to true probabilities       |
+| Lemma 16.3              | Kolmogorov maximal: \(\mathbb P(\max_{1\le k\le n}|T_k|\ge a) \le \frac{1}{a^2}\sum_{j=1}^n \mathbb E[Z_j^2]\) | Bounds the entire running maximum for the price of \(|T_n|\) |
+| Lemma 16.4              | Independent \(\mathbb E Z_j = 0\), \(\sum_j \mathbb E[Z_j^2] < \infty \implies \sum_j Z_j\) converges a.s.   | Turns summable variances into a.s. series convergence      |
+| Lemma 16.5              | Kronecker: \(\sum_{j\ge 1} a_j / j\) converges \(\implies \frac{1}{n}\sum_{j=1}^n a_j \to 0\)                 | Deterministic bridge from weighted series to averages      |
+| Theorem 16.6            | Kolmogorov SLLN (\(\mathbb E|X_1|<\infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) a.s.          | Optimal iid Strong Law; uses growing truncation \(|X_j|\le j\) |
+| Example 16.7            | Monte Carlo: \(\frac{1}{n}\sum_{j=1}^n f(U_j) \to \int_0^1 f(x)\,dx\) a.s. for \(f\in L^1(0,1)\)             | Approximates integrals even when \(\int_0^1 f^2 = \infty\) |
+| Example 16.8            | Empirical CDF \(F_n(x) \to F(x)\) simultaneously at all continuity points of \(F\) a.s.                      | Uses countable grid \(\mathbb Q\) + monotonicity; avoids uncountable intersections |
+
+*Key takeaways*
+
+- In the finite-variance SLLN (Theorem 16.1), evaluating along squares \(n = k^2\) makes the Chebyshev
+  error bounds \(\sigma^2/(k^2\varepsilon^2)\) summable; monotonicity of \(S_n\) for nonnegative variables
+  and the ratio \((k+1)^2/k^2 \to 1\) fill the gaps \(k^2 \le n < (k+1)^2\); splitting \(X_j = X_j^+ - X_j^-\)
+  handles signed variables.
+- Kolmogorov's maximal inequality (Lemma 16.3) splits \(\{\max_{1\le k\le n}|T_k|\ge a\}\) by the *first*
+  crossing time \(A_k\), and uses independence of the future increment \(T_n - T_k\) from \(A_k\) to show
+  \(\mathbb E[T_n^2 \mathbf 1_{A_k}] \ge a^2 \mathbb P(A_k)\).
+- For the general integrable SLLN (Theorem 16.6), truncating at the index \(Y_j = X_j \mathbf 1_{\{|X_j|\le j\}}\)
+  achieves two things simultaneously via \(\mathbb E|X_1| < \infty\): \(\sum_j \mathbb P(X_j \ne Y_j) \le \mathbb E|X_1| < \infty\)
+  (so \(X_j = Y_j\) eventually a.s.) and \(\sum_j \operatorname{var}(Y_j)/j^2 \le 2\mathbb E|X_1| < \infty\)
+  (so Lemma 16.4 and Kronecker's Lemma 16.5 apply).
+- Whenever you need an almost-sure statement to hold *simultaneously* across an uncountable parameter
+  (like all continuity points \(x \in \mathbb R\) of a CDF in Example 16.8), prove it first on a countable
+  dense subset (\(\mathbb Q\)) and extend deterministically by monotonicity or continuity.
+
+* Course References (from T. Kuusi's Lecture Notes)
+
+1. B. Pascal and P. de Fermat. /Correspondence on the problem of points/, 1654. English translations collected by the University of York: https://www.york.ac.uk/depts/maths/histstat/pascal.pdf.
+2. C. Huygens. /De ratiociniis in ludo aleae/, 1657. English translation, /The Value of All Chances in Games of Fortune/, 1714: https://math.dartmouth.edu/~doyle/docs/huygens/huygens/.
+3. H. Lebesgue. Intégrale, longueur, aire. /Annali di Matematica Pura ed Applicata/ (3) 7 (1902), 231–359. doi:10.1007/BF02420592.
+4. A. N. Kolmogorov. /Grundbegriffe der Wahrscheinlichkeitsrechnung/. Springer, Berlin, 1933. doi:10.1007/978-3-642-49888-6.
+5. G. Shafer and V. Vovk. The sources of Kolmogorov's /Grundbegriffe/. /Statistical Science/ 21 (2006), 70–98. doi:10.1214/088342305000000467.
+6. J. L. Snell. A conversation with Joe Doob. /Statistical Science/ 12 (1997), 301–311. Interview text: https://chance.dartmouth.edu/Doob/conversation.html.
+7. W. Sierpiński. Un théorème général sur les familles d'ensembles. /Fundamenta Mathematicae/ 12 (1928), 206–210. doi:10.4064/fm-12-1-206-210.
+8. E. B. Dynkin. /Theory of Markov Processes/. Translated by D. E. Brown; edited by T. Kőváry. Prentice-Hall, Englewood Cliffs, NJ, and Pergamon Press, 1961.
+9. C. Carathéodory. Über das lineare Mass von Punktmengen — eine Verallgemeinerung des Längenbegriffs. /Nachrichten von der Königlichen Gesellschaft der Wissenschaften zu Göttingen, Mathematisch-Physikalische Klasse/ (1914), 404–426.
+10. P. Fatou. Séries trigonométriques et séries de Taylor. /Acta Mathematica/ 30 (1906), 335–400. doi:10.1007/BF02418579.
+11. F. Riesz. Untersuchungen über Systeme integrierbarer Funktionen. /Mathematische Annalen/ 69 (1910), 449–497. doi:10.1007/BF01457637.
+12. N. Lusin. Sur les propriétés des fonctions mesurables. /Comptes rendus de l'Académie des sciences/ 154 (1912), 1688–1690.
+13. G. Fubini. Sugli integrali multipli. /Rendiconti della Reale Accademia dei Lincei/ (5) 16, first semester (1907), 608–614.
+14. L. Tonelli. Sull'integrazione per parti. /Rendiconti della Reale Accademia dei Lincei/ (5) 18, second semester (1909), 246–253.
+15. J. L. Doob. Stochastic processes depending on a continuous parameter. /Transactions of the American Mathematical Society/ 42 (1937), 107–140. doi:10.1090/S0002-9947-1937-1501916-1.
+16. T.-J. Stieltjes. Recherches sur les fractions continues. /Annales de la Faculté des sciences de Toulouse/ (1) 8 (1894), J1–J122. doi:10.5802/afst.108.
+17. M. Fréchet. Sur la convergence en probabilité. /Metron/ 8, no. 4 (1930), 3–50.
+18. G. Bohlmann. Die Grundbegriffe der Wahrscheinlichkeitsrechnung in ihrer Anwendung auf die Lebensversicherung. In G. Castelnuovo (ed.), /Atti del IV Congresso Internazionale dei Matematici/, Rome, 6–11 April 1908, vol. III (1909), 244–278.
+19. É. Borel. Sur la classification des ensembles de mesure nulle. /Bulletin de la Société Mathématique de France/ 47 (1919), 97–125. doi:10.24033/bsmf.996.

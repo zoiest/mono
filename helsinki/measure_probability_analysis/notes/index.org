@@ -1,0 +1,53 @@
+:PROPERTIES:
+:ID:       52f57f58-ab01-4ece-97ca-d636d51c9748
+:ROAM_ALIASES: "MAST31051 Readable Notes Index" "Measure Probability Self-Contained Notes"
+:END:
+#+title: MAST31051 — Readable Self-Contained Notes
+#+subtitle: A gentle, example-rich companion to T. Kuusi's lecture notes (no prior measure theory assumed)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:index:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:../index.org][← Course Master Index]] | [[file:ch00-toolkit.org][Start: Chapter 0 →]]
+
+* How to Use These Notes
+
+These notes rewrite every chapter of the course lecture notes (/MAST31051: Measure, probability, and real analysis/, T. Kuusi, 2026) for a reader who has *not* taken measure theory.
+- Numbering of definitions, theorems and sections follows the original lecture notes, so you can cross-reference.
+- Every section starts with intuition, then gives the precise statement, a readable proof (or a clearly marked sketch), and extra worked examples and non-examples.
+- Each chapter ends with worked exercises (full solutions) and a summary cheat-sheet.
+- Chapter 0 is an extra primer (sets, countability, sup/inf, \([0,\infty]\) arithmetic, topology of \(\mathbb{R}\)). Read it first if any of those feel rusty.
+
+*Suggested path:* 0 → 1 → 2 → 3 → 4 → 5 (foundations), then 6 → 7 (integration), 8 → 9 → 10 → 11 (approximation and products), 12 → 16 (probability).
+
+* Chapters
+
+#+caption: Chapter Map
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.36\textwidth} >{\RaggedRight}X :booktabs t
+| Ch | Notes | Main ideas |
+|----+-------+------------|
+| 0  | [[file:ch00-toolkit.org][Toolkit and prerequisites]] | Sets, preimages, countability, extended reals, sup/inf, limsup/liminf, open sets |
+| 1  | [[file:ch01-measurable-spaces.org][Measurable spaces]] | \(\sigma\)-algebras, generated \(\sigma\)-algebras, Borel sets |
+| 2  | [[file:ch02-measures.org][Measures and probability measures]] | Countable additivity, monotonicity, continuity of measures |
+| 3  | [[file:ch03-measurable-functions.org][Measurable functions are random variables]] | Measurability tests, image measures, distributions |
+| 4  | [[file:ch04-uniqueness.org][Uniqueness of measures]] | \(\pi\)-systems, Dynkin's lemma, \(\sigma\)-finite uniqueness |
+| 5  | [[file:ch05-construction.org][Constructing measures from simpler sets]] | Algebras, premeasures, outer measure, Carathéodory, completion |
+| 6  | [[file:ch06-integration.org][Integration on a general measure space]] | Simple functions, expectation, MCT, Fatou, DCT |
+| 7  | [[file:ch07-lp-spaces.org][The spaces \(L^p\)]] | a.e. equality, Hölder, Minkowski, completeness |
+| 8  | [[file:ch08-regularity.org][Regularity and smooth approximation]] | Approximating Borel sets and functions |
+| 9  | [[file:ch09-product-measures.org][Product measures and iterated integrals]] | Sections, product measure, Tonelli and Fubini |
+| 10 | [[file:ch10-infinite-products.org][Infinitely many coordinates]] | Fair-coin space, countable products, consistent laws |
+| 11 | [[file:ch11-nonmeasurable-paths.org][Nonmeasurable sets and path spaces]] | Nonmeasurable sets, countable-coordinate events, continuous paths |
+| 12 | [[file:ch12-distributions.org][Distributions and Lebesgue–Stieltjes measures]] | CDFs, constructing laws, quantile transform |
+| 13 | [[file:ch13-independence.org][Independence]] | Independent events/\(\sigma\)-algebras/variables, variance of sums |
+| 14 | [[file:ch14-convergence.org][Convergence of random variables]] | a.s., in probability, \(L^p\), in distribution |
+| 15 | [[file:ch15-weak-law.org][Repeated events and the weak law]] | Borel–Cantelli, Markov/Chebyshev, WLLN |
+| 16 | [[file:ch16-strong-law.org][The strong law of large numbers]] | Subsequence trick, maximal inequality, SLLN |

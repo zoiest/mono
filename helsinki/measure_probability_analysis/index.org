@@ -35,6 +35,9 @@
 | Document | Focus & Content | Key Highlights |
 |----------+-----------------+----------------|
 | [[file:prepare.org][Strategic Preparation Guide]] | 3-session pre-course onboarding plan | Readiness assessment, \(\pi\)-\(\lambda\) lemma preview, master dictionary |
+| [[file:notes/index.org][Readable Self-Contained Notes]] | Chapter-by-chapter rewrite of the lecture notes | Intuition first, extra examples, worked exercises, no prior measure theory needed |
+| [[file:writings/week01.org][Week 01 Exercise Guide]] | Foundations of Measure & Measurability | \(\sigma\)-algebras, generated classes, discrete record atoms, pushforward measures |
+| [[file:writings/week02.org][Week 02 Exercise Guide]] | Uniqueness, Carathéodory & Completion | \(\pi\)-\(\lambda\) systems, premeasures, outer measure splitting, completion to $2^\mathbb{R}$ |
 | [[file:../measure_integral/index.org][Measure & Integral Prerequisite]] | Foundational notes on Lebesgue theory | Concrete $\mathbb{R}^n$ intuition, Carathéodory criterion, MCT, Fatou, DCT |
 | [[file:../measure_integral/index.org][Notational & Convention Dictionary]] | Holopainen vs. Graduate analysis notation | Monotone arrows $\nearrow$ & $\searrow$, $\dot{\mathbb{R}}$ vs $\overline{\mathbb{R}}$, $\Gamma$ vs $\mathrm{Leb}(\mathbb{R}^n)$ |
 | [[file:../measure_integral/writings/generated_exercises.org][Generated Practice Exercises]] | Worked calculation & proof problems | Problem 3 (countable discontinuities & level sets) & Problem 10 (Part 3: First Borel-Cantelli Lemma) |

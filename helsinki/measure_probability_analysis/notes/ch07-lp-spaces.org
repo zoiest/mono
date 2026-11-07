@@ -1,0 +1,662 @@
+:PROPERTIES:
+:ID:       7a8b9c0d-1e2f-4a3b-8c9d-0e1f2a3b4c07
+:ROAM_ALIASES: "MAST31051 Chapter 7" "The spaces L^p Notes"
+:END:
+#+title: Chapter 7: The Spaces \(L^p\)
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch07:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch06-integration.org][← Chapter 6]] | [[file:ch08-regularity.org][Chapter 8 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In linear algebra and multivariable calculus, we measure the size of a vector \(x = (x_1, \dots, x_n) \in \mathbb{R}^n\) using a norm—for instance the Euclidean norm \(\|x\|_2 = (\sum_{i=1}^n |x_i|^2)^{1/2}\), the taxicab norm \(\|x\|_1 = \sum_{i=1}^n |x_i|\), or the maximum norm \(\|x\|_\infty = \max_i |x_i|\). Having a norm lets us talk about distance \(\|x - y\|\), approximation, and limits of sequences.
+
+We now want to do the exact same thing for *measurable functions* (or random variables) on a general measure space \((\Omega, \mathcal{F}, \mu)\), replacing sums by integrals:
+\[
+\|f\|_p := \left( \int_\Omega |f|^p \, d\mu \right)^{1/p} \quad (1 \le p < \infty).
+\]
+Immediately we hit three fundamental questions:
+
+1. *When does \(\|f\|_p = 0\)?* By Lemma 6.8, \(\int |f|^p \, d\mu = 0\) happens if and only if \(f = 0\) *almost everywhere* (\(\mu\)-a.e.), not necessarily at every single point! For example, on \((0,1)\) with Lebesgue measure, changing a function at one point (or on \(\mathbb{Q} \cap (0,1)\)) does not change its integral. On \(\mathbb{N}\) with counting measure, however, changing a single value changes the integral. To make \(\|\cdot\|_p\) a genuine norm (where \(\|f\|_p = 0 \implies f = 0\)), we must *identify functions that agree \(\mu\)-almost everywhere* (Section 7.1).
+2. *Does \(\|f + g\|_p \le \|f\|_p + \|g\|_p\) hold, and when is a product \(fg\) integrable?* The triangle inequality for \(p > 1\) is not obvious at all from the definition of the integral. We prove the two workhorse inequalities of analysis and probability: *Hölder's inequality* (Theorem 7.5, which generalizes Cauchy–Schwarz) and *Minkowski's inequality* (Theorem 7.6, the triangle inequality for \(\|\cdot\|_p\)).
+3. *Do Cauchy sequences have limits in \(L^p(\mu)\)?* In analysis we constantly build a desired function \(f\) as a limit of simpler approximations \(f_n\) where \(\|f_n - f_m\|_p \to 0\). Does a limit \(f \in L^p(\mu)\) actually exist? Theorem 7.7 (*completeness* of \(L^p(\mu)\), often called the Riesz–Fischer theorem) says *yes*, for every measure space and every \(1 \le p \le \infty\).
+
+** Probability motivation
+
+If \((\Omega, \mathcal{F}, \mathbb{P})\) is a probability space and \(X : \Omega \to \mathbb{R}\) is a random variable:
+- \(X \in L^1(\mathbb{P})\) means \(\mathbb{E}[|X|] < \infty\): \(X\) has a *finite mean*.
+- \(X \in L^2(\mathbb{P})\) means \(\mathbb{E}[X^2] < \infty\): \(X\) has a *finite second moment* (and therefore a finite variance \(\operatorname{Var}(X) = \mathbb{E}[(X - \mathbb{E}X)^2] = \|X - \mathbb{E}X\|_2^2\)).
+- \(X \in L^p(\mathbb{P})\) means \(X\) has a *finite \(p\)-th absolute moment* \(\mathbb{E}[|X|^p] < \infty\).
+- \(X \in L^\infty(\mathbb{P})\) means \(X\) is *bounded almost surely*: there is a constant \(M < \infty\) such that \(\mathbb{P}(|X| \le M) = 1\).
+- *Hölder's inequality* for \(p = q = 2\) is the probabilistic Cauchy–Schwarz inequality \(|\mathbb{E}[XY]| \le \sqrt{\mathbb{E}[X^2]\mathbb{E}[Y^2]}\), which implies that the correlation between two random variables lies in \([-1,1]\).
+- Furthermore, on a *probability space* (\(\mathbb{P}(\Omega) = 1\)), Hölder's inequality implies the monotonicity of norms:
+  \[
+  \|X\|_1 \le \|X\|_2 \le \|X\|_p \le \|X\|_q \le \|X\|_\infty \quad (1 \le p < q < \infty).
+  \]
+  Thus, if a random variable has a finite variance (\(X \in L^2\)), it automatically has a finite mean (\(X \in L^1\))!
+
+** Roadmap
+
+- *7.1 Functions equal almost everywhere:* Equivalence classes, the \(L^p(\mu)\) norm for \(1 \le p < \infty\), the essential supremum norm \(\|f\|_\infty\) for \(L^\infty(\mu)\), and how the space depends on \(\mu\).
+- *7.2 The two norm inequalities:* Conjugate exponents, Young's numerical inequality, Hölder's inequality (Theorem 7.5), monotonicity of \(L^p\) norms on probability spaces, and Minkowski's inequality (Theorem 7.6).
+- *7.3 Completeness:* Cauchy sequences, Banach spaces, and the completeness of \(L^p(\mu)\) for \(1 \le p \le \infty\) via the fast-subsequence / telescoping-series trick (Theorem 7.7).
+
+** What you need from earlier chapters
+
+- Null sets and "almost everywhere" (\(\mu\)-a.e.): [[file:ch02-measures.org][Chapter 2]] (Section 2.2) and [[file:ch05-construction.org][Chapter 5]] (Section 5.4).
+- Measurable functions and pointwise limits: [[file:ch03-measurable-functions.org][Chapter 3]] (Proposition 3.4).
+- Integration, Monotone Convergence Theorem (Theorem 6.6), and the vanishing integral criterion \(\int |f| \, d\mu = 0 \iff f = 0\) a.e. (Lemma 6.8): [[file:ch06-integration.org][Chapter 6]].
+
+** Background from real analysis (used in Sections 7.2–7.3)
+
+We briefly review three elementary notions from calculus and real analysis so that no step in the proofs feels mysterious:
+
+1. *Convexity and the power bound \(|a + b|^p \le 2^{p-1}(|a|^p + |b|^p)\).*
+   A function \(\varphi : [0, \infty) \to \mathbb{R}\) is *convex* if the line segment joining any two points on its graph lies on or above the graph: for all \(u, v \ge 0\) and \(\theta \in [0,1]\),
+   \[
+   \varphi(\theta u + (1-\theta)v) \le \theta \varphi(u) + (1-\theta)\varphi(v).
+   \]
+   By calculus, if \(\varphi''(t) \ge 0\) for \(t > 0\), then \(\varphi\) is convex. For \(1 \le p < \infty\), the function \(\varphi(t) = t^p\) has \(\varphi''(t) = p(p-1)t^{p-2} \ge 0\), so \(t \mapsto t^p\) is convex on \([0, \infty)\). Taking \(\theta = 1/2\), \(u = |a|\), and \(v = |b|\) gives
+   \[
+   \left(\frac{|a| + |b|}{2}\right)^p \le \frac{|a|^p + |b|^p}{2} \implies |a + b|^p \le (|a| + |b|)^p \le 2^{p-1}\big(|a|^p + |b|^p\big).
+   \]
+2. *Normed vector spaces, Cauchy sequences, and completeness.*
+   A *norm* on a real vector space \(V\) is a map \(\|\cdot\| : V \to [0, \infty)\) satisfying:
+   - (Nonnegativity and positivity) \(\|v\| \ge 0\), and \(\|v\| = 0 \iff v = 0\);
+   - (Homogeneity) \(\|cv\| = |c|\,\|v\|\) for all \(c \in \mathbb{R}\), \(v \in V\);
+   - (Triangle inequality) \(\|u + v\| \le \|u\| + \|v\|\).
+   A sequence \((v_n)\) in \(V\) *converges* to \(v \in V\) in norm if \(\|v_n - v\| \to 0\) as \(n \to \infty\). It is *Cauchy* if the terms get arbitrarily close to one another: for every \(\varepsilon > 0\) there is an index \(N\) such that \(\|v_n - v_m\| < \varepsilon\) for all \(n, m \ge N\). Every convergent sequence is Cauchy (since \(\|v_n - v_m\| \le \|v_n - v\| + \|v - v_m\|\)), and \(V\) is called *complete* (or a *Banach space*) if conversely *every* Cauchy sequence converges to an element of \(V\).
+3. *Absolute convergence implies convergence in \(\mathbb{R}\).*
+   In \(\mathbb{R}\), if \(\sum_{k=1}^\infty |d_k| < \infty\), then the partial sums \(S_k = \sum_{j=1}^{k} d_j\) form a Cauchy sequence in \(\mathbb{R}\) (since \(|S_m - S_k| \le \sum_{j=k+1}^m |d_j| \to 0\)) and therefore converge to a finite real number.
+
+* 7.1 Functions equal almost everywhere
+
+** Intuition
+
+Suppose \(\lambda\) is Lebesgue measure on \((0,1)\). If we take the zero function \(f(x) = 0\) and modify it at a single point—say \(g(x) = \mathbf{1}_{\{1/2\}}(x)\)—then
+\[
+\int_{(0,1)} |f - g|^p \, d\lambda = \lambda(\{1/2\}) = 0.
+\]
+From the point of view of integration with respect to \(\lambda\), the functions \(f\) and \(g\) are completely indistinguishable: they have the exact same integral over every measurable set. If we kept \(f\) and \(g\) as distinct elements of our vector space, then \(g - f\) would be a *nonzero* vector with *zero* length (\(\|g - f\|_p = 0\)), violating the rule that only the zero vector has norm zero.
+
+The remedy is simple: we declare two measurable functions to be *the same element* of \(L^p(\mu)\) whenever they agree outside a \(\mu\)-null set. Notice that this identification depends entirely on the measure \(\mu\):
+- For Lebesgue measure \(\lambda\), a single point has measure zero, so changing a function at one point does not change its \(L^p(\lambda)\) class.
+- For counting measure on \(\mathbb{N}\), only the empty set has measure zero, so changing a function at even one point produces a genuinely different element!
+
+Similarly, what should the "\(p = \infty\)" norm \(\|f\|_\infty\) be? The ordinary supremum \(\sup_{\omega \in \Omega} |f(\omega)|\) is too sensitive to null sets: for \(g = \mathbf{1}_{\{1/2\}}\) on \([0,1]\) with Lebesgue measure, \(\sup g = 1\) even though \(g = 0\) almost everywhere. Instead, we use the *essential supremum*: the smallest constant \(M \ge 0\) that bounds \(|f|\) *almost everywhere*.
+
+#+begin_example
+   |f(x)|
+     ^
+     |          *  <-- Isolated spike on a null set (e.g. a single point for Lebesgue measure):
+     |                 ordinary sup sees this peak, but essential sup ignores it!
+   M |----------.-------------------------.----------  <-- ||f||_infty = M (smallest ceiling
+     |         / \                       / \               holding outside a null set)
+     |   _____/   \_____________________/   \_____
+     +---------------------------------------------> x
+#+end_example
+
+** Definitions and Equivalence Classes
+
+Fix a measure space \((\Omega, \mathcal{F}, \mu)\). Two measurable real-valued functions \(f\) and \(g\) are *equivalent* (written \(f \sim g\)) if \(f = g\) almost everywhere, i.e.,
+\[
+\mu(\{\omega \in \Omega : f(\omega) \ne g(\omega)\}) = 0.
+\]
+Let us verify that \(\sim\) is an equivalence relation:
+- *Reflexivity:* \(\{f \ne f\} = \emptyset\), which has measure \(0\).
+- *Symmetry:* \(\{f \ne g\} = \{g \ne f\}\).
+- *Transitivity:* If \(f = g\) off a null set \(N_1\) and \(g = h\) off a null set \(N_2\), then \(f = h\) off \(N_1 \cup N_2\). By subadditivity, \(\mu(N_1 \cup N_2) \le \mu(N_1) + \mu(N_2) = 0\), so \(f = h\) almost everywhere.
+
+The *equivalence class* of \(f\) consists of all measurable functions equivalent to \(f\). Any particular function in the class is called a *representative*.
+
+For \(1 \le p < \infty\), define
+\[
+\|f\|_{L^p(\mu)} := \left( \int_\Omega |f|^p \, d\mu \right)^{1/p}. \tag{7.1}
+\]
+The value in (7.1) lies in \([0, \infty]\) and may be infinite. If \(f\) and \(g\) are in the same equivalence class, then \(|f|^p = |g|^p\) almost everywhere, so \(\int_\Omega |f|^p \, d\mu = \int_\Omega |g|^p \, d\mu\) by Lemma 6.8 (since \(\int |\,|f|^p - |g|^p\,| \, d\mu = 0\)). Thus \(\|f\|_{L^p(\mu)}\) depends only on the equivalence class of \(f\).
+
+#+begin_quote
+*Definition 7.1 (The spaces \(L^p(\mu)\) and \(L^\infty(\mu)\)).* For \(1 \le p < \infty\), the space \(L^p(\mu)\) consists of the equivalence classes of measurable real-valued functions satisfying \(\|f\|_{L^p(\mu)} < \infty\).
+
+The space \(L^\infty(\mu)\) consists of the equivalence classes of *essentially bounded* measurable functions: those for which there is a finite constant \(M\) such that \(|f| \le M\) almost everywhere. Its norm is the *essential supremum*,
+\[
+\|f\|_{L^\infty(\mu)} := \inf\{M \ge 0 : |f| \le M \text{ almost everywhere}\}.
+\]
+When the measure \(\mu\) is understood from context, we abbreviate these norms by \(\|f\|_p\) and \(\|f\|_\infty\).
+#+end_quote
+
+*Abuse of notation and vector space operations.* By universal custom, we write \(f \in L^p(\mu)\) as if \(f\) were a function, even though the element of \(L^p(\mu)\) is strictly an equivalence class of functions. Addition and scalar multiplication of classes are defined using representatives: \([f] + [g] := [f + g]\) and \(c[f] := [cf]\). Why doesn't this depend on which representatives we pick? If \(f = \tilde{f}\) off a null set \(N_1\) and \(g = \tilde{g}\) off a null set \(N_2\), then \(f + g = \tilde{f} + \tilde{g}\) off the null set \(N_1 \cup N_2\).
+
+*Crucial property of the essential supremum (the infimum is actually attained!).* Unlike the regularity infimum in Chapter 8, the infimum defining \(\|f\|_\infty\) is always attained: if \(M = \|f\|_\infty < \infty\), then
+\[
+|f| \le \|f\|_\infty \quad \text{almost everywhere.}
+\]
+Why? By definition of infimum, for each integer \(n \ge 1\), \(M + 1/n\) is greater than the infimum, so there is a measurable null set \(E_n = \{|f| > M + 1/n\}\) with \(\mu(E_n) = 0\). Let \(E = \bigcup_{n=1}^\infty E_n\). As a countable union of null sets, \(\mu(E) = 0\). For every \(\omega \notin E\), we have \(|f(\omega)| \le M + 1/n\) for *all* \(n \ge 1\), and passing to the limit as \(n \to \infty\) gives \(|f(\omega)| \le M\). Thus the essential supremum is itself an almost-everywhere bound, not merely an infimum of possible bounds!
+
+** Examples from the notes
+
+#+begin_quote
+*Example 7.2 (A norm need not see a pointwise change).* On \(([0, 1], \mathcal{B}([0, 1]), \lambda)\), the zero function and \(\mathbf{1}_{\{0\}}\) represent the same element of every \(L^p\), including \(L^\infty\). The ordinary supremum of the second function is one, but its essential supremum is zero. For the Dirac measure \(\delta_0\), the same indicator has norm one for every \(p\). On this space, the norm records only the value at zero.
+#+end_quote
+
+*Unpacking Example 7.2:*
+- Under Lebesgue measure \(\lambda\), \(\lambda(\{|\mathbf{1}_{\{0\}}| > 0\}) = \lambda(\{0\}) = 0\), so \(M = 0\) is an a.e. bound for \(\mathbf{1}_{\{0\}}\); hence \(\|\mathbf{1}_{\{0\}}\|_{L^\infty(\lambda)} = 0\).
+- Under the Dirac measure \(\delta_0\) at \(0\), a set \(A \subseteq [0,1]\) is \(\delta_0\)-null iff \(0 \notin A\). Thus "almost everywhere" for \(\delta_0\) means "at the point \(0\)". For any measurable function \(f\), \(\int |f|^p \, d\delta_0 = |f(0)|^p\), so \(\|f\|_{L^p(\delta_0)} = |f(0)|\) for all \(1 \le p \le \infty\).
+
+#+begin_quote
+*Example 7.3 (How large a singularity is allowed?).* On \((0, 1)\) with Lebesgue measure, let \(f(x) = x^{-\alpha}\) with \(\alpha > 0\). For finite \(p\),
+\[
+\int_0^1 |f(x)|^p \, dx = \int_0^1 x^{-\alpha p} \, dx = \begin{cases} (1 - \alpha p)^{-1} & \text{if } \alpha p < 1, \\ \infty & \text{if } \alpha p \ge 1. \end{cases}
+\]
+Thus \(f \in L^p((0,1))\) exactly when \(\alpha < 1/p\). The endpoint matters: \(x^{-1/p}\) does not belong to \(L^p\). None of these functions with \(\alpha > 0\) is essentially bounded, since each sufficiently large level \(M\) is exceeded on an interval \((0, M^{-1/\alpha})\) of positive length.
+#+end_quote
+
+#+begin_quote
+*Example 7.4 (Counting measure gives sequence spaces).* For counting measure \(\#\) on \((\mathbb{N}, 2^{\mathbb{N}})\), the only null set is empty. Equivalence therefore identifies only identical sequences. The space \(L^p(\#)\) is usually written \(\ell^p\), with norm
+\[
+\|a\|_{\ell^p} = \left( \sum_{n=1}^\infty |a_n|^p \right)^{1/p} \quad (1 \le p < \infty), \qquad \|a\|_{\ell^\infty} = \sup_{n \ge 1} |a_n|.
+\]
+For example, the harmonic sequence \((1/n)_{n \ge 1}\) belongs to \(\ell^2\) (since \(\sum_{n=1}^\infty 1/n^2 = \pi^2/6 < \infty\)) but not to \(\ell^1\) (since \(\sum_{n=1}^\infty 1/n = \infty\)). This differs from the direction of inclusion on a probability space, which we will explain below.
+#+end_quote
+
+** Additional worked examples
+
+*Example A (Singularity at \(\infty\) vs. singularity at \(0\)).* On \((1, \infty)\) with Lebesgue measure, consider \(g(x) = x^{-\alpha}\) with \(\alpha > 0\). Now the integral is at infinity:
+\[
+\int_1^\infty x^{-\alpha p} \, dx = \begin{cases} (\alpha p - 1)^{-1} & \text{if } \alpha p > 1, \\ \infty & \text{if } \alpha p \le 1. \end{cases}
+\]
+Thus \(x^{-\alpha} \in L^p((1, \infty))\) iff \(\alpha > 1/p\) (and it belongs to \(L^\infty((1, \infty))\) for *every* \(\alpha > 0\), with \(\|x^{-\alpha}\|_\infty = 1\)). Notice how this flips the condition of Example 7.3:
+- Near \(0\) (finite measure space \((0,1)\)), higher \(p\) makes \(|f|^p\) blow up *faster*, so it is *harder* to be in \(L^p\) for large \(p\): \(L^\infty((0,1)) \subsetneq L^2((0,1)) \subsetneq L^1((0,1))\).
+- Near \(\infty\) (where \(|g(x)| \le 1\)), higher \(p\) makes \(|g(x)|^p\) decay *faster* ( just like in \(\ell^p\)!), so it is *easier* to be in \(L^p\) for large \(p\). For instance, \(g(x) = 1/x\) on \((1, \infty)\) is in \(L^2((1, \infty))\) and \(L^\infty((1, \infty))\), but *not* in \(L^1((1, \infty))\).
+
+*Example B (Incomparability of \(L^p(\mathbb{R})\) and \(L^q(\mathbb{R})\)).* Combining Example 7.3 and Example A on \((0, \infty)\) with Lebesgue measure:
+- \(f_1(x) = x^{-1/2}\mathbf{1}_{(0,1)}(x)\) belongs to \(L^1((0,\infty))\) but not \(L^2((0,\infty))\).
+- \(f_2(x) = x^{-1}\mathbf{1}_{(1,\infty)}(x)\) belongs to \(L^2((0,\infty))\) but not \(L^1((0,\infty))\).
+- \(f_3(x) = x^{-1/2}\mathbf{1}_{(0,1)}(x) + x^{-1}\mathbf{1}_{(1,\infty)}(x)\) belongs to neither \(L^1\) nor \(L^2\)!
+Thus on an infinite measure space like \((0, \infty)\) or \(\mathbb{R}\), neither \(L^1\) nor \(L^2\) is contained in the other.
+
+* 7.2 The two norm inequalities
+
+** Intuition
+
+Why do we need Hölder's and Minkowski's inequalities?
+1. *Hölder's inequality* controls the integral of a *product* \(|fg|\) in terms of \(\|f\|_p\) and \(\|g\|_q\) whenever the exponents \(p, q \in [1, \infty]\) satisfy the *scaling balance* \(\frac{1}{p} + \frac{1}{q} = 1\). Where does the relation \(\frac{1}{p} + \frac{1}{q} = 1\) come from? Think of units (or scaling the measure \(\mu\) to \(c\mu\)): \(\int |fg| \, d(c\mu)\) scales by \(c^1\), while \(\|f\|_{L^p(c\mu)}\|g\|_{L^q(c\mu)}\) scales by \(c^{1/p} c^{1/q} = c^{1/p + 1/q}\). For a universal inequality \(\int |fg| \, d\mu \le \|f\|_p \|g\|_q\) to hold on every measure space without a constant depending on \(\mu(\Omega)\), the powers of \(c\) must match: \(\frac{1}{p} + \frac{1}{q} = 1\)!
+2. *Minkowski's inequality* is the *triangle inequality* \(\|f + g\|_p \le \|f\|_p + \|g\|_p\). It guarantees that \(L^p(\mu)\) is closed under addition and that \(\|\cdot\|_p\) is a genuine norm. Its proof is a clever bootstrap from Hölder's inequality: we write \(|f + g|^p = |f + g| \cdot |f + g|^{p-1} \le |f|\,|f+g|^{p-1} + |g|\,|f+g|^{p-1}\) and apply Hölder to each piece.
+
+** Conjugate Exponents and Hölder's Inequality
+
+For \(1 < p < \infty\), the number
+\[
+q = \frac{p}{p - 1}
+\]
+is called the *conjugate exponent* (or *Hölder conjugate*) of \(p\); it is the unique number in \((1, \infty)\) satisfying
+\[
+\frac{1}{p} + \frac{1}{q} = 1 \quad \Longleftrightarrow \quad (p - 1)q = p \quad \Longleftrightarrow \quad p + q = pq.
+\]
+At the endpoints we use the pair \(p = 1, q = \infty\) (or \(p = \infty, q = 1\)), following the convention \(1/\infty = 0\).
+- When \(p = 2\), its conjugate is \(q = 2/(2-1) = 2\) (self-conjugate).
+- When \(p = 3\), its conjugate is \(q = 3/2\).
+- When \(p = 4\), its conjugate is \(q = 4/3\).
+
+#+begin_quote
+*Theorem 7.5 (Hölder's inequality).* If \(f \in L^p(\mu)\) and \(g \in L^q(\mu)\) for conjugate exponents \(1 \le p, q \le \infty\) (\(\frac{1}{p} + \frac{1}{q} = 1\)), then \(fg\) is integrable (i.e. \(fg \in L^1(\mu)\)) and
+\[
+\int_\Omega |fg| \, d\mu \le \|f\|_p \|g\|_q.
+\]
+#+end_quote
+
+** Proof of Theorem 7.5 (unpacked step by step)
+
+*Case 1: The endpoint \(p = 1, q = \infty\) (or vice versa).*
+By the property of the essential supremum proved in Section 7.1, \(|g| \le \|g\|_\infty\) holds outside a \(\mu\)-null set. Multiplying both sides by \(|f| \ge 0\) gives
+\[
+|f(\omega)g(\omega)| \le |f(\omega)| \, \|g\|_\infty \quad \text{for } \mu\text{-a.e. } \omega \in \Omega.
+\]
+Integrating over \(\Omega\) (using monotonicity of the integral off a null set) yields
+\[
+\int_\Omega |fg| \, d\mu \le \|g\|_\infty \int_\Omega |f| \, d\mu = \|f\|_1 \|g\|_\infty < \infty.
+\]
+
+*Case 2: \(1 < p < \infty\) (and hence \(1 < q < \infty\)).*
+
+- *Step 2a: Young's numerical inequality.* We first prove that for all real numbers \(a, b \ge 0\),
+  \[
+  ab \le \frac{a^p}{p} + \frac{b^q}{q}.
+  \]
+  *Proof of Young's inequality via 1D calculus:* Fix \(b \ge 0\) and consider the smooth function \(\psi(a) = ab - \frac{a^p}{p}\) on \([0, \infty)\). Its derivatives are
+  \[
+  \psi'(a) = b - a^{p-1}, \qquad \psi''(a) = -(p-1)a^{p-2} < 0 \quad (a > 0).
+  \]
+  Thus \(\psi\) increases on \([0, b^{1/(p-1)}]\) and decreases on \([b^{1/(p-1)}, \infty)\), attaining its unique global maximum on \([0, \infty)\) at \(a_* = b^{1/(p-1)}\). Since \(a_*^p = b^{p/(p-1)} = b^q\) and \(a_* b = b^{1/(p-1) + 1} = b^{p/(p-1)} = b^q\), the maximum value of \(\psi\) is
+  \[
+  \psi(a_*) = b^q - \frac{b^q}{p} = b^q \left(1 - \frac{1}{p}\right) = \frac{b^q}{q}.
+  \]
+  Therefore, for every \(a \ge 0\), \(ab - \frac{a^p}{p} = \psi(a) \le \psi(a_*) = \frac{b^q}{q}\), which rearranges to \(ab \le \frac{a^p}{p} + \frac{b^q}{q}\).
+
+- *Step 2b: Handle zero norms.* If \(\|f\|_p = 0\) or \(\|g\|_q = 0\), then by Lemma 6.8 either \(f = 0\) a.e. or \(g = 0\) a.e., so \(fg = 0\) a.e. Then \(\int_\Omega |fg| \, d\mu = 0 = \|f\|_p \|g\|_q\), and there is nothing left to prove.
+
+- *Step 2c: Normalize and integrate.* Suppose \(0 < \|f\|_p < \infty\) and \(0 < \|g\|_q < \infty\). At each point \(\omega \in \Omega\), apply Young's inequality with the normalized numbers
+  \[
+  a = \frac{|f(\omega)|}{\|f\|_p}, \qquad b = \frac{|g(\omega)|}{\|g\|_q}.
+  \]
+  This gives the pointwise inequality
+  \[
+  \frac{|f(\omega) g(\omega)|}{\|f\|_p \|g\|_q} \le \frac{1}{p} \frac{|f(\omega)|^p}{\|f\|_p^p} + \frac{1}{q} \frac{|g(\omega)|^q}{\|g\|_q^q}.
+  \]
+  Integrate both sides over \(\Omega\) with respect to \(\mu\). By linearity of the integral,
+  \[
+  \frac{1}{\|f\|_p \|g\|_q} \int_\Omega |fg| \, d\mu \le \frac{1}{p \|f\|_p^p} \int_\Omega |f|^p \, d\mu + \frac{1}{q \|g\|_q^q} \int_\Omega |g|^q \, d\mu = \frac{1}{p} \cdot 1 + \frac{1}{q} \cdot 1 = 1.
+  \]
+  Multiplying both sides by \(\|f\|_p \|g\|_q\) gives \(\int_\Omega |fg| \, d\mu \le \|f\|_p \|g\|_q < \infty\). \(\blacksquare\)
+
+** Special Cases: Cauchy–Schwarz and Probability Spaces
+
+1. *The Cauchy–Schwarz inequality (\(p = q = 2\)).* When \(p = q = 2\), Hölder's inequality reads
+   \[
+   \left| \int_\Omega fg \, d\mu \right| \le \int_\Omega |fg| \, d\mu \le \left( \int_\Omega |f|^2 \, d\mu \right)^{1/2} \left( \int_\Omega |g|^2 \, d\mu \right)^{1/2} = \|f\|_2 \|g\|_2.
+   \]
+2. *Higher moments control lower moments on a probability space.* Suppose \(\mathbb{P}(\Omega) = 1\) and \(1 \le p < q < \infty\). We claim that for every measurable \(f\),
+   \[
+   \|f\|_{L^p(\mathbb{P})} \le \|f\|_{L^q(\mathbb{P})}, \qquad \text{so } L^\infty(\mathbb{P}) \subseteq L^q(\mathbb{P}) \subseteq L^p(\mathbb{P}) \subseteq L^1(\mathbb{P}).
+   \]
+   *Why?* Set \(r = q/p > 1\). Its conjugate exponent is \(r' = \frac{r}{r-1} = \frac{q/p}{q/p - 1} = \frac{q}{q - p}\). Apply Hölder's inequality with exponents \(r\) and \(r'\) to the functions \(F = |f|^p\) and \(G = \mathbf{1}_\Omega = 1\):
+   \[
+   \int_\Omega |f|^p \cdot 1 \, d\mathbb{P} \le \left( \int_\Omega (|f|^p)^{q/p} \, d\mathbb{P} \right)^{p/q} \left( \int_\Omega 1^{r'} \, d\mathbb{P} \right)^{1/r'} = \left( \int_\Omega |f|^q \, d\mathbb{P} \right)^{p/q} \cdot \mathbb{P}(\Omega)^{1/r'}.
+   \]
+   Since \(\mathbb{P}(\Omega) = 1\), the second factor is \(1\). Taking \(p\)-th roots of both sides gives \(\|f\|_p \le \|f\|_q\)! For \(q = \infty\), \(|f| \le \|f\|_\infty\) a.s. implies \(\int |f|^p \, d\mathbb{P} \le \|f\|_\infty^p \mathbb{P}(\Omega) = \|f\|_\infty^p\), so \(\|f\|_p \le \|f\|_\infty\) as well.
+
+   *Remark:* Notice where the normalization \(\mathbb{P}(\Omega) = 1\) was used! On a general finite measure space with \(\mu(\Omega) < \infty\), the same calculation gives \(\|f\|_p \le \mu(\Omega)^{\frac{1}{p} - \frac{1}{q}} \|f\|_q\). On an infinite measure space (like \(\mathbb{R}\) with Lebesgue measure or \(\mathbb{N}\) with counting measure), \(\mu(\Omega) = \infty\) and the inequality fails completely (as we saw in Example 7.4 with \(a_n = 1/n \in \ell^2 \setminus \ell^1\)).
+
+** Minkowski's Inequality
+
+#+begin_quote
+*Theorem 7.6 (Minkowski's inequality).* For \(1 \le p \le \infty\) and \(f, g \in L^p(\mu)\), the sum \(f + g\) belongs to \(L^p(\mu)\) and
+\[
+\|f + g\|_p \le \|f\|_p + \|g\|_p.
+\]
+#+end_quote
+
+** Proof of Theorem 7.6 (unpacked step by step)
+
+*Case 1: \(p = 1\).* Integrate the pointwise triangle inequality \(|f(\omega) + g(\omega)| \le |f(\omega)| + |g(\omega)|\):
+\[
+\|f + g\|_1 = \int_\Omega |f + g| \, d\mu \le \int_\Omega |f| \, d\mu + \int_\Omega |g| \, d\mu = \|f\|_1 + \|g\|_1 < \infty.
+\]
+
+*Case 2: \(p = \infty\).* Outside a null set \(N_1\) we have \(|f| \le \|f\|_\infty\), and outside a null set \(N_2\) we have \(|g| \le \|g\|_\infty\). Outside the union \(N_1 \cup N_2\) (which is still a null set!), the pointwise triangle inequality gives
+\[
+|f(\omega) + g(\omega)| \le |f(\omega)| + |g(\omega)| \le \|f\|_\infty + \|g\|_\infty.
+\]
+Thus \(\|f\|_\infty + \|g\|_\infty\) is an almost-everywhere upper bound for \(|f + g|\). Since \(\|f + g\|_\infty\) is the *infimum* of all such bounds, \(\|f + g\|_\infty \le \|f\|_\infty + \|g\|_\infty < \infty\).
+
+*Case 3: \(1 < p < \infty\).*
+- *Step 3a: Check finiteness of \(\|f + g\|_p\) first (why?).* In Step 3c we will want to divide an inequality by \(\|f + g\|_p^{p-1}\). Dividing by \(\infty\) is illegal! So we first verify that \(\|f + g\|_p < \infty\). By convexity of \(t \mapsto t^p\) (reviewed in the Overview),
+  \[
+  |f + g|^p \le (|f| + |g|)^p \le 2^{p-1}\big(|f|^p + |g|^p\big).
+  \]
+  Integrating over \(\Omega\) gives \(\int_\Omega |f + g|^p \, d\mu \le 2^{p-1}(\|f\|_p^p + \|g\|_p^p) < \infty\), so indeed \(\|f + g\|_p < \infty\).
+- *Step 3b: Apply Hölder's inequality.* Split one factor of \(|f + g|\) using the pointwise triangle inequality:
+  \[
+  |f + g|^p = |f + g| \cdot |f + g|^{p-1} \le |f|\,|f + g|^{p-1} + |g|\,|f + g|^{p-1}.
+  \]
+  Let \(q = p/(p-1)\) be the conjugate exponent of \(p\), so \((p - 1)q = p\). What is the \(L^q\) norm of the helper function \(h := |f + g|^{p-1}\)?
+  \[
+  \| |f + g|^{p-1} \|_q = \left( \int_\Omega \big(|f + g|^{p-1}\big)^q \, d\mu \right)^{1/q} = \left( \int_\Omega |f + g|^p \, d\mu \right)^{(p-1)/p} = \|f + g\|_p^{p-1} < \infty.
+  \]
+  Now apply Hölder's inequality (Theorem 7.5) separately to \(|f|\,|f+g|^{p-1}\) and \(|g|\,|f+g|^{p-1}\):
+  \[
+  \int_\Omega |f + g|^p \, d\mu \le \int_\Omega (|f| + |g|)|f + g|^{p-1} \, d\mu \le \big(\|f\|_p + \|g\|_p\big)\,\| |f + g|^{p-1} \|_q = \big(\|f\|_p + \|g\|_p\big)\,\|f + g\|_p^{p-1}.
+  \]
+- *Step 3c: Divide.* The left-hand side is \(\|f + g\|_p^p\). If \(\|f + g\|_p = 0\), the inequality \(\|f + g\|_p \le \|f\|_p + \|g\|_p\) holds trivially. Otherwise \(0 < \|f + g\|_p < \infty\), and dividing both sides by \(\|f + g\|_p^{p-1}\) gives
+  \[
+  \|f + g\|_p \le \|f\|_p + \|g\|_p. \quad \blacksquare
+  \]
+
+*Summary: \(L^p(\mu)\) is a normed vector space.* Together, Definition 7.1, Lemma 6.8, and Theorem 7.6 show that for \(1 \le p \le \infty\), \(L^p(\mu)\) is a normed vector space:
+1. \(\|f\|_p \ge 0\), and \(\|f\|_p = 0 \iff f = 0\) almost everywhere \(\iff [f] = [0]\) in \(L^p(\mu)\) (this is *precisely* why we passed to equivalence classes!);
+2. \(\|cf\|_p = |c|\,\|f\|_p\);
+3. \(\|f + g\|_p \le \|f\|_p + \|g\|_p\).
+
+** Common confusions in Section 7.2
+
+- *Does \(L^p\) work for \(0 < p < 1\)?* You can still define \(\|f\|_p = (\int |f|^p \, d\mu)^{1/p}\), cleanly, for \(0 < p < 1\), *but Minkowski's inequality fails* (in fact it reverses for nonnegative functions because \(t \mapsto t^p\) is concave when \(0 < p < 1\)). For example, on \([0,1]\) with \(p = 1/2\), take \(f = \mathbf{1}_{[0, 1/2]}\) and \(g = \mathbf{1}_{(1/2, 1]}\): then \(\|f\|_{1/2} = (1/2)^2 = 1/4\), \(\|g\|_{1/2} = 1/4\), while \(\|f + g\|_{1/2} = 1 > 1/4 + 1/4\). That is why we restrict to \(p \ge 1\).
+- *Did we forget to conjugate when \(p = 2\)?* No—for real-valued functions, \(p = 2\) is self-conjugate (\(1/2 + 1/2 = 1\)), and \(\langle f, g \rangle := \int_\Omega fg \, d\mu\) makes \(L^2(\mu)\) an inner product space!
+
+* 7.3 Completeness
+
+** Intuition
+
+Why is completeness of \(L^p(\mu)\) such a big deal, and how do we prove it?
+In calculus, a sequence of continuous functions on \([0,1]\) can be Cauchy in the \(L^1\) norm (say, smooth ramps getting steeper and steeper near \(x = 1/2\)) without converging to a *continuous* function: the limit has a jump discontinuity at \(1/2\). So the space of continuous functions \(C([0,1])\) with the \(\|\cdot\|_1\) norm is *not* complete—it has "missing limit points." One of Henri Lebesgue's crowning achievements was that by enlarging the class of functions to *measurable* functions, all the missing limit points are filled in!
+
+How do we actually construct the limit \(f\) of a Cauchy sequence \((f_n)\) in \(L^p(\mu)\) when \(1 \le p < \infty\)?
+A terrifying pitfall is that a general Cauchy sequence in \(L^p(\mu)\) *does not have to converge pointwise almost everywhere* (think of the "typewriter sequence"—a narrow block of height \(1\) sliding back and forth across \([0,1]\); its \(L^1\) norm goes to \(0\), yet at every point \(x \in [0,1]\) it oscillates between \(0\) and \(1\) infinitely often!).
+The brilliant trick in the proof of Theorem 7.7 is:
+1. Extract a *fast subsequence* \((f_{n_k})\) where the steps are geometrically tiny: \(\|f_{n_{k+1}} - f_{n_k}\|_p \le 2^{-k}\).
+2. Because \(\sum_{k=1}^\infty 2^{-k} = 1 < \infty\), the sum of absolute steps \(h = \sum_{k=1}^\infty |f_{n_{k+1}} - f_{n_k}|\) has \(\|h\|_p \le 1\) (by Minkowski + Monotone Convergence!).
+3. A function with finite \(L^p\) norm must be *finite almost everywhere*! And wherever \(h(\omega) < \infty\), the telescoping series
+   \[
+   f_{n_k}(\omega) = f_{n_1}(\omega) + \sum_{j=1}^{k-1} \big(f_{n_{j+1}}(\omega) - f_{n_j}(\omega)\big)
+   \]
+   converges *absolutely* in \(\mathbb{R}\) to a pointwise limit \(f(\omega)\).
+4. Finally, since the subsequence \(f_{n_k}\) converges in \(L^p\) to \(f\) and the whole sequence \((f_n)\) is Cauchy, the whole sequence is dragged along to \(f\) in \(L^p\) norm!
+
+#+begin_example
+   General Cauchy sequence (f_n) in L^p: may oscillate pointwise!
+          |
+          |  Step 1: Extract fast subsequence ||f_{n_{k+1}} - f_{n_k}||_p <= 2^{-k}
+          v
+   Summable differences: h = sum_k |f_{n_{k+1}} - f_{n_k}| has ||h||_p <= 1  (Minkowski + MCT)
+          |
+          |  Step 2: {h = infty} is a null set => telescoping series converges a.e. to f
+          v
+   Pointwise a.e. limit f = f_{n_1} + sum_{j=1}^infty (f_{n_{j+1}} - f_{n_j}) in L^p
+          |
+          |  Step 3: Tail bound ||f - f_{n_k}||_p <= sum_{j=k}^infty 2^{-j} -> 0
+          |          + triangle inequality ||f_n - f||_p <= ||f_n - f_{n_k}||_p + ||f_{n_k} - f||_p
+          v
+   Full sequence converges in norm: ||f_n - f||_p -> 0!
+#+end_example
+
+** The Completeness Theorem (Riesz–Fischer)
+
+Recall from the Overview: a sequence \((f_n)\) in a normed space is *Cauchy* if for every \(\varepsilon > 0\) there is \(N\) such that \(\|f_n - f_m\| < \varepsilon\) whenever \(n, m \ge N\). The space is *complete* if each Cauchy sequence converges in norm to an element of the space. A complete normed vector space is called a *Banach space*.
+
+#+begin_quote
+*Theorem 7.7 (Completeness of \(L^p(\mu)\)).* For every measure space \((\Omega, \mathcal{F}, \mu)\) and every \(1 \le p \le \infty\), the space \(L^p(\mu)\) is complete.
+#+end_quote
+
+** Proof of Theorem 7.7 (unpacked step by step)
+
+We first treat finite \(p \in [1, \infty)\) in Steps 1–3, and then \(p = \infty\) in Step 4.
+
+*Step 1. Choose summable differences.*
+Let \((f_n)\) be a Cauchy sequence in \(L^p(\mu)\). By definition of Cauchy, for each integer \(k \ge 1\), there is a Cauchy index \(M_k\) such that \(\|f_n - f_m\|_p \le 2^{-k}\) for all \(n, m \ge M_k\).
+- Choose \(n_1 \ge M_1\).
+- For \(k \ge 2\), inductively choose \(n_k \ge M_k\) with \(n_k > n_{k-1}\).
+Then \((f_{n_k})\) is a strictly increasing subsequence, and since both \(n_k\) and \(n_{k+1}\) are at least \(M_k\), we have
+\[
+\|f_{n_{k+1}} - f_{n_k}\|_p \le 2^{-k} \quad \text{for every } k \ge 1.
+\]
+Choose measurable function representatives for these countably many classes, and define the partial sums and infinite sum of absolute differences:
+\[
+h_N := \sum_{k=1}^N |f_{n_{k+1}} - f_{n_k}|, \qquad h := \sum_{k=1}^\infty |f_{n_{k+1}} - f_{n_k}|.
+\]
+By Minkowski's inequality (applied to the finite sum \(h_N\)),
+\[
+\|h_N\|_p \le \sum_{k=1}^N \|f_{n_{k+1}} - f_{n_k}\|_p \le \sum_{k=1}^N 2^{-k} \le 1.
+\]
+Raising both sides to the \(p\)-th power gives \(\int_\Omega h_N^p \, d\mu \le 1\). As \(N \to \infty\), the nonnegative measurable functions \(h_N^p\) increase pointwise to \(h^p\) (\(h_N^p \uparrow h^p\)). Therefore the Monotone Convergence Theorem (Theorem 6.6) gives
+\[
+\int_\Omega h^p \, d\mu = \lim_{N \to \infty} \int_\Omega h_N^p \, d\mu \le 1.
+\]
+In particular, since \(h^p\) has a finite integral, the measurable set \(\{h = \infty\} = \{h^p = \infty\}\) must have measure zero (if \(\mu(\{h = \infty\}) > 0\), then \(\int_\Omega h^p \, d\mu \ge \infty \cdot \mu(\{h = \infty\}) = \infty\)).
+
+*Step 2. Construct the limit.*
+For every point \(\omega\) outside the measurable null set \(E := \{h = \infty\}\), the infinite series \(\sum_{k=1}^\infty |f_{n_{k+1}}(\omega) - f_{n_k}(\omega)| = h(\omega) < \infty\) converges absolutely in \(\mathbb{R}\). In \(\mathbb{R}\), an absolutely convergent series converges! Because of the telescoping identity
+\[
+f_{n_k}(\omega) = f_{n_1}(\omega) + \sum_{j=1}^{k-1} \big(f_{n_{j+1}}(\omega) - f_{n_j}(\omega)\big),
+\]
+the sequence of real numbers \(f_{n_k}(\omega)\) converges to a finite limit as \(k \to \infty\) for every \(\omega \notin E\).
+- Define \(f(\omega) := \lim_{k \to \infty} f_{n_k}(\omega)\) for \(\omega \notin E\), and set \(f(\omega) := 0\) for \(\omega \in E\).
+- *Why is \(f\) measurable?* Also modify each representative \(f_{n_k}\) by setting it to \(0\) on the measurable null set \(E\) (i.e. replace \(f_{n_k}\) by \(f_{n_k} \mathbf{1}_{E^c}\)). These modified functions are measurable and converge at *every single point* of \(\Omega\) to \(f\). By Proposition 3.4, the everywhere pointwise limit of measurable functions is measurable!
+- *Why is \(f \in L^p(\mu)\)?* By the triangle inequality on the telescoping sum, \(|f_{n_k}| \le |f_{n_1}| + h\) everywhere, so letting \(k \to \infty\) gives \(|f| \le |f_{n_1}| + h\) almost everywhere. Using the convexity bound \(|f|^p \le 2^{p-1}(|f_{n_1}|^p + h^p)\) and integrating over \(\Omega\) gives
+  \[
+  \int_\Omega |f|^p \, d\mu \le 2^{p-1}\left( \int_\Omega |f_{n_1}|^p \, d\mu + \int_\Omega h^p \, d\mu \right) \le 2^{p-1}(\|f_{n_1}\|_p^p + 1) < \infty.
+  \]
+  Thus \(f \in L^p(\mu)\).
+
+*Step 3. Estimate the norm of the remainder and conclude for the full sequence.*
+Subtracting \(f_{n_k}\) from the telescoping series for \(f\) leaves the tail from \(j = k\) onwards:
+\[
+|f - f_{n_k}| = \left| \sum_{j=k}^\infty (f_{n_{j+1}} - f_{n_j}) \right| \le \sum_{j=k}^\infty |f_{n_{j+1}} - f_{n_j}| \quad \text{almost everywhere.}
+\]
+For any finite cutoff \(N \ge k\), Minkowski's inequality gives
+\[
+\left\| \sum_{j=k}^N |f_{n_{j+1}} - f_{n_j}| \right\|_p \le \sum_{j=k}^N \|f_{n_{j+1}} - f_{n_j}\|_p \le \sum_{j=k}^N 2^{-j},
+\]
+or upon raising to the \(p\)-th power,
+\[
+\int_\Omega \left( \sum_{j=k}^N |f_{n_{j+1}} - f_{n_j}| \right)^p d\mu \le \left( \sum_{j=k}^N 2^{-j} \right)^p.
+\]
+As \(N \to \infty\), the nonnegative integrands increase monotonically to \(\big(\sum_{j=k}^\infty |f_{n_{j+1}} - f_{n_j}|\big)^p\). Applying the Monotone Convergence Theorem once more and taking \(p\)-th roots, we get
+\[
+\|f - f_{n_k}\|_p \le \left\| \sum_{j=k}^\infty |f_{n_{j+1}} - f_{n_j}| \right\|_p \le \sum_{j=k}^\infty 2^{-j} = 2^{-k+1} \xrightarrow[k \to \infty]{} 0.
+\]
+This proves that the *subsequence* \((f_{n_k})\) converges to \(f\) in \(L^p(\mu)\).
+Finally, what about the *original* Cauchy sequence \((f_n)\)? Given \(\varepsilon > 0\), first choose a Cauchy index \(M\) such that \(\|f_n - f_m\|_p < \varepsilon\) for all \(n, m \ge M\). Next, choose \(k\) large enough that \(n_k \ge M\) and \(\|f_{n_k} - f\|_p < \varepsilon\). Then for every \(n \ge M\), the triangle inequality (Minkowski) gives
+\[
+\|f_n - f\|_p \le \|f_n - f_{n_k}\|_p + \|f_{n_k} - f\|_p < \varepsilon + \varepsilon = 2\varepsilon.
+\]
+Since \(\varepsilon > 0\) was arbitrary, \(\|f_n - f\|_p \to 0\) as \(n \to \infty\).
+
+*Step 4. Treat the essential-supremum norm (\(p = \infty\)).*
+Let \((f_n)\) be Cauchy in \(L^\infty(\mu)\), and choose measurable representatives.
+- *Countable union of bad null sets:* For each pair of indices \((n, m) \in \mathbb{N}^2\), the inequality
+  \[
+  |f_n(\omega) - f_m(\omega)| \le \|f_n - f_m\|_\infty
+  \]
+  holds outside a measurable null set \(A_{n,m}\). Also, for each \(n \in \mathbb{N}\), the bound \(|f_n(\omega)| \le \|f_n\|_\infty\) holds outside a measurable null set \(B_n\). Since \(\mathbb{N}^2\) and \(\mathbb{N}\) are countable, the union of all these exceptional sets,
+  \[
+  E := \left(\bigcup_{n,m=1}^\infty A_{n,m}\right) \cup \left(\bigcup_{n=1}^\infty B_n\right),
+  \]
+  is a measurable null set (\(\mu(E) = 0\)).
+- *Uniform convergence off \(E\):* Outside \(E\), *all* the inequalities \(|f_n(\omega) - f_m(\omega)| \le \|f_n - f_m\|_\infty\) and \(|f_n(\omega)| \le \|f_n\|_\infty\) hold simultaneously at every single point \(\omega \in \Omega \setminus E\)! In particular, for each \(\omega \notin E\), \((f_n(\omega))\) is a Cauchy sequence of real numbers and therefore has a finite limit \(f(\omega) := \lim_{n \to \infty} f_n(\omega)\). Set \(f(\omega) := 0\) on \(E\).
+- *Measurability and essential boundedness:* As in Step 2, setting every \(f_n\) to \(0\) on \(E\) shows that \(f\) is the everywhere pointwise limit of measurable functions, hence measurable. To check \(f \in L^\infty(\mu)\), choose \(N\) so that \(\|f_n - f_N\|_\infty \le 1\) for all \(n \ge N\). Then for \(\omega \notin E\) and \(n \ge N\),
+  \[
+  |f_n(\omega)| \le |f_N(\omega)| + |f_n(\omega) - f_N(\omega)| \le \|f_N\|_\infty + 1,
+  \]
+  and letting \(n \to \infty\) gives \(|f(\omega)| \le \|f_N\|_\infty + 1\) for all \(\omega \notin E\). Thus \(f \in L^\infty(\mu)\).
+- *Convergence in \(\|\cdot\|_\infty\):* Given \(\varepsilon > 0\), choose a Cauchy index \(M\) so that \(\|f_n - f_m\|_\infty \le \varepsilon\) for all \(n, m \ge M\). Then for every \(\omega \notin E\) and \(n, m \ge M\), we have \(|f_n(\omega) - f_m(\omega)| \le \varepsilon\). Holding \(n \ge M\) fixed and letting \(m \to \infty\) gives
+  \[
+  |f_n(\omega) - f(\omega)| \le \varepsilon \quad \text{for all } \omega \notin E.
+  \]
+  Since \(E\) is a null set, this means \(\|f_n - f\|_\infty \le \varepsilon\) for all \(n \ge M\). \(\blacksquare\)
+
+*Important remarks on the proof:*
+1. *No \(\sigma\)-finiteness assumption was used!* Theorem 7.7 holds for literally *every* measure space \((\Omega, \mathcal{F}, \mu)\).
+2. *Subsequence a.e. convergence vs. full-sequence convergence:* For \(1 \le p < \infty\), the proof does *not* claim that the original Cauchy sequence \((f_n)\) converges pointwise almost everywhere; it only extracts a *subsequence* \((f_{n_k})\) that converges pointwise outside a measurable null set. (For \(p = \infty\), by contrast, the full sequence converges uniformly outside one null set.) This distinction will return when we compare modes of convergence of random variables in [[file:ch14-convergence.org][Chapter 14]].
+
+** Examples from the notes
+
+#+begin_quote
+*Example 7.8 (Pointwise convergence does not imply norm convergence).* In \(\ell^p\) with \(p < \infty\), let \(e_n\) be the sequence whose \(n\)-th entry is one and whose other entries are zero:
+\[
+e_n = (0, \dots, 0, \underbrace{1}_{n\text{-th}}, 0, \dots).
+\]
+Each fixed coordinate \(k\) tends to zero as \(n \to \infty\) (since \((e_n)_k = 0\) for all \(n > k\)), so \(e_n \to 0\) coordinatewise (pointwise on \(\mathbb{N}\)). However, \(\|e_n\|_p = 1\) for every \(n\), so \(\|e_n - 0\|_p \not\to 0\). Moreover, for \(n \ne m\),
+\[
+\|e_n - e_m\|_p = (1^p + |-1|^p)^{1/p} = 2^{1/p} \not\to 0.
+\]
+Thus the sequence \((e_n)\) is *not Cauchy* in \(\ell^p\), so its failure to converge in norm does not contradict completeness!
+#+end_quote
+
+** Additional worked examples
+
+*Example C (Why \(C([0,1])\) is not complete in the \(L^p\) norm, and how \(L^p([0,1])\) completes it).*
+On \([0,1]\) with Lebesgue measure and \(1 \le p < \infty\), define continuous ramp functions \(f_n \in C([0,1])\) for \(n \ge 2\) by
+\[
+f_n(x) = \begin{cases} 0 & \text{if } 0 \le x \le \frac{1}{2}, \\ n\left(x - \frac{1}{2}\right) & \text{if } \frac{1}{2} < x < \frac{1}{2} + \frac{1}{n}, \\ 1 & \text{if } \frac{1}{2} + \frac{1}{n} \le x \le 1. \end{cases}
+\]
+Each \(f_n\) is continuous on \([0,1]\). As \(n \to \infty\), \(f_n\) converges in \(L^p([0,1])\) to the indicator \(f = \mathbf{1}_{(1/2, 1]}\), because \(f_n\) and \(f\) differ only on the ramp interval \((1/2, 1/2 + 1/n)\) where \(|f_n - f| \le 1\):
+\[
+\|f_n - f\|_p = \left( \int_{1/2}^{1/2 + 1/n} \left| n\Big(x - \frac{1}{2}\Big) - 1 \right|^p dx \right)^{1/p} = \left( \frac{1}{n(p+1)} \right)^{1/p} \xrightarrow[n \to \infty]{} 0.
+\]
+Therefore \((f_n)\) is a Cauchy sequence in the \(\|\cdot\|_p\) norm! Yet there is *no continuous function* \(g \in C([0,1])\) with \(\|f_n - g\|_p \to 0\): if there were, uniqueness of \(L^p\) limits (\(\|f - g\|_p \le \|f - f_n\|_p + \|f_n - g\|_p \to 0\)) would force \(g = \mathbf{1}_{(1/2, 1]}\) almost everywhere, which is impossible for a continuous function (as shown in Example 8.6). Thus \(C([0,1])\) has a "hole" under the \(\|\cdot\|_p\) norm, and the discontinuous measurable function \(\mathbf{1}_{(1/2,1]} \in L^p([0,1])\) fills that hole.
+
+** Historical remarks (from the notes)
+
+1. *When Fatou's inequality is strict (p. 31).* In his 1906 paper on trigonometric and Taylor series, Pierre Fatou proved a version of the inequality now called Fatou's lemma. Immediately afterwards, he noted that the inequality can be strict and credited this observation to Henri Lebesgue [10, pp. 375–376]. The shrinking spikes of Example 6.14 (\(f_n = n \mathbf{1}_{(0, 1/n)}\)) give an illustration; this particular example is not attributed to either author in that passage. The supports shrink and the pointwise limit vanishes, but the increasing heights keep the integrals equal to one. Fatou's inequality allows precisely this discrepancy.
+2. *Frigyes Riesz and \(L^p\) completeness (p. 35).* In his 1910 study of integrable functions, Frigyes Riesz explicitly agreed to identify functions differing only on a set of measure zero [11, p. 454]. In the same paper he proved a completeness statement for \(p > 1\): a sequence whose pairwise \(p\)-th-power integral differences tend to zero has a limit in the same class, with convergence in that integral sense [11, p. 468]. Thus both the identification of functions and the existence of limits were explicit parts of the theory. His setting was Lebesgue integration on an interval, not the arbitrary measure spaces used here; his proof was also different from our summable-differences argument.
+
+** Classroom route (from the notes)
+
+Explain equivalence classes and the essential supremum using Lebesgue and Dirac measures. Work through the power and sequence examples, prove the two inequalities, and give Steps 1–3 of completeness. Explain the countable-null-set argument for \(L^\infty\). No additional norm inequalities are needed for the course.
+
+* Worked Exercises
+
+** Exercise 1
+Let \(\mu = \lambda + 2\delta_1\) on \(([0, 2], \mathcal{B}([0, 2]))\), where \(\lambda\) is Lebesgue measure and \(\delta_1\) is the Dirac mass at \(1\). For the functions \(f(x) = x\) and \(g(x) = x + 3\,\mathbf{1}_{\{0\}}(x) + 3\,\mathbf{1}_{\{1\}}(x)\):
+(a) Do \(f\) and \(g\) represent the same element of \(L^p(\mu)\)? What about \(f\) and \(h(x) = x + 3\,\mathbf{1}_{\{0\}}(x)\)?
+(b) Compute \(\|f\|_{L^2(\mu)}\), \(\|g\|_{L^2(\mu)}\), \(\|f\|_{L^\infty(\mu)}\), and \(\|g\|_{L^\infty(\mu)}\).
+
+** Solution
+(a) Two functions represent the same element of \(L^p(\mu)\) iff the set where they differ has \(\mu\)-measure zero.
+- \(\{f \ne g\} = \{0, 1\}\), and \(\mu(\{0, 1\}) = \lambda(\{0, 1\}) + 2\delta_1(\{0, 1\}) = 0 + 2(1) = 2 > 0\). So \(f\) and \(g\) are *different* elements of \(L^p(\mu)\).
+- \(\{f \ne h\} = \{0\}\), and \(\mu(\{0\}) = \lambda(\{0\}) + 2\delta_1(\{0\}) = 0 + 0 = 0\). So \(f\) and \(h\) represent the *same* element of every \(L^p(\mu)\) (\(1 \le p \le \infty\)).
+
+(b) For any measurable \(\varphi \ge 0\), \(\int_{[0,2]} \varphi \, d\mu = \int_0^2 \varphi(x) \, dx + 2\varphi(1)\). Thus:
+- \(\|f\|_{L^2(\mu)}^2 = \int_0^2 x^2 \, dx + 2(1^2) = \frac{8}{3} + 2 = \frac{14}{3}\), so \(\|f\|_{L^2(\mu)} = \sqrt{14/3}\).
+- \(\|g\|_{L^2(\mu)}^2 = \int_0^2 x^2 \, dx + 2\,g(1)^2 = \frac{8}{3} + 2(1 + 3)^2 = \frac{8}{3} + 32 = \frac{104}{3}\), so \(\|g\|_{L^2(\mu)} = \sqrt{104/3}\). (Notice that the spike at \(x = 0\) contributes nothing because \(\mu(\{0\}) = 0\), whereas the spike at \(x = 1\) sits on an atom of mass \(2\)!)
+- For \(L^\infty(\mu)\): \(|f(x)| = x \le 2\) everywhere on \([0,2]\), and for any \(M < 2\), \(\{|f| > M\} = (M, 2]\) has \(\mu((M, 2]) \ge \lambda((M, 2]) = 2 - M > 0\). Hence \(\|f\|_{L^\infty(\mu)} = 2\).
+- For \(g\): on \(\{0\}\) we have \(\mu(\{0\}) = 0\), so the value \(g(0) = 3\) is ignored by \(\mu\). Outside \(\{0\}\), \(g(x) = x \le 2\) for \(x \ne 1\), while at \(x = 1\) we have \(g(1) = 4\) and \(\mu(\{1\}) = 2 > 0\). Any a.e. upper bound \(M\) must be \(\ge 4\) (otherwise \(1 \in \{|g| > M\}\), which has measure \(\ge 2 > 0\)), and \(M = 4\) bounds \(|g|\) outside the null set \(\emptyset\) (since \(g(0) = 3 \le 4\) anyway). Thus \(\|g\|_{L^\infty(\mu)} = 4\).
+
+** Exercise 2
+Let \((\Omega, \mathcal{F}, \mu)\) be a measure space and suppose \(1 \le p < r < q \le \infty\). Show that if \(f \in L^p(\mu) \cap L^q(\mu)\), then \(f \in L^r(\mu)\) and obeys the *log-convexity / interpolation inequality*
+\[
+\|f\|_r \le \|f\|_p^\theta \|f\|_q^{1-\theta}, \qquad \text{where } \frac{1}{r} = \frac{\theta}{p} + \frac{1-\theta}{q}, \quad \theta \in (0, 1).
+\]
+
+** Solution
+First consider \(q = \infty\): then \(\theta = p/r \in (0,1)\) and \(1 - \theta = 1 - p/r\). Since \(|f| \le \|f\|_\infty\) almost everywhere, we can write \(|f|^r = |f|^p \, |f|^{r-p} \le |f|^p \|f\|_\infty^{r-p}\) a.e. Integrating over \(\Omega\) gives
+\[
+\int_\Omega |f|^r \, d\mu \le \|f\|_\infty^{r-p} \int_\Omega |f|^p \, d\mu = \|f\|_p^p \|f\|_\infty^{r-p} < \infty.
+\]
+Taking \(r\)-th roots gives \(\|f\|_r \le \|f\|_p^{p/r} \|f\|_\infty^{1 - p/r} = \|f\|_p^\theta \|f\|_\infty^{1-\theta}\).
+
+Now suppose \(q < \infty\). Since \(\frac{1}{r} = \frac{\theta}{p} + \frac{1-\theta}{q}\), multiplying by \(r\) gives
+\[
+1 = \frac{r\theta}{p} + \frac{r(1-\theta)}{q}.
+\]
+Thus \(s := \frac{p}{r\theta} > 1\) and \(s' := \frac{q}{r(1-\theta)} > 1\) are conjugate exponents (\(\frac{1}{s} + \frac{1}{s'} = 1\)). Split \(|f|^r = |f|^{r\theta} \cdot |f|^{r(1-\theta)}\) and apply Hölder's inequality with exponents \(s\) and \(s'\):
+\[
+\int_\Omega |f|^r \, d\mu = \int_\Omega |f|^{r\theta} |f|^{r(1-\theta)} \, d\mu \le \left( \int_\Omega \big(|f|^{r\theta}\big)^s \, d\mu \right)^{1/s} \left( \int_\Omega \big(|f|^{r(1-\theta)}\big)^{s'} \, d\mu \right)^{1/s'}.
+\]
+Since \(r\theta s = p\) and \(r(1-\theta)s' = q\), this becomes
+\[
+\|f\|_r^r \le \left( \int_\Omega |f|^p \, d\mu \right)^{\frac{r\theta}{p}} \left( \int_\Omega |f|^q \, d\mu \right)^{\frac{r(1-\theta)}{q}} = \|f\|_p^{r\theta} \|f\|_q^{r(1-\theta)} < \infty.
+\]
+Taking \(r\)-th roots gives \(\|f\|_r \le \|f\|_p^\theta \|f\|_q^{1-\theta}\). (In words: if a function belongs to two \(L^p\) spaces, it automatically belongs to every \(L^r\) space *in between*!)
+
+** Exercise 3
+On \((0, \infty)\) with Lebesgue measure, consider the function
+\[
+f(x) = \frac{1}{x^\alpha (1 + x^\beta)} \qquad (\alpha, \beta > 0).
+\]
+For a fixed \(p \in [1, \infty)\), find the exact conditions on \(\alpha\) and \(\beta\) under which \(f \in L^p((0, \infty))\). When is \(f \in L^\infty((0, \infty))\)?
+
+** Solution
+Split the integral into \((0, 1)\) (near the singularity at \(0\)) and \([1, \infty)\) (the tail at \(\infty\)):
+\[
+\int_0^\infty |f(x)|^p \, dx = \int_0^1 \frac{dx}{x^{\alpha p}(1 + x^\beta)^p} + \int_1^\infty \frac{dx}{x^{\alpha p}(1 + x^\beta)^p}.
+\]
+1. *On \((0, 1)\):* Since \(1 \le 1 + x^\beta \le 2\), we have \(2^{-p} x^{-\alpha p} \le |f(x)|^p \le x^{-\alpha p}\). By Example 7.3, \(\int_0^1 x^{-\alpha p} \, dx < \infty\) if and only if \(\alpha p < 1\), i.e. \(\alpha < 1/p\).
+2. *On \([1, \infty)\):* Since \(x^\beta \le 1 + x^\beta \le 2x^\beta\) for \(x \ge 1\), we have
+   \[
+   2^{-p} x^{-(\alpha + \beta)p} \le \frac{1}{x^{\alpha p}(1 + x^\beta)^p} \le x^{-(\alpha + \beta)p}.
+   \]
+   By Example A, \(\int_1^\infty x^{-(\alpha + \beta)p} \, dx < \infty\) if and only if \((\alpha + \beta)p > 1\), i.e. \(\alpha + \beta > 1/p\).
+
+Since both pieces are nonnegative, their sum is finite iff both pieces are finite. Thus
+\[
+f \in L^p((0, \infty)) \iff \alpha < \frac{1}{p} < \alpha + \beta \quad \left(\text{equivalently, } \frac{1}{\alpha + \beta} < p < \frac{1}{\alpha}\right).
+\]
+For \(p = \infty\): since \(\alpha > 0\), \(\lim_{x \downarrow 0} f(x) = \infty\), so for every \(M > 0\), \(f(x) > M\) on a nonempty open interval \((0, \delta)\), which has positive Lebesgue measure. Thus \(f \notin L^\infty((0, \infty))\) for any \(\alpha > 0\). (If \(\alpha = 0\) were allowed, \(f(x) = (1+x^\beta)^{-1} \in L^\infty\) with \(\|f\|_\infty = 1\).)
+
+** Exercise 4
+Prove the *reverse triangle inequality* in \(L^p(\mu)\) (\(1 \le p \le \infty\)): for all \(f, g \in L^p(\mu)\),
+\[
+\big| \|f\|_p - \|g\|_p \big| \le \|f - g\|_p.
+\]
+Deduce that if \(f_n \to f\) in \(L^p(\mu)\), then \(\|f_n\|_p \to \|f\|_p\) (norm convergence implies convergence of the norms). Does \(\|f_n\|_p \to \|f\|_p\) imply \(f_n \to f\) in \(L^p(\mu)\)?
+
+** Solution
+Write \(f = (f - g) + g\). By Minkowski's inequality (Theorem 7.6),
+\[
+\|f\|_p = \|(f - g) + g\|_p \le \|f - g\|_p + \|g\|_p \implies \|f\|_p - \|g\|_p \le \|f - g\|_p.
+\]
+Swapping the roles of \(f\) and \(g\) gives \(\|g\|_p - \|f\|_p \le \|g - f\|_p = \|f - g\|_p\). Combining the two inequalities yields \(\big| \|f\|_p - \|g\|_p \big| \le \|f - g\|_p\).
+
+Consequently, if \(\|f_n - f\|_p \to 0\), then \(0 \le \big| \|f_n\|_p - \|f\|_p \big| \le \|f_n - f\|_p \to 0\), so \(\|f_n\|_p \to \|f\|_p\).
+
+*The converse is false:* Take \(f_n = (-1)^n \mathbf{1}_{[0,1]}\) and \(f = \mathbf{1}_{[0,1]}\) in \(L^p([0,1])\). Then \(\|f_n\|_p = 1 = \|f\|_p\) for every \(n\), so \(\|f_n\|_p \to \|f\|_p\), yet \(\|f_n - f\|_p = 2\) for every odd \(n\), so \(f_n \not\to f\) in \(L^p([0,1])\). (Or take \(e_n\) in Example 7.8 and \(f = e_1\): \(\|e_n\|_p = 1 = \|e_1\|_p\), yet \(\|e_n - e_1\|_p = 2^{1/p}\) for \(n \ge 2\).)
+
+** Exercise 5
+Let \((\Omega, \mathcal{F}, \mu)\) be a measure space, \(1 \le p \le \infty\), and let \((g_k)_{k=1}^\infty\) be a sequence in \(L^p(\mu)\) such that
+\[
+\sum_{k=1}^\infty \|g_k\|_p < \infty \qquad \text{(an absolutely summable series in } L^p(\mu)\text{)}.
+\]
+Using Theorem 7.7 (or its proof), show that the partial sums \(S_n := \sum_{k=1}^n g_k\) converge in \(L^p(\mu)\) norm and also pointwise \(\mu\)-almost everywhere to a function \(S \in L^p(\mu)\), with
+\[
+\left\| \sum_{k=1}^\infty g_k \right\|_p \le \sum_{k=1}^\infty \|g_k\|_p.
+\]
+
+** Solution
+For \(m > n\), the difference of partial sums is \(S_m - S_n = \sum_{k=n+1}^m g_k\). By Minkowski's inequality,
+\[
+\|S_m - S_n\|_p = \left\| \sum_{k=n+1}^m g_k \right\|_p \le \sum_{k=n+1}^m \|g_k\|_p.
+\]
+Since the numerical series \(\sum_{k=1}^\infty \|g_k\|_p < \infty\) converges, its tail \(\sum_{k=n+1}^\infty \|g_k\|_p \to 0\) as \(n \to \infty\). Hence \((S_n)\) is a Cauchy sequence in \(L^p(\mu)\). By completeness (Theorem 7.7), there is an \(S \in L^p(\mu)\) such that \(\|S_n - S\|_p \to 0\).
+
+Moreover, just as in Step 1 of Theorem 7.7, let \(h_n = \sum_{k=1}^n |g_k|\) and \(h = \sum_{k=1}^\infty |g_k|\). For \(p < \infty\), Minkowski gives \(\|h_n\|_p \le \sum_{k=1}^n \|g_k\|_p \le \sum_{k=1}^\infty \|g_k\|_p =: M < \infty\), and Monotone Convergence gives \(\int h^p \, d\mu \le M^p < \infty\) (for \(p = \infty\), \(\|h_n\|_\infty \le M\) outside a countable union of null sets). Thus \(h < \infty\) almost everywhere, which means \(\sum_{k=1}^\infty g_k(\omega)\) converges absolutely almost everywhere to \(S(\omega)\). Finally, since \(\|S_n\|_p \le \sum_{k=1}^n \|g_k\|_p\) for each \(n\) and \(\|S_n\|_p \to \|S\|_p\) (Exercise 4), passing to the limit as \(n \to \infty\) gives \(\|S\|_p \le \sum_{k=1}^\infty \|g_k\|_p\).
+
+** Exercise 6
+Let \(X\) be a random variable on a probability space \((\Omega, \mathcal{F}, \mathbb{P})\) with \(\mathbb{E}[X^4] < \infty\).
+(a) Using Hölder's inequality, show that \(\mathbb{E}[|X|^3] \le (\mathbb{E}[X^2])^{1/2} (\mathbb{E}[X^4])^{1/2}\).
+(b) Suppose \(\mathbb{P}(X \ne 0) > 0\). Prove *Paley–Zygmund's second-moment bound* in the form
+\[
+\mathbb{P}(X \ne 0) \ge \frac{(\mathbb{E}[X^2])^2}{\mathbb{E}[X^4]}.
+\]
+
+** Solution
+(a) Write \(|X|^3 = |X| \cdot |X|^2\). Apply Cauchy–Schwarz (Hölder's inequality with \(p = q = 2\)) to \(f = |X|\) and \(g = |X|^2\):
+\[
+\mathbb{E}[|X|^3] = \int_\Omega |X| \cdot |X|^2 \, d\mathbb{P} \le \left( \int_\Omega |X|^2 \, d\mathbb{P} \right)^{1/2} \left( \int_\Omega (|X|^2)^2 \, d\mathbb{P} \right)^{1/2} = (\mathbb{E}[X^2])^{1/2} (\mathbb{E}[X^4])^{1/2}.
+\]
+(Notice that this is Exercise 2 with \(p = 2, r = 3, q = 4, \theta = 1/2\).)
+
+(b) Write \(X^2 = X^2 \cdot \mathbf{1}_{\{X \ne 0\}}\) (since \(X^2 = 0\) when \(X = 0\)). Apply Cauchy–Schwarz (Hölder with \(p = q = 2\)) to \(f = X^2\) and \(g = \mathbf{1}_{\{X \ne 0\}}\):
+\[
+\mathbb{E}[X^2] = \int_\Omega X^2 \mathbf{1}_{\{X \ne 0\}} \, d\mathbb{P} \le \left( \int_\Omega (X^2)^2 \, d\mathbb{P} \right)^{1/2} \left( \int_\Omega \mathbf{1}_{\{X \ne 0\}}^2 \, d\mathbb{P} \right)^{1/2} = (\mathbb{E}[X^4])^{1/2} \, \mathbb{P}(X \ne 0)^{1/2}.
+\]
+Squaring both sides gives \((\mathbb{E}[X^2])^2 \le \mathbb{E}[X^4] \, \mathbb{P}(X \ne 0)\). Since \(\mathbb{P}(X \ne 0) > 0\), Lemma 6.8 implies \(\mathbb{E}[X^4] > 0\), and dividing by \(\mathbb{E}[X^4]\) gives \(\mathbb{P}(X \ne 0) \ge (\mathbb{E}[X^2])^2 / \mathbb{E}[X^4]\).
+
+* Summary
+
+#+caption: Chapter 7 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement                                                                                                    | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Equivalence \(\sim\)    | \(f \sim g \iff f = g\) \(\mu\)-a.e.                                                                         | Ensures \(\|f\|_p = 0 \iff [f] = [0]\) (by Lemma 6.8)      |
+| Definition 7.1 (\(L^p\))| \(\|f\|_p = (\int_\Omega |f|^p \, d\mu)^{1/p} < \infty\) (\(1 \le p < \infty\))                              | Normed space of functions with finite \(p\)-th moment      |
+| Definition 7.1 (\(L^\infty\)) | \(\|f\|_\infty = \inf\{M \ge 0 : |f| \le M \text{ a.e.}\} < \infty\); attained (\(|f|\le\|f\|_\infty\) a.e.) | Essential supremum ignores spikes on \(\mu\)-null sets     |
+| Example 7.2             | \(\|\mathbf{1}_{\{0\}}\|_{L^p(\lambda)} = 0\), \(\|\mathbf{1}_{\{0\}}\|_{L^p(\delta_0)} = 1\)                | \(L^p(\mu)\) depends critically on the measure \(\mu\)     |
+| Example 7.3             | \(x^{-\alpha} \in L^p((0,1)) \iff \alpha < 1/p\)                                                             | Controls how steep a blowup is integrable in \(L^p\)       |
+| Example 7.4             | \(L^p(\mathbb{N}, 2^{\mathbb{N}}, \#) = \ell^p\); \((1/n) \in \ell^2 \setminus \ell^1\)                      | Counting measure recovers sequence spaces                  |
+| Young's inequality      | \(ab \le \frac{a^p}{p} + \frac{b^q}{q}\) for \(a,b \ge 0\) and \(\frac{1}{p}+\frac{1}{q}=1\)                 | 1D calculus engine behind Hölder's inequality              |
+| Theorem 7.5 (Hölder)    | \(\int_\Omega |fg| \, d\mu \le \|f\|_p \|g\|_q\) for \(\frac{1}{p}+\frac{1}{q}=1\)                           | Controls products; \(p=q=2\) is Cauchy–Schwarz             |
+| Probability inclusion   | If \(\mathbb{P}(\Omega) = 1\) and \(1 \le p < q \le \infty\), then \(\|f\|_p \le \|f\|_q\)                   | Higher moments control lower moments on probability spaces |
+| Theorem 7.6 (Minkowski) | \(\|f + g\|_p \le \|f\|_p + \|g\|_p\) for \(1 \le p \le \infty\)                                             | Triangle inequality; makes \(L^p(\mu)\) a normed space     |
+| Theorem 7.7 (Riesz–Fischer) | \(L^p(\mu)\) is complete (a Banach space) for all \(\mu\) and \(1 \le p \le \infty\)                     | Cauchy sequences converge in norm; fast subsequence converges a.e. |
+| Example 7.8             | \(e_n \to 0\) coordinatewise in \(\ell^p\) (\(p<\infty\)), but \(\|e_n\|_p = 1\)                             | Pointwise convergence does not imply \(L^p\) convergence   |
+
+*Key takeaways*
+
+- Elements of \(L^p(\mu)\) are *equivalence classes* of measurable functions agreeing \(\mu\)-almost everywhere; the norm cannot see changes on a \(\mu\)-null set.
+- The essential supremum \(\|f\|_\infty\) is an actual almost-everywhere bound (\(|f| \le \|f\|_\infty\) a.e.), proved by removing a countable union of null sets for \(M + 1/n\).
+- *Hölder's inequality* (\(\|fg\|_1 \le \|f\|_p \|g\|_q\), \(\frac{1}{p} + \frac{1}{q} = 1\)) comes from integrating Young's inequality applied to \(|f|/\|f\|_p\) and \(|g|/\|g\|_q\). On a probability space, applying Hölder to \(|f|^p\) and \(1\) gives \(\|f\|_p \le \|f\|_q\) for \(p < q\).
+- *Minkowski's inequality* (\(\|f + g\|_p \le \|f\|_p + \|g\|_p\)) is proved for \(1 < p < \infty\) by first checking \(\|f+g\|_p < \infty\) via convexity (\(|f+g|^p \le 2^{p-1}(|f|^p + |g|^p)\)) and then applying Hölder to \((|f| + |g|)|f+g|^{p-1}\).
+- *Completeness of \(L^p(\mu)\)* (\(1 \le p < \infty\)) is proved by extracting a subsequence \((f_{n_k})\) with \(\|f_{n_{k+1}} - f_{n_k}\|_p \le 2^{-k}\): Minkowski and Monotone Convergence show that \(\sum_k |f_{n_{k+1}} - f_{n_k}| < \infty\) a.e., so the telescoping series converges both pointwise a.e. and in \(L^p\) norm.

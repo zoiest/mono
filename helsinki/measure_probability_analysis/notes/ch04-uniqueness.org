@@ -1,0 +1,887 @@
+:PROPERTIES:
+:ID:       a4b19c04-77e2-4f88-9014-6b208f3d9004
+:ROAM_ALIASES: "MAST31051 Chapter 4" "Uniqueness of Measures Notes"
+:END:
+#+title: Chapter 4: Uniqueness of Measures
+#+subtitle: Readable Self-Contained Notes for MAST31051 (based on T. Kuusi's lecture notes)
+#+author: Antigravity Notes
+#+date: [2026-11-07]
+#+filetags: :math:helsinki:measure-theory:probability:notes:ch04:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch03-measurable-functions.org][← Chapter 3]] | [[file:ch05-construction.org][Chapter 5 →]]
+
+* Overview
+
+** What problem does this chapter solve?
+
+In Chapters 1–3 we defined the core objects of the theory (\(\sigma\)-algebras, measures, measurable
+functions), but we have not yet solved the *construction problem*: how do you actually specify a
+measure on a huge \(\sigma\)-algebra like \(\mathcal B(\mathbb R)\) or infinite coin-toss space
+\(\{0,1\}^{\mathbb N}\)?
+
+On a finite sample space \(\Omega\), we can just list the weights of individual outcomes \(\{\omega\}\).
+On an uncountable space, singletons often have measure zero, and we cannot list every measurable set.
+Instead, we specify the measure on a small, manageable collection \(\mathcal P\) of "elementary sets" —
+for example:
+- lengths of intervals \((a,b]\) or half-lines \((-\infty, t]\) on \(\mathbb R\);
+- probabilities of finite binary strings (cylinder sets) in \(\{0,1\}^{\mathbb N}\).
+
+Two distinct questions immediately arise:
+1. *Uniqueness (this chapter):* If two measures \(\mu\) and \(\nu\) agree on the elementary sets
+   \(\mathcal P\), must they agree on the entire generated \(\sigma\)-algebra \(\sigma(\mathcal P)\)?
+2. *Existence (Chapter 5):* Does there exist *at least one* measure on \(\sigma(\mathcal P)\) taking
+   those prescribed values on \(\mathcal P\)?
+
+Keeping uniqueness and existence separate makes both arguments much easier to follow. In this chapter
+we solve the *uniqueness* problem using **Dynkin's \(\pi\)-\(\lambda\) lemma** (Theorem 4.6).
+
+Surprise: unlike checking measurability of a function (Lemma 3.2, where *any* generating collection
+works), two probability measures can agree on a generating collection \(\mathcal G\) and still
+*disagree* on \(\sigma(\mathcal G)\)! (See Example 4.1 below.) The extra condition needed on the
+generating collection is simple and natural: it must be closed under finite intersections (a
+**\(\pi\)-system**).
+
+** Probability motivation
+
+How do you know that two random variables \(X\) and \(Y\) have the same distribution (law) on
+\((\mathbb R, \mathcal B(\mathbb R))\)? By definition, their laws \(X_\#\mathbb P\) and
+\(Y_\#\mathbb P\) agree on *every* Borel set \(B \in \mathcal B(\mathbb R)\) — an impossible thing to
+check directly. Theorem 4.7 tells us that because the half-lines \((-\infty, t]\) form a \(\pi\)-system
+generating \(\mathcal B(\mathbb R)\), it suffices to check
+\[
+\mathbb P(X \le t) = \mathbb P(Y \le t) \quad \text{for all } t \in \mathbb R
+\]
+(or even just for \(t \in \mathbb Q\)!). That is why the cumulative distribution function (CDF)
+completely determines the probability law of a real random variable. Similarly, for an infinite
+sequence of coin tosses, prescribing the probabilities of all finite initial strings uniquely fixes the
+probability of *every* tail or infinite-horizon event (such as "infinitely many ones occur",
+Example 4.10).
+
+** Roadmap
+
+- *Introductory counterexample (Example 4.1):* Why agreement on an arbitrary generating set fails.
+- *4.1 Two closure properties:* \(\pi\)-systems (closed under intersections, what our test sets have)
+  vs. \(\lambda\)-systems / Dynkin systems (closed under complements/proper differences and increasing
+  limits, what the "agreement class" of two measures has).
+- *4.2 Dynkin's lemma:* If a \(\lambda\)-system contains a \(\pi\)-system \(\mathcal P\), it contains
+  \(\sigma(\mathcal P)\) (Theorem 4.6), yielding uniqueness for finite measures (Theorem 4.7).
+- *4.3 Half-lines and finite strings:* Uniqueness via CDFs on \(\mathbb R\) (Example 4.8) and cylinder
+  sets on \(\{0,1\}^{\mathbb N}\) (Examples 4.9–4.10).
+- *4.4 Uniqueness for \(\sigma\)-finite measures:* Extending uniqueness when \(\mu(\Omega) = \infty\)
+  by exhausting \(\Omega\) with finite-measure sets from the \(\pi\)-system (Proposition 4.11).
+
+** What you need from earlier chapters
+
+- Generated \(\sigma\)-algebras \(\sigma(\mathcal G)\) and the "smallest collection" intersection trick:
+  [[file:ch01-measurable-spaces.org][Chapter 1]].
+- Finite additivity, subtraction \(\mu(B \setminus A) = \mu(B) - \mu(A)\) when \(\mu(A) < \infty\),
+  and continuity of measures from below (\(\mu(A_n) \uparrow \mu(A)\)) and above:
+  [[file:ch02-measures.org][Chapter 2]].
+- Image measures (laws of random variables) \(X_\#\mathbb P\): [[file:ch03-measurable-functions.org][Chapter 3]].
+
+** Historical remark (Probability, measure, and terminology)
+
+In their 1654 correspondence, Blaise Pascal and Pierre de Fermat discussed how to divide the stake in
+an interrupted game of chance. Christiaan Huygens's 1657 treatise studied the value of uncertain
+winnings: equal chances of receiving \(3\) or \(7\) have a fair value of \(5\). This is an
+*expectation*, not a prediction of the amount the player will actually receive on a single play.
+
+Measure theory developed much later through questions about length and integration. Émile Borel (1898)
+extended length using countable set operations, and Henri Lebesgue's thesis (1902) used measure to
+integrate functions beyond the reach of Riemann integration. These constructions also supplied
+probability models: in 1923, Hugo Steinhaus used Lebesgue measure on \([0,1]\) to model infinite
+sequences of fair binary trials. Finally, Andrey Kolmogorov's *Grundbegriffe* (1933) presented the
+modern axiomatic framework in which probabilities are measures, random variables are measurable
+functions, and expectations are integrals.
+
+Even the vocabulary took time to settle. In a 1997 interview, Joseph Doob recalled disagreeing with
+William Feller while they were writing their classic textbooks: Doob preferred "chance variable",
+Feller "random variable". Wishing to use the same term, they settled it the probabilistic way —
+"That is, we tossed for it and he won."
+
+Throughout these notes we use both the measure-theoretic and probabilistic vocabularies. Calling a
+measurable function a *random variable* does not change its mathematical definition; it simply tells us
+that the underlying measure space is a probability space \((\Omega, \mathcal F, \mathbb P)\).
+
+* Why an arbitrary generating collection is not enough
+
+To test whether a map \(f : \Omega \to S\) is measurable, Lemma 3.2 showed that it is enough to check
+\(f^{-1}(G) \in \mathcal F\) for *any* collection \(\mathcal G\) that generates the target
+\(\sigma\)-algebra \(\mathcal S = \sigma(\mathcal G)\). Why did that work? Because preimages commute
+with *all* set operations (unions, intersections, complements), so the "good sets" always form a
+\(\sigma\)-algebra right away.
+
+Measures do *not* behave this way! Knowing \(\mu(A)\) and \(\mu(B)\) does *not* tell you
+\(\mu(A \cup B)\) or \(\mu(A \cap B)\), because in the inclusion-exclusion formula
+\[
+\mu(A \cup B) = \mu(A) + \mu(B) - \mu(A \cap B)
+\]
+there are two unknowns: \(\mu(A \cup B)\) and \(\mu(A \cap B)\). A simple 4-point example makes this
+crystal clear.
+
+#+begin_quote
+*Example 4.1 (Agreement on two generating events is not enough).* Let
+\(\Omega = \{00, 01, 10, 11\}\), where the two digits record two binary observations, equipped with the
+full \(\sigma\)-algebra \(\mathcal F = 2^\Omega\). Consider two probability measures \(\mu\) and \(\nu\)
+given by the following outcome weights:
+
+| Outcome \(\omega\) | Probability under \(\mu\) | Probability under \(\nu\) |
+|--------------------+---------------------------+---------------------------|
+| \(00\)             | \(1/2\)                   | \(0\)                     |
+| \(01\)             | \(0\)                     | \(1/2\)                   |
+| \(10\)             | \(0\)                     | \(1/2\)                   |
+| \(11\)             | \(1/2\)                   | \(0\)                     |
+
+Let \(A = \{10, 11\}\) ("first digit is \(1\)") and \(B = \{01, 11\}\) ("second digit is \(1\)").
+1. *\(\mathcal G = \{A, B\}\) generates \(\mathcal F = 2^\Omega\):* Indeed, every singleton can be
+   written as an intersection of sets in \(\mathcal G\) or their complements:
+   \[
+   \{11\} = A \cap B, \quad \{10\} = A \cap B^c, \quad \{01\} = A^c \cap B, \quad \{00\} = A^c \cap B^c,
+   \]
+   and any subset of \(\Omega\) is a union of singletons.
+2. *\(\mu\) and \(\nu\) agree on \(\mathcal G\):*
+   \[
+   \mu(A) = \mu(\{10\}) + \mu(\{11\}) = 0 + \tfrac12 = \tfrac12, \qquad
+   \nu(A) = \nu(\{10\}) + \nu(\{11\}) = \tfrac12 + 0 = \tfrac12,
+   \]
+   and similarly \(\mu(B) = \frac12 = \nu(B)\).
+3. *Yet \(\mu \ne \nu\) on \(\sigma(\mathcal G)\):* On the intersection \(A \cap B = \{11\}\),
+   \[
+   \mu(A \cap B) = \frac12 \quad \text{whereas} \quad \nu(A \cap B) = 0.
+   \]
+   Under \(\mu\), the two digits are always equal (\(00\) or \(11\)); under \(\nu\), they are always
+   opposite (\(01\) or \(10\)). Agreement on \(A\) and \(B\) does not imply agreement on \(A \cap B\).
+#+end_quote
+
+#+begin_example
+   Under mu (digits equal):           Under nu (digits opposite):
+          B                                  B
+       01   11                            01   11
+     +----+----+                        +----+----+
+     |  0 | 1/2|  A                     | 1/2|  0 |  A
+     +----+----+                        +----+----+
+     | 1/2|  0 |  A^c                   |  0 | 1/2|  A^c
+     +----+----+                        +----+----+
+       00   10                            00   10
+   Row & column sums are 1/2 in both tables, but the interiors differ!
+#+end_example
+
+*Moral of Example 4.1:* If you know the row sum \(\mu(A)\) and column sum \(\mu(B)\) in a \(2\times 2\)
+contingency table, you still have one degree of freedom inside the table. Once you also pin down the
+intersection \(\mu(A \cap B)\), all four cells are uniquely determined!
+
+* 4.1 Two closure properties
+
+** Intuition
+
+Why did \(\{A \in \mathcal F : \mu(A) = \nu(A)\}\) fail to be a \(\sigma\)-algebra in Example 4.1?
+Because a measure only adds across *disjoint* sets (or subtracts across *nested* sets \(A \subseteq B\)).
+So the collection of sets where two finite measures agree is naturally closed under:
+- taking the whole space \(\Omega\) (if \(\mu(\Omega) = \nu(\Omega)\));
+- taking proper set differences \(B \setminus A\) when \(A \subseteq B\) (since
+  \(\mu(B \setminus A) = \mu(B) - \mu(A)\));
+- taking increasing countable unions \(A_n \uparrow A\) (since \(\mu(A_n) \uparrow \mu(A)\));
+- taking countable *disjoint* unions.
+
+Notice what is missing: **intersections** (and arbitrary unions)! Dynkin's idea is to isolate what the
+agreement class has (a *\(\lambda\)-system*) from what we must require of the testing collection (a
+*\(\pi\)-system*).
+
+** Definitions and basic properties
+
+#+begin_quote
+*Definition 4.2 (\(\pi\)-system).* A nonempty collection \(\mathcal P\) of subsets of \(\Omega\) is a
+*\(\pi\)-system* if it is closed under finite intersections:
+\[
+A, B \in \mathcal P \implies A \cap B \in \mathcal P.
+\]
+Neither complements nor unions are required to belong to \(\mathcal P\).
+#+end_quote
+
+*Quick examples of \(\pi\)-systems:*
+- The half-lines \(\{(-\infty, a] : a \in \mathbb R\}\) on \(\mathbb R\), since
+  \((-\infty, a] \cap (-\infty, b] = (-\infty, \min(a,b)]\).
+- The collection of all intervals \((a,b]\) on \(\mathbb R\) (provided we include \(\emptyset\), since
+  two disjoint intervals have intersection \(\emptyset\)).
+- On any set \(\Omega\), \(\{\emptyset, \Omega\}\) is a \(\pi\)-system.
+- *Non-example:* In Example 4.1, \(\mathcal G = \{A, B\}\) is *not* a \(\pi\)-system because
+  \(A \cap B = \{11\} \notin \{A, B\}\). (If we enlarge \(\mathcal G\) to the \(\pi\)-system
+  \(\{A, B, A \cap B\}\), then any measure matching on all three must agree on \(2^\Omega\).)
+
+#+begin_quote
+*Definition 4.3 (\(\lambda\)-system / Dynkin system).* A collection \(\mathcal D\) of subsets of
+\(\Omega\) is a *\(\lambda\)-system* (also called a *Dynkin system*) if:
+1. \(\Omega \in \mathcal D\).
+2. *(Proper differences)* If \(A, B \in \mathcal D\) and \(A \subseteq B\), then
+   \(B \setminus A \in \mathcal D\).
+3. *(Increasing limits)* If \(A_n \in \mathcal D\) and \(A_n \uparrow A\) (meaning
+   \(A_1 \subseteq A_2 \subseteq \cdots\) and \(A = \bigcup_{n=1}^\infty A_n\)), then
+   \(A \in \mathcal D\).
+#+end_quote
+
+Let us unpack what a \(\lambda\)-system automatically satisfies:
+- *Empty set and complements:* Taking \(B = \Omega\) in (ii) shows that if \(A \in \mathcal D\), then
+  \(A^c = \Omega \setminus A \in \mathcal D\). In particular, \(\emptyset = \Omega^c \in \mathcal D\).
+- *Finite disjoint unions:* Suppose \(A, B \in \mathcal D\) are disjoint (\(A \cap B = \emptyset\)).
+  Then \(B \subseteq A^c\), where \(A^c \in \mathcal D\) by the previous bullet. By (ii),
+  \[
+  A^c \setminus B \in \mathcal D.
+  \]
+  Taking the complement of \(A^c \setminus B = A^c \cap B^c = (A \cup B)^c\) gives
+  \(A \cup B \in \mathcal D\)! By induction, any finite pairwise disjoint union of sets in
+  \(\mathcal D\) belongs to \(\mathcal D\).
+- *Countable disjoint unions:* If \(A_1, A_2, \dots \in \mathcal D\) are pairwise disjoint, their
+  finite unions \(S_n := \bigcup_{k=1}^n A_k\) belong to \(\mathcal D\) and increase to
+  \(S_n \uparrow \bigcup_{k=1}^\infty A_k\), which belongs to \(\mathcal D\) by (iii).
+
+*Equivalent definition of a \(\lambda\)-system (used in many textbooks):* A collection \(\mathcal D\) is
+a \(\lambda\)-system if and only if:
+- (i') \(\Omega \in \mathcal D\),
+- (ii') \(\mathcal D\) is closed under complements (\(A \in \mathcal D \implies A^c \in \mathcal D\)), and
+- (iii') \(\mathcal D\) is closed under countable *disjoint* unions.
+
+*Proof of equivalence:* We just showed (i)–(iii) \(\implies\) (i')–(iii'). Conversely, assume (i')–(iii').
+- If \(A, B \in \mathcal D\) with \(A \subseteq B\), then \(A\) and \(B^c\) are disjoint sets in
+  \(\mathcal D\), so \(A \cup B^c \in \mathcal D\), and taking its complement gives
+  \((A \cup B^c)^c = A^c \cap B = B \setminus A \in \mathcal D\), proving (ii).
+- If \(A_n \in \mathcal D\) with \(A_n \uparrow A\), rewrite the union as a disjoint union:
+  \(A = A_1 \cup \bigcup_{n=1}^\infty (A_{n+1} \setminus A_n)\). Each piece is in \(\mathcal D\) by (ii),
+  so \(A \in \mathcal D\) by (iii'). \(\blacksquare\)
+
+** When a \(\pi\)-system and a \(\lambda\)-system meet
+
+#+begin_quote
+*Lemma 4.4.* A collection that is both a \(\pi\)-system and a \(\lambda\)-system is a \(\sigma\)-algebra.
+#+end_quote
+
+*Proof.* Let \(\mathcal D\) be both a \(\pi\)-system and a \(\lambda\)-system.
+1. \(\Omega \in \mathcal D\) and \(\mathcal D\) is closed under complements (from the \(\lambda\)-system
+   property).
+2. For any \(A, B \in \mathcal D\), we have \(A^c, B^c \in \mathcal D\), hence \(A^c \cap B^c \in \mathcal D\)
+   (by the \(\pi\)-system property), hence \(A \cup B = (A^c \cap B^c)^c \in \mathcal D\) (De Morgan's
+   law). By induction, \(\mathcal D\) is closed under finite unions.
+3. For any sequence \(A_1, A_2, \dots \in \mathcal D\), the finite unions
+   \(B_n := A_1 \cup \cdots \cup A_n\) belong to \(\mathcal D\) and satisfy
+   \(B_n \uparrow \bigcup_{k=1}^\infty A_k\). By property (iii) of a \(\lambda\)-system,
+   \(\bigcup_{k=1}^\infty A_k \in \mathcal D\). Thus \(\mathcal D\) is a \(\sigma\)-algebra. \(\blacksquare\)
+
+#+begin_quote
+*Example 4.5 (The sets on which two finite measures agree).* Let \(\mu\) and \(\nu\) be finite measures
+on \((\Omega, \mathcal F)\) with equal total mass \(\mu(\Omega) = \nu(\Omega) < \infty\). Define the
+*agreement class*
+\[
+\mathcal D := \{A \in \mathcal F : \mu(A) = \nu(A)\}.
+\]
+Then \(\mathcal D\) is a \(\lambda\)-system:
+- *(i) Total space:* \(\Omega \in \mathcal D\) because \(\mu(\Omega) = \nu(\Omega)\) by assumption.
+- *(ii) Proper differences:* If \(A, B \in \mathcal D\) and \(A \subseteq B\), then because \(\mu\) and
+  \(\nu\) are finite measures (so we never encounter \(\infty - \infty\)),
+  \[
+  \mu(B \setminus A) = \mu(B) - \mu(A) = \nu(B) - \nu(A) = \nu(B \setminus A),
+  \]
+  so \(B \setminus A \in \mathcal D\). (Note: this subtraction step is the *only* place where finiteness
+  of the measures is used!)
+- *(iii) Increasing unions:* If \(A_n \in \mathcal D\) and \(A_n \uparrow A\), continuity of measures
+  from below gives
+  \[
+  \mu(A) = \lim_{n\to\infty} \mu(A_n) = \lim_{n\to\infty} \nu(A_n) = \nu(A),
+  \]
+  so \(A \in \mathcal D\).
+
+As Example 4.1 showed, \(\mathcal D\) need *not* be a \(\sigma\)-algebra in general (in Example 4.1,
+\(\mathcal D = \{\emptyset, \Omega, A, B, A^c, B^c, (A\cap B)\cup(A^c\cap B^c), (A\cap B^c)\cup(A^c\cap B)\}\),
+which has \(8\) sets out of \(16\) and is a \(\lambda\)-system but not closed under intersections).
+#+end_quote
+
+* 4.2 Dynkin's lemma
+
+** Intuition and strategy
+
+Suppose a \(\lambda\)-system \(\mathcal L\) contains a \(\pi\)-system \(\mathcal P\). We want to prove
+that \(\mathcal L\) contains the entire generated \(\sigma\)-algebra \(\sigma(\mathcal P)\).
+
+How do you bridge the gap between a \(\pi\)-system and a \(\lambda\)-system?
+1. First, pass to the *smallest* \(\lambda\)-system containing \(\mathcal P\), call it \(\mathcal D\).
+   Since \(\mathcal P \subseteq \mathcal D \subseteq \mathcal L\), if we can show that \(\mathcal D\) is
+   a \(\sigma\)-algebra, then \(\sigma(\mathcal P) \subseteq \mathcal D \subseteq \mathcal L\) and we
+   are done!
+2. By Lemma 4.4, to show the \(\lambda\)-system \(\mathcal D\) is a \(\sigma\)-algebra, we only need to
+   show that \(\mathcal D\) is a **\(\pi\)-system** — that is, for every \(A \in \mathcal D\) and
+   \(B \in \mathcal D\), we have \(A \cap B \in \mathcal D\).
+3. Currently we only know \(A \cap B \in \mathcal P \subseteq \mathcal D\) when *both* \(A \in \mathcal P\)
+   and \(B \in \mathcal P\). We upgrade this in two stages using a "test-set" (\(\mathcal D_A\)) trick:
+   - *First upgrade:* Fix \(A \in \mathcal P\), let \(B\) vary over \(\mathcal D\).
+   - *Second upgrade:* Fix \(B \in \mathcal D\), let \(A\) vary over \(\mathcal D\).
+
+** Statement and proof
+
+#+begin_quote
+*Theorem 4.6 (Dynkin's \(\pi\)-\(\lambda\) lemma).* Let \(\mathcal P\) be a \(\pi\)-system on \(\Omega\),
+and let \(\mathcal L\) be a \(\lambda\)-system containing \(\mathcal P\). Then
+\[
+\sigma(\mathcal P) \subseteq \mathcal L.
+\]
+#+end_quote
+
+*Proof.* Let \(\mathcal D\) be the intersection of all \(\lambda\)-systems on \(\Omega\) that contain
+\(\mathcal P\):
+\[
+\mathcal D := \bigcap \{\mathcal M \subseteq 2^\Omega : \mathcal M \text{ is a }\lambda\text{-system and } \mathcal P \subseteq \mathcal M\}.
+\]
+At least one such \(\lambda\)-system exists (namely \(2^\Omega\), and also \(\mathcal L\)). Just as for
+generated \(\sigma\)-algebras, intersecting any family of \(\lambda\)-systems preserves the three
+defining properties (i)–(iii), so \(\mathcal D\) is the *smallest* \(\lambda\)-system containing
+\(\mathcal P\), and \(\mathcal P \subseteq \mathcal D \subseteq \mathcal L\).
+
+We will prove that \(\mathcal D\) is closed under intersections (a \(\pi\)-system). Lemma 4.4 will then
+imply that \(\mathcal D\) is a \(\sigma\)-algebra containing \(\mathcal P\), whence
+\(\sigma(\mathcal P) \subseteq \mathcal D \subseteq \mathcal L\).
+
+*Step 1. Fix one set \(A \in \mathcal D\) and test its intersections.* For any fixed \(A \in \mathcal D\),
+define the collection of "good partners for \(A\)" inside \(\mathcal D\):
+\[
+\mathcal D_A := \{B \in \mathcal D : A \cap B \in \mathcal D\}.
+\]
+We claim that \(\mathcal D_A\) is itself a \(\lambda\)-system:
+- *(i) \(\Omega \in \mathcal D_A\):* Since \(A \in \mathcal D\), we have
+  \(A \cap \Omega = A \in \mathcal D\), so \(\Omega \in \mathcal D_A\).
+- *(ii) Proper differences:* Let \(B, C \in \mathcal D_A\) with \(B \subseteq C\). First, since
+  \(B, C \in \mathcal D\) and \(\mathcal D\) is a \(\lambda\)-system, \(C \setminus B \in \mathcal D\).
+  Second, we need \(A \cap (C \setminus B) \in \mathcal D\). Notice the elementary set identity
+  \[
+  A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B).
+  \]
+  Why does the right-hand side belong to \(\mathcal D\)? Because \(B, C \in \mathcal D_A\) means both
+  \(A \cap C \in \mathcal D\) and \(A \cap B \in \mathcal D\); furthermore, \(B \subseteq C\) implies
+  \(A \cap B \subseteq A \cap C\). Since \(\mathcal D\) is closed under proper differences,
+  \((A \cap C) \setminus (A \cap B) \in \mathcal D\). Thus \(C \setminus B \in \mathcal D_A\).
+- *(iii) Increasing unions:* Let \(B_n \in \mathcal D_A\) with \(B_n \uparrow B\). Since
+  \(B_n \in \mathcal D\), we have \(B \in \mathcal D\). Also, \(A \cap B_n \in \mathcal D\) and
+  \(A \cap B_n \uparrow A \cap B\). Since \(\mathcal D\) is closed under increasing unions,
+  \(A \cap B \in \mathcal D\), so \(B \in \mathcal D_A\).
+
+#+begin_example
+   Figure 4.1: Visualising A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B) when B \subseteq C
+
+        Left view: A \cap (C \setminus B)             Right view: (A \cap C) \setminus (A \cap B)
+      +-----------------------------------+         +-----------------------------------+
+      | C               +---------------+ |         | C               +---------------+ |
+      |   +---------+   |               | |         |   +---------+   |               | |
+      |   | B       |   |  A \cap(C \ B)| |         |   | B  #####|###|  (A \cap C)   | |
+      |   |     ....|...|  ************ | |   =     |   |    #A&B#|###|  \setminus    | |
+      |   |     ....|...|  ************ | |         |   |    #####|###|  (A \cap B)   | |
+      |   +---------+   |               | |         |   +---------+   |  ************ | |
+      |                 +---------------+ |         |                 +---------------+ |
+      +-------------------A---------------+         +-------------------A---------------+
+      First remove B from C, then keep              First take A \cap C, then remove the
+      the starred part inside A.                    hatched subset A \cap B \subseteq A \cap C.
+#+end_example
+
+*Step 2. Start with the fixed set \(A\) in the \(\pi\)-system \(\mathcal P\).* Suppose \(A \in \mathcal P\).
+For every \(B \in \mathcal P\), the intersection \(A \cap B\) belongs to \(\mathcal P\) (because
+\(\mathcal P\) is a \(\pi\)-system!) and hence to \(\mathcal D\). By definition of \(\mathcal D_A\),
+this says
+\[
+\mathcal P \subseteq \mathcal D_A \quad \text{whenever } A \in \mathcal P.
+\]
+By Step 1, \(\mathcal D_A\) is a \(\lambda\)-system containing \(\mathcal P\). Since \(\mathcal D\) is
+the *smallest* \(\lambda\)-system containing \(\mathcal P\), we must have \(\mathcal D \subseteq \mathcal D_A\).
+Unpacking the definition of \(\mathcal D_A\), we have proved:
+\[
+A \in \mathcal P,\ B \in \mathcal D \implies A \cap B \in \mathcal D.
+\]
+(One set may now come from the whole \(\lambda\)-system \(\mathcal D\); only the other is restricted to
+\(\mathcal P\).)
+
+*Step 3. Remove the remaining restriction (the "double-bootstrapping" flip).* Now fix *any*
+\(B \in \mathcal D\). Step 2 tells us that for every \(A \in \mathcal P\), we have
+\(B \cap A = A \cap B \in \mathcal D\). In the notation of Step 1 (now with \(B\) as the fixed set!),
+this says every \(A \in \mathcal P\) belongs to \(\mathcal D_B\):
+\[
+\mathcal P \subseteq \mathcal D_B \quad \text{for every } B \in \mathcal D.
+\]
+Again by Step 1, \(\mathcal D_B\) is a \(\lambda\)-system containing \(\mathcal P\), so minimality of
+\(\mathcal D\) gives \(\mathcal D \subseteq \mathcal D_B\). That means for every \(A \in \mathcal D\)
+and \(B \in \mathcal D\), we have \(A \cap B \in \mathcal D\).
+
+Thus \(\mathcal D\) is both a \(\pi\)-system and a \(\lambda\)-system. By Lemma 4.4, \(\mathcal D\) is a
+\(\sigma\)-algebra containing \(\mathcal P\), so \(\sigma(\mathcal P) \subseteq \mathcal D \subseteq \mathcal L\).
+\(\blacksquare\)
+
+#+begin_example
+   Summary of the two-step bootstrap in Dynkin's Lemma:
+   Initially known:   P  x  P  ---> in D   (since P is a pi-system)
+                      |
+                      v  [Step 2: fix A in P, use minimality of D inside D_A]
+   Halfway upgrade:   P  x  D  ---> in D
+                      |
+                      v  [Step 3: fix B in D, use minimality of D inside D_B]
+   Full upgrade:      D  x  D  ---> in D   (so D is a pi-system + lambda-system = sigma-algebra!)
+#+end_example
+
+** Uniqueness of finite measures
+
+Combining Example 4.5 with Dynkin's lemma immediately gives our main uniqueness theorem.
+
+#+begin_quote
+*Theorem 4.7 (Uniqueness of finite measures).* Suppose that \(\mathcal F = \sigma(\mathcal P)\) for a
+\(\pi\)-system \(\mathcal P\). If finite measures \(\mu\) and \(\nu\) on \((\Omega, \mathcal F)\) satisfy
+\(\mu(\Omega) = \nu(\Omega) < \infty\) and \(\mu(A) = \nu(A)\) for every \(A \in \mathcal P\), then
+\(\mu = \nu\) on \(\mathcal F\).
+#+end_quote
+
+*Proof.* By Example 4.5, the agreement class \(\mathcal D = \{A \in \mathcal F : \mu(A) = \nu(A)\}\) is
+a \(\lambda\)-system. By hypothesis, \(\mathcal P \subseteq \mathcal D\). Dynkin's lemma (Theorem 4.6)
+therefore gives \(\mathcal F = \sigma(\mathcal P) \subseteq \mathcal D\), which means
+\(\mu(A) = \nu(A)\) for all \(A \in \mathcal F\). \(\blacksquare\)
+
+*Practical checklist for applying Theorem 4.7:*
+1. Identify a collection \(\mathcal P \subseteq \mathcal F\) on which \(\mu\) and \(\nu\) agree.
+2. Verify that \(\mathcal P\) is a \(\pi\)-system (closed under intersections) and generates
+   \(\mathcal F\).
+3. Verify that \(\mu(\Omega) = \nu(\Omega) < \infty\). (For probability measures,
+   \(\mu(\Omega) = 1 = \nu(\Omega)\) is automatic! For general finite measures, you must check
+   \(\mu(\Omega) = \nu(\Omega)\), which is automatic if \(\Omega \in \mathcal P\).)
+
+* 4.3 Half-lines and finite strings
+
+** Cumulative distribution functions on \(\mathbb R\)
+
+#+begin_quote
+*Example 4.8 (A preview of cumulative distribution functions).* Let \(\mu\) and \(\nu\) be probability
+measures on \((\mathbb R, \mathcal B(\mathbb R))\) (called *Borel probability measures*). The function
+\[
+F_\mu(t) := \mu\big((-\infty, t]\big), \qquad t \in \mathbb R,
+\]
+is the *cumulative distribution function* (CDF) of \(\mu\). Since the half-lines
+\(\mathcal P = \{(-\infty, t] : t \in \mathbb R\}\) form a \(\pi\)-system generating
+\(\mathcal B(\mathbb R)\) (Chapter 1), Theorem 4.7 gives:
+\[
+\mu\big((-\infty, t]\big) = \nu\big((-\infty, t]\big) \text{ for every } t \in \mathbb R \implies \mu = \nu \text{ on } \mathcal B(\mathbb R).
+\]
+Thus a Borel probability measure is completely determined by its values on half-lines.
+
+For two real-valued random variables \(X\) and \(Y\) (possibly defined on *different* probability
+spaces!), applying this to their image measures \(\mu = X_\#\mathbb P\) and \(\nu = Y_\#\mathbb P'\)
+shows that
+\[
+\mathbb P(X \le t) = \mathbb P'(Y \le t) \text{ for all } t \in \mathbb R \implies X \text{ and } Y \text{ have the exact same law.}
+\]
+*(Warning: matching laws means \(\mathbb P(X \in B) = \mathbb P'(Y \in B)\) for all Borel \(B\); it does
+NOT mean \(X(\omega) = Y(\omega)\) pointwise! In Example 4.1, the first digit and second digit both have
+a fair Bernoulli\((1/2)\) law, even though under \(\nu\) they are never equal.)*
+
+Even better: **rational thresholds suffice!** Suppose \(\mu((-\infty, q]) = \nu((-\infty, q])\) only for
+all \(q \in \mathbb Q\). Given any real \(t \in \mathbb R\), choose rationals \(q_n \downarrow t\). Then
+\((-\infty, q_n] \downarrow (-\infty, t]\), and continuity of finite measures from above transfers
+equality from the rationals \(q_n\) to \(t\). (Alternatively, \(\{(-\infty, q] : q \in \mathbb Q\}\) is
+already a \(\pi\)-system generating \(\mathcal B(\mathbb R)\)!)
+#+end_quote
+
+** Cylinder sets in infinite coin-toss space
+
+#+begin_quote
+*Example 4.9 (Finite strings determine a sequence measure).* Let \(\Omega = \{0,1\}^{\mathbb N}\) be the
+set of all infinite binary sequences \(\omega = (\omega_1, \omega_2, \dots)\) with
+\(\omega_j \in \{0,1\}\). For any finite binary string \(a_1, \dots, a_n \in \{0,1\}\), define its
+*cylinder set*
+\[
+C(a_1, \dots, a_n) := \{\omega \in \Omega : \omega_1 = a_1, \dots, \omega_n = a_n\},
+\]
+the event that the first \(n\) tosses come out as \(a_1, \dots, a_n\). Include \(\Omega\) as the
+cylinder of length \(0\) (no prescribed digits), and include \(\emptyset\) in the collection
+\(\mathcal P\).
+
+*Checking that \(\mathcal P\) is a \(\pi\)-system:* Take two cylinders \(C(a_1, \dots, a_m)\) and
+\(C(b_1, \dots, b_n)\) with \(m \le n\).
+- *Case 1:* \(a_j \ne b_j\) for some \(j \le m\). No sequence can have its \(j\)-th digit equal to both
+  \(a_j\) and \(b_j\), so \(C(a_1, \dots, a_m) \cap C(b_1, \dots, b_n) = \emptyset \in \mathcal P\).
+- *Case 2:* \(a_j = b_j\) for all \(1 \le j \le m\). Then the first \(m\) prescriptions of the second
+  cylinder match the first cylinder, so the longer string is more restrictive:
+  \[
+  C(a_1, \dots, a_m) \cap C(b_1, \dots, b_n) = C(b_1, \dots, b_n) \in \mathcal P.
+  \]
+Intersecting with \(\Omega\) leaves a set unchanged, and intersecting with \(\emptyset\) gives
+\(\emptyset\). Thus \(\mathcal P\) is a \(\pi\)-system! Let \(\mathcal F := \sigma(\mathcal P)\) be the
+\(\sigma\)-algebra it generates.
+
+By Theorem 4.7, there is **at most one** probability measure \(\mathbb P\) on \((\Omega, \mathcal F)\)
+satisfying the fair-coin prescription
+\begin{equation}
+\mathbb P\big(C(a_1, \dots, a_n)\big) = 2^{-n} \quad \text{for every binary string } (a_1, \dots, a_n). \tag{4.1}
+\end{equation}
+Note carefully: we have *not* yet proved that such a measure \(\mathbb P\) exists (that requires
+Carathéodory's extension theorem in Chapter 5 and Chapter 10). Theorem 4.7 proves *uniqueness* before
+*existence*.
+#+end_quote
+
+#+begin_quote
+*Example 4.10 (Infinitely many ones occur almost surely).* Assuming that the fair-coin measure
+\(\mathbb P\) in (4.1) exists, what is the probability that an infinite sequence \(\omega\) contains
+*only finitely many ones*?
+
+Let us translate the English statement into countable set operations on cylinders:
+1. A sequence \(\omega\) has only finitely many \(1\)s if and only if there is some position
+   \(m \ge 0\) after which *every* digit is \(0\). So for each integer \(m \ge 0\), define
+   \[
+   E_m := \{\omega \in \Omega : \omega_j = 0 \text{ for every integer } j > m\}.
+   \]
+   Then \(\{\text{finitely many } 1\text{s}\} = \bigcup_{m=0}^\infty E_m\).
+2. Fix \(m \ge 0\). To compute \(\mathbb P(E_m)\), first impose only *finitely many* zero requirements
+   after position \(m\): for each \(k \ge 1\), define
+   \[
+   A_k := \{\omega \in \Omega : \omega_{m+1} = \omega_{m+2} = \cdots = \omega_{m+k} = 0\}.
+   \]
+   In \(A_k\), the first \(m\) digits \((\omega_1, \dots, \omega_m)\) are completely free: there are
+   \(2^m\) possible initial strings \((a_1, \dots, a_m) \in \{0,1\}^m\), so \(A_k\) is the disjoint
+   union of \(2^m\) cylinders of length \(m+k\):
+   \[
+   A_k = \bigsqcup_{(a_1,\dots,a_m) \in \{0,1\}^m} C(a_1, \dots, a_m, \underbrace{0, \dots, 0}_{k \text{ zeros}}).
+   \]
+   By finite additivity and (4.1),
+   \[
+   \mathbb P(A_k) = 2^m \cdot 2^{-(m+k)} = 2^{-k}.
+   \]
+3. As \(k\) increases, we add more zero requirements, so \(A_1 \supseteq A_2 \supseteq \cdots\) and a
+   sequence satisfies all of them iff it belongs to \(E_m\):
+   \[
+   A_k \downarrow E_m = \bigcap_{k=1}^\infty A_k.
+   \]
+   In particular, \(E_m \in \mathcal F\) is measurable, and continuity from above gives
+   \[
+   \mathbb P(E_m) = \lim_{k\to\infty} \mathbb P(A_k) = \lim_{k\to\infty} 2^{-k} = 0.
+   \]
+4. Finally, \(\bigcup_{m=0}^\infty E_m\) is a countable union of measurable null sets, so it belongs to
+   \(\mathcal F\) and by countable subadditivity (or continuity from below, since
+   \(E_0 \subseteq E_1 \subseteq \cdots\)),
+   \[
+   \mathbb P(\text{finitely many } 1\text{s}) = \mathbb P\Big(\bigcup_{m=0}^\infty E_m\Big) = 0.
+   \]
+   Taking complements, \(\mathbb P(\text{infinitely many } 1\text{s}) = 1\) ("almost surely"). Notice
+   that we used *only* the finite-string probabilities (4.1), countable set operations, and continuity
+   of a measure!
+#+end_quote
+
+* 4.4 Uniqueness for \(\sigma\)-finite measures
+
+** Intuition
+
+What if \(\mu(\Omega) = \infty\), like Lebesgue measure \(\lambda\) on \(\mathbb R\)? Then the agreement
+class \(\mathcal D = \{A : \mu(A) = \nu(A)\}\) is *not* closed under proper differences, because
+\(\mu(B) = \nu(B) = \infty\) and \(\mu(A) = \nu(A) = \infty\) does *not* imply
+\(\mu(B \setminus A) = \nu(B \setminus A)\) (you cannot subtract \(\infty - \infty\)).
+
+However, if we can exhaust \(\Omega\) by an increasing sequence of sets \(E_n \uparrow \Omega\) *belonging
+to the \(\pi\)-system \(\mathcal P\)* on which \(\mu(E_n) = \nu(E_n) < \infty\), we can restrict \(\mu\)
+and \(\nu\) to each finite piece \(E_n\), apply the finite uniqueness theorem on \(E_n\), and then let
+\(n \to \infty\).
+
+** Statement, proof, and a crucial counterexample
+
+#+begin_quote
+*Proposition 4.11 (Uniqueness for \(\sigma\)-finite measures).* Suppose that
+\(\mathcal F = \sigma(\mathcal P)\) for a \(\pi\)-system \(\mathcal P\) and that measures \(\mu\) and
+\(\nu\) agree on \(\mathcal P\). Assume that there are sets \(E_n \in \mathcal P\) such that
+\(E_n \uparrow \Omega\) and \(\mu(E_n) = \nu(E_n) < \infty\) for every \(n\). Then \(\mu = \nu\) on
+\(\mathcal F\).
+#+end_quote
+
+*Proof.* Fix \(n \ge 1\). Define two restricted measures \(\mu_n, \nu_n\) on \((\Omega, \mathcal F)\) by
+\[
+\mu_n(A) := \mu(A \cap E_n), \qquad \nu_n(A) := \nu(A \cap E_n) \qquad (A \in \mathcal F).
+\]
+- Both \(\mu_n\) and \(\nu_n\) are *finite* measures on \((\Omega, \mathcal F)\) with equal total mass:
+  \(\mu_n(\Omega) = \mu(E_n) = \nu(E_n) = \nu_n(\Omega) < \infty\).
+- For any \(A \in \mathcal P\), since \(E_n \in \mathcal P\) and \(\mathcal P\) is a \(\pi\)-system, we
+  have \(A \cap E_n \in \mathcal P\). Since \(\mu\) and \(\nu\) agree on \(\mathcal P\),
+  \[
+  \mu_n(A) = \mu(A \cap E_n) = \nu(A \cap E_n) = \nu_n(A) \quad \text{for all } A \in \mathcal P.
+  \]
+- By the finite uniqueness theorem (Theorem 4.7), \(\mu_n = \nu_n\) on all of \(\mathcal F = \sigma(\mathcal P)\);
+  that is, \(\mu(A \cap E_n) = \nu(A \cap E_n)\) for every \(A \in \mathcal F\).
+
+Now let \(n \to \infty\): for any \(A \in \mathcal F\), the sets \(A \cap E_n\) increase to
+\(A \cap \Omega = A\), so continuity from below gives
+\[
+\mu(A) = \lim_{n\to\infty} \mu(A \cap E_n) = \lim_{n\to\infty} \nu(A \cap E_n) = \nu(A). \quad \blacksquare
+\]
+
+#+begin_quote
+*Example 4.12 (Agreement at infinite values is useless).* On \((\mathbb R, \mathcal B(\mathbb R))\),
+consider Lebesgue measure \(\lambda\) and twice Lebesgue measure \(\nu = 2\lambda\).
+- Both \(\lambda\) and \(2\lambda\) are \(\sigma\)-finite measures on \(\mathbb R\) (since
+  \(\lambda([-n,n]) = 2n < \infty\) and \(2\lambda([-n,n]) = 4n < \infty\)).
+- Consider the \(\pi\)-system of half-lines \(\mathcal P = \{(-\infty, t] : t \in \mathbb R\}\), which
+  generates \(\mathcal B(\mathbb R)\).
+- For every half-line \((-\infty, t] \in \mathcal P\), both measures assign the *same* value:
+  \[
+  \lambda\big((-\infty, t]\big) = \infty = 2\lambda\big((-\infty, t]\big).
+  \]
+- Yet \(\lambda \ne 2\lambda\) (for instance, \(\lambda((0,1]) = 1 \ne 2 = 2\lambda((0,1])\)).
+
+*Why didn't Proposition 4.11 apply?* Because the exhausting finite-measure sets \(E_n\) must come from
+**inside the \(\pi\)-system \(\mathcal P\)**! Every nonempty set in \(\mathcal P = \{(-\infty, t]\}\) has
+infinite measure, so no sequence \(E_n \in \mathcal P\) with \(\lambda(E_n) < \infty\) exists. (By
+contrast, if we use the \(\pi\)-system \(\mathcal P' = \{(a,b] : a \le b\}\), then \(E_n = (-n, n] \in \mathcal P'\)
+has finite measure, and indeed agreement of \(\mu\) and \(\nu\) on all bounded intervals \((a,b]\)
+*does* force \(\mu = \nu\).)
+#+end_quote
+
+** Additional worked examples
+
+*Example A (Uniqueness of Lebesgue measure on \(\mathcal B(\mathbb R)\)).* Suppose \(\mu\) is any Borel
+measure on \(\mathbb R\) such that \(\mu((a,b]) = b - a\) for all \(a \le b\) (with \((a,a] = \emptyset\)).
+Let \(\mathcal P = \{(a,b] : -\infty < a \le b < \infty\}\).
+- \(\mathcal P\) is a \(\pi\)-system: \((a,b] \cap (c,d] = (\max(a,c), \min(b,d)]\) if
+  \(\max(a,c) \le \min(b,d)\), and \(\emptyset = (a,a]\) otherwise.
+- \(\sigma(\mathcal P) = \mathcal B(\mathbb R)\).
+- The sets \(E_n = (-n, n] \in \mathcal P\) satisfy \(E_n \uparrow \mathbb R\) and
+  \(\mu(E_n) = 2n < \infty\).
+By Proposition 4.11, there is *at most one* Borel measure on \(\mathbb R\) assigning length \(b-a\) to
+every half-open interval \((a,b]\).
+
+*Example B (Why \(\mu(\Omega) = \nu(\Omega)\) cannot be dropped in Theorem 4.7).* Let
+\(\Omega = \{1, 2\}\), \(\mathcal F = 2^\Omega\), and \(\mathcal P = \{\{1\}\}\). Clearly \(\mathcal P\)
+is a \(\pi\)-system (since \(\{1\} \cap \{1\} = \{1\}\)) and \(\sigma(\mathcal P) = 2^\Omega\) (since
+\(\{2\} = \{1\}^c\)). Define two finite measures:
+- \(\mu(\{1\}) = 1,\ \mu(\{2\}) = 1\) (total mass \(\mu(\Omega) = 2\)),
+- \(\nu(\{1\}) = 1,\ \nu(\{2\}) = 5\) (total mass \(\nu(\Omega) = 6\)).
+They agree on \(\mathcal P\), yet \(\mu \ne \nu\) because \(\mu(\Omega) \ne \nu(\Omega)\).
+
+** Common confusions
+
+- *"Any generating family determines a measure":* False! Example 4.1 is the standard counterexample. You
+  need the generating family \(\mathcal P\) to be closed under intersections (a \(\pi\)-system).
+- *"Every \(\lambda\)-system is a \(\sigma\)-algebra":* False! In Example 4.1, the agreement class of
+  \(\mu\) and \(\nu\) is a \(\lambda\)-system of \(8\) sets inside \(2^\Omega\) (which has \(16\) sets),
+  because \(A, B \in \mathcal D\) while \(A \cap B \notin \mathcal D\).
+- *"\(\mu\) and \(\nu\) are \(\sigma\)-finite and agree on a generating \(\pi\)-system \(\implies \mu=\nu\)":*
+  False! As Example 4.12 (\(\lambda\) vs. \(2\lambda\) on half-lines) shows, the \(\sigma\)-finiteness
+  exhaustion \(E_n \uparrow \Omega\) must consist of sets **in \(\mathcal P\)** on which \(\mu(E_n) = \nu(E_n) < \infty\).
+
+** Historical remark and classroom route
+
+*Historical remark (A proof about families of sets).* In 1928, Wacław Sierpiński proved a result about
+families of sets closely related to Dynkin's lemma (Theorem 4.6). Starting from a family closed under
+intersections, he formed the smallest class closed under countable disjoint unions and differences of
+nested sets, and proved that it was also closed under intersections using two successive classes of test
+sets, just as in Steps 1–3 above. Eugene Dynkin's book *Theory of Markov Processes* (1960) introduced
+the names *\(\pi\)-system* and *\(\lambda\)-system* and used the lemma to prove uniqueness of Markov
+process probability measures before constructing them.
+
+*Classroom route.* The core thread is Dynkin's lemma followed by finite-measure uniqueness. The two-bit
+counterexample (Example 4.1) explains why the intersection hypothesis (\(\pi\)-system) is mandatory, and
+half-lines (Example 4.8) and cylinders (Example 4.9) illustrate the payoff. The \(\sigma\)-finite result
+(Proposition 4.11) is simply a reduction to the finite case by restricting to \(E_n \in \mathcal P\),
+not a second abstract theorem to memorize.
+
+* Worked Exercises
+
+** Exercise 1
+Let \(\Omega = \{1, 2, 3, 4\}\). Let \(A = \{1, 2\}\) and \(B = \{2, 3\}\).
+1. Is \(\mathcal G = \{A, B\}\) a \(\pi\)-system? What is \(\sigma(\mathcal G)\)?
+2. Find all subsets belonging to \(\lambda(\mathcal G)\), the smallest \(\lambda\)-system containing
+   \(\mathcal G\). Is \(\lambda(\mathcal G) = \sigma(\mathcal G)\)?
+
+** Solution
+1. \(A \cap B = \{2\} \notin \mathcal G\), so \(\mathcal G\) is *not* a \(\pi\)-system. However,
+   \(\sigma(\mathcal G)\) must contain \(\{2\} = A \cap B\), hence \(\{1\} = A \setminus \{2\}\),
+   \(\{3\} = B \setminus \{2\}\), and \(\{4\} = (A \cup B)^c\). Since \(\sigma(\mathcal G)\) contains
+   all four singletons, \(\sigma(\mathcal G) = 2^\Omega\) (all \(16\) subsets of \(\Omega\)).
+2. Let \(\mathcal D\) be the collection of subsets \(E \subseteq \Omega\) containing an even number of
+   elements (\(0, 2,\) or \(4\) elements), EXCEPT that we be careful: notice that in Example 4.1 (with
+   \(1\leftrightarrow 10, 2\leftrightarrow 11, 3\leftrightarrow 01, 4\leftrightarrow 00\)), the two
+   measures \(\mu = \frac12(\delta_2 + \delta_4)\) and \(\nu = \frac12(\delta_1 + \delta_3)\) satisfy
+   \(\mu(A) = \frac12 = \nu(A)\) and \(\mu(B) = \frac12 = \nu(B)\).
+   A subset \(E \subseteq \Omega\) has \(\mu(E) = \nu(E)\) iff
+   \[
+   |E \cap \{2, 4\}| = |E \cap \{1, 3\}|.
+   \]
+   There are \(1 + 4 + 1 = 6\) such sets:
+   - \(0\) from each: \(\emptyset\) (1 set).
+   - \(1\) from \(\{2,4\}\) and \(1\) from \(\{1,3\}\): \(2 \times 2 = 4\) sets, namely
+     \(\{1,2\}, \{2,3\}, \{3,4\}, \{1,4\}\).
+   - \(2\) from each: \(\Omega\) (1 set).
+   Let \(\mathcal L = \{\emptyset, \{1,2\}, \{2,3\}, \{3,4\}, \{1,4\}, \Omega\}\) (6 sets). Let us check
+   that \(\mathcal L\) is a \(\lambda\)-system!
+   - \(\Omega \in \mathcal L\).
+   - Complements of the four \(2\)-element sets in \(\mathcal L\) are again in \(\mathcal L\)
+     (\(\{1,2\}^c = \{3,4\}\), \(\{2,3\}^c = \{1,4\}\)).
+   - Proper differences \(F \setminus E\) for \(E \subseteq F\) in \(\mathcal L\): if \(E = \emptyset\)
+     or \(F = \Omega\) this is just complements; and no two distinct \(2\)-element sets are nested!
+   - Increasing unions on a finite space are eventually constant.
+   Thus \(\mathcal L\) is a \(\lambda\)-system of \(6\) sets containing \(\mathcal G = \{A, B\}\).
+   Conversely, any \(\lambda\)-system containing \(A=\{1,2\}\) and \(B=\{2,3\}\) must contain
+   \(\Omega\), \(\emptyset\), \(A^c = \{3,4\}\), and \(B^c = \{1,4\}\), so \(\lambda(\mathcal G) = \mathcal L\).
+   In particular, \(\lambda(\mathcal G)\) has \(6\) sets while \(\sigma(\mathcal G) = 2^\Omega\) has
+   \(16\) sets, so \(\lambda(\mathcal G) \ne \sigma(\mathcal G)\).
+
+** Exercise 2
+Let \((\Omega, \mathcal F, \mathbb P)\) be a probability space, and let \(\mathcal P_1, \mathcal P_2 \subseteq \mathcal F\)
+be two \(\pi\)-systems that are *independent*, meaning
+\[
+\mathbb P(A \cap B) = \mathbb P(A)\,\mathbb P(B) \quad \text{for all } A \in \mathcal P_1,\ B \in \mathcal P_2.
+\]
+Use Dynkin's \(\pi\)-\(\lambda\) lemma twice to prove that the generated \(\sigma\)-algebras
+\(\sigma(\mathcal P_1)\) and \(\sigma(\mathcal P_2)\) are independent (i.e., the above equality holds
+for all \(A \in \sigma(\mathcal P_1)\) and \(B \in \sigma(\mathcal P_2)\)).
+
+** Solution
+*(This is a preview of Chapter 13 and one of the most important applications of Theorem 4.7!)*
+1. *Step 1 (Fix \(A \in \mathcal P_1\), extend \(B\) to \(\sigma(\mathcal P_2)\)):* Fix \(A \in \mathcal P_1\).
+   Consider the collection
+   \[
+   \mathcal L_A := \{B \in \mathcal F : \mathbb P(A \cap B) = \mathbb P(A)\,\mathbb P(B)\}.
+   \]
+   We check that \(\mathcal L_A\) is a \(\lambda\)-system:
+   - \(\Omega \in \mathcal L_A\) since \(\mathbb P(A \cap \Omega) = \mathbb P(A) = \mathbb P(A)\,\mathbb P(\Omega)\).
+   - If \(B_1, B_2 \in \mathcal L_A\) with \(B_1 \subseteq B_2\), then \(A \cap B_1 \subseteq A \cap B_2\)
+     and \(A \cap (B_2 \setminus B_1) = (A \cap B_2) \setminus (A \cap B_1)\), so
+     \[
+     \mathbb P\big(A \cap (B_2 \setminus B_1)\big) = \mathbb P(A \cap B_2) - \mathbb P(A \cap B_1)
+     = \mathbb P(A)\big(\mathbb P(B_2) - \mathbb P(B_1)\big) = \mathbb P(A)\,\mathbb P(B_2 \setminus B_1).
+     \]
+   - If \(B_n \in \mathcal L_A\) with \(B_n \uparrow B\), then \(A \cap B_n \uparrow A \cap B\), so
+     continuity from below gives
+     \(\mathbb P(A \cap B) = \lim_n \mathbb P(A \cap B_n) = \lim_n \mathbb P(A)\mathbb P(B_n) = \mathbb P(A)\mathbb P(B)\).
+   By hypothesis, \(\mathcal P_2 \subseteq \mathcal L_A\). Since \(\mathcal P_2\) is a \(\pi\)-system,
+   Dynkin's lemma gives \(\sigma(\mathcal P_2) \subseteq \mathcal L_A\).
+2. *Step 2 (Fix \(B \in \sigma(\mathcal P_2)\), extend \(A\) to \(\sigma(\mathcal P_1)\)):* Fix any
+   \(B \in \sigma(\mathcal P_2)\) and define
+   \[
+   \mathcal L'_B := \{A \in \mathcal F : \mathbb P(A \cap B) = \mathbb P(A)\,\mathbb P(B)\}.
+   \]
+   By the exact same verification as in Step 1, \(\mathcal L'_B\) is a \(\lambda\)-system. By Step 1,
+   \(\mathcal P_1 \subseteq \mathcal L'_B\). Since \(\mathcal P_1\) is a \(\pi\)-system, Dynkin's lemma
+   gives \(\sigma(\mathcal P_1) \subseteq \mathcal L'_B\). Thus
+   \(\mathbb P(A \cap B) = \mathbb P(A)\,\mathbb P(B)\) for all \(A \in \sigma(\mathcal P_1)\) and
+   \(B \in \sigma(\mathcal P_2)\).
+
+*(Alternative proof via Theorem 4.7:* If \(\mathbb P(A) = 0\) the identity is \(0 = 0\); if
+\(\mathbb P(A) > 0\), compare the finite measures \(B \mapsto \mathbb P(A \cap B)\) and
+\(B \mapsto \mathbb P(A)\mathbb P(B)\) on \(\sigma(\mathcal P_2)\)!)*
+
+** Exercise 3
+Prove that Lebesgue measure \(\lambda\) on \((\mathbb R, \mathcal B(\mathbb R))\) is *translation-invariant*
+and *reflection-invariant*: for every Borel set \(B \in \mathcal B(\mathbb R)\) and every \(x \in \mathbb R\),
+\[
+\lambda(B + x) = \lambda(B) \quad \text{and} \quad \lambda(-B) = \lambda(B),
+\]
+where \(B + x = \{y + x : y \in B\}\) and \(-B = \{-y : y \in B\}\), assuming only that
+\(\lambda((a,b]) = b - a\) for all \(a \le b\).
+
+** Solution
+Fix \(x \in \mathbb R\) and define \(\mu(B) := \lambda(B + x)\) for \(B \in \mathcal B(\mathbb R)\).
+(Note that \(B + x\) is the preimage of \(B\) under the continuous map \(y \mapsto y - x\), so
+\(B + x \in \mathcal B(\mathbb R)\) and \(\mu\) is a Borel measure.)
+Let \(\mathcal P = \{(a,b] : -\infty < a \le b < \infty\}\), which is a \(\pi\)-system generating
+\(\mathcal B(\mathbb R)\). For any \((a,b] \in \mathcal P\),
+\[
+\mu((a,b]) = \lambda((a+x, b+x]) = (b+x) - (a+x) = b - a = \lambda((a,b]).
+\]
+Moreover, \(E_n = (-n, n] \in \mathcal P\) satisfies \(E_n \uparrow \mathbb R\) and
+\(\mu(E_n) = \lambda(E_n) = 2n < \infty\). By Proposition 4.11, \(\mu = \lambda\) on
+\(\mathcal B(\mathbb R)\), i.e. \(\lambda(B + x) = \lambda(B)\).
+
+Similarly, for reflection, define \(\nu(B) := \lambda(-B)\). Since \(-(a,b] = [-b, -a)\), let us check
+\(\nu((a,b])\): we know singletons have Lebesgue measure zero (\(\lambda(\{c\}) = \lim_{n\to\infty}\lambda((c-1/n, c]) = 0\)),
+so
+\[
+\nu((a,b]) = \lambda([-b, -a)) = \lambda((-b, -a]) + \lambda(\{-b\}) - \lambda(\{-a\}) = (-a) - (-b) = b - a = \lambda((a,b]).
+\]
+Again \(E_n = (-n, n] \in \mathcal P\) has \(\nu(E_n) = \lambda(E_n) = 2n < \infty\), so Proposition 4.11
+gives \(\nu = \lambda\) on \(\mathcal B(\mathbb R)\).
+
+** Exercise 4
+In the infinite fair-coin space \(\Omega = \{0,1\}^{\mathbb N}\) of Example 4.9, let \(B\) be the event
+that the sequence \(\omega = (\omega_1, \omega_2, \dots)\) is *eventually constant* (meaning either all
+digits after some index \(m\) are \(0\), or all digits after some index \(m\) are \(1\)). Show that
+\(B \in \mathcal F\) and find \(\mathbb P(B)\).
+
+** Solution
+Let \(E_m^{(0)} = \{\omega : \omega_j = 0 \text{ for all } j > m\}\) and
+\(E_m^{(1)} = \{\omega : \omega_j = 1 \text{ for all } j > m\}\). Then
+\[
+B = \Big(\bigcup_{m=0}^\infty E_m^{(0)}\Big) \cup \Big(\bigcup_{m=0}^\infty E_m^{(1)}\Big).
+\]
+In Example 4.10 we showed that each \(E_m^{(0)} \in \mathcal F\) with \(\mathbb P(E_m^{(0)}) = 0\). By the
+exact same argument (replacing \(0\) with \(1\) in the cylinders \(A_k\)), each
+\(E_m^{(1)} \in \mathcal F\) with \(\mathbb P(E_m^{(1)}) = \lim_{k\to\infty} 2^m 2^{-(m+k)} = 0\).
+As a countable union of measurable null sets, \(B \in \mathcal F\) and \(\mathbb P(B) = 0\).
+
+** Exercise 5
+Let \(\mu\) and \(\nu\) be two probability measures on \((\mathbb R^2, \mathcal B(\mathbb R^2))\).
+Prove that if \(\mu\big((-\infty, s] \times (-\infty, t]\big) = \nu\big((-\infty, s] \times (-\infty, t]\big)\)
+for all \(s, t \in \mathbb R\), then \(\mu = \nu\) on \(\mathcal B(\mathbb R^2)\).
+
+** Solution
+Let \(\mathcal P = \{(-\infty, s] \times (-\infty, t] : s, t \in \mathbb R\}\).
+1. *\(\mathcal P\) is a \(\pi\)-system:* The intersection of two south-west quadrants is another
+   south-west quadrant:
+   \[
+   \big((-\infty, s_1] \times (-\infty, t_1]\big) \cap \big((-\infty, s_2] \times (-\infty, t_2]\big)
+   = (-\infty, \min(s_1, s_2)] \times (-\infty, \min(t_1, t_2)] \in \mathcal P.
+   \]
+2. *\(\mathcal P\) generates \(\mathcal B(\mathbb R^2)\):* From \(\mathcal P\), set differences inside
+   \(\sigma(\mathcal P)\) produce strips \((a, b] \times (-\infty, t]\) and rectangles
+   \((a, b] \times (c, d]\), and every open set in \(\mathbb R^2\) is a countable union of open
+   rectangles \((a,b) \times (c,d) = \bigcup_{n=1}^\infty (a, b-1/n] \times (c, d-1/n]\). Thus
+   \(\sigma(\mathcal P) = \mathcal B(\mathbb R^2)\).
+3. Both \(\mu\) and \(\nu\) are probability measures, so \(\mu(\mathbb R^2) = 1 = \nu(\mathbb R^2)\).
+By Theorem 4.7, \(\mu = \nu\) on \(\mathcal B(\mathbb R^2)\). (This is why the joint CDF
+\(F(s,t) = \mathbb P(X \le s, Y \le t)\) uniquely determines the joint distribution of \((X,Y)\).)
+
+** Exercise 6
+Suppose \(\mathcal C\) is a collection of subsets of \(\Omega\). Explain why the intersection of all
+\(\pi\)-systems containing \(\mathcal C\) is a \(\pi\)-system, and describe explicitly the smallest
+\(\pi\)-system containing \(\mathcal C\).
+
+** Solution
+If \(\{\mathcal P_\alpha\}_{\alpha \in I}\) is the family of all \(\pi\)-systems containing \(\mathcal C\)
+(nonempty since \(2^\Omega\) is one), and \(A, B \in \bigcap_\alpha \mathcal P_\alpha\), then for every
+\(\alpha\) we have \(A, B \in \mathcal P_\alpha\), hence \(A \cap B \in \mathcal P_\alpha\), so
+\(A \cap B \in \bigcap_\alpha \mathcal P_\alpha\).
+Unlike \(\sigma(\mathcal C)\) or \(\lambda(\mathcal C)\) (which cannot be written down by finite formulas),
+the smallest \(\pi\)-system containing a nonempty collection \(\mathcal C\) has a very simple explicit
+description: it is simply the set of all *finite intersections* of sets from \(\mathcal C\):
+\[
+\pi(\mathcal C) = \{A_1 \cap A_2 \cap \cdots \cap A_k : k \ge 1,\ A_1, \dots, A_k \in \mathcal C\},
+\]
+because the intersection of two finite intersections of sets in \(\mathcal C\) is again a finite
+intersection of sets in \(\mathcal C\).
+
+* Summary
+
+#+caption: Chapter 4 cheat-sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Concept                 | Statement / Definition                                                                                       | Why it matters                                             |
+|-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
+| Example 4.1             | Two measures on \(\{0,1\}^2\) agree on \(A, B\) (which generate \(2^\Omega\)) but disagree on \(A \cap B\)   | Arbitrary generating sets do NOT give uniqueness           |
+| \(\pi\)-system (4.2)    | Nonempty \(\mathcal P\) closed under finite intersections: \(A, B \in \mathcal P \implies A \cap B \in \mathcal P\) | The closure property required of the testing collection    |
+| \(\lambda\)-system (4.3)| \(\Omega \in \mathcal D\); closed under proper differences \(B \setminus A\) (\(A \subseteq B\)) and \(A_n \uparrow A\) | The closure property naturally satisfied by \(\{\mu=\nu\}\) |
+| Lemma 4.4               | \(\pi\)-system + \(\lambda\)-system \(\iff\) \(\sigma\)-algebra                                              | Bridges the two closure properties                         |
+| Dynkin's lemma (4.6)    | If \(\mathcal P\) is a \(\pi\)-system and \(\mathcal L\) is a \(\lambda\)-system with \(\mathcal P \subseteq \mathcal L\), then \(\sigma(\mathcal P) \subseteq \mathcal L\) | Engine behind measure uniqueness and independence proofs   |
+| Theorem 4.7             | Finite measures \(\mu,\nu\) with \(\mu(\Omega)=\nu(\Omega)\) agreeing on a generating \(\pi\)-system are equal | Standard uniqueness theorem for probability/finite measures|
+| Examples 4.8–4.9        | Half-lines \((-\infty, t]\) on \(\mathbb R\) and cylinders \(C(a_1,\dots,a_n)\) on \(\{0,1\}^{\mathbb N}\) are \(\pi\)-systems | CDFs determine Borel laws; finite strings determine sequence laws |
+| Proposition 4.11        | Uniqueness when \(E_n \in \mathcal P\), \(E_n \uparrow \Omega\), \(\mu(E_n)=\nu(E_n)<\infty\)                | Extends uniqueness to \(\sigma\)-finite measures           |
+| Example 4.12            | \(\lambda\) and \(2\lambda\) both assign \(\infty\) to every half-line \((-\infty, t]\)                      | Exhausting sets \(E_n\) MUST lie inside \(\mathcal P\)     |
+
+*Key takeaways*
+
+- Keep *uniqueness* (this chapter) and *existence* (Chapter 5) separate.
+- To prove two finite measures \(\mu\) and \(\nu\) are equal on \(\mathcal F = \sigma(\mathcal P)\), check
+  three things: (1) \(\mathcal P\) is a \(\pi\)-system, (2) \(\mu = \nu\) on \(\mathcal P\), and
+  (3) \(\mu(\Omega) = \nu(\Omega) < \infty\).
+- The agreement class \(\{A \in \mathcal F : \mu(A) = \nu(A)\}\) is a \(\lambda\)-system (when
+  \(\mu(\Omega) = \nu(\Omega) < \infty\)), not necessarily a \(\sigma\)-algebra until Dynkin's lemma is
+  applied.
+- For infinite measures, you must find an increasing exhaustion \(E_n \uparrow \Omega\) of finite-measure
+  sets **belonging to the \(\pi\)-system \(\mathcal P\)**.
