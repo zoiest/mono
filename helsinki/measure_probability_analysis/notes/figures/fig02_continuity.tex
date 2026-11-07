@@ -1,30 +1,40 @@
-\documentclass[border=4pt]{standalone}
+\documentclass[border=8pt]{standalone}
 \usepackage{amsmath,amssymb}
 \usepackage{tikz}
 \begin{document}
 \begin{tikzpicture}[font=\small]
   % Continuity from below
   \begin{scope}[xshift=0cm]
-    \node[font=\bfseries] at (1.5, 2.6) {Continuity from Below: $A_n \nearrow A$};
-    \draw[thick, fill=blue!10] (1.5,1) circle (1.2);
-    \draw[thick, fill=blue!25] (1.5,1) circle (0.8);
-    \draw[thick, fill=blue!45] (1.5,1) circle (0.4);
-    \node at (1.5, 1.0) {\footnotesize $A_1$};
-    \node at (1.5, 1.5) {\footnotesize $A_2$};
-    \node at (1.5, 2.0) {\footnotesize $A_3$};
-    \node at (1.5, -0.6) {$\mu(A_n) \nearrow \mu(A)$};
+    \node[font=\bfseries] at (2.2, 4.0) {Continuity from Below: $A_n \nearrow A$};
+    
+    \draw[thick, fill=blue!10, draw=blue!70!black] (2.2, 1.8) circle (1.8);
+    \draw[thick, fill=blue!25, draw=blue!80!black] (2.2, 1.8) circle (1.2);
+    \draw[thick, fill=blue!45, draw=blue!90!black] (2.2, 1.8) circle (0.6);
+
+    \node[font=\bfseries, text=white] at (2.2, 1.8) {$A_1$};
+    \node[font=\bfseries, text=blue!90!black] at (2.2, 2.65) {$A_2$};
+    \node[font=\bfseries, text=blue!90!black] at (2.2, 3.25) {$A_3$};
+
+    \node[align=center, fill=gray!5, draw=gray!30, rounded corners=4pt, inner sep=4pt] at (2.2, -0.6)
+      {$A_1 \subseteq A_2 \subseteq A_3 \subseteq \dots$\\[2pt]
+       $\displaystyle \lim_{n\to\infty} \mu(A_n) = \mu\Bigl(\bigcup_{n=1}^\infty A_n\Bigr)$};
   \end{scope}
 
   % Continuity from above
-  \begin{scope}[xshift=4.5cm]
-    \node[font=\bfseries] at (1.5, 2.6) {Continuity from Above: $B_n \searrow B$};
-    \draw[thick, fill=orange!10] (1.5,1) circle (1.2);
-    \draw[thick, fill=orange!25] (1.5,1) circle (0.8);
-    \draw[thick, fill=orange!45] (1.5,1) circle (0.4);
-    \node at (1.5, 2.0) {\footnotesize $B_1$};
-    \node at (1.5, 1.5) {\footnotesize $B_2$};
-    \node at (1.5, 1.0) {\footnotesize $B_3$};
-    \node at (1.5, -0.6) {$\mu(B_n) \searrow \mu(B)$ \footnotesize (if $\mu(B_1)<\infty$)};
+  \begin{scope}[xshift=6.0cm]
+    \node[font=\bfseries] at (2.2, 4.0) {Continuity from Above: $B_n \searrow B$};
+    
+    \draw[thick, fill=orange!10, draw=orange!70!black] (2.2, 1.8) circle (1.8);
+    \draw[thick, fill=orange!25, draw=orange!80!black] (2.2, 1.8) circle (1.2);
+    \draw[thick, fill=orange!45, draw=orange!90!black] (2.2, 1.8) circle (0.6);
+
+    \node[font=\bfseries, text=orange!90!black] at (2.2, 3.25) {$B_1$};
+    \node[font=\bfseries, text=orange!90!black] at (2.2, 2.65) {$B_2$};
+    \node[font=\bfseries, text=white] at (2.2, 1.8) {$B_3$};
+
+    \node[align=center, fill=gray!5, draw=gray!30, rounded corners=4pt, inner sep=4pt] at (2.2, -0.6)
+      {$B_1 \supseteq B_2 \supseteq B_3 \supseteq \dots \quad (\mu(B_1) < \infty)$\\[2pt]
+       $\displaystyle \lim_{n\to\infty} \mu(B_n) = \mu\Bigl(\bigcap_{n=1}^\infty B_n\Bigr)$};
   \end{scope}
 \end{tikzpicture}
 \end{document}
