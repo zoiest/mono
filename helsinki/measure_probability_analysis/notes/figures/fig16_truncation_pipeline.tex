@@ -1,0 +1,23 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \node[draw, rounded corners, fill=purple!15, text width=6.5cm, align=center] (X) at (0, 3.0)
+    {\textbf{Original Variables} $X_j \in L^1$ iid, mean $m$};
+  \node[draw, rounded corners, fill=blue!15, text width=3.8cm, align=center] (Y) at (-2.4, 1.4)
+    {\textbf{Bounded Part} \\ $Y_j = X_j \mathbf{1}_{\{|X_j| \le j\}}$};
+  \node[draw, rounded corners, fill=orange!15, text width=3.8cm, align=center] (R) at (2.4, 1.4)
+    {\textbf{Tail Part} \\ $X_j - Y_j = X_j \mathbf{1}_{\{|X_j| > j\}}$};
+
+  \draw[->, thick] (X) -- (Y);
+  \draw[->, thick] (X) -- (R);
+
+  \node[draw, rounded corners, fill=teal!15, text width=6.5cm, align=center] (SLLN) at (0, -0.5)
+    {\textbf{Strong Law of Large Numbers}: $\frac{1}{n}\sum_{j=1}^n X_j \xrightarrow{\mathrm{a.s.}} m$ \\
+     \footnotesize Borel--Cantelli kills tail $R_j$; Kolmogorov + Kronecker handles $Y_j$};
+  \draw[->, thick] (Y) -- (SLLN);
+  \draw[->, thick] (R) -- (SLLN);
+\end{tikzpicture}
+\end{document}

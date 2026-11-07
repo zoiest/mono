@@ -1,0 +1,6 @@
+# Ignore generated image files and standalone PDFs
+*.png
+*.pdf
+
+# Add exemption to commit TikZ source files
+!*.tex

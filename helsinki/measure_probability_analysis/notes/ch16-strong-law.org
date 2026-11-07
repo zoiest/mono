@@ -103,17 +103,10 @@ How can we make the series converge without assuming higher moments?
   \]
   Dividing by \(n\) (where \(k^2 \le n < (k+1)^2\)) traps \(S_n / n\) between two square averages:
 
-#+begin_example
-   k^2 <= n < (k+1)^2   ==>   1/(k+1)^2  <  1/n  <=  1/k^2
-                        ==>   S_{k^2}       <= S_n <= S_{(k+1)^2}
-
-           S_{k^2}           S_n          S_{(k+1)^2}
-         -----------  <=  ---------  <=  -------------
-          (k+1)^2             n               k^2
-             |                                 |
-             v                                 v
-      m * (k/(k+1))^2  --->   m   <---  m * ((k+1)/k)^2
-#+end_example
+#+caption: Figure 16.2: Squeezing $S_n / n$ Between Square Subsequence Averages
+#+ATTR_LATEX: :width 0.85\textwidth :center t
+#+ATTR_HTML: :width 650px :align center
+[[file:figures/fig16_square_sandwich.png]]
 
 Because the gap between consecutive squares \((k+1)^2 - k^2 = 2k + 1\) is tiny compared to \(k^2\), the
 ratio \(\frac{(k+1)^2}{k^2} = (1 + \frac{1}{k})^2 \to 1\), so both ends of the sandwich converge to \(m\)!
@@ -253,16 +246,10 @@ of Chebyshev's inequality. Look at the difference between the two questions for 
 - *Kolmogorov's question:* What is the probability that the walk *ever* reaches \(\ge a\) at *any*
   intermediate step \(k \in \{1, 2, \dots, n\}\), even if it later wanders back below \(a\) by time \(n\)?
 
-#+begin_example
-   |T_k|
-     |            * (first time |T_k| >= a happens at step k!)
-   a |-----------/-\-----------------------
-     |          /   \          * (at final step n, |T_n| may be < a;
-     |    *    /     \   *    /   yet orthogonal increments ensure
-     |   / \  /       \ / \  /    average T_n^2 >= T_k^2 >= a^2!)
-   0 +--*---*----------*---*--------------> step index
-        1   2     k        n
-#+end_example
+#+caption: Figure 16.1: Kolmogorov's Maximal Inequality Stopping Time Event
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig16_maximal_inequality.png]]
 
 Astonishingly, *Kolmogorov's maximal inequality* says the upper bound for \(\mathbb P(\max_{1 \le k \le n} |T_k| \ge a)\)
 is the *exact same formula* \(\frac{1}{a^2}\sum_{j=1}^n \mathbb E[Z_j^2]\) as Chebyshev's bound for the
@@ -492,20 +479,9 @@ Why is truncating at \(|X_j| \le j\) the magic choice? Because of two identities
    Lemma 16.5 immediately turns this into \(\frac{1}{n}\sum_{j=1}^n (Y_j - \mathbb E Y_j) \to 0\) a.s.!
 
 #+caption: Figure 16.1: Truncation Architecture for Kolmogorov's SLLN
-#+begin_example
-X_j  --(truncate at |X_j| <= j)-->  Y_j = X_j 1_{|X_j| <= j}
- |                                   |
- | sum P(X_j != Y_j) <= E|X_1|   | sum var(Y_j)/j^2 <= 2 E|X_1| < \infty
- | Borel-Cantelli:                   | Lemma 16.4: sum (Y_j - E Y_j)/j
- v                                   |             converges a.s.
-X_j = Y_j eventually a.s.           v
- |                                 Kronecker (Lemma 16.5):
- |                                   (1/n) sum (Y_j - E Y_j) -> 0 a.s.
- +-----------------+-----------------+
-                   |
-                   v  (since E Y_j -> E X_1 by DCT)
-          (1/n) sum_{j=1}^n X_j -> E X_1 a.s.
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig16_truncation_pipeline.png]]
 
 ** Kolmogorov's Strong Law
 

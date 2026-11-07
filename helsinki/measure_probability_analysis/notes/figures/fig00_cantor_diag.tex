@@ -1,0 +1,15 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[font=\small]
+  \node[anchor=west] at (0, 3.0) {$x_1 = 0.\,\mathbf{\color{red}3}\,1\,4\,1\,5\,\dots \quad \longrightarrow \quad d_1 = 5 \neq 3$};
+  \node[anchor=west] at (0, 2.4) {$x_2 = 0.\,7\,\mathbf{\color{red}1}\,8\,2\,8\,\dots \quad \longrightarrow \quad d_2 = 5 \neq 1$};
+  \node[anchor=west] at (0, 1.8) {$x_3 = 0.\,0\,0\,\mathbf{\color{red}0}\,0\,0\,\dots \quad \longrightarrow \quad d_3 = 5 \neq 0$};
+  \node[anchor=west] at (0, 1.2) {$x_4 = 0.\,5\,5\,5\,\mathbf{\color{red}5}\,5\,\dots \quad \longrightarrow \quad d_4 = 6 \neq 5$};
+  \node[anchor=west] at (0, 0.6) {$\vdots$};
+  \draw[thick, teal!80!black, rounded corners=4pt, fill=teal!5] (-0.2, -0.8) rectangle (7.5, 0.2);
+  \node[anchor=west, font=\bfseries, text=teal!80!black] at (0, -0.3) 
+    {Diagonal number $y = 0.5556\dots \in [0,1]$ differs from every $x_n$!};
+\end{tikzpicture}
+\end{document}

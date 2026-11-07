@@ -163,18 +163,10 @@ Let \(A = \{10, 11\}\) ("first digit is \(1\)") and \(B = \{01, 11\}\) ("second 
    opposite (\(01\) or \(10\)). Agreement on \(A\) and \(B\) does not imply agreement on \(A \cap B\).
 #+end_quote
 
-#+begin_example
-   Under mu (digits equal):           Under nu (digits opposite):
-          B                                  B
-       01   11                            01   11
-     +----+----+                        +----+----+
-     |  0 | 1/2|  A                     | 1/2|  0 |  A
-     +----+----+                        +----+----+
-     | 1/2|  0 |  A^c                   |  0 | 1/2|  A^c
-     +----+----+                        +----+----+
-       00   10                            00   10
-   Row & column sums are 1/2 in both tables, but the interiors differ!
-#+end_example
+#+caption: Figure 4.3: Identical Marginals with Different Joint Distributions on $\{0,1\}^2$
+#+ATTR_LATEX: :width 0.85\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig04_coupling_table.png]]
 
 *Moral of Example 4.1:* If you know the row sum \(\mu(A)\) and column sum \(\mu(B)\) in a \(2\times 2\)
 contingency table, you still have one degree of freedom inside the table. Once you also pin down the
@@ -370,33 +362,10 @@ We claim that \(\mathcal D_A\) is itself a \(\lambda\)-system:
   \(A \cap B_n \uparrow A \cap B\). Since \(\mathcal D\) is closed under increasing unions,
   \(A \cap B \in \mathcal D\), so \(B \in \mathcal D_A\).
 
-#+caption: Figure 4.1: Visualising A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B) when B \subseteq C
-#+begin_example
-   [Left view: A \cap (C \setminus B)]
-   +-----------------------------------+
-   | C               +---------------+ |
-   |   +---------+   |               | |
-   |   | B       |   |  A \cap(C \ B)| |
-   |   |     ....|...|  ************ | |
-   |   |     ....|...|  ************ | |
-   |   +---------+   |               | |
-   |                 +---------------+ |
-   +-------------------A---------------+
-   First remove B from C, then keep the starred part inside A.
-
-   [Right view: (A \cap C) \setminus (A \cap B)]
-   +-----------------------------------+
-   | C               +---------------+ |
-   |   +---------+   |               | |
-   |   | B  #####|###|  (A \cap C)   | |
-   |   |    #A&B#|###|  \setminus    | |
-   |   |    #####|###|  (A \cap B)   | |
-   |   +---------+   |  ************ | |
-   |                 +---------------+ |
-   +-------------------A---------------+
-   First take A \cap C, then remove A \cap B \subseteq A \cap C.
-   Both views yield the exact same elements!
-#+end_example
+#+caption: Figure 4.1: Visualising $A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B)$ when $B \subseteq C$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig04_set_difference.png]]
 
 *Step 2. Start with the fixed set \(A\) in the \(\pi\)-system \(\mathcal P\).* Suppose \(A \in \mathcal P\).
 For every \(B \in \mathcal P\), the intersection \(A \cap B\) belongs to \(\mathcal P\) (because
@@ -429,19 +398,10 @@ Thus \(\mathcal D\) is both a \(\pi\)-system and a \(\lambda\)-system. By Lemma 
 \(\sigma\)-algebra containing \(\mathcal P\), so \(\sigma(\mathcal P) \subseteq \mathcal D \subseteq \mathcal L\).
 \(\blacksquare\)
 
-#+caption: Figure 4.2: Two-Step Bootstrap in Dynkin's Lemma
-#+begin_example
-Summary of the two-step bootstrap in Dynkin's Lemma:
-
-Initially known:   P  x  P  ---> in D   (since P is a pi-system)
-                   |
-                   v  [Step 2: fix A in P, use minimality of D]
-First bootstrap:   P  x  D  ---> in D
-                   |
-                   v  [Step 3: fix B in D, use minimality of D]
-Full upgrade:      D  x  D  ---> in D
-Conclusion:        D is a pi-system + lambda-system, so sigma(P) <= D!
-#+end_example
+#+caption: Figure 4.2: Two-Step Bootstrap in Dynkin's $\pi$-$\lambda$ Lemma
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig04_bootstrap.png]]
 
 ** Uniqueness of finite measures
 

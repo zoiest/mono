@@ -1,0 +1,21 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[font=\small]
+  \draw[->, thick] (0,0) -- (6.0,0) node[right] {$x$};
+  \draw[->, thick] (0,0) -- (0,3.5) node[above] {$|f(x)|$};
+
+  % Normal curve
+  \draw[very thick, blue!80!black] (0.5, 0.8) to[out=40, in=180] (2.5, 2.0) to[out=0, in=140] (5.5, 1.2);
+
+  % Essential supremum ceiling
+  \draw[thick, dashed, red!80!black] (0, 2.0) -- (5.8, 2.0) node[right] {$\|f\|_\infty = M$};
+
+  % Isolated spike on null set
+  \draw[thick, fill=red] (4.0, 3.0) circle (2pt);
+  \draw[dashed, red] (4.0, 0) -- (4.0, 3.0);
+  \node[font=\footnotesize, red!80!black, align=center] at (4.0, 3.3) 
+    {Spike on null set $\{x_0\}$\\Ordinary sup sees peak,\\essential sup ignores it!};
+\end{tikzpicture}
+\end{document}

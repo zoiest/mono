@@ -274,16 +274,9 @@ cover \(E\) by a countable sequence of elementary sets \(A_1, A_2, \dots \in \ma
 and take the **infimum** over all possible countable covers of \(E\).
 
 #+caption: Figure 5.1: Outer Measure as Infimum Over Countable Covers
-#+begin_example
-A_1            A_2               A_3          A_4 ...
- +-------------+---------------+------------------+---------+
- |   ..........|...............|.............     |         |
- |  .          |      E        |             .    |         |
- |   ..........|...............|.............     |         |
- +-------------+---------------+------------------+---------+
- Formula:
- mu*(E) = inf { sum_n mu_0(A_n) : E \subseteq \bigcup_n A_n, A_n \in A }
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig05_outer_measure_cover.png]]
 
 ** Definitions and the covering lemma
 
@@ -419,23 +412,10 @@ also holds for every test set \(T \subseteq \Omega\), so that we have exact equa
 \end{equation}
 We denote the collection of all Carathéodory-measurable subsets of \(\Omega\) by \(\mathcal M\).
 
-#+caption: Figure 5.2: Caratheodory's Splitting Criterion
-#+begin_example
-Caratheodory splitting test for candidate set E and test set T:
-
-                     Omega
-    +--------------------------------------------------+
-    |   +-------------------+                          |
-    |   | T \cap E          |   T \setminus E          |
-    |   | (part of T in E)  |   (part outside E)       |
-    |   +-------------------+                          |
-    |             T (arbitrary test set)               |
-    |            E (candidate measurable set)          |
-    +--------------------------------------------------+
-Set identity:    T = (T \cap E) \sqcup (T \setminus E)
-Caratheodory:    mu*(T) = mu*(T \cap E) + mu*(T \setminus E)
-(Must hold for ALL test sets T \subseteq \Omega!)
-#+end_example
+#+caption: Figure 5.2: Carathéodory's Splitting Criterion for Measurable Sets
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig05_caratheodory_split.png]]
 
 *Practical tip for checking \(E \in \mathcal M\):* Because \(\mu^*(T) \le \mu^*(T \cap E) + \mu^*(T \setminus E)\)
 is automatic from subadditivity, and because \(\mu^*(T) = \infty\) makes
@@ -487,18 +467,10 @@ every subset \(Z \subseteq N\) of a set \(N \in \mathcal M\) with \(\mu^*(N) = 0
      Since the opposite inequality (\(\le\)) always holds by subadditivity, equality holds and
      \(E \cup F \in \mathcal M\).
 
-#+begin_example
-   Splitting T first by E, then by F:
-   +-------------------------------------------------+
-   | T                                               |
-   |   +-------------+---------------+---------------+
-   |   |   T \cap E  | (T \ E)\cap F | T \ (E \cup F)|
-   |   +-------------+---------------+---------------+
-   |   \____________  ______________/
-   |                \/
-   |          T \cap (E \cup F)
-   +-------------------------------------------------+
-#+end_example
+#+caption: Figure 5.3: Splitting Test Set $T$ Successively by Measurable Sets $E$ and $F$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig05_caratheodory_split_ef.png]]
 
 Since \(\mathcal M\) is closed under complements and finite unions, it is an algebra (hence also closed
 under finite intersections and set differences).
@@ -611,18 +583,10 @@ Finally, under the \(\sigma\)-finiteness assumption \(E_n \in \mathcal A\), \(E_
 applied with \(\mathcal P = \mathcal A\) immediately guarantees that the extension to
 \(\sigma(\mathcal A)\) is unique. \(\blacksquare\)
 
-#+caption: Figure 5.3: Caratheodory's Extension Pipeline
-#+begin_example
-Summary of Caratheodory's Extension Pipeline:
-
-Premeasure mu_0     --> Outer measure mu*  --> Measure mu*|_M
-on algebra A            on all of 2^\Omega     on Caratheodory M
-(finitely additive)     (subadditive)          (complete sigma-algebra)
-                                                    |
-                                                    v
-                                               Measure mu on sigma(A)
-                                               (uniquely extends mu_0)
-#+end_example
+#+caption: Figure 5.3: Carathéodory's Extension Pipeline from Premeasure to Complete Measure
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig05_pipeline.png]]
 
 #+begin_quote
 *Example 5.11 (Recognizing the Lebesgue construction).* On \(\Omega = (0, 1]\), let \(\mathcal A\) be the
@@ -707,21 +671,10 @@ Then:
    \(\overline{\mathcal F}\) extending \(\mu\).
 #+end_quote
 
-#+caption: Figure 5.4: Squeezing a Completed-Measurable Set
-#+begin_example
-Squeezing a completed-measurable set E between A and B in F:
-     B  (in F)
-   +----------------------------------------+
-   |     E  (in \overline{F})               |
-   |   +--------------------------------+   |
-   |   |   A  (in F)                    |   |   B \setminus A is null
-   |   |   +------------------------+   |   |   mu(B \setminus A) = 0!
-   |   |   |                        |   |   |
-   |   |   +------------------------+   |   |
-   |   +--------------------------------+   |
-   +----------------------------------------+
-A <= E <= B with mu(B \setminus A) = 0 ===> \overline{mu}(E) = mu(A)
-#+end_example
+#+caption: Figure 5.4: Squeezing a Completed-Measurable Set $E \in \overline{\mathcal{F}}$ Between $A, B \in \mathcal{F}$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig05_completion_squeeze.png]]
 
 *Proof.*
 

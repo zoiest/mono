@@ -115,17 +115,10 @@ complicated (think of the irrationals in \([0,1]\), which contain no interval at
 says that, *as far as the measure can tell*, every Borel set is almost compact from the inside and
 almost open from the outside:
 
-#+begin_example
-        U (open, slightly bigger)
-   +-------------------------------+
-   |    E (arbitrary Borel set)    |
-   |   +-----------------------+   |
-   |   |  K (compact, slightly |   |
-   |   |      smaller)         |   |
-   |   +-----------------------+   |
-   +-------------------------------+
-          mu(U \ K) < epsilon
-#+end_example
+#+caption: Figure 8.1: Regularity Squeezing of a Borel Set: $K \subseteq E \subseteq U$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig08_regularity.png]]
 
 ** The theorem
 
@@ -293,13 +286,10 @@ Example: \(\varphi(x) = x\) on \(\mathbb R\) has support \(\mathbb R\) (not comp
 Indicator functions \(\mathbf 1_K\) jump. We want a smooth "plateau" function that is \(1\) on
 \(K\), \(0\) far away, and transitions smoothly in the gap between \(K\) and the complement of \(U\):
 
-#+begin_example
-     1 |        ___________
-       |       /    K      \
-       |      /             \
-     0 |_____/               \______
-          |<-  U  (support inside U) ->|
-#+end_example
+#+caption: Figure 8.2: Smooth Cutoff Function $\varphi \in C_c^\infty$ Between $K$ and $U$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig08_bump.png]]
 
 The building block is the classical bump \(e^{-1/(1-x^2)}\), which is smooth even though it is
 identically zero outside \((-1,1)\).

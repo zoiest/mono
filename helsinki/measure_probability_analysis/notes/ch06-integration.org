@@ -38,25 +38,10 @@ To integrate a function \(f : \Omega \to [0, \infty]\) on *any* measure space \(
    function** integral).
 3. Pass to the limit as the slices get finer and higher.
 
-#+caption: Figure 6.1: Riemann vs. Lebesgue Partitioning
-#+begin_example
-[Panel A: Riemann (chops the domain on x-axis)]
-   f(x)
-    |     _
-    |   _| |_
-    | _| | | |_
-    +-----------> x   (needs Euclidean interval domain)
-      dx dx dx
-
-[Panel B: Lebesgue (chops the range on y-axis)]
-   f(\omega)
-    |  c_3 - - - - - - .------.
-    |  c_2 - - - - .---|      |---.
-    |  c_1 - - .---|   |      |   |---.
-    +----------|---|---+------+---|---> \omega
-              E_1 E_2   E_3    E_2 E_1
-Works on ANY space: coin tosses, graphs, function spaces!
-#+end_example
+#+caption: Figure 6.1: Riemann Partitioning vs. Lebesgue Partitioning
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig06_riemann_vs_lebesgue.png]]
 
 Because nothing in the definition of a simple function requires intervals, distances, or coordinates,
 this single construction unifies:
@@ -232,20 +217,10 @@ Let us check all required properties of \(s_n\):
   - *Case 2:* \(f(\omega) = \infty\). Then \(\min\{f(\omega), n\} = n\) for every \(n\), so
     \(s_n(\omega) = n \uparrow \infty = f(\omega)\). \(\blacksquare\)
 
-#+caption: Figure 6.2: Dyadic Staircase Approximation s_n \uparrow f
-#+begin_example
-Dyadic staircase s_n(\omega) at level n=1 (grid 1/2, cap 1) vs n=2:
-height
- 2.0 |                                      .---.---  s_2 = 2
- 1.5 |                              .---.---'
- 1.0 |                      .---.---'=======.=======  s_1 = 1
- 0.5 |              .---.---'=======.
- 0.0 |      .---.---'
-     +------+-------+-------+-------+-------+-------+
-     0     1/4     1/2     3/4      1      5/4     ...
-     +----------------------------------------------> \omega
-Each step n -> n+1 halves step size (2^{-n}) and raises cap (n).
-#+end_example
+#+caption: Figure 6.2: Dyadic Staircase Approximation $s_n \uparrow f$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig06_dyadic_staircase.png]]
 
 * Nonnegative integrals and expectations
 
@@ -487,17 +462,10 @@ Let us test this on two concrete laws on \(\Omega = \mathbb N\) with \(X(n) = n\
    be finite everywhere without having a finite expectation!*
 #+end_quote
 
-#+caption: Figure 6.3: Layer-Cake Decomposition
-#+begin_example
-Layer-cake decomposition X = \sum_{k=1}^\infty 1_{X >= k}:
-height
-  3 |          +---+         k=3 layer: 1_{X >= 3}
-  2 |      +---+   +---+     k=2 layer: 1_{X >= 2}
-  1 |  +---+   +---+   +---+ k=1 layer: 1_{X >= 1}
-    +--+---+---+---+---+---+---> outcomes \omega
-  X:   1   2   3   2   1
-Sum of column heights E[X] = Sum of layer widths \sum P(X >= k)!
-#+end_example
+#+caption: Figure 6.3: Layer-Cake Decomposition of Expectation
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig06_layer_cake.png]]
 
 * Signed functions and integrability
 
@@ -815,16 +783,9 @@ uniformly bounded and \(f_n \to 0\) pointwise everywhere on \((0, 1)\), we canno
 #+end_quote
 
 #+caption: Figure 6.4: Mass Escaping into a Singularity (Strict Fatou Inequality)
-#+begin_example
-Shrinking spikes on (0,1) with area = n * (1/n) = 1:
-height
-  n |   +----+
-    |   |    |  area = 1 under every spike f_n!
-  0 +---+----+-----------------------------------> x in (0,1)
-    0  1/n
-At every fixed x > 0, the spike moves to the left of x, so f_n(x) -> 0.
-Thus \int \lim f_n = 0 < 1 = \lim \int f_n: mass escapes into x=0!
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig06_shrinking_spike.png]]
 
 ** The Dominated Convergence Theorem (DCT)
 
