@@ -77,7 +77,7 @@ When $E = \mathbb{R}^n$, we write $I(f) = \int f \, dm$.
 Let $f, g : E \to [0, +\infty]$ be measurable, $E \in \mathrm{Leb}(\mathbb{R}^n)$, and $c \ge 0$.
 1. *Consistency:* If $f \in \mathcal{Y}$, the supremum coincides with the simple function integral $I(f, E)$.
 2. *Monotonicity:* If $f \le g$ on $E$, then $\int_E f \le \int_E g$.
-3. *Domain Monotonicity:* If $A \subset B \subset E$, then $\int_A f \le \int_B f$.
+3. *Domain Monotonicity:* If $A \subset B \subset E$ with $A, B \in \mathrm{Leb}(\mathbb{R}^n)$, then $\int_A f \le \int_B f$.
 4. *Homogeneity:* $\int_E c f = c \int_E f$ (with $0 \cdot \infty = 0$).
 5. *Null Sets Carry Zero Integral:* If $m(E) = 0$, then $\int_E f = 0$ (even if $f = +\infty$).
 6. *Almost Everywhere Vanishing:*
@@ -262,13 +262,14 @@ Finally, $|f_j - f| \le |f_j| + |f| \le 2g \in L^1(E)$, so applying the same res
 Let $U \subset \mathbb{R}$ be an open interval and $f : E \times U \to \mathbb{R}$ such that:
 1. For each $t \in U$, $x \mapsto f(x, t)$ is integrable on $E$.
 2. For almost every $x \in E$, $t \mapsto f(x, t)$ is differentiable on $U$.
-3. There exists an integrable function $g \in L^1(E)$ such that for all $t \in U$:
-   $$ \left| \frac{\partial f}{\partial t}(x, t) \right| \le g(x) \quad \text{a.e. on } E. $$
+3. There exist an integrable function $g \in L^1(E)$ and a single null set $N \subset E$ (independent of $t$) such that
+   $$ \left| \frac{\partial f}{\partial t}(x, t) \right| \le g(x) \quad \text{for all } x \in E \setminus N \text{ and all } t \in U. $$
+   (Allowing the null set to depend on $t$ is not enough: a union of uncountably many null sets need not be null.)
 Then $F(t) = \int_E f(x, t) \, dm(x)$ is differentiable on $U$, and:
 $$ F'(t) = \frac{d}{dt} \int_E f(x, t) \, dm(x) = \int_E \frac{\partial f}{\partial t}(x, t) \, dm(x). $$
 #+end_quote
 *Proof:* Let $t_j \to t$ with $t_j \ne t$. The difference quotients $h_j(x) = \frac{f(x, t_j) - f(x, t)}{t_j - t}$ converge pointwise to $\frac{\partial f}{\partial t}(x, t)$.
-By the Mean Value Theorem, $|h_j(x)| = |\frac{\partial f}{\partial t}(x, \xi_j)| \le g(x)$.
+For $x \in E \setminus N$ (with $N$ also absorbing the null set of non-differentiability), the Mean Value Theorem gives $|h_j(x)| = |\frac{\partial f}{\partial t}(x, \xi_j)| \le g(x)$, where $\xi_j = \xi_j(x)$ lies between $t$ and $t_j$.
 Apply DCT directly to $h_j$! $\blacksquare$
 
 ---
@@ -279,7 +280,7 @@ Apply DCT directly to $h_j$! $\blacksquare$
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X >{\RaggedRight}X :booktabs t
 | Feature | Riemann Integral $\int_a^b f(x)\,dx$ | Lebesgue Integral $\int_{[a, b]} f\,dm$ |
 |---------+--------------------------------------+------------------------------------------|
-| *Domain Partition* | \(x\)-axis (horizontal slices $\Delta x_k$) | \(y\)-axis (vertical slices of range) |
+| *Partition* | Domain: \(x\)-axis subintervals $\Delta x_k$ (vertical strips) | Range: \(y\)-axis levels $[y_k, y_{k+1}[$ (horizontal slabs, preimages measured) |
 | *Measurable Sets* | Jordan measurable (boundary has content $0$) | Lebesgue measurable (\(\sigma\)-algebra) |
 | *Dirichlet Function $\chi_{\mathbb{Q}}$* | Not integrable | Integrable (integral $= 0$) |
 | *Limit under Integral* | Requires uniform convergence $f_j \rightrightarrows f$ | Monotone (MCT) or Dominated (DCT) |

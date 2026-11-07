@@ -68,11 +68,14 @@ Let $A \in \mathrm{Leb}(\mathbb{R}^n)$ and $f : A \to \dot{\mathbb{R}}$. The fol
   $$ \{x \in A : f(x) \le a\} = \bigcap_{k=1}^\infty \left\{x \in A : f(x) < a + \frac{1}{k}\right\}. $$
 - *(4) $\implies$ (1):*
   $\{x \in A : f(x) > a\} = A \setminus \{x \in A : f(x) \le a\}$.
-- *Connecting to open sets (5):*
-  Every open interval $]a, b[ = ]-\infty, b[ \cap ]a, +\infty[$, so
-  $$ f^{-1}(]a, b[) = \{x : f(x) < b\} \cap \{x : f(x) > a\} \in \mathrm{Leb}(\mathbb{R}^n). $$
-  Since every open set in $\mathbb{R}$ is a countable union of disjoint open intervals $G = \bigcup_k I_k$:
-  $$ f^{-1}(G) = \bigcup_k f^{-1}(I_k) \in \mathrm{Leb}(\mathbb{R}^n). \quad \blacksquare $$
+- *(1)–(4) $\implies$ (5):*
+  First, $\{f = +\infty\} = \bigcap_{k=1}^\infty \{f > k\}$ and $\{f = -\infty\} = \bigcap_{k=1}^\infty \{f < -k\}$ are measurable.
+  For a bounded open interval, $f^{-1}(]a, b[) = \{x : f(x) < b\} \cap \{x : f(x) > a\} \in \mathrm{Leb}(\mathbb{R}^n)$ (points with $f = \pm\infty$ are automatically excluded).
+  For rays, $f^{-1}(]a, +\infty[) = \{f > a\} \setminus \{f = +\infty\}$ and $f^{-1}(]-\infty, b[) = \{f < b\} \setminus \{f = -\infty\}$, both measurable.
+  Since every open set $G \subset \mathbb{R}$ is a countable union of disjoint open intervals or rays $G = \bigcup_k I_k$:
+  $$ f^{-1}(G) = \bigcup_k f^{-1}(I_k) \in \mathrm{Leb}(\mathbb{R}^n). $$
+- *(5) $\implies$ (1):*
+  $\{f > a\} = f^{-1}(]a, +\infty[) \cup f^{-1}(\{+\infty\})$, a union of two measurable sets. $\blacksquare$
 
 ---
 
