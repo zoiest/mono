@@ -367,7 +367,7 @@ starting at \(m_k\) exceeds \(2^{-k}\):
 \[
 \bigcup_{N \ge m_k} B_N = \Big\{\sup_{n \ge m_k} \Big|\sum_{j=m_k}^n Z_j\Big| > 2^{-k}\Big\} .
 \]
-By *continuity of measure from below* (Proposition 2.3),
+By *continuity of measure from below* (Proposition 2.6),
 \[
 \mathbb P\Big(\sup_{n \ge m_k} \Big|\sum_{j=m_k}^n Z_j\Big| > 2^{-k}\Big)
   = \lim_{N\to\infty} \mathbb P(B_N) \le 2^{-k} .

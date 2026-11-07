@@ -185,7 +185,7 @@ that *no* event occurs from time \(m\) onwards is zero).
   sending \(N \to \infty\) makes \(\sum_{n=m}^N \mathbb P(A_n) \to +\infty\), so
   \(\exp(-\sum_{n=m}^N \mathbb P(A_n)) \to 0\).
 - Meanwhile, the finite intersections \(B_N := \bigcap_{n=m}^N A_n^c\) decrease as \(N \to \infty\) to
-  \(\bigcap_{n \ge m} A_n^c\). By *continuity of measure from above* (Proposition 2.3),
+  \(\bigcap_{n \ge m} A_n^c\). By *continuity of measure from above* (Proposition 2.6),
   \[
   \mathbb P\Big(\bigcap_{n \ge m} A_n^c\Big) = \lim_{N\to\infty} \mathbb P\Big(\bigcap_{n=m}^N A_n^c\Big) = 0 .
   \]

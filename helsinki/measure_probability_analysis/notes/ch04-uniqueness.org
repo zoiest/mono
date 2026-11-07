@@ -89,29 +89,9 @@ Example 4.10).
   [[file:ch02-measures.org][Chapter 2]].
 - Image measures (laws of random variables) \(X_\#\mathbb P\): [[file:ch03-measurable-functions.org][Chapter 3]].
 
-** Historical remark (Probability, measure, and terminology)
+** Historical remark
 
-In their 1654 correspondence, Blaise Pascal and Pierre de Fermat discussed how to divide the stake in
-an interrupted game of chance. Christiaan Huygens's 1657 treatise studied the value of uncertain
-winnings: equal chances of receiving \(3\) or \(7\) have a fair value of \(5\). This is an
-*expectation*, not a prediction of the amount the player will actually receive on a single play.
-
-Measure theory developed much later through questions about length and integration. Émile Borel (1898)
-extended length using countable set operations, and Henri Lebesgue's thesis (1902) used measure to
-integrate functions beyond the reach of Riemann integration. These constructions also supplied
-probability models: in 1923, Hugo Steinhaus used Lebesgue measure on \([0,1]\) to model infinite
-sequences of fair binary trials. Finally, Andrey Kolmogorov's *Grundbegriffe* (1933) presented the
-modern axiomatic framework in which probabilities are measures, random variables are measurable
-functions, and expectations are integrals.
-
-Even the vocabulary took time to settle. In a 1997 interview, Joseph Doob recalled disagreeing with
-William Feller while they were writing their classic textbooks: Doob preferred "chance variable",
-Feller "random variable". Wishing to use the same term, they settled it the probabilistic way —
-"That is, we tossed for it and he won."
-
-Throughout these notes we use both the measure-theoretic and probabilistic vocabularies. Calling a
-measurable function a *random variable* does not change its mathematical definition; it simply tells us
-that the underlying measure space is a probability space \((\Omega, \mathcal F, \mathbb P)\).
+For the historical background connecting games of chance, measure theory, and the Kolmogorov framework (including the coin toss between Doob and Feller that settled "random variable"), see the historical remark in [[file:ch03-measurable-functions.org][Chapter 3]].
 
 * Why an arbitrary generating collection is not enough
 
@@ -163,7 +143,7 @@ Let \(A = \{10, 11\}\) ("first digit is \(1\)") and \(B = \{01, 11\}\) ("second 
    opposite (\(01\) or \(10\)). Agreement on \(A\) and \(B\) does not imply agreement on \(A \cap B\).
 #+end_quote
 
-#+caption: Figure 4.3: Identical Marginals with Different Joint Distributions on $\{0,1\}^2$
+#+caption: Figure 4.1: Identical Marginals with Different Joint Distributions on $\{0,1\}^2$
 #+ATTR_LATEX: :width 0.85\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig04_coupling_table.png]]
@@ -291,8 +271,8 @@ Then \(\mathcal D\) is a \(\lambda\)-system:
   so \(A \in \mathcal D\).
 
 As Example 4.1 showed, \(\mathcal D\) need *not* be a \(\sigma\)-algebra in general (in Example 4.1,
-\(\mathcal D = \{\emptyset, \Omega, A, B, A^c, B^c, (A\cap B)\cup(A^c\cap B^c), (A\cap B^c)\cup(A^c\cap B)\}\),
-which has \(8\) sets out of \(16\) and is a \(\lambda\)-system but not closed under intersections).
+\(\mathcal D = \{\emptyset, \Omega, A, B, A^c, B^c\}\), which has \(6\) sets out of \(16\) (see Worked Exercise 1)
+and is a \(\lambda\)-system but not closed under intersections).
 #+end_quote
 
 * Dynkin's lemma
@@ -362,7 +342,7 @@ We claim that \(\mathcal D_A\) is itself a \(\lambda\)-system:
   \(A \cap B_n \uparrow A \cap B\). Since \(\mathcal D\) is closed under increasing unions,
   \(A \cap B \in \mathcal D\), so \(B \in \mathcal D_A\).
 
-#+caption: Figure 4.1: Visualising $A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B)$ when $B \subseteq C$
+#+caption: Figure 4.2: Visualising $A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B)$ when $B \subseteq C$
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig04_set_difference.png]]
@@ -398,7 +378,7 @@ Thus \(\mathcal D\) is both a \(\pi\)-system and a \(\lambda\)-system. By Lemma 
 \(\sigma\)-algebra containing \(\mathcal P\), so \(\sigma(\mathcal P) \subseteq \mathcal D \subseteq \mathcal L\).
 \(\blacksquare\)
 
-#+caption: Figure 4.2: Two-Step Bootstrap in Dynkin's $\pi$-$\lambda$ Lemma
+#+caption: Figure 4.3: Two-Step Bootstrap in Dynkin's $\pi$-$\lambda$ Lemma
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig04_bootstrap.png]]
@@ -637,7 +617,7 @@ They agree on \(\mathcal P\), yet \(\mu \ne \nu\) because \(\mu(\Omega) \ne \nu(
 - *"Any generating family determines a measure":* False! Example 4.1 is the standard counterexample. You
   need the generating family \(\mathcal P\) to be closed under intersections (a \(\pi\)-system).
 - *"Every \(\lambda\)-system is a \(\sigma\)-algebra":* False! In Example 4.1, the agreement class of
-  \(\mu\) and \(\nu\) is a \(\lambda\)-system of \(8\) sets inside \(2^\Omega\) (which has \(16\) sets),
+  \(\mu\) and \(\nu\) is a \(\lambda\)-system of \(6\) sets inside \(2^\Omega\) (which has \(16\) sets),
   because \(A, B \in \mathcal D\) while \(A \cap B \notin \mathcal D\).
 - *"\(\mu\) and \(\nu\) are \(\sigma\)-finite and agree on a generating \(\pi\)-system \(\implies \mu=\nu\)":*
   False! As Example 4.12 (\(\lambda\) vs. \(2\lambda\) on half-lines) shows, the \(\sigma\)-finiteness
@@ -808,9 +788,10 @@ Let \(\mathcal P = \{(-\infty, s] \times (-\infty, t] : s, t \in \mathbb R\}\).
    \]
 2. *\(\mathcal P\) generates \(\mathcal B(\mathbb R^2)\):* From \(\mathcal P\), set differences inside
    \(\sigma(\mathcal P)\) produce strips \((a, b] \times (-\infty, t]\) and rectangles
-   \((a, b] \times (c, d]\), and every open set in \(\mathbb R^2\) is a countable union of open
-   rectangles \((a,b) \times (c,d) = \bigcup_{n=1}^\infty (a, b-1/n] \times (c, d-1/n]\). Thus
-   \(\sigma(\mathcal P) = \mathcal B(\mathbb R^2)\).
+   \((a, b] \times (c, d]\). Every open set in \(\mathbb R^2\) is a countable union of open rectangles
+   \((a,b) \times (c,d)\) with rational endpoints \(a,b,c,d \in \mathbb Q\), and each open rectangle
+   can be written as the countable union \((a,b) \times (c,d) = \bigcup_{n=1}^\infty (a, b-1/n] \times (c, d-1/n]\)
+   for \(n\) sufficiently large. Thus \(\sigma(\mathcal P) = \mathcal B(\mathbb R^2)\).
 3. Both \(\mu\) and \(\nu\) are probability measures, so \(\mu(\mathbb R^2) = 1 = \nu(\mathbb R^2)\).
 By Theorem 4.7, \(\mu = \nu\) on \(\mathcal B(\mathbb R^2)\). (This is why the joint CDF
 \(F(s,t) = \mathbb P(X \le s, Y \le t)\) uniquely determines the joint distribution of \((X,Y)\).)

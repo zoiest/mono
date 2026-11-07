@@ -328,7 +328,8 @@ of integral \(1\) (change of variables \(x = \delta y\)).
 \]
 - \(0 \le \varphi \le \int \rho_\delta = 1\).
 - If \(x\in K\): the function \(y\mapsto\rho_\delta(x-y)\) lives on the ball \(|y-x|\le\delta\), which
-  lies inside the integration set (points within \(\delta\) of \(K\)). So \(\varphi(x) = 1\).
+  lies inside the integration set \(\{y : \operatorname{dist}(y,K)\le 2\delta\}\) because
+  \(\operatorname{dist}(y,K) \le |y-x| \le \delta \le 2\delta\). So \(\varphi(x) = 1\).
 - If \(\operatorname{dist}(x,K) > 3\delta\): for \(y\) in the integration set,
   \(|x-y| \ge \operatorname{dist}(x,K) - \operatorname{dist}(y,K) > \delta\), so the integrand is
   \(0\) and \(\varphi(x) = 0\). Hence \(\operatorname{supp}\varphi\subseteq\{\operatorname{dist}(\cdot,K)\le3\delta\}\),
@@ -560,12 +561,13 @@ Let \(\mu=\delta_0+\lambda\) on \(\mathbb R\) and \(E = \{0\}\cup(\mathbb Q\cap[
 \(\mu(E) = \delta_0(E)+\lambda(E) = 1 + 0 = 1\). Take \(K=\{0\}\), compact, \(\mu(K)=1\). Enumerate
 \(\mathbb Q\cap[1,2] = \{q_1,q_2,\dots\}\) and let
 \[
-U = \Big(-\tfrac\varepsilon4,\tfrac\varepsilon4\Big)\cup\bigcup_{n}\big(q_n-\varepsilon2^{-n-2},\,q_n+\varepsilon2^{-n-2}\big).
+U = \Big(-\tfrac\varepsilon8,\tfrac\varepsilon8\Big)\cup\bigcup_{n=1}^\infty\big(q_n-\varepsilon2^{-n-2},\,q_n+\varepsilon2^{-n-2}\big).
 \]
 \(U\) is open and contains \(E\). \(U\setminus K\) contains no atom of \(\mu\) (the only atom is \(0\in K\)),
-so \(\mu(U\setminus K) = \lambda(U\setminus K)\le\varepsilon/2+\sum_n\varepsilon2^{-n-1} = \varepsilon/2 + \varepsilon/2\).
-To get strict inequality use \(\varepsilon/8\) in the first interval: then the total is at most
-\(\varepsilon/4+\varepsilon/2<\varepsilon\).
+so
+\[
+\mu(U\setminus K) = \lambda(U\setminus K)\le\frac{\varepsilon}{4}+\sum_{n=1}^\infty\varepsilon2^{-n-1} = \frac{\varepsilon}{4} + \frac{\varepsilon}{2} = \frac{3\varepsilon}{4} < \varepsilon.
+\]
 
 ** Exercise 2
 Show directly from Theorem 8.1 that if two finite Borel measures \(\mu,\nu\) on \(\mathbb R^d\) agree

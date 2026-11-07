@@ -128,7 +128,7 @@ and the product \(\prod_{j=1}^n \mathbb P(A_j)\) (since \(\mathbb P(\Omega) = 1\
 
 ** Definitions: independent events, \(\sigma\)-algebras, and random variables
 
- throughout this chapter, let \((\Omega, \mathcal F, \mathbb P)\) be a probability space.
+Throughout this chapter, let \((\Omega, \mathcal F, \mathbb P)\) be a probability space.
 
 #+begin_quote
 *Definition (Independent events).*
@@ -385,7 +385,7 @@ of a factored function \(x_1 \cdots x_n\) against a product measure splits into 
 
 Once expectations of products factor, expanding the square of a centered sum \(\sum_{j=1}^n (X_j - \mathbb E X_j)\)
 causes all cross-terms \(\mathbb E[(X_i - \mathbb E X_i)(X_j - \mathbb E X_j)]\) (\(i \ne j\)) to vanish,
-yielding the clean Pythogorean-style identity \(\operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\).
+yielding the clean Pythagorean-style identity \(\operatorname{var}(\sum_{j=1}^n X_j) = \sum_{j=1}^n \operatorname{var}(X_j)\).
 
 ** Factorization of expectations
 
@@ -477,7 +477,7 @@ Take expectations on both sides. By pairwise independence, every mixed term has 
 *Highlight.* Notice that (13.1) only requires *pairwise independence* (or even just
 \(\operatorname{cov}(X_i, X_j) = 0\) for all \(i < j\)), because every cross-term in the expanded square
 involves only two variables \(X_i\) and \(X_j\) at a time! This observation will allow us to prove the
-Weak and Strong Laws of Large Numbers in Chapters 15–16 assuming only pairwise independence.
+finite-variance Weak and Strong Laws of Large Numbers in Chapters 15–16 (Theorems 15.6 and 16.1) using only pairwise independence in the variance calculation.
 #+end_quote
 
 ** Examples from the notes
@@ -805,7 +805,7 @@ By right-continuity of \(F_X\) (or Proposition 12.6), \(F_X(c) = 1\), whereas fo
 \]
 
 ** Exercise 3
-Let \(X_1, \dots, X_n\) be independent real-valued random variables, and suppose that for every
+Let \(X_1, \dots, X_n\) be real-valued random variables, and suppose that for every
 \(x_1, \dots, x_n \in \mathbb R\), the half-line events factor:
 \[
 \mathbb P(X_1 \le x_1, \dots, X_n \le x_n) = \prod_{j=1}^n \mathbb P(X_j \le x_j) = \prod_{j=1}^n F_{X_j}(x_j).

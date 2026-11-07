@@ -213,7 +213,7 @@ Let us record the three key remarks accompanying this table in the notes:
 1. *First row (a.e. vs. a.s.):* In measure theory, \(f_n \to f\) almost everywhere means the
    exceptional set \(\{\omega : f_n(\omega) \not\to f(\omega)\}\) has measure zero. On a probability
    space (\(\mathbb P(\Omega) = 1\)), having exceptional set of measure \(0\) is the exact same thing as
-   the convergence set having probability \(1 - 0 = 1\) ("almost surely").Norm convergence in \(L^p\)
+   the convergence set having probability \(1 - 0 = 1\) ("almost surely"). Norm convergence in \(L^p\)
    is also called *strong convergence in \(L^p\)*.
 2. *Second row (convergence in measure):* More generally, on any measure space \((\Omega, \mathcal F, \mu)\),
    real-valued measurable functions \(f_n\) converge to a real-valued measurable function \(f\) *in
@@ -287,7 +287,7 @@ Assume \(X_n \to X\) a.s., and fix \(\varepsilon > 0\). We want to show that
 - Since the set of good outcomes has probability \(1\), we have \(Y_n \to 0\) almost surely.
 - Moreover, \(0 \le Y_n \le 1\), and the constant function \(1\) is integrable on a probability space
   (\(\mathbb E[1] = \mathbb P(\Omega) = 1 < \infty\)).
-- By the *Dominated Convergence Theorem* (Theorem 6.10), \(\mathbb P(|X_n - X| > \varepsilon) = \mathbb E[Y_n] \to \mathbb E[0] = 0\).
+- By the *Dominated Convergence Theorem* (Theorem 6.15), \(\mathbb P(|X_n - X| > \varepsilon) = \mathbb E[Y_n] \to \mathbb E[0] = 0\).
 
 *2. Convergence in \(L^p\) \(\implies\) in probability.*
 Assume \(\mathbb E|X_n - X|^p \to 0\), and fix \(\varepsilon > 0\).
@@ -396,7 +396,7 @@ By countable subadditivity (the union bound),
 
 *Step 3. Intersect the tail unions and verify convergence outside the null set.*
 The events \(U_m = \bigcup_{k \ge m} E_k\) decrease as \(m\) increases (\(U_1 \supseteq U_2 \supseteq \dots\)),
-and \(\mathbb P(U_1) \le 1 < \infty\). By *continuity of measure from above* (Proposition 2.3),
+and \(\mathbb P(U_1) \le 1 < \infty\). By *continuity of measure from above* (Proposition 2.6),
 \[
 \mathbb P\Big(\bigcap_{m=1}^\infty \bigcup_{k \ge m} \{|X_{n_k} - X| > 2^{-k}\}\Big)
   = \lim_{m\to\infty} \mathbb P(U_m) = 0 .
@@ -778,7 +778,7 @@ and explain the step-function proof; its full details remain in the notes for re
 Let \(X_n, X\) be random variables on \((\Omega, \mathcal F, \mathbb P)\) and let \(g : \mathbb R \to \mathbb R\)
 be a continuous function.
 1. Show that if \(X_n \to X\) almost surely, then \(g(X_n) \to g(X)\) almost surely.
-2. Using the subsequence principle (Proposition 14.3) and Exercise D, deduce that if \(X_n \to X\) in
+2. Using the subsequence principle (Proposition 14.3) and Example D, deduce that if \(X_n \to X\) in
    probability, then \(g(X_n) \to g(X)\) in probability (even when \(g\) is not uniformly continuous!).
 
 ** Solution
@@ -821,19 +821,14 @@ Prove that \(X_n \to 0\) in \(L^2\), in probability, and in distribution. If we 
 - *In \(L^2\):* \(\mathbb E|X_n - 0|^2 = \operatorname{var}(X_n) = 1/n \to 0\).
 - *In probability and in distribution:* Both follow immediately from \(L^2\) convergence by
   Proposition 14.2.
-- *Almost surely:* No, the marginal laws \(\mathcal N(0, 1/n)\) alone do not determine whether
-  \(X_n \to 0\) almost surely!
-  - If we couple them as \(X_n = n^{-1/2} Z\) for a single fixed \(Z \sim \mathcal N(0,1)\), then
-    \(X_n(\omega) = n^{-1/2} Z(\omega) \to 0\) for every \(\omega\), so \(X_n \to 0\) a.s.
-  - On the other hand, if \(X_n\) are *independent* \(\mathcal N(0, 1/n)\) variables, one can show using
-    the tail of the Gaussian distribution and the second Borel–Cantelli lemma ([[file:ch15-weak-law.org][Chapter 15]]) that
-    \(\limsup_{n\to\infty} X_n = +\infty\) almost surely (specifically, for \(\varepsilon = 1\),
-    \(\mathbb P(X_n > 1) = \mathbb P(Z > \sqrt{n}) \ge \frac{c}{\sqrt{n}} e^{-n/2}\) is summable, so in fact
-    \(\sum_n \mathbb P(|X_n| > \varepsilon) < \infty\) *does* hold here! Wait: let's check via Markov
-    \(\mathbb E[X_n^4] = 3/n^2\): since \(\sum_n \mathbb P(|X_n| > \varepsilon) \le \varepsilon^{-4} \sum_n 3/n^2 < \infty\),
-    \(X_n \to 0\) a.s. for *every* coupling when \(\operatorname{var}(X_n) = 1/n\)! By contrast, for
-    \(Y_n \sim \mathcal N(0, 1/\log(n+1))\), \(Y_n = (\log(n+1))^{-1/2} Z \to 0\) a.s., whereas independent
-    \(Y_n\) satisfy \(\sum_n \mathbb P(Y_n > 1) = \infty\) and do *not* converge to \(0\) a.s.).
+- *Almost surely:* *Yes*, we can decide: \(X_n \to 0\) almost surely under *every* coupling!
+  - For any fixed \(\varepsilon > 0\), Markov's inequality with the 4th moment \(\mathbb E[X_n^4] = 3/n^2\) gives
+    \[
+    \mathbb P(|X_n| > \varepsilon) \le \varepsilon^{-4} \mathbb E[X_n^4] = \frac{3}{\varepsilon^4 n^2} .
+    \]
+  - Since \(\sum_{n=1}^\infty \frac{1}{n^2} < \infty\), we have \(\sum_{n=1}^\infty \mathbb P(|X_n| > \varepsilon) < \infty\).
+  - By the First Borel–Cantelli Lemma ([[file:ch15-weak-law.org][Chapter 15]]), which requires no independence or coupling assumption whatsoever, \(X_n \to 0\) almost surely under *every* coupling!
+  - By contrast, for sequences where probabilities are not summable, such as \(Y_n \sim \mathcal N(0, 1/\log(n+1))\) or \(Y_n \sim \operatorname{Bernoulli}(1/n)\), we have \(\sum_{n=1}^\infty \mathbb P(|Y_n| > \varepsilon) = \infty\), so whether \(Y_n \to 0\) a.s. depends heavily on the joint coupling (e.g. \(Y_n = (\log(n+1))^{-1/2} Z \to 0\) a.s., whereas independent \(Y_n\) fail to converge a.s. by the Second Borel–Cantelli Lemma).
 
 ** Exercise 4 (Slutsky's theorem, additive part)
 Suppose \(X_n, Y_n\) live on the same probability space, \(X_n \Rightarrow X\), and \(Y_n \to 0\) in

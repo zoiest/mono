@@ -499,8 +499,8 @@ define \(C_n := A_1 \setminus A_n\) for \(n \in \mathbb{N}\).
    \mu(A_n) = \mu(A_1) - \mu(A_1 \setminus A_n) \longrightarrow \mu(A_1) - \mu(A_1 \setminus A) = \mu(A). \qquad \square
    \]
 
-*(Bonus enhancement:* In Proposition 2.6(ii), what if \(\mu(A_1) = \infty\), wait — what if
-\(\mu(A_N) < \infty\) for *some* later index \(N \ge 1\)? Then we can simply discard the first
+*(Bonus enhancement:* In Proposition 2.6(ii), what if \(\mu(A_1) = \infty\) but
+\(\mu(A_N) < \infty\) for some later index \(N \ge 1\)? Then we can simply discard the first
 \(N - 1\) terms and apply Proposition 2.6(ii) starting at \(A_N\), so \(\mu(A_n) \to \mu(A)\) still
 holds whenever \(\mu(A_N) < \infty\) for at least one \(N\). What fails is when \(\mu(A_n) = \infty\)
 for *all* \(n\), as Example 2.7 now demonstrates!)
