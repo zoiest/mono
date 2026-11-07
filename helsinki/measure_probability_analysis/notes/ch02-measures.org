@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch02:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -82,7 +84,7 @@ surely* in probability), meaning they hold outside a negligible set of measure z
   sets, and the Borel \(\sigma\)-algebra \(\mathcal{B}(\mathbb{R})\): [[file:ch01-measurable-spaces.org][Chapter 1]].
 - Basic properties of suprema and limits of monotone sequences in \([0, \infty]\): [[file:ch00-toolkit.org][Chapter 0]].
 
-* 2.0 Definition and first examples of measures
+* Definition and first examples of measures
 
 ** Intuition
 
@@ -303,7 +305,7 @@ Neither case is compatible with \(\mathbb{P}(\mathbb{N}) = 1\). Therefore, an in
 like "choose a positive integer uniformly at random" does *not* define a countably additive
 probability model! \(\square\)
 
-* 2.1 Two consequences of countable additivity
+* Two consequences of countable additivity
 
 ** Intuition
 
@@ -408,7 +410,7 @@ the events \(A_n\) occurs. Lemma 2.5 says this is at most \(\sum_{n=1}^\infty \m
 *with no independence assumption whatsoever*: overlaps between the events \(A_n\) can only cause the
 right-hand sum \(\sum_{n=1}^\infty \mathbb{P}(A_n)\) to count the overlapping outcomes multiple times.
 
-* 2.2 Continuity of a measure
+* Continuity of a measure
 
 ** Intuition
 
@@ -426,20 +428,33 @@ monotone way:
   into an expanding sequence \(A_1 \setminus A_n \uparrow A_1 \setminus A\), and subtracting from
   \(\mu(A_1)\) shows \(\mu(A_n) \to \mu(A)\).
 
+#+caption: Figure 2.1: Continuity of Measures (Monotone Limits)
 #+begin_example
-   Increasing sets: A_n \uparrow A               Decreasing sets: A_n \downarrow A
-       A = \bigcup_{n=1}^\infty A_n                  A = \bigcap_{n=1}^\infty A_n
-     - - - - - - - - - - - - - - -                 +-------------------------------+
-   :   +-----------------------+   :               | A_1                           |
-   :   | A_3                   |   :               |   +-----------------------+   |
-   :   |   +---------------+   |   :               |   | A_2                   |   |
-   :   |   | A_2           |   |   :               |   |   +---------------+   |   |
-   :   |   |   +-------+   |   |   :               |   |   | A_3           |   |   |
-   :   |   |   |  A_1  |   |   |   :               |   |   |   : - - - :   |   |   |
-   :   |   |   +-------+   |   |   :               |   |   |   :   A   :   |   |   |
-   :   |   +---------------+   |   :               |   |   |   : - - - :   |   |   |
-   :   +-----------------------+   :               |   |   +---------------+   |   |
-     - - - - - - - - - - - - - - -                 +---+-----------------------+---+
+[Panel A: Increasing sets A_n \uparrow A = \bigcup_{n=1}^\infty A_n]
+  - - - - - - - - - - - - - - -
+:   +-----------------------+   :
+:   | A_3                   |   :
+:   |   +---------------+   |   :
+:   |   | A_2           |   |   :
+:   |   |   +-------+   |   |   :
+:   |   |   |  A_1  |   |   |   :
+:   |   |   +-------+   |   |   :
+:   |   +---------------+   |   :
+:   +-----------------------+   :
+  - - - - - - - - - - - - - - -
+
+[Panel B: Decreasing sets A_n \downarrow A = \bigcap_{n=1}^\infty A_n]
++-------------------------------+
+| A_1                           |
+|   +-----------------------+   |
+|   | A_2                   |   |
+|   |   +---------------+   |   |
+|   |   | A_3           |   |   |
+|   |   |   : - - - :   |   |   |
+|   |   |   :   A   :   |   |   |
+|   |   |   : - - - :   |   |   |
+|   |   +---------------+   |   |
++---+-----------------------+---+
 #+end_example
 
 ** Monotone sequences of sets and Proposition 2.6

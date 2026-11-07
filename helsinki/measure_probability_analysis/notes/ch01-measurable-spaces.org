@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch01:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -81,7 +83,7 @@ outcomes, infinite sequences of coin tosses, or continuous functions (paths) on 
 - This is the first chapter of the main text. If you want a refresher on basic set notation,
   countability of \(\mathbb{Q}\), or open sets in \(\mathbb{R}\), see [[file:ch00-toolkit.org][Chapter 0 (Toolkit)]].
 
-* 1.1 Sets, subsets, and the power set
+* Sets, subsets, and the power set
 
 ** Intuition
 
@@ -182,7 +184,7 @@ different requirements.
 - Is \(\{\emptyset\} = \emptyset\)? *No:* \(\emptyset\) has \(0\) elements, while \(\{\emptyset\}\)
   is a collection containing \(1\) element (namely, the empty set).
 
-* 1.2 Set operations and sequences
+* Set operations and sequences
 
 ** Intuition
 
@@ -289,7 +291,7 @@ and \(\Omega \setminus B = B^c\).
   \(\bigcup_{n=1}^\infty B_n = \mathbb{N}\), but they are *not* pairwise disjoint (in fact,
   \(B_1 \subseteq B_2 \subseteq B_3 \subseteq \cdots\), so \(B_m \cap B_n = B_{\min(m,n)} \ne \emptyset\)).
 
-* 1.3 Which sets are measurable?
+* Which sets are measurable?
 
 ** Intuition
 
@@ -397,13 +399,20 @@ measurable.
   combines whichever of the two blocks \(D\) and \(D^c\) appear in the sequence, producing again one
   of the four sets \(\emptyset, D, D^c, \Omega \in \mathcal{F}\).
 
+#+caption: Figure 1.2: Coarse vs. Fine sigma-Algebras (Parity vs. Power Set)
 #+begin_example
-   Only parity recorded: F = {emptyset, D, D^c, Omega}         Exact outcome recorded: 2^Omega
-   +-----------------------+ +-----------------------+         +---+ +---+ +---+ +---+ +---+ +---+
-   |   1       3       5   | |   2       4       6   |         | 1 | | 2 | | 3 | | 4 | | 5 | | 6 |
-   |       odd (D^c)       | |       even (D)        |         +---+ +---+ +---+ +---+ +---+ +---+
-   +-----------------------+ +-----------------------+         Each outcome can be distinguished
-   A measurable set must contain ALL or NONE of each block.    from the others (64 subsets).
+   [Case A: Only parity recorded — F = {emptyset, D, D^c, Omega}]
+   +-----------------------+   +-----------------------+
+   |   1       3       5   |   |   2       4       6   |
+   |       odd (D^c)       |   |       even (D)        |
+   +-----------------------+   +-----------------------+
+   A measurable set must contain ALL or NONE of each block (4 sets).
+
+   [Case B: Exact outcome recorded — 2^Omega]
+   +---+  +---+  +---+  +---+  +---+  +---+
+   | 1 |  | 2 |  | 3 |  | 4 |  | 5 |  | 6 |
+   +---+  +---+  +---+  +---+  +---+  +---+
+   Each outcome can be distinguished from the others (64 subsets).
 #+end_example
 
 As the lecture notes point out, \(\{6\} \notin \mathcal{F}\) is already a genuine example of a
@@ -449,7 +458,7 @@ E = \bigcup_{n=1}^\infty \{2n\} = \{2, 4, 6, 8, \dots\}.
 \]
 Both \(E\) and \(E^c = \{1, 3, 5, 7, \dots\}\) are infinite, so \(E \notin \mathcal{A}\).
 
-* 1.4 Generated sigma-algebras
+* Generated sigma-algebras
 
 ** Intuition
 
@@ -575,6 +584,7 @@ are equal:
 - Conversely, to show \(\sigma(\mathcal{A}_2) \subseteq \sigma(\mathcal{A}_1)\), check that every
   generator in \(\mathcal{A}_2\) belongs to \(\sigma(\mathcal{A}_1)\).
 
+#+caption: Figure 1.3: Generating the Borel sigma-Algebra from Rational Half-Lines
 #+begin_example
 Roadmap of the reverse inclusion:
    Rational half-lines (-\infty, q]   (q \in \mathbb{Q})
@@ -583,11 +593,11 @@ Roadmap of the reverse inclusion:
         v
    Real half-lines     (-\infty, t]   (t \in \mathbb{R})
         |
-        |  Step 2: Complement + countable union of (-\infty, b - 1/n]
+        |  Step 2: Complement + union of (-\infty, b - 1/n]
         v
-   Open intervals      (a, b)         (a < b in \mathbb{R}, in particular p < q in \mathbb{Q})
+   Open intervals      (a, b)         (a < b in \mathbb{R})
         |
-        |  Step 3: Countable union of rational intervals (p, q) \subseteq U
+        |  Step 3: Countable union of rational intervals
         v
    Arbitrary open set  U \subseteq \mathbb{R}
 #+end_example

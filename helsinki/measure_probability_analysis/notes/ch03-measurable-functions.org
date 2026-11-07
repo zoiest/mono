@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch03:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -85,7 +87,7 @@ course:
 - Measures, probability measures, Dirac measure \(\delta_x\), and almost everywhere / almost surely:
   [[file:ch02-measures.org][Chapter 2]].
 
-* 3.0 Preimages, measurable functions, and indicators
+* Preimages, measurable functions, and indicators
 
 ** Intuition
 
@@ -93,19 +95,20 @@ Suppose \(X : \Omega \to S\) is a function. Given a subset \(B \subseteq S\) of 
 pull \(B\) back along the arrows of \(X\) to ask: *which domain points \(\omega \in \Omega\) land
 inside \(B\)?*
 
+#+caption: Figure 3.1: Preimage of a Measurable Set Under Mapping X
 #+begin_example
-       Domain \Omega                   X : \Omega \to S                Target S
-   +-------------------+                                         +-------------------+
-   |   (w_1) ----------+---------------------------------------->|---> (s_1)         |
-   |                   |                                         |               B   |
-   |  +-------------+  |                                         |  +-------------+  |
-   |  | (w_2) ------+--+---------------------------------------->|->|-> (s_2)     |  |
-   |  |             |  |                                         |  |     ^       |  |
-   |  | (w_3) ------+--+-----------------------------------------+--+-----+       |  |
-   |  |             |  |                                         |  |   (s_3)     |  |
-   |  +-------------+  |                                         |  +-------------+  |
-   |    X^{-1}(B)      |                                         |                   |
-   +-------------------+                                         +-------------------+
+Domain \Omega             X : \Omega \to S          Target S
++-------------------+                              +-------------------+
+|   (w_1) ----------+----------------------------->|---> (s_1)         |
+|                   |                              |               B   |
+|  +-------------+  |                              |  +-------------+  |
+|  | (w_2) ------+--+----------------------------->|->|-> (s_2)     |  |
+|  |             |  |                              |  |     ^       |  |
+|  | (w_3) ------+--+------------------------------+--+-----+       |  |
+|  |             |  |                              |  |   (s_3)     |  |
+|  +-------------+  |                              |  +-------------+  |
+|    X^{-1}(B)      |                              |                   |
++-------------------+                              +-------------------+
 #+end_example
 
 As Figure 3.1 in the lecture notes illustrates, notice two crucial features of the preimage
@@ -213,7 +216,7 @@ A^c & \text{if } 0 \in B \text{ and } 1 \notin B, \\
 In probability language: an event \(A \in \mathcal{F}\) gives a binary random variable \(\mathbf{1}_A\)
 that equals \(1\) when \(A\) occurs and \(0\) when \(A\) does not occur.
 
-* 3.1 Checking measurability
+* Checking measurability
 
 ** Intuition
 
@@ -398,7 +401,7 @@ that information if and only if \(f(\omega)\) depends only on whether \(\omega\)
   space or infinite coin-tossing space), no topology or notion of "open set" may even be given;
   measurability uses only the \(\sigma\)-algebras \(\mathcal{F}\) and \(\mathcal{S}\), not continuity.
 
-* 3.2 Image measures and the language of distributions
+* Image measures and the language of distributions
 
 ** Intuition
 
@@ -411,15 +414,16 @@ Think of \(\mu\) as a distribution of mass on \(\Omega\). For each point \(\omeg
 up inside a measurable region \(B \in \mathcal{S}\) of the target space? Precisely the mass of all
 domain points \(\omega \in \Omega\) that landed inside \(B\) — namely \(\mu(X^{-1}(B))\)!
 
+#+caption: Figure 3.2: Push-forward / Image Measure Construction
 #+begin_example
-   Domain (\Omega, \mathcal{F}, \mu)             X               Target (S, \mathcal{S}, X_# \mu)
-   +-------------------------------+                           +-------------------------------+
-   |    +---------------------+    |                           |         +-----------+         |
-   |    |      X^{-1}(B)      |----+----- pushes mass -------->|-------->|     B     |         |
-   |    |  mass = \mu(X^{-1}B)|    |      forward via X        |         | (X_#\mu)B |         |
-   |    +---------------------+    |                           |         +-----------+         |
-   +-------------------------------+                           +-------------------------------+
-                               (X_# \mu)(B) := \mu(X^{-1}(B))
+Domain (\Omega, \mathcal{F}, \mu)       Target (S, \mathcal{S}, X_# \mu)
++---------------------------+            +---------------------------+
+|   +-------------------+   |            |       +-----------+       |
+|   |     X^{-1}(B)     |---+-- pushes ->|------>|     B     |       |
+|   | mass = \mu(X^-1 B)|   |  mass fwd  |       | (X_#\mu)B |       |
+|   +-------------------+   |            |       +-----------+       |
++---------------------------+            +---------------------------+
+            Formula: (X_# \mu)(B) := \mu(X^{-1}(B))
 #+end_example
 
 In probability, when \(\mu = \mathbb{P}\) is a probability measure on \(\Omega\), this pushed-forward

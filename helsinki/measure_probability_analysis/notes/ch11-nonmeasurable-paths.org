@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch11:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -87,7 +89,7 @@ quantities like \(\sup_{t \in [0,1]} f(t)\) become honestly measurable (Example 
 - The fair-coin probability space \((\{0,1\}^{\mathbb N}, \mathcal F, \mathbb P)\) and initial
   cylinders: [[file:ch10-infinite-products.org][Chapter 10]].
 
-* 11.1 Changing finitely many bits
+* Changing finitely many bits
 
 ** Intuition
 
@@ -106,13 +108,17 @@ chosen representatives \(V\), then the whole space \(\Omega = \{0,1\}^{\mathbb N
 into countably many disjoint copies \(T_F(V)\) (one for each finite subset \(F \subseteq \mathbb N\)),
 all of which must have the *exact same* probability \(\mathbb P(V)\):
 
+#+caption: Figure 11.1: Partition of the Fair-Coin Space by Bit-Flip Translates
 #+begin_example
-   Omega = {0,1}^N  (total probability = 1)
-   +-------------+-------------+-------------+-------------+---
-   |   T_empty V |   T_{1} V   |   T_{2} V   |  T_{1,2} V  |  ...  (countably many
-   |    = V      |             |             |             |        disjoint copies)
-   |  prob = a   |  prob = a   |  prob = a   |  prob = a   |
-   +-------------+-------------+-------------+-------------+---
+Omega = {0,1}^N  (total probability = 1)
++-------------------------------------------------------------+
+| T_empty V |  T_{1} V  |  T_{2} V  | T_{1,2} V | ...         |
+|   = V     |           |           |           | (countable  |
+|           |           |           |           |  disjoint)  |
++-------------------------------------------------------------+
+If V were measurable, all copies would share the same probability p.
+- If p = 0: sum_F P(T_F V) = 0 != 1 (contradiction!).
+- If p > 0: sum_F P(T_F V) = \infty != 1 (contradiction!).
 #+end_example
 
 What can the common probability \(a = \mathbb P(V)\) be?
@@ -272,7 +278,7 @@ we get sequences starting with arbitrarily many zeros, each strictly smaller in 
 and the infimum \((0, 0, 0, \dots)\) differs from \(\omega\) in *infinitely* many coordinates so it
 is not in \([\omega]\). No simple formula can choose a representative from every class.
 
-* 11.2 What countably many coordinates can detect
+* What countably many coordinates can detect
 
 ** Intuition
 
@@ -429,7 +435,7 @@ Since \(\mathbb Q \cap [0,1]\) is *countable*, \(E\) is a countable intersection
 Borel cylinders, so \(E\) *is* in the product \(\sigma\)-algebra! It depends on the countable set
 \(J = \mathbb Q \cap [0,1]\).
 
-* 11.3 Fixed times and whole paths
+* Fixed times and whole paths
 
 ** Intuition
 
@@ -457,19 +463,20 @@ has probability \(0\). But to say the *entire paths* agree is to stay outside \(
 which is an *uncountable* union of null sets — and an uncountable union of null sets can have
 probability \(1\)!
 
+#+caption: Figure 11.2: The Random Spike Process
 #+begin_example
-   Time t in [0,1]
-     1 +-----------------------------------+
-       |                                 / |  Y_t(omega) = 1 if t = omega,
-       |                               /   |               0 otherwise.
-       |                             /     |
-     t | - - - - - - - - - - - - - *       |  <-- For fixed t: only hits spike at
-       |                         / |       |      the single outcome omega = t
-       |                       /   |       |      (Lebesgue measure 0!).
-       |                     /     |       |
-     0 +-------------------+-------+-------+  <-- For fixed omega: path t -> Y_t(omega)
-       0                         omega     1      ALWAYS has a spike at t = omega!
-                                                  Outcome omega in [0,1]
+t | - - - - - - - - - - - - - *       |  <-- Fixed t: only hits spike
+    |                             |       |      when omega = t (prob 0)
+  0 +-----------------------------+-------+
+    0                             t       1
+                                outcome omega
+
+    Sample paths t -> Y_t(omega):
+  1 |                             *
+    |                             |
+  0 +-------------------+---------+-------+  <-- Fixed omega: spike of
+    0                   |         omega   1      height 1 at t = omega!
+                      Time t in [0,1]
 #+end_example
 
 ** The random spike example
@@ -557,7 +564,7 @@ countable dense set of times \(\mathbb Q \cap [0,1]\) forces agreement at *all* 
 "modification" to "indistinguishable".
 #+end_quote
 
-* 11.4 Using continuous paths as the sample space
+* Using continuous paths as the sample space
 
 ** Intuition
 
@@ -589,7 +596,7 @@ B(g, r) := \{f \in C([0,1]) : \|f - g\|_\infty < r\}.
        ^
        |          . . . . . . . . .          <-- g(t) + r
        |      . '   _______         ' .
-       |    .     /         \           .    <-- f(t) stays strictly inside tube
+       |    .     /         \           .    <-- f stays inside tube
        |   .     /   g(t)    \___________ .  <-- g(t) (center path)
        |        /
        |    . ' . . . . . . . . . . . . . '  <-- g(t) - r

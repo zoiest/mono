@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch00:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -44,7 +46,7 @@ course.
 *What you need from earlier chapters.* Nothing: this is the starting point. You should be comfortable
 with calculus-level limits and with reading simple proofs.
 
-* 0.1 Sets and the algebra of sets
+* Sets and the algebra of sets
 
 ** Membership and inclusion
 
@@ -152,7 +154,7 @@ The proof is identical to the two-set case: "\(\omega\) is in no \(A_i\)" means 
 - "Infinitely many operations" can produce sets of a different nature (Example 0.5): this is exactly why
   measure theory insists on *countable* operations.
 
-* 0.2 Functions, images and preimages
+* Functions, images and preimages
 
 A *function* (or *map*) \(f:X\to Y\) assigns to every \(x\in X\) exactly one value \(f(x)\in Y\). \(X\) is the
 *domain*, \(Y\) the *target* (codomain).
@@ -218,7 +220,7 @@ measurable". With images, nothing would work.
 - \(f^{-1}(f(A))\supseteq A\), and it can be strictly larger: with \(f(x)=x^2\), \(f^{-1}(f(\{1\}))=\{-1,1\}\).
 - \(f(f^{-1}(B))\subseteq B\), and it can be strictly smaller: \(f(f^{-1}([-1,1]))=[0,1]\).
 
-* 0.3 Countable and uncountable sets
+* Countable and uncountable sets
 
 #+begin_quote
 *Definition 0.13.* A set \(A\) is *countable* if it is finite or its elements can be listed in a sequence
@@ -282,7 +284,7 @@ Chapter 4 as the sample space of infinitely many coin tosses.
 singletons, each of length zero, yet its length is one. There is no contradiction, precisely because
 uncountable unions are not covered by the axioms (Chapter 2, Example 2.8).
 
-* 0.4 The extended half-line \([0,\infty]\)
+* The extended half-line \([0,\infty]\)
 
 Measures can be infinite (the length of \(\mathbb{R}\) is infinite). So we work in
 \([0,\infty]=[0,\infty)\cup\{\infty\}\), where \(\infty\) is a new symbol, larger than every real number.
@@ -311,7 +313,7 @@ every subset of \([0,\infty]\) has a supremum in \([0,\infty]\) (Section 0.5); e
 *Common confusions.* \(a+c=b+c\) does *not* imply \(a=b\) if \(c=\infty\). \(\infty\) is not a real number; "\(x_n\to\infty\)"
 in \([0,\infty]\) is genuine convergence to the element \(\infty\).
 
-* 0.5 Supremum and infimum
+* Supremum and infimum
 
 #+begin_quote
 *Definition 0.18.* Let \(S\subseteq\mathbb{R}\). A number \(u\) is an *upper bound* of \(S\) if \(s\le u\) for all \(s\in S\). The
@@ -346,7 +348,7 @@ real numbers converges to \(\sup_n x_n\) (which may be \(\infty\)). A decreasing
 \(u-\varepsilon<x_N\le x_n\le u\) for all \(n\ge N\). If \(u=\infty\), for every \(M\) some \(x_N>M\), hence all later terms
 exceed \(M\). \(\square\)
 
-* 0.6 \(\limsup\) and \(\liminf\)
+* \(\limsup\) and \(\liminf\)
 
 ** For sequences of numbers
 
@@ -404,7 +406,7 @@ Properties:
 3. \(A_n=[0,1/n]\subseteq\mathbb{R}\): decreasing, so \(\limsup A_n=\liminf A_n=\{0\}\).
 4. \(A_n=\{n\}\subseteq\mathbb{N}\): every \(m\) lies in only one \(A_n\), so \(\limsup A_n=\liminf A_n=\emptyset\).
 
-* 0.7 Series of nonnegative terms
+* Series of nonnegative terms
 
 #+begin_quote
 *Definition 0.26.* For \(a_n\in[0,\infty]\),
@@ -444,7 +446,7 @@ This is why measures (which add nonnegative numbers) cause no ordering problems.
 /Proof sketch./ Each iterated sum is a supremum of finite sums over rectangles \(\{1..M\}\times\{1..N\}\), and
 every finite subset of \(\mathbb{N}^2\) lies in such a rectangle; apply Proposition 0.28. \(\square\)
 
-* 0.8 Basic topology of \(\mathbb{R}\)
+* Basic topology of \(\mathbb{R}\)
 
 #+begin_quote
 *Definition 0.30.* A set \(U\subseteq\mathbb{R}\) is *open* if for every \(x\in U\) there is \(\varepsilon>0\) with
@@ -480,7 +482,7 @@ need this.) This theorem is the reason the Borel \(\sigma\)-algebra can be gener
 *Continuity via preimages.* \(f:\mathbb{R}\to\mathbb{R}\) is continuous iff \(f^{-1}(U)\) is open for every open \(U\). This preimage
 formulation is the model for the definition of measurable functions (Chapter 3).
 
-* 0.9 Indicator functions
+* Indicator functions
 
 #+begin_quote
 *Definition 0.32.* For \(A\subseteq\Omega\), the *indicator function* \(\mathbf 1_A:\Omega\to\mathbb{R}\) is

@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch08:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -104,7 +106,7 @@ add up finitely many finite numbers.)
 - *Non-example:* counting measure \(\#\) on \(\mathbb R\) (number of points; \(\infty\) for infinite sets).
   \(\#([0,1]) = \infty\).
 
-* 8.1 Approximating Borel sets
+* Approximating Borel sets
 
 ** Intuition
 
@@ -275,7 +277,7 @@ work together, since every compact \(K\) has \(\lambda(U\setminus K) = \infty\).
 - The inner sets are *compact*, the outer sets *open*; you cannot swap them (an open set inside
   \(\mathbb Q\cap[0,1]\) must be empty).
 
-* 8.2 Smooth functions between compact and open sets
+* Smooth functions between compact and open sets
 
 ** Vocabulary
 
@@ -478,7 +480,7 @@ exactly.
 - Density fails for \(p=\infty\) (Example 8.6), and also for non-locally-finite measures in general.
 - The approximating \(\varphi\) depends on \(\mu\) and \(p\).
 
-* 8.3 Approximation of functions without a finite moment
+* Approximation of functions without a finite moment
 
 ** Intuition
 

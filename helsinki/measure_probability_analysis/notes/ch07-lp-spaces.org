@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch07:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -82,7 +84,7 @@ We briefly review three elementary notions from calculus and real analysis so th
 3. *Absolute convergence implies convergence in \(\mathbb{R}\).*
    In \(\mathbb{R}\), if \(\sum_{k=1}^\infty |d_k| < \infty\), then the partial sums \(S_k = \sum_{j=1}^{k} d_j\) form a Cauchy sequence in \(\mathbb{R}\) (since \(|S_m - S_k| \le \sum_{j=k+1}^m |d_j| \to 0\)) and therefore converge to a finite real number.
 
-* 7.1 Functions equal almost everywhere
+* Functions equal almost everywhere
 
 ** Intuition
 
@@ -98,15 +100,17 @@ The remedy is simple: we declare two measurable functions to be *the same elemen
 
 Similarly, what should the "\(p = \infty\)" norm \(\|f\|_\infty\) be? The ordinary supremum \(\sup_{\omega \in \Omega} |f(\omega)|\) is too sensitive to null sets: for \(g = \mathbf{1}_{\{1/2\}}\) on \([0,1]\) with Lebesgue measure, \(\sup g = 1\) even though \(g = 0\) almost everywhere. Instead, we use the *essential supremum*: the smallest constant \(M \ge 0\) that bounds \(|f|\) *almost everywhere*.
 
+#+caption: Figure 7.1: Essential Supremum vs. Pointwise Supremum
 #+begin_example
-   |f(x)|
-     ^
-     |          *  <-- Isolated spike on a null set (e.g. a single point for Lebesgue measure):
-     |                 ordinary sup sees this peak, but essential sup ignores it!
-   M |----------.-------------------------.----------  <-- ||f||_infty = M (smallest ceiling
-     |         / \                       / \               holding outside a null set)
-     |   _____/   \_____________________/   \_____
-     +---------------------------------------------> x
+|f(x)|
+  ^
+  |          *  <-- Spike on null set: ordinary sup sees it,
+  |                 essential sup ignores it!
+M |----------.-------------------------.----------  <-- ||f||_\infty = M
+  |         / \                       / \               (holds a.e.)
+  |        /   \                     /   \
+  |  .----'     `-------------------'     `----.
+0 +------------------------------------------------> x
 #+end_example
 
 ** Definitions and Equivalence Classes
@@ -188,7 +192,7 @@ Thus \(x^{-\alpha} \in L^p((1, \infty))\) iff \(\alpha > 1/p\) (and it belongs t
 - \(f_3(x) = x^{-1/2}\mathbf{1}_{(0,1)}(x) + x^{-1}\mathbf{1}_{(1,\infty)}(x)\) belongs to neither \(L^1\) nor \(L^2\)!
 Thus on an infinite measure space like \((0, \infty)\) or \(\mathbb{R}\), neither \(L^1\) nor \(L^2\) is contained in the other.
 
-* 7.2 The two norm inequalities
+* The two norm inequalities
 
 ** Intuition
 
@@ -335,7 +339,7 @@ Thus \(\|f\|_\infty + \|g\|_\infty\) is an almost-everywhere upper bound for \(|
 - *Does \(L^p\) work for \(0 < p < 1\)?* You can still define \(\|f\|_p = (\int |f|^p \, d\mu)^{1/p}\), cleanly, for \(0 < p < 1\), *but Minkowski's inequality fails* (in fact it reverses for nonnegative functions because \(t \mapsto t^p\) is concave when \(0 < p < 1\)). For example, on \([0,1]\) with \(p = 1/2\), take \(f = \mathbf{1}_{[0, 1/2]}\) and \(g = \mathbf{1}_{(1/2, 1]}\): then \(\|f\|_{1/2} = (1/2)^2 = 1/4\), \(\|g\|_{1/2} = 1/4\), while \(\|f + g\|_{1/2} = 1 > 1/4 + 1/4\). That is why we restrict to \(p \ge 1\).
 - *Did we forget to conjugate when \(p = 2\)?* No—for real-valued functions, \(p = 2\) is self-conjugate (\(1/2 + 1/2 = 1\)), and \(\langle f, g \rangle := \int_\Omega fg \, d\mu\) makes \(L^2(\mu)\) an inner product space!
 
-* 7.3 Completeness
+* Completeness
 
 ** Intuition
 
@@ -354,21 +358,18 @@ The brilliant trick in the proof of Theorem 7.7 is:
    converges *absolutely* in \(\mathbb{R}\) to a pointwise limit \(f(\omega)\).
 4. Finally, since the subsequence \(f_{n_k}\) converges in \(L^p\) to \(f\) and the whole sequence \((f_n)\) is Cauchy, the whole sequence is dragged along to \(f\) in \(L^p\) norm!
 
+#+caption: Figure 7.2: Riesz-Fischer Completeness Proof Architecture
 #+begin_example
-   General Cauchy sequence (f_n) in L^p: may oscillate pointwise!
-          |
-          |  Step 1: Extract fast subsequence ||f_{n_{k+1}} - f_{n_k}||_p <= 2^{-k}
-          v
-   Summable differences: h = sum_k |f_{n_{k+1}} - f_{n_k}| has ||h||_p <= 1  (Minkowski + MCT)
-          |
-          |  Step 2: {h = infty} is a null set => telescoping series converges a.e. to f
-          v
-   Pointwise a.e. limit f = f_{n_1} + sum_{j=1}^infty (f_{n_{j+1}} - f_{n_j}) in L^p
-          |
-          |  Step 3: Tail bound ||f - f_{n_k}||_p <= sum_{j=k}^infty 2^{-j} -> 0
-          |          + triangle inequality ||f_n - f||_p <= ||f_n - f_{n_k}||_p + ||f_{n_k} - f||_p
-          v
-   Full sequence converges in norm: ||f_n - f||_p -> 0!
+Cauchy sequence (f_n) in L^p:
+       |  Step 1: Fast subsequence ||f_{n_{k+1}} - f_{n_k}||_p <= 2^{-k}
+       v
+Differences: h = \sum |f_{n_{k+1}} - f_{n_k}| has ||h||_p <= 1
+       |  Step 2: h < \infty a.e. => telescoping series converges a.e.
+       v
+Pointwise a.e. limit f \in L^p
+       |  Step 3: Fatou / tail bound ||f - f_{n_k}||_p -> 0
+       v
+L^p limit: f_n -> f in L^p (completeness proved!)
 #+end_example
 
 ** The Completeness Theorem (Riesz–Fischer)
