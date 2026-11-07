@@ -201,7 +201,7 @@ iff \(x\notin f^{-1}(B)\). The others are similar. \(\square\)
 #+end_quote
 
 *Counterexample.* With \(f(x)=x^2\), \(A=[-1,0]\), \(B=[0,1]\): \(A\cap B=\{0\}\), so \(f(A\cap B)=\{0\}\), but
-\(f(A)\cap f(B)=[0,1]\cap[0,1]=[0,1]\). Also \(f(\mathbb{R}\setminus A)=f((0,\infty))=(0,\infty)\), while
+\(f(A)\cap f(B)=[0,1]\cap[0,1]=[0,1]\). Also \(f(\mathbb{R}\setminus A)=f((-\infty,-1)\cup(0,\infty))=(0,\infty)\), while
 \(\mathbb{R}\setminus f(A)=\mathbb{R}\setminus[0,1]\). The trouble: two different inputs can share an output, and
 some outputs are never hit.
 
@@ -261,7 +261,7 @@ each in decimal: \(x_n=0.d_{n1}d_{n2}d_{n3}\dots\). Build a new number \(y=0.e_1
 \(n\)-th digit for every \(n\). Because \(y\) uses only digits \(4\) and \(5\), it has a unique decimal expansion
 (no trailing \(9\)'s or \(0\)'s ambiguity), so \(y\neq x_n\) for all \(n\): the list missed \(y\). Contradiction. \(\square\)
 
-#+caption: Figure 0.2: Cantor's Diagonal Argument Showing $[0,1]$ is Uncountable
+#+caption: Figure 0.2: Cantor's Diagonal Argument Showing $[0,1)$ is Uncountable
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig00_cantor_diag.png]]

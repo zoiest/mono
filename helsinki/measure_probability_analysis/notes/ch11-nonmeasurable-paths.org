@@ -289,7 +289,7 @@ looks at finitely many times, \(E_3\) looks at finitely many times, and so on fo
 \(E_1, E_2, \dots\), then altogether \(\bigcup_{n=1}^\infty E_n\) only ever looks at a *countable*
 union of finite sets of times — which is still a *countable* set of times!
 
-#+caption: Figure 11.4: Cylinder Events Inspecting Countable Subsets of Uncountable Index Set $I$
+#+caption: Figure 11.2: Cylinder Events Inspecting Countable Subsets of Uncountable Index Set $I$
 #+ATTR_LATEX: :width 0.85\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig11_uncountable_sampling.png]]
@@ -401,7 +401,7 @@ proved nonmeasurability in a *specific* completion).
 
 ** Additional worked examples and non-examples
 
-*Example D (Bounded paths, monotone paths, Differentiable paths — all nonmeasurable).* By the exact
+*Example D (Bounded paths, monotone paths, differentiable paths — all nonmeasurable).* By the exact
 same spike trick on \(I = [0,1]\):
 - The set of *bounded* functions \(B([0,1]) = \{x \in \mathbb R^{[0,1]} : \sup_{t \in [0,1]} |x(t)| \le 1\}\)
   is not product measurable: given a countable \(J \subseteq [0,1]\), pick \(t \notin J\) and compare
@@ -410,6 +410,7 @@ same spike trick on \(I = [0,1]\):
   \(J \subseteq [0,1]\), pick \(t \in (0,1) \setminus J\) and compare \(x \equiv 0\) (nondecreasing)
   with \(y = \mathbf 1_{\{t\}}\) (which jumps up from \(0\) to \(1\) at \(t\) and drops back to \(0\)
   for \(s > t\), so not nondecreasing).
+- *Differentiable paths:* \(x \equiv 0 \in C^1([0,1])\) but \(y = \mathbf{1}_{\{t\}} \notin C^1([0,1])\), yet both agree on \(J \setminus \{t\}\), so \(\{x \in \mathbb{R}^{[0,1]} : x \text{ is differentiable}\} \notin \mathcal{B}(\mathbb{R})^{\otimes [0,1]}\).
 
 *Example E (What IS product measurable on \(\mathbb R^{[0,1]}\)?).* Suppose we ask whether a path is
 bounded at *rational* times:
@@ -449,7 +450,7 @@ has probability \(0\). But to say the *entire paths* agree is to stay outside \(
 which is an *uncountable* union of null sets — and an uncountable union of null sets can have
 probability \(1\)!
 
-#+caption: Figure 11.2: The Random Spike Process
+#+caption: Figure 11.3: The Random Spike Process
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig11_random_spike.png]]
@@ -567,7 +568,7 @@ gap between the graphs of \(f\) and \(g\). An *open ball* with center \(g \in C(
 B(g, r) := \{f \in C([0,1]) : \|f - g\|_\infty < r\}.
 \]
 
-#+caption: Figure 11.3: Open Ball in $(C([0,1]), \|\cdot\|_\infty)$ as a Uniform Tube
+#+caption: Figure 11.4: Open Ball in $(C([0,1]), \|\cdot\|_\infty)$ as a Uniform Tube
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig11_uniform_tube.png]]
@@ -889,7 +890,7 @@ On \((C([0,1]), \mathcal B(C([0,1])))\), show that the set of nondecreasing cont
 \[
 M_\uparrow := \{f \in C([0,1]) : f(s) \le f(t) \text{ whenever } 0 \le s \le t \le 1\}
 \]
-is a Borel subset of \(C([0,1])\). Contrast this with Exercise D in Section 11.2!
+is a Borel subset of \(C([0,1])\). Contrast this with Example D in Section 11.2!
 
 ** Solution
 Because every \(f \in C([0,1])\) is continuous, \(f(s) \le f(t)\) holds for all \(0 \le s \le t \le 1\)

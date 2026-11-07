@@ -62,9 +62,9 @@ To describe two random experiments performed together—or two random variables 
 ** What you need from earlier chapters
 
 - Generated \(\sigma\)-algebras, coordinate projections, Borel sets: [[file:ch01-measurable-spaces.org][Chapter 1]], [[file:ch03-measurable-functions.org][Chapter 3]].
-- \(\pi\)-systems, \(\lambda\)-systems, Dynkin's lemma (Lemma 4.3), and finite/\(\sigma\)-finite uniqueness of measures (Theorem 4.4): [[file:ch04-uniqueness.org][Chapter 4]].
+- \(\pi\)-systems, \(\lambda\)-systems, Dynkin's lemma (Theorem 4.6), and finite/\(\sigma\)-finite uniqueness of measures (Theorem 4.7 / Proposition 4.11): [[file:ch04-uniqueness.org][Chapter 4]].
 - Completion of a measure space (Proposition 5.14): [[file:ch05-construction.org][Chapter 5]].
-- Simple functions (Lemma 6.2), Monotone Convergence Theorem (Theorem 6.6), linearity of integration, and null sets: [[file:ch06-integration.org][Chapter 6]].
+- Simple functions (Lemma 6.2), Monotone Convergence Theorem (Theorem 6.5), linearity of integration, and null sets: [[file:ch06-integration.org][Chapter 6]].
 
 * Rectangles and sections
 
@@ -202,7 +202,7 @@ This is *Cavalieri's principle* from geometry: the volume of a solid is the inte
 
 To turn Cavalieri's formula into a rigorous proof of existence and uniqueness of \(\mu \otimes \nu\), we have one technical hurdle to clear first: we know from Section 9.1 that the slice \(E_s \subseteq T\) is a \(\mathcal{T}\)-measurable set, so \(\nu(E_s)\) is a well-defined number in \([0, \infty]\) for each \(s\). *But is the function \(s \mapsto \nu(E_s)\) an \(\mathcal{S}\)-measurable function of \(s\)?* If it wasn't measurable, we wouldn't be allowed to integrate it with respect to \(\mu\)!
 
-In Step 1 of Theorem 9.2 (when \(\mu\) and \(\nu\) are finite measures), we prove that \(s \mapsto \nu(E_s)\) is measurable for *every* \(E \in \mathcal{S} \otimes \mathcal{T}\) using *Dynkin's \(\pi\)-\(\lambda\) lemma* (Lemma 4.3). Notice why finiteness of \(\nu\) is needed right there: to show that the collection \(\mathcal{D}\) of sets with measurable section-measure functions is closed under complements, we write
+In Step 1 of Theorem 9.2 (when \(\mu\) and \(\nu\) are finite measures), we prove that \(s \mapsto \nu(E_s)\) is measurable for *every* \(E \in \mathcal{S} \otimes \mathcal{T}\) using *Dynkin's \(\pi\)-\(\lambda\) lemma* (Theorem 4.6). Notice why finiteness of \(\nu\) is needed right there: to show that the collection \(\mathcal{D}\) of sets with measurable section-measure functions is closed under complements, we write
 \[
 \nu\big((E^c)_s\big) = \nu(T \setminus E_s) = \nu(T) - \nu(E_s),
 \]
@@ -246,11 +246,11 @@ Suppose first that both \(\mu\) and \(\nu\) are finite measures.
      \nu\left( \Big(\bigcup_{j=1}^\infty E_j\Big)_s \right) = \nu\left( \bigcup_{j=1}^\infty (E_j)_s \right) = \sum_{j=1}^\infty \nu\big((E_j)_s\big).
      \]
      As the pointwise limit of finite partial sums of measurable functions, this infinite sum is an \(\mathcal{S}\)-measurable function of \(s\). Thus \(\bigcup_{j=1}^\infty E_j \in \mathcal{D}\).
-  Therefore \(\mathcal{D}\) is a \(\lambda\)-system containing the \(\pi\)-system \(\mathcal{P}\) of measurable rectangles. By Dynkin's \(\pi\)-\(\lambda\) lemma (Lemma 4.3), \(\mathcal{D} \supseteq \sigma(\mathcal{P}) = \mathcal{S} \otimes \mathcal{T}\), so \(\mathcal{D} = \mathcal{S} \otimes \mathcal{T}\).
+  Therefore \(\mathcal{D}\) is a \(\lambda\)-system containing the \(\pi\)-system \(\mathcal{P}\) of measurable rectangles. By Dynkin's \(\pi\)-\(\lambda\) lemma (Theorem 4.6), \(\mathcal{D} \supseteq \sigma(\mathcal{P}) = \mathcal{S} \otimes \mathcal{T}\), so \(\mathcal{D} = \mathcal{S} \otimes \mathcal{T}\).
 
 - *Step 1b: Define \(\lambda_1(E) := \int_S \nu(E_s) \, d\mu(s)\) and check it is a measure.*
   1. For \(E = \emptyset\), \(\emptyset_s = \emptyset\) has \(\nu(\emptyset_s) = 0\), so \(\lambda_1(\emptyset) = \int_S 0 \, d\mu = 0\).
-  2. For pairwise disjoint \(E_1, E_2, \dots \in \mathcal{S} \otimes \mathcal{T}\), we have \(\nu\big((\bigcup_{j=1}^\infty E_j)_s\big) = \sum_{j=1}^\infty \nu((E_j)_s)\). Applying the Monotone Convergence Theorem (Theorem 6.6) to the increasing partial sums \(\sum_{j=1}^N \nu((E_j)_s) \uparrow \sum_{j=1}^\infty \nu((E_j)_s)\) allows us to pass the sum through the integral:
+  2. For pairwise disjoint \(E_1, E_2, \dots \in \mathcal{S} \otimes \mathcal{T}\), we have \(\nu\big((\bigcup_{j=1}^\infty E_j)_s\big) = \sum_{j=1}^\infty \nu((E_j)_s)\). Applying the Monotone Convergence Theorem (Theorem 6.5) to the increasing partial sums \(\sum_{j=1}^N \nu((E_j)_s) \uparrow \sum_{j=1}^\infty \nu((E_j)_s)\) allows us to pass the sum through the integral:
      \[
      \lambda_1\left(\bigcup_{j=1}^\infty E_j\right) = \int_S \left( \sum_{j=1}^\infty \nu\big((E_j)_s\big) \right) d\mu(s) = \sum_{j=1}^\infty \int_S \nu\big((E_j)_s\big) \, d\mu(s) = \sum_{j=1}^\infty \lambda_1(E_j).
      \]
@@ -260,7 +260,7 @@ Suppose first that both \(\mu\) and \(\nu\) are finite measures.
      \]
 
 - *Step 1c: Uniqueness and equality of the two slice integrals in the finite case.*
-  Since \(\lambda_1(S \times T) = \mu(S)\nu(T) < \infty\), any measure on \(\mathcal{S} \otimes \mathcal{T}\) agreeing with \(\lambda_1\) on the \(\pi\)-system of measurable rectangles must equal \(\lambda_1\) on all of \(\mathcal{S} \otimes \mathcal{T}\) by finite-measure uniqueness (Theorem 4.4).
+  Since \(\lambda_1(S \times T) = \mu(S)\nu(T) < \infty\), any measure on \(\mathcal{S} \otimes \mathcal{T}\) agreeing with \(\lambda_1\) on the \(\pi\)-system of measurable rectangles must equal \(\lambda_1\) on all of \(\mathcal{S} \otimes \mathcal{T}\) by finite-measure uniqueness (Theorem 4.7).
   Now repeat Steps 1a–1b in the opposite order of coordinates: for every \(E \in \mathcal{S} \otimes \mathcal{T}\), \(t \mapsto \mu(E^t)\) is \(\mathcal{T}\)-measurable, and \(\lambda_2(E) := \int_T \mu(E^t) \, d\nu(t)\) is a finite measure on \(\mathcal{S} \otimes \mathcal{T}\) satisfying \(\lambda_2(A \times B) = \mu(A)\nu(B)\) on all measurable rectangles. By uniqueness, \(\lambda_1(E) = \lambda_2(E)\) for every \(E \in \mathcal{S} \otimes \mathcal{T}\)! This proves Theorem 9.2 and (9.1) when \(\mu\) and \(\nu\) are finite.
 
 *Step 2. Construct the \(\sigma\)-finite product from finite pieces.*
@@ -339,13 +339,13 @@ The common value lies in \([0, \infty]\) and may be infinite.
 ** Proof of Theorem 9.4 (unpacked step by step)
 
 1. *Indicators:* For \(f = \mathbf{1}_E\) with \(E \in \mathcal{S} \otimes \mathcal{T}\), we have \(\mathbf{1}_E(s, t) = \mathbf{1}_{E_s}(t) = \mathbf{1}_{E^t}(s)\), so \(\int_T \mathbf{1}_E(s, t) \, d\nu(t) = \nu(E_s)\) and \(\int_S \mathbf{1}_E(s, t) \, d\mu(s) = \mu(E^t)\). Thus the statement for indicators is literally (9.1) from Theorem 9.2!
-2. *Nonnegative simple functions:* If \(f = \sum_{k=1}^m c_k \mathbf{1}_{E_k}\) with \(c_k \ge 0\) and \(E_k \in \mathcal{S} \otimes \mathcal{T}\), linearity of the integral (Proposition 6.7) and the fact that linear combinations of measurable functions are measurable immediately give the statement for \(f\).
+2. *Nonnegative simple functions:* If \(f = \sum_{k=1}^m c_k \mathbf{1}_{E_k}\) with \(c_k \ge 0\) and \(E_k \in \mathcal{S} \otimes \mathcal{T}\), linearity of the integral (Section 6.2) and the fact that linear combinations of measurable functions are measurable immediately give the statement for \(f\).
 3. *General nonnegative measurable functions:* Let \(f : S \times T \to [0, \infty]\) be \(\mathcal{S} \otimes \mathcal{T}\)-measurable. By Lemma 6.2, choose an increasing sequence of nonnegative product-measurable simple functions \(0 \le f_n \uparrow f\) pointwise on \(S \times T\).
-   - For each fixed \(s \in S\), the section functions \((f_n)_s\) are nonnegative \(\mathcal{T}\)-measurable functions increasing pointwise on \(T\) to \(f_s\). By the Monotone Convergence Theorem (Theorem 6.6) on \((T, \mathcal{T}, \nu)\),
+   - For each fixed \(s \in S\), the section functions \((f_n)_s\) are nonnegative \(\mathcal{T}\)-measurable functions increasing pointwise on \(T\) to \(f_s\). By the Monotone Convergence Theorem (Theorem 6.5) on \((T, \mathcal{T}, \nu)\),
      \[
      \int_T f_n(s, t) \, d\nu(t) \uparrow \int_T f(s, t) \, d\nu(t) \qquad \text{as } n \to \infty.
      \]
-   - Since each \(s \mapsto \int_T f_n(s, t) \, d\nu(t)\) is \(\mathcal{S}\)-measurable (by Step 2), its pointwise limit \(s \mapsto \int_T f(s, t) \, d\nu(t)\) is \(\mathcal{S}\)-measurable (Proposition 3.4).
+   - Since each \(s \mapsto \int_T f_n(s, t) \, d\nu(t)\) is \(\mathcal{S}\)-measurable (by Step 2), its pointwise limit \(s \mapsto \int_T f(s, t) \, d\nu(t)\) is \(\mathcal{S}\)-measurable (Chapter 6, Section 6.1).
    - Now apply the Monotone Convergence Theorem a second time, both to the outer integral on \((S, \mathcal{S}, \mu)\) and to the product integral on \((S \times T, \mathcal{S} \otimes \mathcal{T}, \mu \otimes \nu)\):
      \[
      \int_S \left( \int_T f(s, t) \, d\nu(t) \right) d\mu(s) = \lim_{n \to \infty} \int_S \left( \int_T f_n(s, t) \, d\nu(t) \right) d\mu(s) = \lim_{n \to \infty} \int_{S \times T} f_n \, d(\mu \otimes \nu) = \int_{S \times T} f \, d(\mu \otimes \nu).
@@ -498,7 +498,7 @@ For three \(\sigma\)-finite measure spaces \((S_i, \mathcal{S}_i, \mu_i)\) (\(i 
 \]
 Under the natural identification of \(((s_1, s_2), s_3)\) with \((s_1, (s_2, s_3))\) and \((s_1, s_2, s_3)\):
 - Both \(\sigma\)-algebras agree, because both are generated by the three-dimensional measurable rectangles \(A_1 \times A_2 \times A_3\) (\(A_i \in \mathcal{S}_i\))—equivalently, both are the smallest \(\sigma\)-algebra making all three coordinate maps measurable.
-- Both product measures assign the exact same value \(\mu_1(A_1)\mu_2(A_2)\mu_3(A_3)\) to every rectangle \(A_1 \times A_2 \times A_3\). By uniqueness on finite-measure rectangle exhaustions (Theorem 4.4), the two measures agree on every set in \(\mathcal{S}_1 \otimes \mathcal{S}_2 \otimes \mathcal{S}_3\).
+- Both product measures assign the exact same value \(\mu_1(A_1)\mu_2(A_2)\mu_3(A_3)\) to every rectangle \(A_1 \times A_2 \times A_3\). By uniqueness on finite-measure rectangle exhaustions (Proposition 4.11), the two measures agree on every set in \(\mathcal{S}_1 \otimes \mathcal{S}_2 \otimes \mathcal{S}_3\).
 
 Repeating this argument inductively defines finite products \(\bigotimes_{i=1}^n \mu_i\) on \(\bigotimes_{i=1}^n \mathcal{S}_i\) for any \(n \ge 2\) without any dependence on parentheses, and Tonelli and Fubini apply successively to swap any order of the \(n\) integrals. (In particular, \(n\)-dimensional Borel–Lebesgue measure on \(\mathcal{B}(\mathbb{R}^n) = \bigotimes_{i=1}^n \mathcal{B}(\mathbb{R})\) is the \(n\)-fold product \(\lambda^{\otimes n}\) of one-dimensional Lebesgue measure!)
 

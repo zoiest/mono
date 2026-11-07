@@ -800,24 +800,21 @@ no atoms). Show that the random variable \(Y := F(X)\) has the \(\mathrm{Uniform
 Where does this fail if \(F\) has a jump?
 
 ** Solution
-Let \(Q\) be the quantile function of \(F\). First we note that because \(F\) is continuous on
-\(\mathbb R\) and \(\lim_{x\to-\infty} F(x) = 0\), \(\lim_{x\to+\infty} F(x) = 1\), the Intermediate
-Value Theorem guarantees that for every \(u \in (0,1)\) there is some \(x\) with \(F(x) = u\). In fact,
-at \(q = Q(u)\), we know \(F(q) \ge u\) by right-continuity, and for \(y < q\) we have \(F(y) < u\) so
-taking \(y \uparrow q\) and using left-continuity of \(F\) gives \(F(q) = F(q-) \le u\); hence
+Because \(F\) is continuous on \(\mathbb R\) with \(\lim_{x\to-\infty} F(x) = 0\) and \(\lim_{x\to+\infty} F(x) = 1\), the Intermediate Value Theorem ensures that for every \(u \in (0,1)\), the level set \(\{x \in \mathbb R : F(x) = u\}\) is nonempty and bounded from above.
+
+Fix \(u \in (0,1)\) and define unconditionally
 \[
-F(Q(u)) = u \qquad \text{for every } u \in (0,1).
+r := \sup\{x \in \mathbb R : F(x) = u\}.
 \]
-Now fix \(u \in (0,1)\). We want to show \(\mathbb P(F(X) \le u) = u\). Let \(q = Q(u)\), so \(F(q) = u\).
-- By monotonicity of \(F\), if \(X(\omega) \le q\), then \(F(X(\omega)) \le F(q) = u\). Thus
-  \(\{X \le q\} \subseteq \{F(X) \le u\}\).
-- What if \(X(\omega) > q\) and yet \(F(X(\omega)) \le u = F(q)\)? Then by monotonicity \(F\) is
-  constant equal to \(u\) on the interval \([q, X(\omega)]\). Let \(r := \sup\{x \in \mathbb R : F(x) = u\}\).
-  By continuity of \(F\), \(F(r) = u\), and for \(x > r\) we have \(F(x) > u\), while for \(x \in (q, r]\)
-  we have \(F(x) = u\). Thus \(\{F(X) \le u\} = \{X \le r\}\), and since \(F(r) = F(q) = u\),
-  \[
-  \mathbb P(F(X) \le u) = \mathbb P(X \le r) = F(r) = u!
-  \]
+Because \(F\) is continuous, \(F(r) = u\). By monotonicity of \(F\):
+- If \(X(\omega) \le r\), then \(F(X(\omega)) \le F(r) = u\).
+- If \(X(\omega) > r\), then \(F(X(\omega)) > u\) (since \(F\) cannot equal \(u\) anywhere to the right of its supremum \(r\), and \(F\) is nondecreasing).
+
+Thus \(\{F(X) \le u\} = \{X \le r\}\). Therefore,
+\[
+\mathbb P(F(X) \le u) = \mathbb P(X \le r) = F(r) = u.
+\]
+Since this holds for every \(u \in (0,1)\), \(Y = F(X)\) is uniformly distributed on \((0,1)\).
 - *Why this fails when \(F\) has a jump:* If \(X \equiv 0\) is a constant random variable, then
   \(F(x) = \mathbf 1_{[0,\infty)}(x)\) and \(F(0) = 1\), so \(Y = F(X) = F(0) = 1\) almost surely, which
   is a point mass at \(1\), not \(\mathrm{Uniform}(0,1)\)!

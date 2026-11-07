@@ -58,9 +58,9 @@ If \((\Omega, \mathcal{F}, \mathbb{P})\) is a probability space and \(X : \Omega
 
 ** What you need from earlier chapters
 
-- Null sets and "almost everywhere" (\(\mu\)-a.e.): [[file:ch02-measures.org][Chapter 2]] (Section 2.2) and [[file:ch05-construction.org][Chapter 5]] (Section 5.4).
-- Measurable functions and pointwise limits: [[file:ch03-measurable-functions.org][Chapter 3]] (Proposition 3.4).
-- Integration, Monotone Convergence Theorem (Theorem 6.6), and the vanishing integral criterion \(\int |f| \, d\mu = 0 \iff f = 0\) a.e. (Lemma 6.8): [[file:ch06-integration.org][Chapter 6]].
+- Null sets and "almost everywhere" (\(\mu\)-a.e.): [[file:ch02-measures.org][Chapter 2]] (Section 2.2) and [[file:ch05-construction.org][Chapter 5]] (Section 5.5).
+- Measurable functions and pointwise limits: [[file:ch03-measurable-functions.org][Chapter 3]] and [[file:ch06-integration.org][Chapter 6]] (Section 6.1).
+- Integration, Monotone Convergence Theorem (Theorem 6.5), and the vanishing integral criterion \(\int |f| \, d\mu = 0 \iff f = 0\) a.e. (Lemma 6.8): [[file:ch06-integration.org][Chapter 6]].
 
 ** Background from real analysis (used in Sections 7.2–7.3)
 
@@ -122,7 +122,7 @@ For \(1 \le p < \infty\), define
 \[
 \|f\|_{L^p(\mu)} := \left( \int_\Omega |f|^p \, d\mu \right)^{1/p}. \tag{7.1}
 \]
-The value in (7.1) lies in \([0, \infty]\) and may be infinite. If \(f\) and \(g\) are in the same equivalence class, then \(|f|^p = |g|^p\) almost everywhere, so \(\int_\Omega |f|^p \, d\mu = \int_\Omega |g|^p \, d\mu\) by Lemma 6.8 (since \(\int |\,|f|^p - |g|^p\,| \, d\mu = 0\)). Thus \(\|f\|_{L^p(\mu)}\) depends only on the equivalence class of \(f\).
+The value in (7.1) lies in \([0, \infty]\) and may be infinite. If \(f\) and \(g\) are in the same equivalence class, then \(|f|^p = |g|^p\) almost everywhere, so \(\int_\Omega |f|^p \, d\mu = \int_\Omega |g|^p \, d\mu\) by Lemma 6.8(2). Thus \(\|f\|_{L^p(\mu)}\) depends only on the equivalence class of \(f\).
 
 #+begin_quote
 *Definition 7.1 (The spaces \(L^p(\mu)\) and \(L^\infty(\mu)\)).* For \(1 \le p < \infty\), the space \(L^p(\mu)\) consists of the equivalence classes of measurable real-valued functions satisfying \(\|f\|_{L^p(\mu)} < \infty\).
@@ -383,7 +383,7 @@ By Minkowski's inequality (applied to the finite sum \(h_N\)),
 \[
 \|h_N\|_p \le \sum_{k=1}^N \|f_{n_{k+1}} - f_{n_k}\|_p \le \sum_{k=1}^N 2^{-k} \le 1.
 \]
-Raising both sides to the \(p\)-th power gives \(\int_\Omega h_N^p \, d\mu \le 1\). As \(N \to \infty\), the nonnegative measurable functions \(h_N^p\) increase pointwise to \(h^p\) (\(h_N^p \uparrow h^p\)). Therefore the Monotone Convergence Theorem (Theorem 6.6) gives
+Raising both sides to the \(p\)-th power gives \(\int_\Omega h_N^p \, d\mu \le 1\). As \(N \to \infty\), the nonnegative measurable functions \(h_N^p\) increase pointwise to \(h^p\) (\(h_N^p \uparrow h^p\)). Therefore the Monotone Convergence Theorem (Theorem 6.5) gives
 \[
 \int_\Omega h^p \, d\mu = \lim_{N \to \infty} \int_\Omega h_N^p \, d\mu \le 1.
 \]
@@ -396,7 +396,7 @@ f_{n_k}(\omega) = f_{n_1}(\omega) + \sum_{j=1}^{k-1} \big(f_{n_{j+1}}(\omega) - 
 \]
 the sequence of real numbers \(f_{n_k}(\omega)\) converges to a finite limit as \(k \to \infty\) for every \(\omega \notin E\).
 - Define \(f(\omega) := \lim_{k \to \infty} f_{n_k}(\omega)\) for \(\omega \notin E\), and set \(f(\omega) := 0\) for \(\omega \in E\).
-- *Why is \(f\) measurable?* Also modify each representative \(f_{n_k}\) by setting it to \(0\) on the measurable null set \(E\) (i.e. replace \(f_{n_k}\) by \(f_{n_k} \mathbf{1}_{E^c}\)). These modified functions are measurable and converge at *every single point* of \(\Omega\) to \(f\). By Proposition 3.4, the everywhere pointwise limit of measurable functions is measurable!
+- *Why is \(f\) measurable?* Also modify each representative \(f_{n_k}\) by setting it to \(0\) on the measurable null set \(E\) (i.e. replace \(f_{n_k}\) by \(f_{n_k} \mathbf{1}_{E^c}\)). These modified functions are measurable and converge at *every single point* of \(\Omega\) to \(f\). By [[file:ch06-integration.org][Chapter 6]] (Section 6.1), the everywhere pointwise limit of measurable functions is measurable!
 - *Why is \(f \in L^p(\mu)\)?* By the triangle inequality on the telescoping sum, \(|f_{n_k}| \le |f_{n_1}| + h\) everywhere, so letting \(k \to \infty\) gives \(|f| \le |f_{n_1}| + h\) almost everywhere. Using the convexity bound \(|f|^p \le 2^{p-1}(|f_{n_1}|^p + h^p)\) and integrating over \(\Omega\) gives
   \[
   \int_\Omega |f|^p \, d\mu \le 2^{p-1}\left( \int_\Omega |f_{n_1}|^p \, d\mu + \int_\Omega h^p \, d\mu \right) \le 2^{p-1}(\|f_{n_1}\|_p^p + 1) < \infty.
@@ -483,7 +483,7 @@ Therefore \((f_n)\) is a Cauchy sequence in the \(\|\cdot\|_p\) norm! Yet there 
 
 ** Historical remarks (from the notes)
 
-1. *When Fatou's inequality is strict (p. 31).* In his 1906 paper on trigonometric and Taylor series, Pierre Fatou proved a version of the inequality now called Fatou's lemma. Immediately afterwards, he noted that the inequality can be strict and credited this observation to Henri Lebesgue [10, pp. 375–376]. The shrinking spikes of Example 6.14 (\(f_n = n \mathbf{1}_{(0, 1/n)}\)) give an illustration; this particular example is not attributed to either author in that passage. The supports shrink and the pointwise limit vanishes, but the increasing heights keep the integrals equal to one. Fatou's inequality allows precisely this discrepancy.
+1. *When Fatou's inequality is strict (p. 31).* See [[file:ch06-integration.org][Chapter 6]] (Section 6.5, Historical remark) for Fatou's 1906 paper and Lebesgue's strict inequality observation illustrated by the shrinking spikes of Example 6.14.
 2. *Frigyes Riesz and \(L^p\) completeness (p. 35).* In his 1910 study of integrable functions, Frigyes Riesz explicitly agreed to identify functions differing only on a set of measure zero [11, p. 454]. In the same paper he proved a completeness statement for \(p > 1\): a sequence whose pairwise \(p\)-th-power integral differences tend to zero has a limit in the same class, with convergence in that integral sense [11, p. 468]. Thus both the identification of functions and the existence of limits were explicit parts of the theory. His setting was Lebesgue integration on an interval, not the arbitrary measure spaces used here; his proof was also different from our summable-differences argument.
 
 ** Classroom route (from the notes)

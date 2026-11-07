@@ -33,7 +33,7 @@ In probability theory, however, we constantly need to talk about *infinitely man
 
 In all three situations, it is completely natural to prescribe the probabilities of *finite-coordinate events* ("cylinder sets" that only look at finitely many coordinates at a time). For example, the probability that the first \(n\) coin tosses land in a specific pattern \((a_1, \dots, a_n) \in \{0, 1\}^n\) must be \(2^{-n}\). That immediately gives a well-defined, finitely additive set function \(\mathbb{P}_0\) on the algebra \(\mathcal{A}\) of cylinder sets.
 
-*The central mathematical obstacle:* To extend \(\mathbb{P}_0\) from the algebra \(\mathcal{A}\) of finite-coordinate cylinders to a countably additive probability measure \(\mathbb{P}\) on the generated \(\sigma\)-algebra \(\mathcal{F} = \sigma(\mathcal{A})\) via Carathéodory's extension theorem (Chapter 5, Theorem 5.2), we must prove that \(\mathbb{P}_0\) is a *premeasure*—which by Proposition 5.5 reduces to verifying *continuity at the empty set*:
+*The central mathematical obstacle:* To extend \(\mathbb{P}_0\) from the algebra \(\mathcal{A}\) of finite-coordinate cylinders to a countably additive probability measure \(\mathbb{P}\) on the generated \(\sigma\)-algebra \(\mathcal{F} = \sigma(\mathcal{A})\) via Carathéodory's extension theorem (Chapter 5, Theorem 5.10), we must prove that \(\mathbb{P}_0\) is a *premeasure*—which by Proposition 5.5 reduces to verifying *continuity at the empty set*:
 \[
 A_n \in \mathcal{A},\quad A_1 \supseteq A_2 \supseteq \cdots,\quad \bigcap_{n=1}^\infty A_n = \emptyset \quad \Longrightarrow \quad \lim_{n \to \infty} \mathbb{P}_0(A_n) = 0.
 \]
@@ -59,8 +59,8 @@ Without Theorem 10.4 and Theorem 10.5, modern probability theory could barely be
 
 ** What you need from earlier chapters
 
-- Uniqueness of finite measures on a \(\pi\)-system (Theorem 4.4) and initial cylinders (Example 4.9): [[file:ch04-uniqueness.org][Chapter 4]].
-- Algebras, premeasures, continuity at \(\emptyset\) (Proposition 5.5), and Carathéodory's extension theorem (Theorem 5.2): [[file:ch05-construction.org][Chapter 5]].
+- Uniqueness of finite measures on a \(\pi\)-system (Theorem 4.7) and initial cylinders (Example 4.9): [[file:ch04-uniqueness.org][Chapter 4]].
+- Algebras, premeasures, continuity at \(\emptyset\) (Proposition 5.5), and Carathéodory's extension theorem (Definition 5.2 and Theorem 5.10): [[file:ch05-construction.org][Chapter 5]].
 - Dominated Convergence Theorem (Theorem 6.15) and Lemma 6.8: [[file:ch06-integration.org][Chapter 6]].
 - Inner regularity of finite Borel measures on \(\mathbb{R}^n\) by compact sets (Theorem 8.1): [[file:ch08-regularity.org][Chapter 8]].
 - Finite product measures and Tonelli's theorem (Theorems 9.2 and 9.4): [[file:ch09-product-measures.org][Chapter 9]].
@@ -145,7 +145,7 @@ Since \(k \ge 1\) was arbitrary, \(\omega \in \bigcap_{k=1}^\infty A_k\), so \(\
 *Consequence: The fair-coin probability measure \(\mathbb{P}\).*
 Suppose \(A_n \in \mathcal{A}\) is a decreasing sequence with \(\bigcap_{n=1}^\infty A_n = \emptyset\). By the contrapositive of Lemma 10.1, the sets \(A_n\) cannot all be nonempty: there is some \(N\) such that \(A_n = \emptyset\) for all \(n \ge N\). Their prescribed masses therefore equal \(0\) for \(n \ge N\) and hence tend to \(0\) as \(n \to \infty\).
 - By Proposition 5.5, this continuity at \(\emptyset\) makes the finitely additive cylinder prescription a *premeasure* on \(\mathcal{A}\).
-- By Carathéodory's extension theorem (Theorem 5.2), it extends to a probability measure \(\mathbb{P}\) on the generated \(\sigma\)-algebra \(\mathcal{F} := \sigma(\mathcal{A})\), and finite-measure uniqueness on the \(\pi\)-system of initial cylinders (Theorem 4.4) shows that \(\mathbb{P}\) is the unique probability measure on \((\Omega, \mathcal{F})\) assigning \(\mathbb{P}(C(a)) = 2^{-n}\) to every length-\(n\) cylinder \(C(a)\)!
+- By Carathéodory's extension theorem (Theorem 5.10), it extends to a probability measure \(\mathbb{P}\) on the generated \(\sigma\)-algebra \(\mathcal{F} := \sigma(\mathcal{A})\), and finite-measure uniqueness on the \(\pi\)-system of initial cylinders (Theorem 4.7) shows that \(\mathbb{P}\) is the unique probability measure on \((\Omega, \mathcal{F})\) assigning \(\mathbb{P}(C(a)) = 2^{-n}\) to every length-\(n\) cylinder \(C(a)\)!
 
 ** Examples from the notes
 
@@ -154,7 +154,7 @@ Suppose \(A_n \in \mathcal{A}\) is a decreasing sequence with \(\bigcap_{n=1}^\i
 \[
 \{\bar{\omega}\} = \bigcap_{n=1}^\infty C(\bar{\omega}_1, \dots, \bar{\omega}_n).
 \]
-Hence \(\{\bar{\omega}\} \in \mathcal{F}\), and by continuity of \(\mathbb{P}\) from above (Proposition 2.4),
+Hence \(\{\bar{\omega}\} \in \mathcal{F}\), and by continuity of \(\mathbb{P}\) from above (Proposition 2.6),
 \[
 \mathbb{P}(\{\bar{\omega}\}) = \lim_{n \to \infty} \mathbb{P}\big(C(\bar{\omega}_1, \dots, \bar{\omega}_n)\big) = \lim_{n \to \infty} 2^{-n} = 0.
 \]
@@ -272,7 +272,7 @@ For each \(n \ge 1\) and \(0 \le k \le n\), integrate the indicator \(\mathbf{1}
 - At the bottom endpoint \(k = 0\) (all \(n\) coordinates integrated out), \(f_{n, 0}\) is simply a constant number: the cylinder mass \(\mathbb{P}_0(A_n) \ge \varepsilon\)!
 
 Let us check the key properties of the functions \(f_{n, k}\):
-1. *One-step integral relation:* By Tonelli's theorem for finite products (Section 9.4), integrating over \(S_{k+1} \times \cdots \times S_n\) is the same as first integrating over \(S_{k+2} \times \cdots \times S_n\) (which gives \(f_{n, k+1}\)) and then integrating in coordinate \(k+1\):
+1. *One-step integral relation:* By Tonelli's theorem for finite products (Theorem 9.4 / Section 9.3), integrating over \(S_{k+1} \times \cdots \times S_n\) is the same as first integrating over \(S_{k+2} \times \cdots \times S_n\) (which gives \(f_{n, k+1}\)) and then integrating in coordinate \(k+1\):
    \[
    f_{n, k}(s_1, \dots, s_k) = \int_{S_{k+1}} f_{n, k+1}(s_1, \dots, s_k, t) \, d\mu_{k+1}(t).
    \]
@@ -304,7 +304,7 @@ Now we select coordinates \(s_1, s_2, \dots\) inductively:
   Since \(\mathbf{1}_{B_k}(s_1, \dots, s_k) > 0\), the prefix \((s_1, \dots, s_k)\) belongs to \(B_k\)! Therefore the infinite sequence \(s = (s_1, s_2, s_3, \dots) \in \Omega\) belongs to \(A_k\) for every \(k \ge 1\), contradicting \(\bigcap_{k=1}^\infty A_k = \emptyset\).
 
 *Step 4. Extend.*
-The contradiction proves that \(\mathbb{P}_0\) is continuous at the empty set, and hence is a premeasure on the algebra of finite-coordinate cylinders. Carathéodory's extension theorem (Theorem 5.2) extends \(\mathbb{P}_0\) to a probability measure \(\bigotimes_{j \ge 1} \mu_j\) on \(\bigotimes_{j \ge 1} \mathcal{S}_j\), and finite-measure uniqueness on the \(\pi\)-system of cylinders (Theorem 4.4) proves uniqueness. \(\blacksquare\)
+The contradiction proves that \(\mathbb{P}_0\) is continuous at the empty set, and hence is a premeasure on the algebra of finite-coordinate cylinders. Carathéodory's extension theorem (Theorem 5.10) extends \(\mathbb{P}_0\) to a probability measure \(\bigotimes_{j \ge 1} \mu_j\) on \(\bigotimes_{j \ge 1} \mathcal{S}_j\), and finite-measure uniqueness on the \(\pi\)-system of cylinders (Theorem 4.7) proves uniqueness. \(\blacksquare\)
 
 *Remark:* Notice that *no topology or regularity was assumed on the factor spaces \((S_j, \mathcal{S}_j, \mu_j)\)*! Theorem 10.4 works for completely arbitrary measurable spaces because the finite-dimensional laws were *product* measures \(\mu_1 \otimes \cdots \otimes \mu_n\), allowing us to integrate out coordinate \(k+1\) with respect to \(\mu_{k+1}\). When the coordinates are *dependent*, their finite-dimensional laws are not product measures, so we need a different argument (Section 10.3).
 
@@ -440,7 +440,7 @@ We now extract a single subsequence along which every coordinate converges:
 - *Compatibility:* The first \(j\) coordinates of the stage-\((j+1)\) limit in \(K_{j+1}\) are the limit of the exact same coordinate sequences \(\big(x_1^{(N_k)}, \dots, x_j^{(N_k)}\big)\), so they agree with the stage-\(j\) limit in \(K_j\). Therefore, these finite-dimensional limits define a single infinite sequence \((x_1, x_2, x_3, \dots) \in \mathbb{R}^{\mathbb{N}}\) whose prefix \((x_1, \dots, x_j)\) belongs to \(K_j \subseteq B_j\) for *every* \(j \ge 1\)!
 - Finally, define \(\omega \in \mathbb{R}^I\) by setting \(\omega(t_j) := x_j\) for the enumerated coordinates \(t_j \in J_\infty\), and \(\omega(t) := 0\) for all other coordinates \(t \in I \setminus J_\infty\). Then \(\omega \in A_j\) for every \(j \ge 1\), contradicting \(\bigcap_{j=1}^\infty A_j = \emptyset\)!
 
-Thus \(\mathbb{P}_0\) is continuous at the empty set, hence a premeasure on the algebra of cylinders. Carathéodory's theorem (Theorem 5.2) gives the probability measure \(\mathbb{P}\) on \(\mathcal{B}(\mathbb{R})^{\otimes I}\), and finite-measure uniqueness on the \(\pi\)-system of cylinders (Theorem 4.4) proves uniqueness. \(\blacksquare\)
+Thus \(\mathbb{P}_0\) is continuous at the empty set, hence a premeasure on the algebra of cylinders. Carathéodory's theorem (Theorem 5.10) gives the probability measure \(\mathbb{P}\) on \(\mathcal{B}(\mathbb{R})^{\otimes I}\), and finite-measure uniqueness on the \(\pi\)-system of cylinders (Theorem 4.7) proves uniqueness. \(\blacksquare\)
 
 ** Examples and Remarks from the Notes
 
@@ -489,7 +489,7 @@ A_N := \{\omega \in \Omega : (\omega_{2k-1}, \omega_{2k}) \ne (1, 1) \text{ for 
    \[
    \mathbb{P}(A_N) = 3^N \cdot 4^{-N} = \left(\frac{3}{4}\right)^N.
    \]
-2. *Pass to the limit:* The events \(A_N\) decrease (\(A_1 \supseteq A_2 \supseteq \cdots\)) and their intersection is \(A = \bigcap_{N=1}^\infty A_N\). Thus \(A \in \mathcal{F}\), and by continuity of \(\mathbb{P}\) from above (Proposition 2.4),
+2. *Pass to the limit:* The events \(A_N\) decrease (\(A_1 \supseteq A_2 \supseteq \cdots\)) and their intersection is \(A = \bigcap_{N=1}^\infty A_N\). Thus \(A \in \mathcal{F}\), and by continuity of \(\mathbb{P}\) from above (Proposition 2.6),
    \[
    \mathbb{P}(A) = \lim_{N \to \infty} \mathbb{P}(A_N) = \lim_{N \to \infty} \left(\frac{3}{4}\right)^N = 0.
    \]
