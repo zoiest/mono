@@ -1,54 +1,74 @@
-\documentclass[border=4pt]{standalone}
+\documentclass[border=8pt]{standalone}
 \usepackage{amsmath,amssymb}
 \usepackage{tikz}
 \begin{document}
-\begin{tikzpicture}[font=\footnotesize]
+\begin{tikzpicture}[font=\small]
   % Panel 1: Union
   \begin{scope}[xshift=0cm, yshift=0cm]
-    \draw[thick] (-1.2,-1) rectangle (2.2,1);
-    \node[anchor=north west] at (-1.2,1) {$\Omega$};
-    \fill[blue!20] (0,0) circle (0.7);
-    \fill[blue!20] (1,0) circle (0.7);
-    \draw[thick] (0,0) circle (0.7) node[left] {$A$};
-    \draw[thick] (1,0) circle (0.7) node[right] {$B$};
-    \node at (0.5, -1.3) {\textbf{Union} $A \cup B$};
+    \draw[thick, fill=gray!5] (-1.4, -1.2) rectangle (2.4, 1.3);
+    \node[anchor=north west, font=\bfseries] at (-1.3, 1.2) {$\Omega$};
+    
+    \fill[blue!25] (0, 0) circle (0.75);
+    \fill[blue!25] (1.0, 0) circle (0.75);
+    \draw[thick, draw=blue!80!black] (0, 0) circle (0.75);
+    \draw[thick, draw=blue!80!black] (1.0, 0) circle (0.75);
+
+    \node[font=\bfseries, text=blue!90!black] at (-0.3, 0) {$A$};
+    \node[font=\bfseries, text=blue!90!black] at (1.3, 0) {$B$};
+    
+    \node[font=\bfseries] at (0.5, -1.6) {Union: $A \cup B$};
   \end{scope}
 
   % Panel 2: Intersection
-  \begin{scope}[xshift=4.2cm, yshift=0cm]
-    \draw[thick] (-1.2,-1) rectangle (2.2,1);
-    \node[anchor=north west] at (-1.2,1) {$\Omega$};
+  \begin{scope}[xshift=4.6cm, yshift=0cm]
+    \draw[thick, fill=gray!5] (-1.4, -1.2) rectangle (2.4, 1.3);
+    \node[anchor=north west, font=\bfseries] at (-1.3, 1.2) {$\Omega$};
+    
     \begin{scope}
-      \clip (0,0) circle (0.7);
-      \fill[teal!30] (1,0) circle (0.7);
+      \clip (0, 0) circle (0.75);
+      \fill[teal!35] (1.0, 0) circle (0.75);
     \end{scope}
-    \draw[thick] (0,0) circle (0.7) node[left] {$A$};
-    \draw[thick] (1,0) circle (0.7) node[right] {$B$};
-    \node at (0.5, -1.3) {\textbf{Intersection} $A \cap B$};
+    
+    \draw[thick, draw=teal!80!black] (0, 0) circle (0.75);
+    \draw[thick, draw=teal!80!black] (1.0, 0) circle (0.75);
+
+    \node[font=\bfseries, text=teal!90!black] at (-0.3, 0) {$A$};
+    \node[font=\bfseries, text=teal!90!black] at (1.3, 0) {$B$};
+    
+    \node[font=\bfseries] at (0.5, -1.6) {Intersection: $A \cap B$};
   \end{scope}
 
   % Panel 3: Difference
-  \begin{scope}[xshift=0cm, yshift=-3.2cm]
-    \draw[thick] (-1.2,-1) rectangle (2.2,1);
-    \node[anchor=north west] at (-1.2,1) {$\Omega$};
+  \begin{scope}[xshift=0cm, yshift=-3.6cm]
+    \draw[thick, fill=gray!5] (-1.4, -1.2) rectangle (2.4, 1.3);
+    \node[anchor=north west, font=\bfseries] at (-1.3, 1.2) {$\Omega$};
+    
     \begin{scope}
-      \fill[orange!30] (0,0) circle (0.7);
-      \clip (1,0) circle (0.7);
-      \fill[white] (0,0) circle (0.7);
+      \fill[orange!35] (0, 0) circle (0.75);
+      \clip (1.0, 0) circle (0.75);
+      \fill[gray!5] (0, 0) circle (0.75);
     \end{scope}
-    \draw[thick] (0,0) circle (0.7) node[left] {$A$};
-    \draw[thick] (1,0) circle (0.7) node[right] {$B$};
-    \node at (0.5, -1.3) {\textbf{Difference} $A \setminus B$};
+    
+    \draw[thick, draw=orange!80!black] (0, 0) circle (0.75);
+    \draw[thick, draw=orange!80!black] (1.0, 0) circle (0.75);
+
+    \node[font=\bfseries, text=orange!90!black] at (-0.3, 0) {$A$};
+    \node[font=\bfseries, text=orange!90!black] at (1.3, 0) {$B$};
+    
+    \node[font=\bfseries] at (0.5, -1.6) {Difference: $A \setminus B$};
   \end{scope}
 
   % Panel 4: Complement
-  \begin{scope}[xshift=4.2cm, yshift=-3.2cm]
-    \fill[purple!15] (-1.2,-1) rectangle (2.2,1);
-    \fill[white] (0.5,0) circle (0.7);
-    \draw[thick] (-1.2,-1) rectangle (2.2,1);
-    \node[anchor=north west] at (-1.2,1) {$\Omega$};
-    \draw[thick] (0.5,0) circle (0.7) node {$A$};
-    \node at (0.5, -1.3) {\textbf{Complement} $A^c = \Omega \setminus A$};
+  \begin{scope}[xshift=4.6cm, yshift=-3.6cm]
+    \fill[purple!20] (-1.4, -1.2) rectangle (2.4, 1.3);
+    \fill[white] (0.5, 0) circle (0.75);
+    \draw[thick] (-1.4, -1.2) rectangle (2.4, 1.3);
+    \node[anchor=north west, font=\bfseries] at (-1.3, 1.2) {$\Omega$};
+    
+    \draw[thick, draw=purple!80!black] (0.5, 0) circle (0.75);
+    \node[font=\bfseries, text=purple!90!black] at (0.5, 0) {$A$};
+    
+    \node[font=\bfseries] at (0.5, -1.6) {Complement: $A^c = \Omega \setminus A$};
   \end{scope}
 \end{tikzpicture}
 \end{document}
