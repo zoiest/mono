@@ -377,7 +377,7 @@ measurable.
   combines whichever of the two blocks \(D\) and \(D^c\) appear in the sequence, producing again one
   of the four sets \(\emptyset, D, D^c, \Omega \in \mathcal{F}\).
 
-#+caption: Figure 1.2: Coarse vs. Fine \(\sigma\)-Algebras (Parity vs. Power Set)
+#+caption: Figure 1.3: Coarse vs. Fine \(\sigma\)-Algebras (Parity vs. Power Set)
 #+ATTR_LATEX: :width 0.85\textwidth :center t
 #+ATTR_HTML: :width 650px :align center
 [[file:figures/fig01_parity.png]]

@@ -14,8 +14,11 @@
   \draw[thick, fill=green!25] (0, -0.3) ellipse (2.0cm and 1.0cm);
   \node[font=\bfseries, green!60!black] at (0, -0.3) {$A \in \mathcal{F}$};
 
-  % Annotations
-  \draw[->, thick] (-2.8, -1.8) node[left, align=center] {Null difference\\$\mu(B \setminus A) = 0$} -- (-2.2, -0.8);
+  % Annotations outside outer ellipse B pointing into both rings of B \setminus A
+  \node[left, align=center] (nulllabel) at (-4.3, -1.7) {Null difference:\\$\mu(B \setminus A) = 0$};
+  \draw[->, thick] (nulllabel.east) -- (-3.5, -0.8);
+  \draw[->, thick] (nulllabel.east) -- (-2.3, -0.6);
+
   \node[align=center, fill=white, draw=gray!40, rounded corners, inner sep=4pt] at (0, -3.2)
     {$A \subseteq E \subseteq B$ with $A, B \in \mathcal{F}$ and $\mu(B \setminus A) = 0 \implies \overline{\mu}(E) = \mu(A) = \mu(B)$};
 \end{tikzpicture}

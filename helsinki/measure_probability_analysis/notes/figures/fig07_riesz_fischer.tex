@@ -4,27 +4,27 @@
 \usetikzlibrary{arrows.meta, positioning}
 \begin{document}
 \begin{tikzpicture}[font=\small, >=Stealth]
-  \node[draw=blue!80!black, rounded corners=6pt, fill=blue!10, text width=7.4cm, align=center, inner sep=7pt] (C1)
-    {\textbf{Step 1: Cauchy Sequence in $L^p(\mu)$} \\[2pt]
-     $\|f_n - f_m\|_p \to 0$ as $n, m \to \infty$};
+  \node[draw=blue!80!black, rounded corners=6pt, fill=blue!10, text width=8.2cm, align=center, inner sep=7pt] (C1)
+    {\textbf{Step 1: Fast Subsequence from Cauchy Sequence} \\[2pt]
+     Extract $n_1 < n_2 < \dots$ with $\|f_{n_{k+1}} - f_{n_k}\|_p < 2^{-k}$};
 
-  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!10, text width=7.4cm, align=center, inner sep=7pt, below=0.85cm of C1] (C2)
-    {\textbf{Step 2: Rapidly Converging Subsequence} \\[2pt]
-     Select $n_1 < n_2 < \dots$ such that $\|f_{n_{k+1}} - f_{n_k}\|_p \le 2^{-k}$};
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!10, text width=8.6cm, align=center, inner sep=7pt, below=0.85cm of C1] (C2)
+    {\mbox{\textbf{Step 2: Bounding Function via Minkowski + MCT}} \\[2pt]
+     $h_N = \sum_{k=1}^N |f_{n_{k+1}} - f_{n_k}| \uparrow h$ with $\|h\|_p \le \sum_{k=1}^\infty 2^{-k} = 1 < \infty \implies h < \infty$ a.e.};
 
-  \node[draw=orange!80!black, rounded corners=6pt, fill=orange!10, text width=7.4cm, align=center, inner sep=7pt, below=0.85cm of C2] (C3)
-    {\textbf{Step 3: Telescoping Bound via Minkowski + MCT} \\[2pt]
-     $g_K = \sum_{k=1}^K |f_{n_{k+1}} - f_{n_k}| \implies g = \lim g_K \in L^p \implies g < \infty \text{ a.e.}$};
+  \node[draw=orange!80!black, rounded corners=6pt, fill=orange!10, text width=8.2cm, align=center, inner sep=7pt, below=0.85cm of C2] (C3)
+    {\textbf{Step 3: Pointwise Limit in $L^p(\mu)$} \\[2pt]
+     $f(\omega) := f_{n_1}(\omega) + \sum_{k=1}^\infty (f_{n_{k+1}}(\omega) - f_{n_k}(\omega))$ converges a.e., $|f| \le |f_{n_1}| + h \in L^p$};
 
-  \node[draw=purple!80!black, rounded corners=6pt, fill=purple!10, text width=7.4cm, align=center, inner sep=7pt, below=0.85cm of C3] (C4)
-    {\textbf{Step 4: Pointwise a.e.\ Limit and $L^p$ Convergence} \\[2pt]
-     $f_{n_k}(x) \to f(x)$ a.e.; by Fatou's Lemma $\|f - f_n\|_p \to 0$};
+  \node[draw=purple!80!black, rounded corners=6pt, fill=purple!10, text width=8.2cm, align=center, inner sep=7pt, below=0.85cm of C3] (C4)
+    {\textbf{Step 4: Norm Convergence $\|f_n - f\|_p \to 0$} \\[2pt]
+     $\|f - f_{n_k}\|_p \le \sum_{j=k}^\infty \|f_{n_{j+1}} - f_{n_j}\|_p \le 2^{-k+1} \to 0$, and Cauchy $\implies \|f_n - f\|_p \to 0$};
 
   \draw[->, line width=1.6pt, blue!80!black] (C1) -- (C2)
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=blue!80!black] {Fast subsequence};
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=blue!80!black] {Minkowski + MCT};
   \draw[->, line width=1.6pt, teal!80!black] (C2) -- (C3)
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=teal!80!black] {Minkowski + MCT};
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=teal!80!black] {Absolute convergence a.e.};
   \draw[->, line width=1.6pt, orange!80!black] (C3) -- (C4)
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=orange!80!black] {Fatou's Lemma};
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=orange!80!black] {Minkowski + MCT on tail};
 \end{tikzpicture}
 \end{document}

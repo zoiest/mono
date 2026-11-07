@@ -29,8 +29,8 @@
     $\displaystyle \frac{S_{(k+1)^2}}{k^2} = \frac{S_{(k+1)^2}}{(k+1)^2} \cdot \left(\frac{k+1}{k}\right)^2$
   };
 
-  \draw[thick] (lower) -- node[midway, font=\large] {$\le$} (mid);
-  \draw[thick] (mid) -- node[midway, font=\large] {$\le$} (upper);
+  \path (lower) -- node[midway, font=\large] {$\le$} (mid);
+  \path (mid) -- node[midway, font=\large] {$\le$} (upper);
 
   % Convergence arrows
   \draw[->, very thick, red!80!black] (lower.south) -- ++(0, -0.6) node[below] {$m \cdot 1^2 = m$};

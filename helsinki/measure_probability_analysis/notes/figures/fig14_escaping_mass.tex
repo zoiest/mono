@@ -1,5 +1,5 @@
 \documentclass[tikz,border=5pt]{standalone}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,centernot}
 \begin{document}
 \begin{tikzpicture}[>=latex, font=\small]
   \draw[->, thick] (-0.5, 0) -- (8.5, 0) node[right] {$x$};
@@ -27,8 +27,8 @@
   }
 
   \node[align=center, fill=gray!5, draw=gray!30, rounded corners, inner sep=4pt] at (4.0, -1.2)
-    {Pointwise limit: for every fixed $x \in \mathbb{R}$, $f_n(x) = 0$ for all $n > x \implies f_n(x) \to 0$.\\[2pt]
-     Yet $\|f_n - 0\|_{L^1} = \int_{\mathbb{R}} \mathbf{1}_{[n, n+1]}(x)\,dx = 1 \centernot\longrightarrow 0$.\\[2pt]
-     \textbf{Escaping mass:} probability mass slides off to infinity; uniform integrability fails!};
+    {Pointwise $f_n(x) = \mathbf{1}_{[n,n+1]}(x) \to 0$ for all $x \in \mathbb{R}$,\\[2pt]
+     yet $\lambda(\{|f_n| > \varepsilon\}) = 1 \centernot\longrightarrow 0$ (and $\|f_n\|_{L^1} = 1$)\\[2pt]
+     --- mass escapes to $+\infty$ on an infinite measure space!};
 \end{tikzpicture}
 \end{document}

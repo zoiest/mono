@@ -7,7 +7,7 @@
   \node[draw=purple!80!black, rounded corners=6pt, fill=purple!15, text width=4.4cm, align=center, inner sep=8pt] (AS) at (0, 3.2)
     {\textbf{Almost Sure (a.s.)} \\[3pt] $X_n \xrightarrow{\mathrm{a.s.}} X$};
 
-  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!15, text width=4.4cm, align=center, inner sep=8pt] (LP) at (7.0, 3.2)
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!15, text width=4.4cm, align=center, inner sep=8pt] (LP) at (7.6, 3.2)
     {\textbf{$L^p$ Convergence} \\[3pt] $X_n \xrightarrow{L^p} X \quad (p \ge 1)$};
 
   \node[draw=blue!80!black, rounded corners=6pt, fill=blue!15, text width=4.6cm, align=center, inner sep=8pt] (PR) at (0, 0.0)
@@ -20,8 +20,8 @@
   \draw[->, line width=1.6pt, purple!80!black] (AS) -- (PR)
     node[midway, right=6pt, font=\footnotesize\bfseries, text=purple!80!black] {always};
 
-  \draw[->, line width=1.6pt, teal!80!black] (LP) -- (PR)
-    node[midway, above=4pt, font=\footnotesize\bfseries, text=teal!80!black] {Markov's inequality};
+  \draw[->, line width=1.6pt, teal!80!black] (LP) --
+    node[midway, sloped, above=2pt, font=\scriptsize\bfseries, text=teal!80!black] {Markov's inequality} (PR);
 
   \draw[->, line width=1.6pt, blue!80!black] (PR) -- (DI)
     node[midway, right=6pt, font=\footnotesize\bfseries, text=blue!80!black] {always};

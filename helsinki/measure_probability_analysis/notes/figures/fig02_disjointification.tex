@@ -4,40 +4,72 @@
 \usetikzlibrary{arrows.meta}
 \begin{document}
 \begin{tikzpicture}[font=\small, >=Stealth]
-  % Panel A: Overlapping sequence
-  \node[font=\bfseries, anchor=west] at (0, 3.8) {1. Overlapping Sequence of Sets ($A_n$)};
-  
-  \draw[thick, fill=blue!20, draw=blue!80!black] (2.2, 2.0) circle (1.4);
-  \draw[thick, fill=orange!25, fill opacity=0.7, draw=orange!80!black] (4.0, 2.0) circle (1.4);
-  \draw[thick, fill=green!25, fill opacity=0.7, draw=green!70!black] (5.8, 2.0) circle (1.4);
+  % Panel 1: Overlapping sequence
+  \node[font=\bfseries, anchor=west] at (0, 3.7) {1. Overlapping Sequence of Sets ($A_n$)};
 
-  \node[font=\bfseries\large, blue!90!black] at (1.4, 2.0) {$A_1$};
-  \node[font=\bfseries\large, orange!90!black] at (4.0, 2.0) {$A_2$};
-  \node[font=\bfseries\large, green!60!black] at (6.6, 2.0) {$A_3$};
+  \draw[thick, fill=blue!22, draw=blue!80!black] (2.6, 1.9) circle (1.25);
+  \draw[thick, fill=orange!25, fill opacity=0.7, draw=orange!80!black] (4.1, 1.9) circle (1.25);
+  \draw[thick, fill=green!25, fill opacity=0.7, draw=green!70!black] (5.6, 1.9) circle (1.25);
+
+  \node[font=\bfseries\large, blue!90!black] at (1.9, 1.9) {$A_1$};
+  \node[font=\bfseries\large, orange!90!black] at (4.1, 1.9) {$A_2$};
+  \node[font=\bfseries\large, green!60!black] at (6.3, 1.9) {$A_3$};
 
   % Downward arrows indicating disjointification
-  \draw[->, very thick, gray!70] (2.2, 0.4) -- (2.2, -0.6);
-  \draw[->, very thick, gray!70] (4.0, 0.4) -- (4.0, -0.6);
-  \draw[->, very thick, gray!70] (5.8, 0.4) -- (5.8, -0.6);
-  \node[font=\footnotesize\bfseries, text=gray!80!black] at (4.0, -0.1) {Disjointify};
+  \draw[->, very thick, gray!70] (2.6, 0.45) -- (2.6, -0.35);
+  \draw[->, very thick, gray!70] (4.1, 0.45) -- (4.1, -0.35);
+  \draw[->, very thick, gray!70] (5.6, 0.45) -- (5.6, -0.35);
+  \node[font=\footnotesize\bfseries, text=gray!80!black, fill=white, inner sep=2pt] at (4.1, 0.05) {Disjointify};
 
-  % Panel B: Disjointified pieces
-  \node[font=\bfseries, anchor=west] at (0, -1.0) {2. Pairwise Disjoint Decomposition ($E_n$)};
+  % Panel 2: Disjointified geometric shapes
+  \node[font=\bfseries, anchor=west] at (0, -0.75) {2. Pairwise Disjoint Decomposition ($B_n$)};
 
-  % Piece 1
-  \draw[thick, fill=blue!25, draw=blue!80!black, rounded corners=6pt] (0.2, -3.0) rectangle (2.8, -1.6);
-  \node[align=center] at (1.5, -2.3) {\textbf{\large $E_1$}\\[3pt] $E_1 = A_1$};
+  % Shape B_1 = A_1 (full disk)
+  \begin{scope}[xshift=1.1cm, yshift=-2.3cm]
+    \filldraw[thick, fill=blue!25, draw=blue!80!black] (0, 0) circle (1.05);
+    \node[font=\bfseries\large, text=blue!90!black] at (0, 0) {$B_1$};
+    \node[font=\small] at (0, -1.5) {$B_1 = A_1$};
+  \end{scope}
 
-  % Piece 2
-  \draw[thick, fill=orange!30, draw=orange!80!black, rounded corners=6pt] (3.2, -3.0) rectangle (6.2, -1.6);
-  \node[align=center] at (4.7, -2.3) {\textbf{\large $E_2$}\\[3pt] $E_2 = A_2 \setminus A_1$};
+  % Shape B_2 = A_2 \setminus A_1 (crescent: A_2 with A_1 punched out)
+  \begin{scope}[xshift=4.0cm, yshift=-2.3cm]
+    % Faint ghost of subtracted A_1
+    \draw[dashed, gray!55] (0, 0) circle (1.05);
+    % Fill crescent A_2 \setminus A_1
+    \begin{scope}
+      \clip[even odd rule] (-1.5, -1.5) rectangle (3.0, 1.5) (0, 0) circle (1.05);
+      \filldraw[thick, fill=orange!30, draw=orange!80!black] (1.25, 0) circle (1.05);
+    \end{scope}
+    % Draw inner boundary arc of B_2
+    \begin{scope}
+      \clip (1.25, 0) circle (1.05);
+      \draw[thick, orange!80!black] (0, 0) circle (1.05);
+    \end{scope}
+    \node[font=\bfseries\large, text=orange!90!black] at (1.68, 0) {$B_2$};
+    \node[font=\small] at (0.8, -1.5) {$B_2 = A_2 \setminus A_1$};
+  \end{scope}
 
-  % Piece 3
-  \draw[thick, fill=green!30, draw=green!70!black, rounded corners=6pt] (6.6, -3.0) rectangle (10.4, -1.6);
-  \node[align=center] at (8.5, -2.3) {\textbf{\large $E_3$}\\[3pt] $E_3 = A_3 \setminus (A_1 \cup A_2)$};
+  % Shape B_3 = A_3 \setminus (A_1 \cup A_2) (crescent: A_3 with A_1 \cup A_2 punched out)
+  \begin{scope}[xshift=8.1cm, yshift=-2.3cm]
+    % Faint ghosts of subtracted A_1 and A_2
+    \draw[dashed, gray!45] (0, 0) circle (1.05);
+    \draw[dashed, gray!55] (1.25, 0) circle (1.05);
+    % Fill crescent A_3 \setminus (A_1 \cup A_2)
+    \begin{scope}
+      \clip[even odd rule] (-1.5, -1.5) rectangle (4.3, 1.5) (1.25, 0) circle (1.05);
+      \filldraw[thick, fill=green!30, draw=green!70!black] (2.5, 0) circle (1.05);
+    \end{scope}
+    % Draw inner boundary arc of B_3
+    \begin{scope}
+      \clip (2.5, 0) circle (1.05);
+      \draw[thick, green!70!black] (1.25, 0) circle (1.05);
+    \end{scope}
+    \node[font=\bfseries\large, text=green!60!black] at (2.93, 0) {$B_3$};
+    \node[font=\small] at (1.35, -1.5) {$B_3 = A_3 \setminus (A_1 \cup A_2)$};
+  \end{scope}
 
   % Summary note
-  \node[align=center, fill=gray!5, draw=gray!30, rounded corners=6pt, inner sep=6pt] at (5.3, -4.0)
-    {\textbf{Core Property}: $\displaystyle \bigcup_{n=1}^\infty A_n = \bigsqcup_{n=1}^\infty E_n$ with $E_i \cap E_j = \emptyset$ for $i \ne j \implies \mu\Bigl(\bigcup_{n=1}^\infty A_n\Bigr) = \sum_{n=1}^\infty \mu(E_n)$};
+  \node[align=center, fill=gray!5, draw=gray!30, rounded corners=6pt, inner sep=6pt] at (5.5, -4.65)
+    {\textbf{Core Property}: $\displaystyle \bigcup_{n=1}^\infty A_n = \bigsqcup_{n=1}^\infty B_n$ with $B_m \cap B_n = \emptyset$ ($m \ne n$) $\implies \mu\Bigl(\bigcup_{n=1}^\infty A_n\Bigr) = \sum_{n=1}^\infty \mu(B_n) \le \sum_{n=1}^\infty \mu(A_n)$};
 \end{tikzpicture}
 \end{document}
