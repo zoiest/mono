@@ -92,16 +92,9 @@ Imagine watching a sequence of random variables \(X_1, X_2, X_3, \dots\) compare
 \(X\). There are two ways to slice this two-dimensional table of values \(X_n(\omega)\):
 
 #+caption: Figure 14.1: Modes of Convergence Matrix (Outcomes vs. Time Steps)
-#+begin_example
-              |  n = 1   |  n = 2   |  n = 3   | ... | n -> \infty
-   -----------+----------+----------+----------+-----+-------------
-   outcome w1 | X_1(w1)  | X_2(w1)  | X_3(w1)  | ... | -> X(w1) ?
-   outcome w2 | X_1(w2)  | X_2(w2)  | X_3(w2)  | ... | -> X(w2) ?
-   outcome w3 | X_1(w3)  | X_2(w3)  | X_3(w3)  | ... | -> X(w3) ?
-   -----------+----------+----------+----------+-----+-------------
-   - Row-wise (horizontal):   Almost-sure convergence tracks each row!
-   - Column-wise (vertical):  Probability, L^p, distribution
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_convergence_matrix.png]]
 
 - *Horizontal (almost sure):* You pick \(\omega\) first, then look at the entire infinite row
   \((X_n(\omega))_{n\ge 1}\). You ask: does the set of "good rows" that converge to \(X(\omega)\) have
@@ -184,22 +177,10 @@ Let's visualize Example 14.1:
   \(x \ge 1/n\).
 - For the limit \(X = 0\), \(F_0(x) = \mathbb P(0 \le x)\) is \(0\) for \(x < 0\) and \(1\) for \(x \ge 0\).
 
-#+caption: Figure 14.2: CDF Jump Points
-#+begin_example
-  [Panel A: F_{X_n}(x) with jump at x = 1/n]
-      1 |          *---------
-        |          |
-      0 |----------o
-        +------+---+---------> x
-               0  1/n
-
-  [Panel B: Limit CDF F_0(x) with jump at x = 0]
-      1 |      *-------------
-        |      |
-      0 |------o
-        +------+-------------> x
-               0
-#+end_example
+#+caption: Figure 14.1: Weak Convergence Fails at Discontinuity Point $x = 0$
+#+ATTR_LATEX: :width 0.85\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_weak_convergence_jump.png]]
 
 Look at what happens at each \(x \in \mathbb R\):
 - If \(x < 0\): for all \(n\), \(x < 0 < 1/n\), so \(F_{X_n}(x) = 0 \to 0 = F_0(x)\).
@@ -273,19 +254,10 @@ immediately that \(X_n \Rightarrow 0\).
 
 How do our four modes fit together? Here is the complete map of implications on a probability space:
 
-#+begin_example
-     Almost-sure convergence  (X_n -> X a.s.)
-               |
-               |  (holds on finite measure spaces;
-               |   conversely, a subsequence X_{n_k} -> X a.s. exists!)
-               v
-     Convergence in probability  <====  Convergence in L^p
-               |                        (E|X_n - X|^p -> 0)
-               |  (always; converse holds ONLY
-               |   when the limit X = c is a constant!)
-               v
-     Convergence in distribution  (X_n => X)
-#+end_example
+#+caption: Figure 14.3: Hierarchy and Implications Between Convergence Modes
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_hierarchy.png]]
 
 Notice two hub facts:
 1. *Convergence in probability is the central crossroads:* Both almost-sure convergence and \(L^p\)
@@ -381,13 +353,10 @@ On an *infinite* measure space, \(1\) is not integrable, and the implication fai
   \(\lambda([n, n+1]) = 1 \not\to 0\). The bump of mass \(1\) slides off to \(+\infty\) without ever
   shrinking in measure:
 
-#+begin_example
-  f_1 = 1_{[1,2]}        f_2 = 1_{[2,3]}        f_n = 1_{[n,n+1]}
-      +---+                  +---+                         +---+
-  ----+   +-------------- ---+   +-------------- ... ------+   +---> x
-      1   2                  2   3                         n  n+1
-  Measure of {|f_n| > 1/2} is 1, even though f_n(x) -> 0 for each x!
-#+end_example
+#+caption: Figure 14.2: Escaping Mass to Infinity ($f_n \to 0$ Pointwise but $\|f_n\|_1 = 1$)
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_escaping_mass.png]]
 
 ** The subsequence principle
 
@@ -471,16 +440,10 @@ Why is it called the "typewriter sequence"? Think of an old mechanical typewrite
 - *Level \(k=1\) (\(n=2, 3\)):* \([0, 1/2)\), then \([1/2, 1)\) (width \(1/2\))
 - *Level \(k=2\) (\(n=4, 5, 6, 7\)):* \([0, 1/4)\), \([1/4, 1/2)\), \([1/2, 3/4)\), \([3/4, 1)\) (width \(1/4\))
 
-#+begin_example
-  k=0, n=1:  [=============== 1 ===============)     width = 1
-  k=1, n=2:  [======= 1 =======)
-       n=3:                    [======= 1 =======)     width = 1/2
-  k=2, n=4:  [=== 1 ===)
-       n=5:          [=== 1 ===)
-       n=6:                    [=== 1 ===)
-       n=7:                              [=== 1 ===)   width = 1/4
-             0                 1/2                 1
-#+end_example
+#+caption: Figure 14.3: The Typewriter Sequence ($f_n \xrightarrow{\mathbb{P}} 0$ but Diverges Everywhere)
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_typewriter.png]]
 
 Let us check all four modes for \(X_n\) on \(\Omega = [0,1)\) with \(\mathbb P = \lambda|_{[0,1)}\):
 - *Almost sure:* Fix *any* \(\omega \in [0,1)\). During level \(k\) (\(2^k \le n < 2^{k+1}\)), the \(2^k\)
@@ -507,14 +470,10 @@ At every outcome \(\omega > 0\), the variable is eventually zero, so \(X_n \to 0
 of expectations. The heights compensate exactly for the shrinking exceptional sets.
 #+end_quote
 
-#+begin_example
-   height n  |   +--+
-             |   |  |     Area = height * width = n * (1/n) = 1
-   height 2  |   |  +---+
-   height 1  |   |  |   +-------+
-           0 +---+--+---+-------+-----> omega in (0,1)
-             0  1/n 1/2 1       1
-#+end_example
+#+caption: Figure 14.4: Shrinking Tall Spike ($f_n \to 0$ a.e. but $\|f_n\|_1 = 1$)
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_spike.png]]
 
 - Fix any \(\omega \in (0,1)\). By the Archimedean property, there is an integer \(N > 1/\omega\). For all
   \(n \ge N\), we have \(1/n < \omega\), so \(\omega \notin (0, 1/n)\) and \(X_n(\omega) = 0\). Thus
@@ -612,14 +571,10 @@ If we replace discontinuous step indicators by *bounded continuous* test functio
 jumps disappear completely. Conversely, any step indicator \(\mathbf 1_{(-\infty, x]}\) can be sandwiched
 tightly between two continuous "ramp" functions \(h_- \le \mathbf 1_{(-\infty, x]} \le h_+\):
 
-#+begin_example
-      1 |------------*=======*
-        |             \       \
-        |     h_-(t)   \       \  h_+(t)
-      0 |               *=======*------------
-        +------------+-------+-------+------> t
-                  x-delta    x    x+delta
-#+end_example
+#+caption: Figure 14.5: Continuous Trapezoidal Sandwiching in Portmanteau Theorem
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig14_portmanteau_trapezoid.png]]
 
 Because \(h_-\) and \(h_+\) only differ on the tiny transition window \([x-\delta, x+\delta]\), their
 expectations squeeze \(\mathbb P(X_n \le x)\) whenever \(x\) is a continuity point of \(F_X\).

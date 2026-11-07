@@ -1,0 +1,20 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \node[draw, rounded corners, fill=purple!10, text width=5.5cm, align=center] (L0) at (0, 3.6)
+    {\textbf{Level 0 (Outcome)}: $\omega \in \Omega$ \\ \footnotesize e.g., die roll shows $4$};
+  \node[draw, rounded corners, fill=blue!10, text width=5.5cm, align=center] (L1) at (0, 2.4)
+    {\textbf{Level 1 (Singleton subset)}: $\{\omega\} \subseteq \Omega$ \\ \footnotesize set containing outcome $4$};
+  \node[draw, rounded corners, fill=teal!10, text width=5.5cm, align=center] (L2) at (0, 1.2)
+    {\textbf{Level 2 (Event / Measurable set)}: $A \in \mathcal{F}$ \\ \footnotesize e.g., even outcomes $\{2,4,6\}$};
+  \node[draw, rounded corners, fill=orange!10, text width=5.5cm, align=center] (L3) at (0, 0.0)
+    {\textbf{Level 3 ($\sigma$-Algebra)}: $\mathcal{F} \subseteq 2^\Omega$ \\ \footnotesize system of all measurable events};
+
+  \draw[->, thick] (L0) -- (L1);
+  \draw[->, thick] (L1) -- (L2);
+  \draw[->, thick] (L2) -- (L3);
+\end{tikzpicture}
+\end{document}

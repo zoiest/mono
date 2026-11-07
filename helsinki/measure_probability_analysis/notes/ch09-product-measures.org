@@ -81,19 +81,9 @@ Just as open intervals do not form a \(\sigma\)-algebra on \(\mathbb{R}\) (the c
 To integrate over a general set \(E \subseteq S \times T\) one variable at a time, we slice \(E\) along a fixed first coordinate \(s \in S\) or along a fixed second coordinate \(t \in T\):
 
 #+caption: Figure 9.1: Sections of a Measurable Set in a Product Space
-#+begin_example
-T ^
-  |
-t | - - - - - - - - - +---------------+ - -
-  |                   |               |
-  |        /          \               /     E^t = {s in S : (s,t) in E}
-  |       |            |      E       |     (horizontal slice)
-  |        \          /               \ 
-  |                   |               |     E_s = {t in T : (s,t) in E}
-  | - - - +-----------+---------------+ -   (vertical slice)
-  +-------+-----------+---------------+----> S
-          0           s               1
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig09_sections.png]]
 
 Notice closely where the sections live:
 - Fixing \(s \in S\), the *section at \(s\)* is \(E_s := \{t \in T : (s, t) \in E\}\), which is a subset of \(T\)!
@@ -180,15 +170,10 @@ The theorem below explains why both computations give the measure of the same se
 
 *Unpacking Example 9.1:* Why does the countable union over \(q \in \mathbb{Q} \cap [0, 1]\) equal \(\{(s, t) : s < t\}\)? By density of \(\mathbb{Q}\) in \(\mathbb{R}\), we have \(s < t\) if and only if there exists a rational number \(q \in \mathbb{Q} \cap [0, 1]\) with \(s < q < t\), which means \((s, t) \in [0, q) \times (q, 1]\). Each set \([0, q) \times (q, 1]\) is a measurable rectangle in \(\mathcal{B}([0, 1]) \otimes \mathcal{B}([0, 1])\), and a countable union of measurable rectangles belongs to the product \(\sigma\)-algebra!
 
-#+caption: Figure 9.2: The Triangle Subset Above the Diagonal
-#+begin_example
-t ^
-1 |       . ' |
-  |   . '     |    E = {(s,t) \in [0,1]^2 : s < t}
-  |. '        |    (the open triangle above the diagonal)
-  +-----------+---> s
-  0           1
-#+end_example
+#+caption: Figure 9.2: The Triangle Subset $E = \{s < t\} \subseteq [0,1]^2$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig09_triangle.png]]
 
 ** Euclidean Borels: \(\mathcal{B}(\mathbb{R}^m) \otimes \mathcal{B}(\mathbb{R}^n) = \mathcal{B}(\mathbb{R}^{m+n})\)
 
@@ -282,16 +267,10 @@ Suppose first that both \(\mu\) and \(\nu\) are finite measures.
 Now suppose \((S, \mathcal{S}, \mu)\) and \((T, \mathcal{T}, \nu)\) are \(\sigma\)-finite.
 
 - *Step 2a: Disjoint finite-measure partitions.* By \(\sigma\)-finiteness, \(S = \bigcup_{i=1}^\infty \tilde{S}_i\) with \(\mu(\tilde{S}_i) < \infty\). Making them disjoint via \(S_1 = \tilde{S}_1\) and \(S_i = \tilde{S}_i \setminus \bigcup_{k=1}^{i-1} \tilde{S}_k\) gives a countable measurable partition \(S = \bigsqcup_{i \ge 1} S_i\) with \(\mu(S_i) < \infty\), and similarly \(T = \bigsqcup_{j \ge 1} T_j\) with \(\nu(T_j) < \infty\).
-  #+caption: Figure 9.3: Measurable Rectangle in Product Space
-#+begin_example
-T ^
-1 |    .-------------------------.
-  |    |                         |    E = A x B
-  |    |                         |    Area = \mu(A) * \nu(B)
-  |    .-------------------------.
-  +----+-------------------------+----> S
-  0                               1
-#+end_example
+  #+caption: Figure 9.1: Product Rectangle $E = A \times B$ and Coordinate Sections
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig09_product_rect.png]]
   On each piece \(S_i\), use the trace \(\sigma\)-algebra \(\mathcal{S}_i = \{A \cap S_i : A \in \mathcal{S}\}\) and the restricted finite measure \(\mu_i = \mu|_{S_i}\), and similarly \((T_j, \mathcal{T}_j, \nu_j)\). By Step 1, we have a finite product measure \(\mu_i \otimes \nu_j\) on \(\mathcal{S}_i \otimes \mathcal{T}_j\).
   For any \(E \in \mathcal{S} \otimes \mathcal{T}\), its intersection \(E \cap (S_i \times T_j)\) belongs to \(\mathcal{S}_i \otimes \mathcal{T}_j\) (the collection of \(E \subseteq S \times T\) with \(E \cap (S_i \times T_j) \in \mathcal{S}_i \otimes \mathcal{T}_j\) contains all measurable rectangles \((A \times B) \cap (S_i \times T_j) = (A \cap S_i) \times (B \cap T_j)\) and is preserved by \(\sigma\)-algebra operations).
   Define
@@ -331,18 +310,10 @@ has product measure
 What if we slice the other way? For fixed \(s > 0\), the vertical section \(E_s = \{n \in \mathbb{N} : 2^{-n} \ge s\} = \{1, 2, \dots, \lfloor \log_2(1/s) \rfloor\}\) contains only finitely many integers. At \(s = 0\), however, the section is \(E_0 = \mathbb{N}\), which has infinite counting measure \(\#(E_0) = \infty\)! Yet that exceptional section lies above the \(\lambda\)-null set \(\{0\}\). An infinite section measure at a null set of base points does not make the product measure infinite: \(\int_0^1 \#(E_s) \, ds = 1\) (since \(\infty \cdot \lambda(\{0\}) = \infty \cdot 0 = 0\)).
 #+end_quote
 
-#+caption: Figure 9.4: Non-Absolute Double Series Failure of Fubini
-#+begin_example
-n ^
-  |
-  |   +1  -1   0   0 ...   (sum = 0)
-  |    0  +1  -1   0 ...   (sum = 0)
-  |    0   0  +1  -1 ...   (sum = 0)
-  +------------------------> m
-Sum along rows: each row sums to 0, total = 0.
-Sum along cols: first col sums to 1, rest 0, total = 1!
-Fails because \sum |a_{m,n}| = \infty!
-#+end_example
+#+caption: Figure 9.3: Fubini Counterexample Matrix Violating $\sum |a_{m,n}| < \infty$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig09_fubini_counterexample.png]]
 
 * Tonelli and Fubini
 
@@ -512,17 +483,10 @@ Three natural questions arise once we have product measures for two spaces:
 2. *If \((S, \mathcal{S}, \mu)\) and \((T, \mathcal{T}, \nu)\) are complete measure spaces (Chapter 5, Section 5.4), is their product \((S \times T, \mathcal{S} \otimes \mathcal{T}, \mu \otimes \nu)\) automatically complete?*
    *No!* Why not? Suppose \(A_0 \in \mathcal{S}\) is a non-empty \(\mu\)-null set (say \(A_0 = \{0\} \subseteq [0, 1]\) with Lebesgue measure), and let \(V \subseteq T = [0, 1]\) be a *non-measurable* subset of \(T\). Then the thin vertical strip \(A_0 \times V = \{0\} \times V\) sits inside the measurable rectangle \(\{0\} \times [0, 1]\), which has product measure \(0 \cdot 1 = 0\). So in the *completion* of the product space, \(\{0\} \times V\) is a subset of a null set and is therefore measurable! Yet \(\{0\} \times V\) *cannot* belong to the uncompleted product \(\sigma\)-algebra \(\mathcal{S} \otimes \mathcal{T}\), because by Section 9.1 every set in \(\mathcal{S} \otimes \mathcal{T}\) has measurable sections, whereas the section of \(\{0\} \times V\) at \(s = 0\) is \(V \notin \mathcal{T}\)!
 
-   #+caption: Figure 9.5: Vitali Set Slice in Product Space Completion
-#+begin_example
-T = [0,1] ^
-        1 |       |   |
-          |   #   |   |   # = {0} x V  (where V is Vitali set)
-          |   #   |   |   Inside null rectangle {0} x [0,1].
-        0 +---+---+---+----> S = [0,1]
-          0   s   1
-In product sigma-algebra, {0} x V is not measurable!
-In completion, {0} x V is measurable with measure 0.
-#+end_example
+   #+caption: Figure 9.4: Nonmeasurable Slice $\{0\} \times V$ in Null Rectangle $\{0\} \times [0,1]$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig09_null_rectangle.png]]
 
 3. *Can we still use Fubini's theorem if \(f\) is only measurable with respect to the completion of \(\mu \otimes \nu\)?* Yes—provided \(\mu\) and \(\nu\) are complete and \(\sigma\)-finite! The only twist is that the sections \(f_s\) are now measurable for *\(\mu\)-almost every* \(s\) (rather than *every* \(s\), because a bad slice like \(V\) at \(s = 0\) can happen on a \(\mu\)-null set!).
 

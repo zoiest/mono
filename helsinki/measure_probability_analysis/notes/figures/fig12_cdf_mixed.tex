@@ -1,0 +1,29 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[font=\small]
+  \draw[->, thick] (0,0) -- (6.0,0) node[right] {$x$};
+  \draw[->, thick] (0,0) -- (0,3.5) node[above] {$F(x)$};
+
+  \draw[dashed, gray!40] (0, 3.0) -- (5.5, 3.0) node[right] {$1$};
+
+  % Flat part
+  \draw[very thick, blue!80!black] (0.5, 0.0) -- (1.5, 0.0);
+  
+  % Continuous increase
+  \draw[very thick, blue!80!black] (1.5, 0.0) to[out=0, in=200] (3.0, 1.2);
+  \draw[blue!80!black] (3.0, 1.2) circle (2pt);
+
+  % Jump at x_0
+  \draw[fill=blue!80!black] (3.0, 2.2) circle (2pt);
+  \draw[dashed, blue!60!black] (3.0, 0) node[below] {$x_0$} -- (3.0, 2.2);
+  \draw[<->, thick, red!80!black] (3.2, 1.2) -- node[right, font=\footnotesize] {jump $p_0 = \mathbb{P}(X=x_0)$} (3.2, 2.2);
+
+  % Shelf
+  \draw[very thick, blue!80!black] (3.0, 2.2) -- (4.2, 2.2);
+
+  % Continuous to 1
+  \draw[very thick, blue!80!black] (4.2, 2.2) to[out=20, in=180] (5.5, 3.0);
+\end{tikzpicture}
+\end{document}

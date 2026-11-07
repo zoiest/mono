@@ -1,0 +1,30 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[font=\small]
+  % Continuity from below
+  \begin{scope}[xshift=0cm]
+    \node[font=\bfseries] at (1.5, 2.6) {Continuity from Below: $A_n \nearrow A$};
+    \draw[thick, fill=blue!10] (1.5,1) circle (1.2);
+    \draw[thick, fill=blue!25] (1.5,1) circle (0.8);
+    \draw[thick, fill=blue!45] (1.5,1) circle (0.4);
+    \node at (1.5, 1.0) {\footnotesize $A_1$};
+    \node at (1.5, 1.5) {\footnotesize $A_2$};
+    \node at (1.5, 2.0) {\footnotesize $A_3$};
+    \node at (1.5, -0.6) {$\mu(A_n) \nearrow \mu(A)$};
+  \end{scope}
+
+  % Continuity from above
+  \begin{scope}[xshift=4.5cm]
+    \node[font=\bfseries] at (1.5, 2.6) {Continuity from Above: $B_n \searrow B$};
+    \draw[thick, fill=orange!10] (1.5,1) circle (1.2);
+    \draw[thick, fill=orange!25] (1.5,1) circle (0.8);
+    \draw[thick, fill=orange!45] (1.5,1) circle (0.4);
+    \node at (1.5, 2.0) {\footnotesize $B_1$};
+    \node at (1.5, 1.5) {\footnotesize $B_2$};
+    \node at (1.5, 1.0) {\footnotesize $B_3$};
+    \node at (1.5, -0.6) {$\mu(B_n) \searrow \mu(B)$ \footnotesize (if $\mu(B_1)<\infty$)};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

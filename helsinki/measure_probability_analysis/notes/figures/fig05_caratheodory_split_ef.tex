@@ -1,0 +1,29 @@
+\documentclass[tikz,border=5pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{shapes,patterns}
+\begin{document}
+\begin{tikzpicture}[>=latex, font=\small]
+  % Outer box representing T
+  \draw[thick, fill=gray!5] (0, 0) rectangle (9, 3);
+  \node[anchor=north west, font=\bfseries] at (0.2, 2.8) {Test Set $T$};
+
+  % Three partitions
+  \draw[thick, fill=blue!15] (0.5, 0.4) rectangle (3.2, 2.3);
+  \node[align=center] at (1.85, 1.35) {\textbf{Piece 1}\\[2pt] $T \cap E$};
+
+  \draw[thick, fill=orange!20] (3.4, 0.4) rectangle (6.1, 2.3);
+  \node[align=center] at (4.75, 1.35) {\textbf{Piece 2}\\[2pt] $(T \setminus E) \cap F$};
+
+  \draw[thick, fill=green!15] (6.3, 0.4) rectangle (8.6, 2.3);
+  \node[align=center] at (7.45, 1.35) {\textbf{Piece 3}\\[2pt] $T \setminus (E \cup F)$};
+
+  \node[align=center, text=blue!80!black] at (1.85, -0.4) {Split by $E$};
+  \draw[->, thick, blue!80!black] (1.85, 0.4) -- (1.85, -0.1);
+
+  \node[align=center, text=orange!80!black] at (4.75, -0.4) {Split $T \setminus E$ by $F$};
+  \draw[->, thick, orange!80!black] (4.75, 0.4) -- (4.75, -0.1);
+
+  \node[align=center, text=green!60!black] at (7.45, -0.4) {Remainder};
+  \draw[->, thick, green!60!black] (7.45, 0.4) -- (7.45, -0.1);
+\end{tikzpicture}
+\end{document}

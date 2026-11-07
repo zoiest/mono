@@ -246,19 +246,10 @@ probability law need not be purely discrete or have a density!
 
 Here is the graph of \(F(x)\) from Example 12.2 (corresponding to Figure 12.1 in the lecture notes):
 
-#+begin_example
-      F(x)
-        1 |                   *----------------
-          |                 . :
-          |               .   :   slope = 1/2
-          |             .     :
-      1/2 |           *       :  <-- solid dot at (0, 1/2): F(0) = 1/2
-          |           :       :      (jump of size 1/2 at x = 0)
-          |           :       :
-        0 +-----------o-------+---------------> x
-                      0       1
-                      ^-- open circle: F(0-) = 0
-#+end_example
+#+caption: Figure 12.1: Cumulative Distribution Function of a Mixed Law
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig12_cdf_mixed.png]]
 
 ** Additional worked examples
 
@@ -296,15 +287,10 @@ for a general nondecreasing right-continuous \(F\):
 3. Apply Carathéodory's theorem on \((-m, m]\) to get a finite Borel measure \(\mu_F^{(m)}\), and then
    let \(m \to \infty\).
 
-#+caption: Figure 12.2: Compact Exhaustion of Half-Open Intervals
-#+begin_example
-Shrinking (u, v] at left endpoint to get compact K_n = [u+delta, v]:
-
-     u     u+delta                    v
------o-------[------------------------]----->
-             |<======= K_n ==========>|
-     |<============= (u, v] =========>|
-#+end_example
+#+caption: Figure 12.2: Shrinking Half-Open Interval $(u, v]$ to Compact $K_n = [u+\delta, v]$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig12_interval_shrink.png]]
 
 ** The Lebesgue–Stieltjes theorem
 
@@ -552,19 +538,10 @@ What if \(F\) is a general CDF with *jumps* (atoms, where \(F\) skips over verti
 and *flat spots* (empty regions of zero probability, where \(F(x) = u\) for a whole horizontal interval
 of \(x\))?
 
-#+caption: Figure 12.3: Generalized Inverse / Quantile Function
-#+begin_example
-F(x)
-     1 |                         . '
-       |                     . '
-    u_2| - - - - - - - - - *        <-- In a jump at x_0:
-       |                   |            F^{-1}(u_2) = x_0
-       |     .   :         :
-    u_1| - - * - - - - - - :        <-- In a flat shelf [a, b]:
-       |     |   :         :            F^{-1}(u_1) jumps to a!
-     0 +-----+---+---------+------> x
-             a   b         x_0
-#+end_example
+#+caption: Figure 12.3: Left-Continuous Generalized Inverse / Quantile Function
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig12_quantile.png]]
 
 We replace \(F^{-1}(u)\) by the *quantile function* (or *generalized inverse*): for each threshold
 \(u \in (0,1)\), look at all \(x \in \mathbb R\) where \(F(x)\) has reached at least level \(u\), and

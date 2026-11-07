@@ -97,15 +97,10 @@ Keeping these three levels straight prevents almost all beginner confusion. Thin
 box of marbles, a subset \(A \subseteq \Omega\) as a small bag containing some of those marbles, and
 a collection \(\mathcal{F} \subseteq 2^\Omega\) as a catalogue of permissible bags.
 
-#+begin_example
-Level 0 (point):         w  (a single outcome, e.g. H)
-                         |  is an element of (in)
-                         v
-Level 1 (subset):       {w} (a set of outcomes, e.g. {H} subseteq Omega)
-                         |  is an element of (in)
-                         v
-Level 2 (collection):   2^Omega = { emptyset, {H}, {T}, {H,T} }
-#+end_example
+#+caption: Figure 1.1: Hierarchy of Outcomes, Singletons, Events, and $\sigma$-Algebras
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig01_hierarchy.png]]
 
 ** Definitions and notation
 
@@ -199,27 +194,10 @@ When we pass from finitely many operations to infinitely many (sequences of sets
 "exists \(n\) such that \(A_n\) occurs" becomes the countable union \(\bigcup_{n=1}^\infty A_n\), and
 "for all \(n\), \(A_n\) occurs" becomes the countable intersection \(\bigcap_{n=1}^\infty A_n\).
 
-#+begin_example
-+------------------------+   +------------------------+
-| Omega                  |   | Omega                  |
-|   +-------+            |   |   +-------+            |
-|   | A   +-+-----+      |   |   | A   +-+-----+      |
-|   |#####|#|#####|      |   |   |     |#|     |      |
-|   +-----+-+   B |      |   |   +-----+-+   B |      |
-|         +-------+      |   |         +-------+      |
-+------------------------+   +------------------------+
-   Union: A \cup B              Intersection: A \cap B
-
-+------------------------+   +------------------------+
-| Omega                  |   | Omega##################|
-|   +-------+            |   |###+-------+############|
-|   | A   +-+-----+      |   |###| A     |############|
-|   |#####| |     |      |   |###|       |############|
-|   +-----+-+   B |      |   |###+-------+############|
-|         +-------+      |   |########################|
-+------------------------+   +------------------------+
-  Difference: A \setminus B     Complement: A^c = \Omega \setminus A
-#+end_example
+#+caption: Figure 1.2: Set Operations (Union, Intersection, Difference, Complement)
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig01_venn_ops.png]]
 
 As Figure 1.1 in the lecture notes emphasises, these Venn diagrams are *schematic pictures of
 membership*: the sets \(A, B\) need not be geometric regions in the plane, and the drawn areas on the
@@ -399,21 +377,10 @@ measurable.
   combines whichever of the two blocks \(D\) and \(D^c\) appear in the sequence, producing again one
   of the four sets \(\emptyset, D, D^c, \Omega \in \mathcal{F}\).
 
-#+caption: Figure 1.2: Coarse vs. Fine sigma-Algebras (Parity vs. Power Set)
-#+begin_example
-   [Case A: Only parity recorded — F = {emptyset, D, D^c, Omega}]
-   +-----------------------+   +-----------------------+
-   |   1       3       5   |   |   2       4       6   |
-   |       odd (D^c)       |   |       even (D)        |
-   +-----------------------+   +-----------------------+
-   A measurable set must contain ALL or NONE of each block (4 sets).
-
-   [Case B: Exact outcome recorded — 2^Omega]
-   +---+  +---+  +---+  +---+  +---+  +---+
-   | 1 |  | 2 |  | 3 |  | 4 |  | 5 |  | 6 |
-   +---+  +---+  +---+  +---+  +---+  +---+
-   Each outcome can be distinguished from the others (64 subsets).
-#+end_example
+#+caption: Figure 1.2: Coarse vs. Fine \(\sigma\)-Algebras (Parity vs. Power Set)
+#+ATTR_LATEX: :width 0.85\textwidth :center t
+#+ATTR_HTML: :width 650px :align center
+[[file:figures/fig01_parity.png]]
 
 As the lecture notes point out, \(\{6\} \notin \mathcal{F}\) is already a genuine example of a
 *nonmeasurable set* (relative to the \(\sigma\)-algebra (1.1)). It does not require the Axiom of
@@ -584,23 +551,10 @@ are equal:
 - Conversely, to show \(\sigma(\mathcal{A}_2) \subseteq \sigma(\mathcal{A}_1)\), check that every
   generator in \(\mathcal{A}_2\) belongs to \(\sigma(\mathcal{A}_1)\).
 
-#+caption: Figure 1.3: Generating the Borel sigma-Algebra from Rational Half-Lines
-#+begin_example
-Roadmap of the reverse inclusion:
-   Rational half-lines (-\infty, q]   (q \in \mathbb{Q})
-        |
-        |  Step 1: Countable intersection over rational q > t
-        v
-   Real half-lines     (-\infty, t]   (t \in \mathbb{R})
-        |
-        |  Step 2: Complement + union of (-\infty, b - 1/n]
-        v
-   Open intervals      (a, b)         (a < b in \mathbb{R})
-        |
-        |  Step 3: Countable union of rational intervals
-        v
-   Arbitrary open set  U \subseteq \mathbb{R}
-#+end_example
+#+caption: Figure 1.4: Roadmap Generating the Borel $\sigma$-Algebra from Rational Half-Lines
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig01_borel_roadmap.png]]
 
 *Unpacked Proof:*
 

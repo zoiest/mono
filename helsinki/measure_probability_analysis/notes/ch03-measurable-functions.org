@@ -95,21 +95,10 @@ Suppose \(X : \Omega \to S\) is a function. Given a subset \(B \subseteq S\) of 
 pull \(B\) back along the arrows of \(X\) to ask: *which domain points \(\omega \in \Omega\) land
 inside \(B\)?*
 
-#+caption: Figure 3.1: Preimage of a Measurable Set Under Mapping X
-#+begin_example
-Domain \Omega             X : \Omega \to S          Target S
-+-------------------+                              +-------------------+
-|   (w_1) ----------+----------------------------->|---> (s_1)         |
-|                   |                              |               B   |
-|  +-------------+  |                              |  +-------------+  |
-|  | (w_2) ------+--+----------------------------->|->|-> (s_2)     |  |
-|  |             |  |                              |  |     ^       |  |
-|  | (w_3) ------+--+------------------------------+--+-----+       |  |
-|  |             |  |                              |  |   (s_3)     |  |
-|  +-------------+  |                              |  +-------------+  |
-|    X^{-1}(B)      |                              |                   |
-+-------------------+                              +-------------------+
-#+end_example
+#+caption: Figure 3.1: Preimage of a Measurable Set Under Mapping $X$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig03_preimage.png]]
 
 As Figure 3.1 in the lecture notes illustrates, notice two crucial features of the preimage
 \(X^{-1}(B)\):
@@ -414,17 +403,10 @@ Think of \(\mu\) as a distribution of mass on \(\Omega\). For each point \(\omeg
 up inside a measurable region \(B \in \mathcal{S}\) of the target space? Precisely the mass of all
 domain points \(\omega \in \Omega\) that landed inside \(B\) — namely \(\mu(X^{-1}(B))\)!
 
-#+caption: Figure 3.2: Push-forward / Image Measure Construction
-#+begin_example
-Domain (\Omega, \mathcal{F}, \mu)       Target (S, \mathcal{S}, X_# \mu)
-+---------------------------+            +---------------------------+
-|   +-------------------+   |            |       +-----------+       |
-|   |     X^{-1}(B)     |---+-- pushes ->|------>|     B     |       |
-|   | mass = \mu(X^-1 B)|   |  mass fwd  |       | (X_#\mu)B |       |
-|   +-------------------+   |            |       +-----------+       |
-+---------------------------+            +---------------------------+
-            Formula: (X_# \mu)(B) := \mu(X^{-1}(B))
-#+end_example
+#+caption: Figure 3.2: Push-forward / Image Measure Construction $(X_\# \mu)(B) = \mu(X^{-1}(B))$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig03_pushforward.png]]
 
 In probability, when \(\mu = \mathbb{P}\) is a probability measure on \(\Omega\), this pushed-forward
 measure \(X_\# \mathbb{P}\) on the target space \((S, \mathcal{S})\) is called the *law* or

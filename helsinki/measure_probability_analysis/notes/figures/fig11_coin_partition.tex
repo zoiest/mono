@@ -1,0 +1,16 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[font=\small]
+  \draw[thick, fill=blue!5] (0,0) rectangle (7.0, 1.8);
+  \node[anchor=north west] at (0, 1.8) {$\Omega = \{0,1\}^{\mathbb{N}}$};
+
+  \foreach \x/\label in {0.2/$V$, 1.6/$T_1 V$, 3.0/$T_2 V$, 4.4/$T_{1,2} V$, 5.8/$\dots$} {
+    \draw[thick, fill=teal!20, rounded corners=3pt] (\x, 0.2) rectangle (\x+1.0, 1.2);
+    \node at (\x+0.5, 0.7) {\footnotesize \label};
+  }
+  \node[font=\footnotesize, text=gray!80!black, align=center] at (3.5, -0.5) 
+    {Countable partition into disjoint translates: if $\mathbb{P}(V)=0 \implies \sum=0$, if $\mathbb{P}(V)>0 \implies \sum=\infty$ (Contradiction!)};
+\end{tikzpicture}
+\end{document}

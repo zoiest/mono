@@ -109,17 +109,9 @@ into countably many disjoint copies \(T_F(V)\) (one for each finite subset \(F \
 all of which must have the *exact same* probability \(\mathbb P(V)\):
 
 #+caption: Figure 11.1: Partition of the Fair-Coin Space by Bit-Flip Translates
-#+begin_example
-Omega = {0,1}^N  (total probability = 1)
-+-------------------------------------------------------------+
-| T_empty V |  T_{1} V  |  T_{2} V  | T_{1,2} V | ...         |
-|   = V     |           |           |           | (countable  |
-|           |           |           |           |  disjoint)  |
-+-------------------------------------------------------------+
-If V were measurable, all copies would share the same probability p.
-- If p = 0: sum_F P(T_F V) = 0 != 1 (contradiction!).
-- If p > 0: sum_F P(T_F V) = \infty != 1 (contradiction!).
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig11_coin_partition.png]]
 
 What can the common probability \(a = \mathbb P(V)\) be?
 - If \(a = 0\), the countable sum \(a + a + a + \dots\) is \(0\), not \(1\).
@@ -297,16 +289,10 @@ looks at finitely many times, \(E_3\) looks at finitely many times, and so on fo
 \(E_1, E_2, \dots\), then altogether \(\bigcup_{n=1}^\infty E_n\) only ever looks at a *countable*
 union of finite sets of times — which is still a *countable* set of times!
 
-#+begin_example
-   Time interval I = [0, 1] (uncountably many times)
-   |----*-------*--*--------*---------*------*----*-------|
-        t_1    t_2 t_3     t_4       t_5    t_6  t_7 ...
-        \___________________ ___________________________/
-                            v
-     Countable set J of times inspected by E in B(R)^{x I}.
-     Pick ANY time t_0 NOT in J: changing x(t_0) cannot
-     change whether x belongs to E!
-#+end_example
+#+caption: Figure 11.4: Cylinder Events Inspecting Countable Subsets of Uncountable Index Set $I$
+#+ATTR_LATEX: :width 0.85\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig11_uncountable_sampling.png]]
 
 Therefore, *no event in the product \(\sigma\)-algebra on \(\mathbb R^{[0,1]}\) can ever inspect all
 times \(t \in [0,1]\)*. Every product-measurable event is completely blind to all coordinates outside
@@ -464,20 +450,9 @@ which is an *uncountable* union of null sets — and an uncountable union of nul
 probability \(1\)!
 
 #+caption: Figure 11.2: The Random Spike Process
-#+begin_example
-t | - - - - - - - - - - - - - *       |  <-- Fixed t: only hits spike
-    |                             |       |      when omega = t (prob 0)
-  0 +-----------------------------+-------+
-    0                             t       1
-                                outcome omega
-
-    Sample paths t -> Y_t(omega):
-  1 |                             *
-    |                             |
-  0 +-------------------+---------+-------+  <-- Fixed omega: spike of
-    0                   |         omega   1      height 1 at t = omega!
-                      Time t in [0,1]
-#+end_example
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig11_random_spike.png]]
 
 ** The random spike example
 
@@ -592,17 +567,10 @@ gap between the graphs of \(f\) and \(g\). An *open ball* with center \(g \in C(
 B(g, r) := \{f \in C([0,1]) : \|f - g\|_\infty < r\}.
 \]
 
-#+begin_example
-       ^
-       |          . . . . . . . . .          <-- g(t) + r
-       |      . '   _______         ' .
-       |    .     /         \           .    <-- f stays inside tube
-       |   .     /   g(t)    \___________ .  <-- g(t) (center path)
-       |        /
-       |    . ' . . . . . . . . . . . . . '  <-- g(t) - r
-       +------------------------------------> t
-       0                                   1
-#+end_example
+#+caption: Figure 11.3: Open Ball in $(C([0,1]), \|\cdot\|_\infty)$ as a Uniform Tube
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig11_uniform_tube.png]]
 
 A subset \(U \subseteq C([0,1])\) is *open* for the uniform norm if around each \(g \in U\) it contains
 some open ball \(B(g, r) \subseteq U\). The *Borel \(\sigma\)-algebra* \(\mathcal B(C([0,1]))\) is the

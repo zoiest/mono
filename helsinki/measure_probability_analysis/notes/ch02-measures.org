@@ -321,18 +321,10 @@ Countable additivity requires the sets \(A_n\) to be *pairwise disjoint*. What i
    \(A_3\) keep only the part not already in \(A_1 \cup A_2\), and so on. This slices the union into
    pairwise disjoint pieces \(B_n \subseteq A_n\) without losing or double-counting a single point!
 
-#+begin_example
-Overlapping sets:                     Disjoint pieces, same union:
-  +---------+                           +---------+
-  |   A_1   |                           |   B_1   |
-  |     +---+-------+                   |   = A_1 +-------+
-  |     |   |  A_2  |        ===>       +---------+  B_2  |
-  +-----+---+   +---+-----+                   | = A_2\A_1 +-----+
-        |       |   | A_3 |                   +-----------+ B_3 |
-        +-------+---+-----+                               |     |
-                                                          +-----+
-                                               B_3 = A_3 \ (A_1 U A_2)
-#+end_example
+#+caption: Figure 2.1: Disjointification of an Overlapping Sequence of Sets
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig02_disjointification.png]]
 
 ** Monotonicity and the union bound
 
@@ -428,34 +420,10 @@ monotone way:
   into an expanding sequence \(A_1 \setminus A_n \uparrow A_1 \setminus A\), and subtracting from
   \(\mu(A_1)\) shows \(\mu(A_n) \to \mu(A)\).
 
-#+caption: Figure 2.1: Continuity of Measures (Monotone Limits)
-#+begin_example
-[Panel A: Increasing sets A_n \uparrow A = \bigcup_{n=1}^\infty A_n]
-  - - - - - - - - - - - - - - -
-:   +-----------------------+   :
-:   | A_3                   |   :
-:   |   +---------------+   |   :
-:   |   | A_2           |   |   :
-:   |   |   +-------+   |   |   :
-:   |   |   |  A_1  |   |   |   :
-:   |   |   +-------+   |   |   :
-:   |   +---------------+   |   :
-:   +-----------------------+   :
-  - - - - - - - - - - - - - - -
-
-[Panel B: Decreasing sets A_n \downarrow A = \bigcap_{n=1}^\infty A_n]
-+-------------------------------+
-| A_1                           |
-|   +-----------------------+   |
-|   | A_2                   |   |
-|   |   +---------------+   |   |
-|   |   | A_3           |   |   |
-|   |   |   : - - - :   |   |   |
-|   |   |   :   A   :   |   |   |
-|   |   |   : - - - :   |   |   |
-|   |   +---------------+   |   |
-+---+-----------------------+---+
-#+end_example
+#+caption: Figure 2.2: Continuity of Measures from Below and Above
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig02_continuity.png]]
 
 ** Monotone sequences of sets and Proposition 2.6
 
