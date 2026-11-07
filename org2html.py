@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -45,6 +46,20 @@ def save_cache(cache_path: Path, data: dict):
         cache_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     except Exception as exc:
         print(f"Warning: Failed to save cache: {exc}", file=sys.stderr)
+
+
+def has_newer_linked_images(org_file: Path, target_mtime: float) -> bool:
+    """Checks if any linked image file has an mtime newer than target_mtime."""
+    try:
+        content = org_file.read_text(encoding="utf-8", errors="ignore")
+        img_refs = re.findall(r'\[\[file:([^\]]+)\]\]', content)
+        for ref in img_refs:
+            ref_path = (org_file.parent / ref).resolve()
+            if ref_path.is_file() and ref_path.stat().st_mtime > target_mtime:
+                return True
+    except Exception:
+        pass
+    return False
 
 
 def collect_org_files(target_dir: Path) -> list[Path]:
@@ -143,8 +158,9 @@ def process_directory(target_dir: Path, force: bool = False, verbose: bool = Fal
             current_html_mtime = html_file.stat().st_mtime
 
             if cached_hash == current_hash and current_html_mtime >= cached_html_mtime:
-                skipped.append(org_file)
-                continue
+                if not has_newer_linked_images(org_file, current_html_mtime):
+                    skipped.append(org_file)
+                    continue
 
         to_compile.append((org_file, rel_key, current_hash))
 

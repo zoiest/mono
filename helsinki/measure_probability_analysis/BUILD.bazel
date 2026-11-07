@@ -1,4 +1,5 @@
 load("//:sync.bzl", "sync")
+load("//:tex2png.bzl", "tex2png")
 load("//:org2html.bzl", "org2html")
 load("//:org2pdf.bzl", "org2pdf")
 
@@ -9,10 +10,16 @@ sync(
     remote_path = "helsinki/measure_probability_analysis",
 )
 
+tex2png(
+    name = "tex2png",
+)
+
 org2html(
     name = "org2html",
+    tex2png = ":tex2png",
 )
 
 org2pdf(
     name = "org2pdf",
+    tex2png = ":tex2png",
 )
