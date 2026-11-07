@@ -177,7 +177,7 @@ Let's visualize Example 14.1:
   \(x \ge 1/n\).
 - For the limit \(X = 0\), \(F_0(x) = \mathbb P(0 \le x)\) is \(0\) for \(x < 0\) and \(1\) for \(x \ge 0\).
 
-#+caption: Figure 14.1: Weak Convergence Fails at Discontinuity Point $x = 0$
+#+caption: Figure 14.2: Weak Convergence Fails at Discontinuity Point $x = 0$
 #+ATTR_LATEX: :width 0.85\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig14_weak_convergence_jump.png]]
@@ -353,7 +353,7 @@ On an *infinite* measure space, \(1\) is not integrable, and the implication fai
   \(\lambda([n, n+1]) = 1 \not\to 0\). The bump of mass \(1\) slides off to \(+\infty\) without ever
   shrinking in measure:
 
-#+caption: Figure 14.2: Escaping Mass to Infinity ($f_n \to 0$ Pointwise but $\|f_n\|_1 = 1$)
+#+caption: Figure 14.4: Escaping Mass to Infinity ($f_n \to 0$ Pointwise but $\|f_n\|_1 = 1$)
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig14_escaping_mass.png]]
@@ -440,7 +440,7 @@ Why is it called the "typewriter sequence"? Think of an old mechanical typewrite
 - *Level \(k=1\) (\(n=2, 3\)):* \([0, 1/2)\), then \([1/2, 1)\) (width \(1/2\))
 - *Level \(k=2\) (\(n=4, 5, 6, 7\)):* \([0, 1/4)\), \([1/4, 1/2)\), \([1/2, 3/4)\), \([3/4, 1)\) (width \(1/4\))
 
-#+caption: Figure 14.3: The Typewriter Sequence ($f_n \xrightarrow{\mathbb{P}} 0$ but Diverges Everywhere)
+#+caption: Figure 14.5: The Typewriter Sequence ($f_n \xrightarrow{\mathbb{P}} 0$ but Diverges Everywhere)
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig14_typewriter.png]]
@@ -470,7 +470,7 @@ At every outcome \(\omega > 0\), the variable is eventually zero, so \(X_n \to 0
 of expectations. The heights compensate exactly for the shrinking exceptional sets.
 #+end_quote
 
-#+caption: Figure 14.4: Shrinking Tall Spike ($f_n \to 0$ a.e. but $\|f_n\|_1 = 1$)
+#+caption: Figure 14.6: Shrinking Tall Spike ($f_n \to 0$ a.e. but $\|f_n\|_1 = 1$)
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig14_spike.png]]
@@ -571,7 +571,7 @@ If we replace discontinuous step indicators by *bounded continuous* test functio
 jumps disappear completely. Conversely, any step indicator \(\mathbf 1_{(-\infty, x]}\) can be sandwiched
 tightly between two continuous "ramp" functions \(h_- \le \mathbf 1_{(-\infty, x]} \le h_+\):
 
-#+caption: Figure 14.5: Continuous Trapezoidal Sandwiching in Portmanteau Theorem
+#+caption: Figure 14.7: Continuous Trapezoidal Sandwiching in Portmanteau Theorem
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig14_portmanteau_trapezoid.png]]

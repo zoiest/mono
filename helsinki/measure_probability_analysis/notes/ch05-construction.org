@@ -583,7 +583,7 @@ Finally, under the \(\sigma\)-finiteness assumption \(E_n \in \mathcal A\), \(E_
 applied with \(\mathcal P = \mathcal A\) immediately guarantees that the extension to
 \(\sigma(\mathcal A)\) is unique. \(\blacksquare\)
 
-#+caption: Figure 5.3: Carathéodory's Extension Pipeline from Premeasure to Complete Measure
+#+caption: Figure 5.4: Carathéodory's Extension Pipeline from Premeasure to Complete Measure
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig05_pipeline.png]]
@@ -671,7 +671,7 @@ Then:
    \(\overline{\mathcal F}\) extending \(\mu\).
 #+end_quote
 
-#+caption: Figure 5.4: Squeezing a Completed-Measurable Set $E \in \overline{\mathcal{F}}$ Between $A, B \in \mathcal{F}$
+#+caption: Figure 5.5: Squeezing a Completed-Measurable Set $E \in \overline{\mathcal{F}}$ Between $A, B \in \mathcal{F}$
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig05_completion_squeeze.png]]

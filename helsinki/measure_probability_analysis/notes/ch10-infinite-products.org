@@ -88,7 +88,7 @@ What is the simplest kind of event we can describe? An event that specifies the 
 - \(C(1) = \{\omega : \omega_1 = 1\}\) (first toss is heads; mass \(1/2\));
 - \(C(1, 0, 1) = \{\omega : \omega_1 = 1, \omega_2 = 0, \omega_3 = 1\}\) (first three tosses are H, T, H; mass \(1/2^3 = 1/8\)).
 
-#+caption: Figure 10.1: Binary Tree of Cylinder Sets in $\Omega = \{0,1\}^\mathbb{N}$
+#+caption: Figure 10.2: Binary Tree of Cylinder Sets in $\Omega = \{0,1\}^\mathbb{N}$
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig10_binary_tree.png]]
@@ -206,7 +206,7 @@ The idea is *backward integration of unused coordinates* (a conditional-probabil
   \]
 - At \(k = 0\) (no coordinates fixed yet), \(h_0 = \lim_{n \to \infty} \text{mass}(A_n) \ge \varepsilon > 0\). Since \(\int_{S_1} h_1(t) \, d\mu_1(t) = h_0 > 0\), the integrand \(h_1\) cannot be identically zero—so there exists \(s_1 \in S_1\) with \(h_1(s_1) > 0\)! Then \(\int_{S_2} h_2(s_1, t) \, d\mu_2(t) = h_1(s_1) > 0\) implies there exists \(s_2 \in S_2\) with \(h_2(s_1, s_2) > 0\), and so on! And because \(0 < h_k(s_1, \dots, s_k) \le f_{k, k}(s_1, \dots, s_k) = \mathbf{1}_{B_k}(s_1, \dots, s_k)\), every prefix \((s_1, \dots, s_k)\) belongs to \(B_k\), so \(s = (s_1, s_2, \dots) \in \bigcap_{k=1}^\infty A_k\)!
 
-#+caption: Figure 10.2: Successive Coordinate Selection in Daniell–Kolmogorov Extension
+#+caption: Figure 10.3: Successive Coordinate Selection in Daniell–Kolmogorov Extension
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig10_selection_chain.png]]
@@ -336,7 +336,7 @@ By *inner regularity* (Theorem 8.1 from Chapter 8)! Every Borel probability meas
 \]
 Summing these tiny probability losses over \(j = 1, \dots, N\) loses at most \(\sum_{j=1}^N \varepsilon 2^{-j-1} < \varepsilon/2\), leaving at least \(\varepsilon - \varepsilon/2 = \varepsilon/2 > 0\) probability in \(\mathbb{R}^N\) for points \(x^{(N)}\) that satisfy *all* the compact conditions \(K_1, \dots, K_N\) simultaneously! Then, because each \(K_j \subseteq \mathbb{R}^j\) is *compact*, we can extract a diagonal subsequence of \((x^{(N)})_{N \ge 1}\) converging in every coordinate to a point \(x\) lying in every \(K_j \subseteq B_j\)!
 
-#+caption: Figure 10.3: Kolmogorov Extension Regularity Architecture
+#+caption: Figure 10.4: Kolmogorov Extension Regularity Architecture
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig10_kolmogorov_regularity.png]]

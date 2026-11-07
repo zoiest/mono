@@ -1,5 +1,5 @@
 \documentclass[tikz,border=5pt]{standalone}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,centernot}
 \begin{document}
 \begin{tikzpicture}[>=latex, font=\small]
   % Panel A: F_{X_n} with jump at 1/n
@@ -8,7 +8,7 @@
     \draw[->, thick] (-0.5, 0) -- (4.2, 0) node[right] {$x$};
     \draw[->, thick] (0, -0.3) -- (0, 2.5) node[above] {$F$};
 
-    \node[left] at (0, 0) {$0$};
+    \node[below left] at (0, 0) {$0$};
     \node[left] at (0, 1.8) {$1$};
     \draw[dashed, gray] (0, 1.8) -- (4, 1.8);
 
@@ -28,7 +28,7 @@
     \draw[->, thick] (-0.5, 0) -- (4.2, 0) node[right] {$x$};
     \draw[->, thick] (0, -0.3) -- (0, 2.5) node[above] {$F$};
 
-    \node[left] at (0, 0) {$0$};
+    \node[below left] at (0, 0) {$0$};
     \node[left] at (0, 1.8) {$1$};
     \draw[dashed, gray] (0, 1.8) -- (4, 1.8);
 

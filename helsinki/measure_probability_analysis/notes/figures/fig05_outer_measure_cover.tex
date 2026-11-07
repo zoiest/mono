@@ -19,10 +19,9 @@
   \draw[thick, fill=green!15, draw=green!60!black] (5.8, 1.0) rectangle (7.8, 3.1);
   \node[green!60!black, font=\bfseries] at (6.8, 2.8) {$A_4$};
 
-  % Arbitrary set E
-  \draw[very thick, dashed, fill=red!30, opacity=0.8] 
-    (1.2, 1.5) [rounded corners=15pt] -- (2.5, 2.3) -- (4.8, 2.0) -- (6.8, 1.8) 
-    -- (6.0, 1.0) -- (3.5, 1.1) -- (1.5, 1.2) -- cycle;
+  % Arbitrary set E with smooth non-self-intersecting rounded boundary
+  \draw[very thick, dashed, fill=red!30, opacity=0.8, rounded corners=12pt]
+    (1.2, 1.5) -- (2.5, 2.3) -- (4.8, 2.0) -- (6.8, 1.8) -- (6.0, 1.0) -- (3.5, 1.1) -- cycle;
   \node[font=\large\bfseries, red!80!black] at (4.0, 1.55) {Target Set $E$};
 
   \node[align=center, fill=white, draw=gray!40, rounded corners, inner sep=4pt] at (4.0, -1.2)

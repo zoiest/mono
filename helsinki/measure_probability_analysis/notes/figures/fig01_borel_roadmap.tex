@@ -4,27 +4,27 @@
 \usetikzlibrary{arrows.meta, positioning}
 \begin{document}
 \begin{tikzpicture}[font=\small, >=Stealth]
-  \node[draw=blue!80!black, rounded corners=6pt, fill=blue!10, text width=7.4cm, align=center, inner sep=7pt] (S1)
-    {\textbf{Step 1: Rational Half-Lines} \\[2pt]
-     $\mathcal{A}_0 = \{(-\infty, q] : q \in \mathbb{Q}\}$ (countable generator collection)};
+  \node[draw=blue!80!black, rounded corners=6pt, fill=blue!10, text width=7.8cm, align=center, inner sep=7pt] (S1)
+    {\textbf{Generator: Rational Half-Lines} \\[2pt]
+     $\mathcal{A}_{\mathbb{Q}} = \{(-\infty, a] : a \in \mathbb{Q}\}$ (countable generating collection)};
 
-  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!10, text width=7.4cm, align=center, inner sep=7pt, below=0.85cm of S1] (S2)
-    {\textbf{Step 2: Real Half-Lines via Countable Intersection} \\[2pt]
-     $(-\infty, t] = \bigcap_{q > t, q \in \mathbb{Q}} (-\infty, q] \in \sigma(\mathcal{A}_0)$ for all $t \in \mathbb{R}$};
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!10, text width=7.8cm, align=center, inner sep=7pt, below=0.85cm of S1] (S2)
+    {\textbf{Step 1: Real Half-Lines} \\[2pt]
+     $(-\infty, t] = \bigcap_{q \in \mathbb{Q},\, q > t} (-\infty, q] \in \sigma(\mathcal{A}_{\mathbb{Q}})$ for all $t \in \mathbb{R}$};
 
-  \node[draw=orange!80!black, rounded corners=6pt, fill=orange!10, text width=7.4cm, align=center, inner sep=7pt, below=0.85cm of S2] (S3)
-    {\textbf{Step 3: Open Intervals via Complements and Differences} \\[2pt]
-     $(a, b) = (-\infty, b) \setminus (-\infty, a] \in \sigma(\mathcal{A}_0)$};
+  \node[draw=orange!80!black, rounded corners=6pt, fill=orange!10, text width=7.8cm, align=center, inner sep=7pt, below=0.85cm of S2] (S3)
+    {\textbf{Step 2: Open Intervals} \\[2pt]
+     $(a, b) = (-\infty, a]^c \cap \bigcup_{n=1}^\infty (-\infty, b - 1/n] \in \sigma(\mathcal{A}_{\mathbb{Q}})$};
 
-  \node[draw=purple!80!black, rounded corners=6pt, fill=purple!10, text width=7.4cm, align=center, inner sep=7pt, below=0.85cm of S3] (S4)
-    {\textbf{Step 4: All Open Sets and the Borel $\sigma$-Algebra} \\[2pt]
-     Every open $U = \bigcup_{n} (p_n, q_n) \implies \sigma(\mathcal{A}_0) = \mathcal{B}(\mathbb{R})$};
+  \node[draw=purple!80!black, rounded corners=6pt, fill=purple!10, text width=7.8cm, align=center, inner sep=7pt, below=0.85cm of S3] (S4)
+    {\textbf{Step 3: Open Sets \& Borel $\sigma$-Algebra} \\[2pt]
+     Every open $U = \bigcup_{p, q \in \mathbb{Q},\, p < q,\, (p, q) \subseteq U} (p, q) \implies \sigma(\mathcal{A}_{\mathbb{Q}}) = \mathcal{B}(\mathbb{R})$};
 
-  \draw[->, line width=1.6pt, blue!80!black] (S1) -- (S2) 
+  \draw[->, line width=1.6pt, blue!80!black] (S1) -- (S2)
     node[midway, right=10pt, font=\footnotesize\bfseries, text=blue!80!black] {Countable $\bigcap_{q \in \mathbb{Q}}$};
-  \draw[->, line width=1.6pt, teal!80!black] (S2) -- (S3) 
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=teal!80!black] {Complements \& differences};
-  \draw[->, line width=1.6pt, orange!80!black] (S3) -- (S4) 
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=orange!80!black] {Countable base $\bigcup$};
+  \draw[->, line width=1.6pt, teal!80!black] (S2) -- (S3)
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=teal!80!black] {Complements \& countable $\bigcup_{n=1}^\infty$};
+  \draw[->, line width=1.6pt, orange!80!black] (S3) -- (S4)
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=orange!80!black] {Countable rational base $\bigcup$};
 \end{tikzpicture}
 \end{document}

@@ -1,29 +1,32 @@
-\documentclass[tikz,border=5pt]{standalone}
+\documentclass[tikz,border=6pt]{standalone}
 \usepackage{amsmath,amssymb}
-\usetikzlibrary{shapes,patterns}
+\usetikzlibrary{shapes,patterns,decorations.pathreplacing}
 \begin{document}
 \begin{tikzpicture}[>=latex, font=\small]
-  % Outer box representing T
-  \draw[thick, fill=gray!5] (0, 0) rectangle (9, 3);
-  \node[anchor=north west, font=\bfseries] at (0.2, 2.8) {Test Set $T$};
+  % Title above test set T
+  \node[font=\bfseries] at (4.8, 3.0) {Test Set $T$ Partitioned Successively by $E$ and $F$};
 
-  % Three partitions
-  \draw[thick, fill=blue!15] (0.5, 0.4) rectangle (3.2, 2.3);
-  \node[align=center] at (1.85, 1.35) {\textbf{Piece 1}\\[2pt] $T \cap E$};
+  % Three contiguous, adjacent sub-rectangles partitioning T
+  \fill[green!15] (0, 0.8) rectangle (3.2, 2.6);
+  \fill[blue!15] (3.2, 0.8) rectangle (6.4, 2.6);
+  \fill[orange!15] (6.4, 0.8) rectangle (9.6, 2.6);
 
-  \draw[thick, fill=orange!20] (3.4, 0.4) rectangle (6.1, 2.3);
-  \node[align=center] at (4.75, 1.35) {\textbf{Piece 2}\\[2pt] $(T \setminus E) \cap F$};
+  % Outer border of T and vertical partition lines
+  \draw[very thick] (0, 0.8) rectangle (9.6, 2.6);
+  \draw[thick] (3.2, 0.8) -- (3.2, 2.6);
+  \draw[thick] (6.4, 0.8) -- (6.4, 2.6);
 
-  \draw[thick, fill=green!15] (6.3, 0.4) rectangle (8.6, 2.3);
-  \node[align=center] at (7.45, 1.35) {\textbf{Piece 3}\\[2pt] $T \setminus (E \cup F)$};
+  % Piece labels
+  \node[align=center] at (1.6, 1.7) {\textbf{Piece 1}\\[2pt] $T \cap E$\\[2pt] {\footnotesize\color{green!50!black}(Split by $E$)}};
+  \node[align=center] at (4.8, 1.7) {\textbf{Piece 2}\\[2pt] $(T \setminus E) \cap F$\\[2pt] {\footnotesize\color{blue!70!black}(Split $T \setminus E$ by $F$)}};
+  \node[align=center] at (8.0, 1.7) {\textbf{Piece 3}\\[2pt] $T \setminus (E \cup F)$\\[2pt] {\footnotesize\color{orange!70!black}(Remainder)}};
 
-  \node[align=center, text=blue!80!black] at (1.85, -0.4) {Split by $E$};
-  \draw[->, thick, blue!80!black] (1.85, 0.4) -- (1.85, -0.1);
+  % Curly underbrace spanning Pieces 1 and 2
+  \draw[thick, decorate, decoration={brace, amplitude=6pt, mirror}] (0, 0.7) -- (6.4, 0.7)
+    node[midway, below=7pt, font=\footnotesize\bfseries] {$(T \cap E) \sqcup \big((T \setminus E) \cap F\big) = T \cap (E \cup F)$};
 
-  \node[align=center, text=orange!80!black] at (4.75, -0.4) {Split $T \setminus E$ by $F$};
-  \draw[->, thick, orange!80!black] (4.75, 0.4) -- (4.75, -0.1);
-
-  \node[align=center, text=green!60!black] at (7.45, -0.4) {Remainder};
-  \draw[->, thick, green!60!black] (7.45, 0.4) -- (7.45, -0.1);
+  % Summary inequality box below underbrace
+  \node[align=center, fill=gray!5, draw=gray!40, rounded corners, inner sep=5pt, font=\footnotesize] at (4.8, -0.65)
+    {$\mu^*(T) = \mu^*(T \cap E) + \mu^*\big((T \setminus E) \cap F\big) + \mu^*\big(T \setminus (E \cup F)\big) \ge \mu^*\big(T \cap (E \cup F)\big) + \mu^*\big(T \setminus (E \cup F)\big)$};
 \end{tikzpicture}
 \end{document}

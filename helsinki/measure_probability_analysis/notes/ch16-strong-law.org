@@ -103,7 +103,7 @@ How can we make the series converge without assuming higher moments?
   \]
   Dividing by \(n\) (where \(k^2 \le n < (k+1)^2\)) traps \(S_n / n\) between two square averages:
 
-#+caption: Figure 16.2: Squeezing $S_n / n$ Between Square Subsequence Averages
+#+caption: Figure 16.1: Squeezing $S_n / n$ Between Square Subsequence Averages
 #+ATTR_LATEX: :width 0.85\textwidth :center t
 #+ATTR_HTML: :width 650px :align center
 [[file:figures/fig16_square_sandwich.png]]
@@ -246,7 +246,7 @@ of Chebyshev's inequality. Look at the difference between the two questions for 
 - *Kolmogorov's question:* What is the probability that the walk *ever* reaches \(\ge a\) at *any*
   intermediate step \(k \in \{1, 2, \dots, n\}\), even if it later wanders back below \(a\) by time \(n\)?
 
-#+caption: Figure 16.1: Kolmogorov's Maximal Inequality Stopping Time Event
+#+caption: Figure 16.2: Kolmogorov's Maximal Inequality Stopping Time Event
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig16_maximal_inequality.png]]
@@ -478,7 +478,7 @@ Why is truncating at \(|X_j| \le j\) the magic choice? Because of two identities
    Then Lemma 16.4 says \(\sum_{j=1}^\infty \frac{Y_j - \mathbb E Y_j}{j}\) converges a.s., and Kronecker's
    Lemma 16.5 immediately turns this into \(\frac{1}{n}\sum_{j=1}^n (Y_j - \mathbb E Y_j) \to 0\) a.s.!
 
-#+caption: Figure 16.1: Truncation Architecture for Kolmogorov's SLLN
+#+caption: Figure 16.3: Truncation Architecture for Kolmogorov's SLLN
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig16_truncation_pipeline.png]]

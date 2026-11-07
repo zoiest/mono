@@ -267,7 +267,7 @@ Suppose first that both \(\mu\) and \(\nu\) are finite measures.
 Now suppose \((S, \mathcal{S}, \mu)\) and \((T, \mathcal{T}, \nu)\) are \(\sigma\)-finite.
 
 - *Step 2a: Disjoint finite-measure partitions.* By \(\sigma\)-finiteness, \(S = \bigcup_{i=1}^\infty \tilde{S}_i\) with \(\mu(\tilde{S}_i) < \infty\). Making them disjoint via \(S_1 = \tilde{S}_1\) and \(S_i = \tilde{S}_i \setminus \bigcup_{k=1}^{i-1} \tilde{S}_k\) gives a countable measurable partition \(S = \bigsqcup_{i \ge 1} S_i\) with \(\mu(S_i) < \infty\), and similarly \(T = \bigsqcup_{j \ge 1} T_j\) with \(\nu(T_j) < \infty\).
-  #+caption: Figure 9.1: Product Rectangle $E = A \times B$ and Coordinate Sections
+  #+caption: Figure 9.3: Product Rectangle $E = A \times B$ and Coordinate Sections
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig09_product_rect.png]]
@@ -309,11 +309,6 @@ has product measure
 \]
 What if we slice the other way? For fixed \(s > 0\), the vertical section \(E_s = \{n \in \mathbb{N} : 2^{-n} \ge s\} = \{1, 2, \dots, \lfloor \log_2(1/s) \rfloor\}\) contains only finitely many integers. At \(s = 0\), however, the section is \(E_0 = \mathbb{N}\), which has infinite counting measure \(\#(E_0) = \infty\)! Yet that exceptional section lies above the \(\lambda\)-null set \(\{0\}\). An infinite section measure at a null set of base points does not make the product measure infinite: \(\int_0^1 \#(E_s) \, ds = 1\) (since \(\infty \cdot \lambda(\{0\}) = \infty \cdot 0 = 0\)).
 #+end_quote
-
-#+caption: Figure 9.3: Fubini Counterexample Matrix Violating $\sum |a_{m,n}| < \infty$
-#+ATTR_LATEX: :width 0.75\textwidth :center t
-#+ATTR_HTML: :width 600px :align center
-[[file:figures/fig09_fubini_counterexample.png]]
 
 * Tonelli and Fubini
 
@@ -449,6 +444,11 @@ a_{31} & a_{32} & a_{33} & a_{34} & \cdots \\
 Why did Fubini not prevent this? Because the positive and negative parts both have infinite product integral: \(\sum_{m,n} a_{mn}^+ = 1 + 1 + 1 + \cdots = \infty\) and \(\sum_{m,n} a_{mn}^- = 1 + 1 + 1 + \cdots = \infty\) (so \(\sum_{m,n} |a_{mn}| = \infty\)). There is no signed product integral to which Fubini could apply.
 #+end_quote
 
+#+caption: Figure 9.4: Fubini Counterexample Matrix Violating $\sum |a_{m,n}| < \infty$
+#+ATTR_LATEX: :width 0.75\textwidth :center t
+#+ATTR_HTML: :width 600px :align center
+[[file:figures/fig09_fubini_counterexample.png]]
+
 #+begin_quote
 *Example 9.7 (Integrating over the triangle).* For the triangle \(E = \{(s, t) \in [0, 1]^2 : s < t\}\) in Example 9.1, consider the nonnegative function \(f(s, t) = t\,\mathbf{1}_{\{s < t\}}\). Since \(f \ge 0\) is product measurable, Tonelli's theorem gives
 \[
@@ -483,7 +483,7 @@ Three natural questions arise once we have product measures for two spaces:
 2. *If \((S, \mathcal{S}, \mu)\) and \((T, \mathcal{T}, \nu)\) are complete measure spaces (Chapter 5, Section 5.4), is their product \((S \times T, \mathcal{S} \otimes \mathcal{T}, \mu \otimes \nu)\) automatically complete?*
    *No!* Why not? Suppose \(A_0 \in \mathcal{S}\) is a non-empty \(\mu\)-null set (say \(A_0 = \{0\} \subseteq [0, 1]\) with Lebesgue measure), and let \(V \subseteq T = [0, 1]\) be a *non-measurable* subset of \(T\). Then the thin vertical strip \(A_0 \times V = \{0\} \times V\) sits inside the measurable rectangle \(\{0\} \times [0, 1]\), which has product measure \(0 \cdot 1 = 0\). So in the *completion* of the product space, \(\{0\} \times V\) is a subset of a null set and is therefore measurable! Yet \(\{0\} \times V\) *cannot* belong to the uncompleted product \(\sigma\)-algebra \(\mathcal{S} \otimes \mathcal{T}\), because by Section 9.1 every set in \(\mathcal{S} \otimes \mathcal{T}\) has measurable sections, whereas the section of \(\{0\} \times V\) at \(s = 0\) is \(V \notin \mathcal{T}\)!
 
-   #+caption: Figure 9.4: Nonmeasurable Slice $\{0\} \times V$ in Null Rectangle $\{0\} \times [0,1]$
+   #+caption: Figure 9.5: Nonmeasurable Slice $\{0\} \times V$ in Null Rectangle $\{0\} \times [0,1]$
 #+ATTR_LATEX: :width 0.75\textwidth :center t
 #+ATTR_HTML: :width 600px :align center
 [[file:figures/fig09_null_rectangle.png]]

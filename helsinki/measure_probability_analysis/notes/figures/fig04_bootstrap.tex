@@ -4,25 +4,30 @@
 \usetikzlibrary{arrows.meta, positioning}
 \begin{document}
 \begin{tikzpicture}[font=\small, >=Stealth]
-  \node[draw=blue!80!black, rounded corners=6pt, fill=blue!10, text width=7.8cm, align=center, inner sep=8pt] (B0)
-    {\textbf{Initial Condition}: $\mathcal{P} \times \mathcal{P} \subseteq \mathcal{D}$ \\[3pt] 
-     \footnotesize $\mathcal{P}$ is a $\pi$-system; $\mathcal{D}$ is a $\lambda$-system of product sets in $\Omega_1 \times \Omega_2$};
+  \node[draw=blue!80!black, rounded corners=6pt, fill=blue!10, text width=8.4cm, align=center, inner sep=7pt] (B0)
+    {\textbf{Initial Condition: $\mathcal{P} \subseteq \mathcal{D}$} \\[2pt]
+     \footnotesize $\mathcal{P}$ is a $\pi$-system, $\mathcal{D}$ is the smallest $\lambda$-system containing $\mathcal{P}$ \\
+     $\implies A \cap B \in \mathcal{P} \subseteq \mathcal{D}$ for all $A \in \mathcal{P},\ B \in \mathcal{P}$};
 
-  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!10, text width=7.8cm, align=center, inner sep=8pt, below=0.9cm of B0] (B1)
-    {\textbf{Step 1: Bootstrap First Coordinate} \\[3pt]
-     Fix $A \in \mathcal{P} \implies \mathcal{D}_A := \{B \in \mathcal{F}_2 : A \times B \in \mathcal{D}\}$ is a $\lambda$-system. \\
-     Since $\mathcal{P}_2 \subseteq \mathcal{D}_A$, Dynkin's Lemma gives $\sigma(\mathcal{P}_2) \subseteq \mathcal{D}_A$. \\[2pt]
-     \textbf{Progress}: $\mathcal{P} \times \sigma(\mathcal{P}) \subseteq \mathcal{D}$};
+  \node[draw=teal!80!black, rounded corners=6pt, fill=teal!10, text width=8.4cm, align=center, inner sep=7pt, below=0.8cm of B0] (B1)
+    {\textbf{Step 1 (First Pass): Fix $A \in \mathcal{P}$} \\[2pt]
+     \footnotesize Define $\mathcal{D}_A := \{B \in \mathcal{D} : A \cap B \in \mathcal{D}\}$. It is a $\lambda$-system with $\mathcal{P} \subseteq \mathcal{D}_A \implies \mathcal{D}_A = \mathcal{D}$. \\[2pt]
+     \textbf{Progress}: $A \cap B \in \mathcal{D}$ for all $A \in \mathcal{P},\ B \in \mathcal{D}$};
 
-  \node[draw=orange!80!black, rounded corners=6pt, fill=orange!10, text width=7.8cm, align=center, inner sep=8pt, below=0.9cm of B1] (B2)
-    {\textbf{Step 2: Bootstrap Second Coordinate} \\[3pt]
-     Fix $B \in \sigma(\mathcal{P}_2) \implies \mathcal{D}_B := \{A \in \mathcal{F}_1 : A \times B \in \mathcal{D}\}$ is a $\lambda$-system. \\
-     Since $\mathcal{P}_1 \subseteq \mathcal{D}_B$, Dynkin's Lemma gives $\sigma(\mathcal{P}_1) \subseteq \mathcal{D}_B$. \\[2pt]
-     \textbf{Conclusion}: $\sigma(\mathcal{P}) \times \sigma(\mathcal{P}) \subseteq \mathcal{D}$};
+  \node[draw=orange!80!black, rounded corners=6pt, fill=orange!10, text width=8.4cm, align=center, inner sep=7pt, below=0.8cm of B1] (B2)
+    {\textbf{Step 2 (Second Pass): Fix $B \in \mathcal{D}$} \\[2pt]
+     \footnotesize Define $\mathcal{D}_B := \{A \in \mathcal{D} : A \cap B \in \mathcal{D}\}$. By Step 1, $\mathcal{P} \subseteq \mathcal{D}_B$, and $\mathcal{D}_B$ is a $\lambda$-system $\implies \mathcal{D}_B = \mathcal{D}$. \\[2pt]
+     \textbf{Progress}: $A \cap B \in \mathcal{D}$ for all $A \in \mathcal{D},\ B \in \mathcal{D}$};
 
-  \draw[->, line width=1.6pt, blue!80!black] (B0) -- (B1) 
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=blue!80!black] {Fix $A \in \mathcal{P}$ \& apply Dynkin};
-  \draw[->, line width=1.6pt, teal!80!black] (B1) -- (B2) 
-    node[midway, right=10pt, font=\footnotesize\bfseries, text=teal!80!black] {Fix $B \in \sigma(\mathcal{P})$ \& apply Dynkin};
+  \node[draw=purple!80!black, rounded corners=6pt, fill=purple!10, text width=8.4cm, align=center, inner sep=7pt, below=0.8cm of B2] (B3)
+    {\textbf{Conclusion: $A \cap B \in \mathcal{D}$ for all $A, B \in \mathcal{D}$} \\[2pt]
+     \footnotesize $\mathcal{D}$ is both a $\pi$-system and a $\lambda$-system $\implies \mathcal{D}$ is a $\sigma$-algebra $\implies \sigma(\mathcal{P}) \subseteq \mathcal{D}$};
+
+  \draw[->, line width=1.6pt, blue!80!black] (B0) -- (B1)
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=blue!80!black] {Upgrade $B$: $\mathcal{P} \to \mathcal{D}$};
+  \draw[->, line width=1.6pt, teal!80!black] (B1) -- (B2)
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=teal!80!black] {Upgrade $A$: $\mathcal{P} \to \mathcal{D}$};
+  \draw[->, line width=1.6pt, orange!80!black] (B2) -- (B3)
+    node[midway, right=10pt, font=\footnotesize\bfseries, text=orange!80!black] {Lemma 4.4 ($\pi + \lambda \Rightarrow \sigma$)};
 \end{tikzpicture}
 \end{document}
