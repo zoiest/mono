@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch05:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -97,7 +99,7 @@ additive probability measure can extend it!
 - \(\pi\)-systems and uniqueness of \(\sigma\)-finite measures (Proposition 4.11):
   [[file:ch04-uniqueness.org][Chapter 4]].
 
-* 5.1 Algebras and premeasures
+* Algebras and premeasures
 
 ** Intuition
 
@@ -261,7 +263,7 @@ We will use Proposition 5.5 in Chapter 10 to prove that cylinder probabilities o
 spaces form a premeasure, and in Chapter 12 to prove that interval lengths \(\mu_0((a,b]) = F(b) - F(a)\)
 form a premeasure.
 
-* 5.2 Outer measure from coverings
+* Outer measure from coverings
 
 ** Intuition
 
@@ -271,14 +273,16 @@ cover \(E\) by a countable sequence of elementary sets \(A_1, A_2, \dots \in \ma
 \(E \subseteq \bigcup_{n=1}^\infty A_n\)), add up their prescribed sizes \(\sum_{n=1}^\infty \mu_0(A_n)\),
 and take the **infimum** over all possible countable covers of \(E\).
 
+#+caption: Figure 5.1: Outer Measure as Infimum Over Countable Covers
 #+begin_example
-          A_1            A_2               A_3          A_4 ...   (sets in algebra A)
-    +-------------+---------------+------------------+---------+
-    |   ..........|...............|.............     |         |
-    |  .          |      E        |             .    |         |
-    |   ..........|...............|.............     |         |
-    +-------------+---------------+------------------+---------+
-    mu*(E) = inf { sum_n mu_0(A_n) : E is covered by A_1, A_2, ... in A }
+A_1            A_2               A_3          A_4 ...
+ +-------------+---------------+------------------+---------+
+ |   ..........|...............|.............     |         |
+ |  .          |      E        |             .    |         |
+ |   ..........|...............|.............     |         |
+ +-------------+---------------+------------------+---------+
+ Formula:
+ mu*(E) = inf { sum_n mu_0(A_n) : E \subseteq \bigcup_n A_n, A_n \in A }
 #+end_example
 
 ** Definitions and the covering lemma
@@ -388,7 +392,7 @@ Outer measure is strictly subadditive here: because \(\mathcal A\) cannot distin
 covering \(\{1\}\) and \(\{2\}\) separately pays for the whole block \(\{1, 2\}\) twice.
 #+end_quote
 
-* 5.3 Which sets can split every test set?
+* Which sets can split every test set?
 
 ** Intuition
 
@@ -415,24 +419,22 @@ also holds for every test set \(T \subseteq \Omega\), so that we have exact equa
 \end{equation}
 We denote the collection of all Carathéodory-measurable subsets of \(\Omega\) by \(\mathcal M\).
 
+#+caption: Figure 5.2: Caratheodory's Splitting Criterion
 #+begin_example
-   Figure 5.1: Caratheodory's splitting test for a candidate set E using an arbitrary test set T
+Caratheodory splitting test for candidate set E and test set T:
 
-                        Omega
-       +--------------------------------------------------+
-       |                        E                         |
-       |              +--------------------------------+  |
-       |      T       |                                |  |
-       |   +----------+---------------+                |  |
-       |   |          |               |                |  |
-       |   |  T \ E   |    T \cap E   |                |  |
-       |   | (outside)|   (inside E)  |                |  |
-       |   +----------+---------------+                |  |
-       |              |                                |  |
-       |              +--------------------------------+  |
-       +--------------------------------------------------+
-       Set identity:     T = (T \cap E) \sqcup (T \setminus E)  (always true)
-       Caratheodory (5.2): mu*(T) = mu*(T \cap E) + mu*(T \setminus E) for ALL T \subseteq \Omega
+                     Omega
+    +--------------------------------------------------+
+    |   +-------------------+                          |
+    |   | T \cap E          |   T \setminus E          |
+    |   | (part of T in E)  |   (part outside E)       |
+    |   +-------------------+                          |
+    |             T (arbitrary test set)               |
+    |            E (candidate measurable set)          |
+    +--------------------------------------------------+
+Set identity:    T = (T \cap E) \sqcup (T \setminus E)
+Caratheodory:    mu*(T) = mu*(T \cap E) + mu*(T \setminus E)
+(Must hold for ALL test sets T \subseteq \Omega!)
 #+end_example
 
 *Practical tip for checking \(E \in \mathcal M\):* Because \(\mu^*(T) \le \mu^*(T \cap E) + \mu^*(T \setminus E)\)
@@ -551,7 +553,7 @@ First let \(E_1, E_2, \dots \in \mathcal M\) be **pairwise disjoint**, and set
   \]
   Thus equality holds, \(Z \in \mathcal M\), and \(\mu^*(Z) = 0\). \(\blacksquare\)
 
-* 5.4 The extension theorem
+* The extension theorem
 
 ** Intuition
 
@@ -609,13 +611,17 @@ Finally, under the \(\sigma\)-finiteness assumption \(E_n \in \mathcal A\), \(E_
 applied with \(\mathcal P = \mathcal A\) immediately guarantees that the extension to
 \(\sigma(\mathcal A)\) is unique. \(\blacksquare\)
 
+#+caption: Figure 5.3: Caratheodory's Extension Pipeline
 #+begin_example
-   Summary of Caratheodory's Extension Pipeline:
+Summary of Caratheodory's Extension Pipeline:
 
-   Premeasure mu_0        Outer measure mu*         Measure mu*|M         Measure mu
-   on algebra A    ===>   on all of 2^\Omega  ===>  on Caratheodory ===>  on \sigma(A)
-   (Def 5.2)       (5.1)  (Lemma 5.7)         (5.2) \sigma-alg M          (restrict from M
-                                                    (Thm 5.9)              to \sigma(A) \subseteq M)
+Premeasure mu_0     --> Outer measure mu*  --> Measure mu*|_M
+on algebra A            on all of 2^\Omega     on Caratheodory M
+(finitely additive)     (subadditive)          (complete sigma-algebra)
+                                                    |
+                                                    v
+                                               Measure mu on sigma(A)
+                                               (uniquely extends mu_0)
 #+end_example
 
 #+begin_quote
@@ -646,7 +652,7 @@ and on \(\sigma(\mathcal A)\) the measure is unique. If you enlarge the \(\sigma
 and \(3\) and \(0\) to \(2\) and \(4\). Both extend \(\mu_0\) to \(2^\Omega\), and this does not
 contradict uniqueness on \(\sigma(\mathcal A)\).
 
-* 5.5 Completing a measure
+* Completing a measure
 
 ** Intuition
 
@@ -701,19 +707,20 @@ Then:
    \(\overline{\mathcal F}\) extending \(\mu\).
 #+end_quote
 
+#+caption: Figure 5.4: Squeezing a Completed-Measurable Set
 #+begin_example
-   Squeezing a completed-measurable set E between A and B in F:
-        B  (in F)
-      +----------------------------------------+
-      |     E  (in \overline{F})               |
-      |   +--------------------------------+   |
-      |   |     A  (in F)                  |   |
-      |   |   +------------------------+   |   |
-      |   |   |                        |   |   |
-      |   |   +------------------------+   |   |
-      |   +--------------------------------+   |
-      +----------------------------------------+
-        A \subseteq E \subseteq B,   mu(B \setminus A) = 0  ===>  \overline{mu}(E) = mu(A) = mu(B)
+Squeezing a completed-measurable set E between A and B in F:
+     B  (in F)
+   +----------------------------------------+
+   |     E  (in \overline{F})               |
+   |   +--------------------------------+   |
+   |   |   A  (in F)                    |   |   B \setminus A is null
+   |   |   +------------------------+   |   |   mu(B \setminus A) = 0!
+   |   |   |                        |   |   |
+   |   |   +------------------------+   |   |
+   |   +--------------------------------+   |
+   +----------------------------------------+
+A <= E <= B with mu(B \setminus A) = 0 ===> \overline{mu}(E) = mu(A)
 #+end_example
 
 *Proof.*

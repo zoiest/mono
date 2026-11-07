@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch12:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -93,7 +95,7 @@ other random variables \(Y\) on \(\Omega\) (that is the subject of Chapter 13).
 - Monotone Convergence Theorem (applied to counting measure on \(\mathbb N\) to swap \(\lim_m\) and
   \(\sum_j\)): [[file:ch06-integration.org][Chapter 6]].
 
-* 12.1 Cumulative distribution functions
+* Cumulative distribution functions
 
 ** Intuition
 
@@ -272,7 +274,7 @@ For instance, in Example 12.2 with \(a = 0\) and \(b = 1/2\):
 - \(\mu((0, 1/2]) = F(1/2) - F(0) = 3/4 - 1/2 = 1/4\),
 - \(\mu([0, 1/2]) = F(1/2) - F(0-) = 3/4 - 0 = 3/4\) (includes the atom of mass \(1/2\) at \(0\)!).
 
-* 12.2 Constructing a measure from interval increments
+* Constructing a measure from interval increments
 
 ** Intuition
 
@@ -294,16 +296,14 @@ for a general nondecreasing right-continuous \(F\):
 3. Apply Carathéodory's theorem on \((-m, m]\) to get a finite Borel measure \(\mu_F^{(m)}\), and then
    let \(m \to \infty\).
 
+#+caption: Figure 12.2: Compact Exhaustion of Half-Open Intervals
 #+begin_example
-   Shrinking (u, v] at its left endpoint to get a compact K_n = [u+delta, v]:
+Shrinking (u, v] at left endpoint to get compact K_n = [u+delta, v]:
 
-        u     u+delta                    v
-   -----o-------[------------------------]----->
-        \_______/\_______________________/
-        lost mass        compact interval
-   F(u+delta) - F(u)        [u+delta, v]
-      -> 0 as delta -> 0+
-      by RIGHT-CONTINUITY of F at u!
+     u     u+delta                    v
+-----o-------[------------------------]----->
+             |<======= K_n ==========>|
+     |<============= (u, v] =========>|
 #+end_example
 
 ** The Lebesgue–Stieltjes theorem
@@ -526,7 +526,7 @@ When a density \(f\) exists:
      \(\int_K f(x)\,dx = 0\) to \(K\), so no density can exist.
 #+end_quote
 
-* 12.3 Quantiles and realizing a prescribed law
+* Quantiles and realizing a prescribed law
 
 ** Intuition
 
@@ -552,17 +552,18 @@ What if \(F\) is a general CDF with *jumps* (atoms, where \(F\) skips over verti
 and *flat spots* (empty regions of zero probability, where \(F(x) = u\) for a whole horizontal interval
 of \(x\))?
 
+#+caption: Figure 12.3: Generalized Inverse / Quantile Function
 #+begin_example
-      F(x)
-        1 |                         . '
-          |                     . '
-       u_2| - - - - - - - - - *        <-- At u_2 in a jump at x_0:
-          |                   :            {x : F(x) >= u_2} = [x_0, inf),
-          |                   :            so inf is x_0!
-       u_1| - - - - *=========*        <-- At u_1 on a flat spot [a, b]:
-          |       . :         :            {x : F(x) >= u_1} = [a, inf),
-          |     .   :         :            so inf is the LEFT endpoint a!
-        0 +---------a---------x_0-----> x
+F(x)
+     1 |                         . '
+       |                     . '
+    u_2| - - - - - - - - - *        <-- In a jump at x_0:
+       |                   |            F^{-1}(u_2) = x_0
+       |     .   :         :
+    u_1| - - * - - - - - - :        <-- In a flat shelf [a, b]:
+       |     |   :         :            F^{-1}(u_1) jumps to a!
+     0 +-----+---+---------+------> x
+             a   b         x_0
 #+end_example
 
 We replace \(F^{-1}(u)\) by the *quantile function* (or *generalized inverse*): for each threshold

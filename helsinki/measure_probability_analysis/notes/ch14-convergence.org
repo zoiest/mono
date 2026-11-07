@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch14:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -82,26 +84,23 @@ Every major limit theorem in probability and statistics is stated in one of thes
 - Cumulative distribution functions (CDFs) \(F_X(x) = \mathbb P(X \le x)\) and the fact that a
   monotone function has at most countably many jumps: [[file:ch12-distributions.org][Chapter 12]].
 
-* 14.1 Four definitions
+* Four definitions
 
 ** Intuition
 
 Imagine watching a sequence of random variables \(X_1, X_2, X_3, \dots\) compared against a target
 \(X\). There are two ways to slice this two-dimensional table of values \(X_n(\omega)\):
 
+#+caption: Figure 14.1: Modes of Convergence Matrix (Outcomes vs. Time Steps)
 #+begin_example
-                 n = 1      n = 2      n = 3     ...     n -> infinity
-              +----------+----------+----------+-----+------------------+
-  outcome w_1 | X_1(w_1) | X_2(w_1) | X_3(w_1) | ... | -> X(w_1) ?      |  <-- Horizontal slice:
-  outcome w_2 | X_1(w_2) | X_2(w_2) | X_3(w_2) | ... | -> X(w_2) ?      |      Almost-sure convergence
-  outcome w_3 | X_1(w_3) | X_2(w_3) | X_3(w_3) | ... | -> X(w_3) ?      |      tracks each row!
-              +----------+----------+----------+-----+------------------+
-                   |          |          |
-                   v          v          v
-                Vertical slices at fixed n:
-                - In probability: is P(|X_n - X| > eps) small in column n?
-                - In L^p:         is E[|X_n - X|^p] small in column n?
-                - In distribution: does the histogram of column n match that of X?
+              |  n = 1   |  n = 2   |  n = 3   | ... | n -> \infty
+   -----------+----------+----------+----------+-----+-------------
+   outcome w1 | X_1(w1)  | X_2(w1)  | X_3(w1)  | ... | -> X(w1) ?
+   outcome w2 | X_1(w2)  | X_2(w2)  | X_3(w2)  | ... | -> X(w2) ?
+   outcome w3 | X_1(w3)  | X_2(w3)  | X_3(w3)  | ... | -> X(w3) ?
+   -----------+----------+----------+----------+-----+-------------
+   - Row-wise (horizontal):   Almost-sure convergence tracks each row!
+   - Column-wise (vertical):  Probability, L^p, distribution
 #+end_example
 
 - *Horizontal (almost sure):* You pick \(\omega\) first, then look at the entire infinite row
@@ -185,13 +184,21 @@ Let's visualize Example 14.1:
   \(x \ge 1/n\).
 - For the limit \(X = 0\), \(F_0(x) = \mathbb P(0 \le x)\) is \(0\) for \(x < 0\) and \(1\) for \(x \ge 0\).
 
+#+caption: Figure 14.2: CDF Jump Points
 #+begin_example
-  F_{X_n}(x) (jump at x = 1/n)               F_0(x) (jump at x = 0)
-      1 |          *---------                    1 |      *-------------
-        |          |                               |      |
-      0 |----------o                             0 |------o
-        +------+---+---------> x                   +------+------------> x
-               0  1/n                                     0
+  [Panel A: F_{X_n}(x) with jump at x = 1/n]
+      1 |          *---------
+        |          |
+      0 |----------o
+        +------+---+---------> x
+               0  1/n
+
+  [Panel B: Limit CDF F_0(x) with jump at x = 0]
+      1 |      *-------------
+        |      |
+      0 |------o
+        +------+-------------> x
+               0
 #+end_example
 
 Look at what happens at each \(x \in \mathbb R\):
@@ -260,7 +267,7 @@ For every \(x < 0\), \(F_{X_n}(x) = 0 = F_0(x)\). For every \(x > 0\), once \(n 
 \(F_{X_n}(x) = 1 = F_0(x)\). Since \(x = 0\) is the sole discontinuity point of \(F_0\), we conclude
 immediately that \(X_n \Rightarrow 0\).
 
-* 14.2 Implications and a subsequence principle
+* Implications and a subsequence principle
 
 ** Intuition
 
@@ -272,8 +279,8 @@ How do our four modes fit together? Here is the complete map of implications on 
                |  (holds on finite measure spaces;
                |   conversely, a subsequence X_{n_k} -> X a.s. exists!)
                v
-     Convergence in probability  (X_n -> X in prob.)  <====  Convergence in L^p
-               |                                              (E|X_n - X|^p -> 0)
+     Convergence in probability  <====  Convergence in L^p
+               |                        (E|X_n - X|^p -> 0)
                |  (always; converse holds ONLY
                |   when the limit X = c is a constant!)
                v
@@ -379,7 +386,7 @@ On an *infinite* measure space, \(1\) is not integrable, and the implication fai
       +---+                  +---+                         +---+
   ----+   +-------------- ---+   +-------------- ... ------+   +---> x
       1   2                  2   3                         n  n+1
-  Measure of {|f_n| > 1/2} is ALWAYS 1, even though f_n(x) -> 0 for each fixed x!
+  Measure of {|f_n| > 1/2} is 1, even though f_n(x) -> 0 for each x!
 #+end_example
 
 ** The subsequence principle
@@ -442,7 +449,7 @@ Because the exceptional intersection has probability \(0\), \(X_{n_k} \to X\) al
 Now we look at the three classic counterexamples from the lecture notes showing which arrows in our
 implication diagram *cannot* be reversed.
 
-*** 1. In probability and \(L^p\), but NOT almost surely
+*** In probability and \(L^p\), but NOT almost surely
 
 #+begin_quote
 *Example 14.4 (The typewriter sequence).* On \([0,1)\) with uniform measure, for \(k \ge 0\) and
@@ -465,14 +472,14 @@ Why is it called the "typewriter sequence"? Think of an old mechanical typewrite
 - *Level \(k=2\) (\(n=4, 5, 6, 7\)):* \([0, 1/4)\), \([1/4, 1/2)\), \([1/2, 3/4)\), \([3/4, 1)\) (width \(1/4\))
 
 #+begin_example
-  k=0, n=1:  [=================== 1 ===================)          width = 1
-  k=1, n=2:  [======== 1 ========)
-       n=3:                      [======== 1 ========)          width = 1/2
+  k=0, n=1:  [=============== 1 ===============)     width = 1
+  k=1, n=2:  [======= 1 =======)
+       n=3:                    [======= 1 =======)     width = 1/2
   k=2, n=4:  [=== 1 ===)
-       n=5:            [=== 1 ===)
-       n=6:                      [=== 1 ===)
-       n=7:                                [=== 1 ===)          width = 1/4
-             0                  1/2                    1
+       n=5:          [=== 1 ===)
+       n=6:                    [=== 1 ===)
+       n=7:                              [=== 1 ===)   width = 1/4
+             0                 1/2                 1
 #+end_example
 
 Let us check all four modes for \(X_n\) on \(\Omega = [0,1)\) with \(\mathbb P = \lambda|_{[0,1)}\):
@@ -491,7 +498,7 @@ Let us check all four modes for \(X_n\) on \(\Omega = [0,1)\) with \(\mathbb P =
   each level: \(n_k = 2^k\), so \(X_{n_k} = \mathbf 1_{[0, 2^{-k})}\). Then for every \(\omega > 0\),
   once \(2^{-k} \le \omega\) we have \(X_{n_k}(\omega) = 0 \to 0\)!
 
-*** 2. Almost surely (and in probability/distribution), but NOT in \(L^1\)
+*** Almost surely (and in probability/distribution), but NOT in \(L^1\)
 
 #+begin_quote
 *Example 14.5 (Shrinking spikes).* On \((0,1)\) with uniform measure, let \(X_n = n \mathbf 1_{(0, 1/n)}\).
@@ -519,7 +526,7 @@ of expectations. The heights compensate exactly for the shrinking exceptional se
   \]
   which equals \(1\) for \(p=1\) and explodes to \(+\infty\) for \(p > 1\)!
 
-*** 3. In distribution, but NOT in probability
+*** In distribution, but NOT in probability
 
 #+begin_quote
 *Example 14.6 (The same laws, different values).* Let \(X\) take the values \(-1\) and \(1\) with equal
@@ -591,7 +598,7 @@ the reverse direction, if \(\mathbb P(|X_n - X| > \varepsilon) \not\to 0\), extr
 with \(\mathbb P(|X_{n_j} - X| > \varepsilon) \ge \delta > 0\), which cannot have any further subsequence
 converging a.s. by Proposition 14.2.)
 
-* 14.3 Testing laws by continuous functions
+* Testing laws by continuous functions
 
 ** Intuition
 

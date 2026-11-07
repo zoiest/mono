@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch04:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -178,7 +180,7 @@ Let \(A = \{10, 11\}\) ("first digit is \(1\)") and \(B = \{01, 11\}\) ("second 
 contingency table, you still have one degree of freedom inside the table. Once you also pin down the
 intersection \(\mu(A \cap B)\), all four cells are uniquely determined!
 
-* 4.1 Two closure properties
+* Two closure properties
 
 ** Intuition
 
@@ -301,7 +303,7 @@ As Example 4.1 showed, \(\mathcal D\) need *not* be a \(\sigma\)-algebra in gene
 which has \(8\) sets out of \(16\) and is a \(\lambda\)-system but not closed under intersections).
 #+end_quote
 
-* 4.2 Dynkin's lemma
+* Dynkin's lemma
 
 ** Intuition and strategy
 
@@ -368,21 +370,32 @@ We claim that \(\mathcal D_A\) is itself a \(\lambda\)-system:
   \(A \cap B_n \uparrow A \cap B\). Since \(\mathcal D\) is closed under increasing unions,
   \(A \cap B \in \mathcal D\), so \(B \in \mathcal D_A\).
 
+#+caption: Figure 4.1: Visualising A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B) when B \subseteq C
 #+begin_example
-   Figure 4.1: Visualising A \cap (C \setminus B) = (A \cap C) \setminus (A \cap B) when B \subseteq C
+   [Left view: A \cap (C \setminus B)]
+   +-----------------------------------+
+   | C               +---------------+ |
+   |   +---------+   |               | |
+   |   | B       |   |  A \cap(C \ B)| |
+   |   |     ....|...|  ************ | |
+   |   |     ....|...|  ************ | |
+   |   +---------+   |               | |
+   |                 +---------------+ |
+   +-------------------A---------------+
+   First remove B from C, then keep the starred part inside A.
 
-        Left view: A \cap (C \setminus B)             Right view: (A \cap C) \setminus (A \cap B)
-      +-----------------------------------+         +-----------------------------------+
-      | C               +---------------+ |         | C               +---------------+ |
-      |   +---------+   |               | |         |   +---------+   |               | |
-      |   | B       |   |  A \cap(C \ B)| |         |   | B  #####|###|  (A \cap C)   | |
-      |   |     ....|...|  ************ | |   =     |   |    #A&B#|###|  \setminus    | |
-      |   |     ....|...|  ************ | |         |   |    #####|###|  (A \cap B)   | |
-      |   +---------+   |               | |         |   +---------+   |  ************ | |
-      |                 +---------------+ |         |                 +---------------+ |
-      +-------------------A---------------+         +-------------------A---------------+
-      First remove B from C, then keep              First take A \cap C, then remove the
-      the starred part inside A.                    hatched subset A \cap B \subseteq A \cap C.
+   [Right view: (A \cap C) \setminus (A \cap B)]
+   +-----------------------------------+
+   | C               +---------------+ |
+   |   +---------+   |               | |
+   |   | B  #####|###|  (A \cap C)   | |
+   |   |    #A&B#|###|  \setminus    | |
+   |   |    #####|###|  (A \cap B)   | |
+   |   +---------+   |  ************ | |
+   |                 +---------------+ |
+   +-------------------A---------------+
+   First take A \cap C, then remove A \cap B \subseteq A \cap C.
+   Both views yield the exact same elements!
 #+end_example
 
 *Step 2. Start with the fixed set \(A\) in the \(\pi\)-system \(\mathcal P\).* Suppose \(A \in \mathcal P\).
@@ -416,15 +429,18 @@ Thus \(\mathcal D\) is both a \(\pi\)-system and a \(\lambda\)-system. By Lemma 
 \(\sigma\)-algebra containing \(\mathcal P\), so \(\sigma(\mathcal P) \subseteq \mathcal D \subseteq \mathcal L\).
 \(\blacksquare\)
 
+#+caption: Figure 4.2: Two-Step Bootstrap in Dynkin's Lemma
 #+begin_example
-   Summary of the two-step bootstrap in Dynkin's Lemma:
-   Initially known:   P  x  P  ---> in D   (since P is a pi-system)
-                      |
-                      v  [Step 2: fix A in P, use minimality of D inside D_A]
-   Halfway upgrade:   P  x  D  ---> in D
-                      |
-                      v  [Step 3: fix B in D, use minimality of D inside D_B]
-   Full upgrade:      D  x  D  ---> in D   (so D is a pi-system + lambda-system = sigma-algebra!)
+Summary of the two-step bootstrap in Dynkin's Lemma:
+
+Initially known:   P  x  P  ---> in D   (since P is a pi-system)
+                   |
+                   v  [Step 2: fix A in P, use minimality of D]
+First bootstrap:   P  x  D  ---> in D
+                   |
+                   v  [Step 3: fix B in D, use minimality of D]
+Full upgrade:      D  x  D  ---> in D
+Conclusion:        D is a pi-system + lambda-system, so sigma(P) <= D!
 #+end_example
 
 ** Uniqueness of finite measures
@@ -451,7 +467,7 @@ therefore gives \(\mathcal F = \sigma(\mathcal P) \subseteq \mathcal D\), which 
    \(\mu(\Omega) = 1 = \nu(\Omega)\) is automatic! For general finite measures, you must check
    \(\mu(\Omega) = \nu(\Omega)\), which is automatic if \(\Omega \in \mathcal P\).)
 
-* 4.3 Half-lines and finite strings
+* Half-lines and finite strings
 
 ** Cumulative distribution functions on \(\mathbb R\)
 
@@ -570,7 +586,7 @@ Let us translate the English statement into countable set operations on cylinder
    of a measure!
 #+end_quote
 
-* 4.4 Uniqueness for \(\sigma\)-finite measures
+* Uniqueness for \(\sigma\)-finite measures
 
 ** Intuition
 

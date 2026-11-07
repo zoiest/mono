@@ -7,6 +7,8 @@
 #+author: Antigravity Notes
 #+date: [2026-11-07]
 #+filetags: :math:helsinki:measure-theory:probability:notes:ch06:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
@@ -36,15 +38,24 @@ To integrate a function \(f : \Omega \to [0, \infty]\) on *any* measure space \(
    function** integral).
 3. Pass to the limit as the slices get finer and higher.
 
+#+caption: Figure 6.1: Riemann vs. Lebesgue Partitioning
 #+begin_example
-   Riemann (chops the domain R):            Lebesgue (chops the range [0,\infty]):
-      f(x)                                     f(\omega)
-       |     _                                  |  c_3 - - - - - - .---.
-       |   _| |_                                |  c_2 - - - - .---|   |---.
-       | _| | | |_                              |  c_1 - - .---|           |---.
-       +-----------> x                          +----------|---|-----------|---|---> \omega
-         dx dx dx                                          \___ A_2 = {c_2 <= f < c_3}
-   Needs intervals in R^d & continuity!     Works on ANY (\Omega, F, \mu): coin tosses, graphs, R^d!
+[Panel A: Riemann (chops the domain on x-axis)]
+   f(x)
+    |     _
+    |   _| |_
+    | _| | | |_
+    +-----------> x   (needs Euclidean interval domain)
+      dx dx dx
+
+[Panel B: Lebesgue (chops the range on y-axis)]
+   f(\omega)
+    |  c_3 - - - - - - .------.
+    |  c_2 - - - - .---|      |---.
+    |  c_1 - - .---|   |      |   |---.
+    +----------|---|---+------+---|---> \omega
+              E_1 E_2   E_3    E_2 E_1
+Works on ANY space: coin tosses, graphs, function spaces!
 #+end_example
 
 Because nothing in the definition of a simple function requires intervals, distances, or coordinates,
@@ -98,7 +109,7 @@ proof template of measure and integration theory:
   [[file:ch02-measures.org][Chapter 2]].
 - Measurable functions and image measures \(X_\#\mu\): [[file:ch03-measurable-functions.org][Chapter 3]].
 
-* 6.1 Approximation by simple functions
+* Approximation by simple functions
 
 ** Measurability of extended-real functions and limit operations
 
@@ -221,19 +232,22 @@ Let us check all required properties of \(s_n\):
   - *Case 2:* \(f(\omega) = \infty\). Then \(\min\{f(\omega), n\} = n\) for every \(n\), so
     \(s_n(\omega) = n \uparrow \infty = f(\omega)\). \(\blacksquare\)
 
+#+caption: Figure 6.2: Dyadic Staircase Approximation s_n \uparrow f
 #+begin_example
-   Visualising the dyadic staircase s_n(\omega) at level n=1 (grid 1/2, cap 1) vs n=2 (grid 1/4, cap 2):
-   height
-    2.0 |                                      .---.---  s_2 = 2 (on {f >= 2})
-    1.5 |                              .---.---'
-    1.0 |                      .---.---'=======.=======  s_1 = 1 (on {f >= 1})
-    0.5 |              .---.==='               '
-    0.0 |======.---.==='
-        +----------------------------------------------> \omega (sorted by f(\omega) for clarity)
-        Each step of n -> n+1 halves the vertical step size (2^{-n}) and raises the ceiling cap (n).
+Dyadic staircase s_n(\omega) at level n=1 (grid 1/2, cap 1) vs n=2:
+height
+ 2.0 |                                      .---.---  s_2 = 2
+ 1.5 |                              .---.---'
+ 1.0 |                      .---.---'=======.=======  s_1 = 1
+ 0.5 |              .---.---'=======.
+ 0.0 |      .---.---'
+     +------+-------+-------+-------+-------+-------+
+     0     1/4     1/2     3/4      1      5/4     ...
+     +----------------------------------------------> \omega
+Each step n -> n+1 halves step size (2^{-n}) and raises cap (n).
 #+end_example
 
-* 6.2 Nonnegative integrals and expectations
+* Nonnegative integrals and expectations
 
 ** Step 1 of the Standard Machine: Integrating simple functions
 
@@ -473,18 +487,19 @@ Let us test this on two concrete laws on \(\Omega = \mathbb N\) with \(X(n) = n\
    be finite everywhere without having a finite expectation!*
 #+end_quote
 
+#+caption: Figure 6.3: Layer-Cake Decomposition
 #+begin_example
-   Layer-cake decomposition X = \sum_{k=1}^\infty 1_{X >= k} for an integer-valued X:
-   height
-     3 |          +---+         k=3 layer: 1_{X >= 3}
-     2 |      +---+   +---+     k=2 layer: 1_{X >= 2}
-     1 |  +---+   |   |   |     k=1 layer: 1_{X >= 1}
-     0 +--+---+---+---+---+--> \omega
-         X=0 X=1 X=2 X=3 X=2
-     Sum of column heights (definition of E[X]) = Sum of horizontal layer widths (\sum_{k>=1} P(X >= k))!
+Layer-cake decomposition X = \sum_{k=1}^\infty 1_{X >= k}:
+height
+  3 |          +---+         k=3 layer: 1_{X >= 3}
+  2 |      +---+   +---+     k=2 layer: 1_{X >= 2}
+  1 |  +---+   +---+   +---+ k=1 layer: 1_{X >= 1}
+    +--+---+---+---+---+---+---> outcomes \omega
+  X:   1   2   3   2   1
+Sum of column heights E[X] = Sum of layer widths \sum P(X >= k)!
 #+end_example
 
-* 6.3 Signed functions and integrability
+* Signed functions and integrability
 
 ** Null sets and almost-everywhere agreement
 
@@ -648,7 +663,7 @@ Riemann's rearrangement theorem, rearranging a conditionally convergent series c
 order the space.
 #+end_quote
 
-* 6.4 Integrating with respect to an image measure
+* Integrating with respect to an image measure
 
 ** Intuition and the "Standard Machine" in action
 
@@ -724,7 +739,7 @@ and \(-1\) (with probability \(3/7\)). Thus the image measure (law) of \(X\) on 
 the 6-point die space \(\Omega\) again! (Notice also that \(\mu_X\) is a discrete measure here, *not*
 Lebesgue measure.)
 
-* 6.5 Passage to the limit
+* Passage to the limit
 
 ** Fatou's lemma: what survives without monotonicity?
 
@@ -799,15 +814,16 @@ uniformly bounded and \(f_n \to 0\) pointwise everywhere on \((0, 1)\), we canno
 \(\int\).
 #+end_quote
 
+#+caption: Figure 6.4: Mass Escaping into a Singularity (Strict Fatou Inequality)
 #+begin_example
-   Example 6.14 (Shrinking spikes on (0,1): area = 1 escapes into x = 0):
-   height
-     3 | +--+         f_3 = 3 * 1_{(0, 1/3)}   (area = 3 * 1/3 = 1)
-     2 | |  +--+      f_2 = 2 * 1_{(0, 1/2)}   (area = 2 * 1/2 = 1)
-     1 | |  |  +----+ f_1 = 1 * 1_{(0, 1)}     (area = 1 * 1   = 1)
-     0 +-+--+--+----+---> x in (0, 1)
-         0 1/3 1/2  1
-     At every fixed x > 0, the spike eventually moves to the left of x, so f_n(x) -> 0!
+Shrinking spikes on (0,1) with area = n * (1/n) = 1:
+height
+  n |   +----+
+    |   |    |  area = 1 under every spike f_n!
+  0 +---+----+-----------------------------------> x in (0,1)
+    0  1/n
+At every fixed x > 0, the spike moves to the left of x, so f_n(x) -> 0.
+Thus \int \lim f_n = 0 < 1 = \lim \int f_n: mass escapes into x=0!
 #+end_example
 
 ** The Dominated Convergence Theorem (DCT)
