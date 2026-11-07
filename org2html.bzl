@@ -6,6 +6,29 @@ def _org2html_impl(ctx):
 
     package_path = ctx.label.package
 
+    tex2png_cmd = ""
+    runfiles_list = [py_tool]
+
+    if ctx.attr.tex2png:
+        tex2png_bin = ctx.executable.tex2png
+        runfiles_list.append(tex2png_bin)
+        tex2png_cmd = """
+# Run pre-requisite tex2png compiler
+TEX2PNG_EXE="{tex2png_short_path}"
+if [ -f "$TEX2PNG_EXE" ]; then
+    "$TEX2PNG_EXE"
+elif [ -f "${{BASH_SOURCE[0]}}.runfiles/_main/$TEX2PNG_EXE" ]; then
+    "${{BASH_SOURCE[0]}}.runfiles/_main/$TEX2PNG_EXE"
+elif [ -f "${{BASH_SOURCE[0]}}.runfiles/{workspace_name}/$TEX2PNG_EXE" ]; then
+    "${{BASH_SOURCE[0]}}.runfiles/{workspace_name}/$TEX2PNG_EXE"
+elif [ -n "${{RUNFILES_DIR:-}}" ] && [ -f "${{RUNFILES_DIR}}/_main/$TEX2PNG_EXE" ]; then
+    "${{RUNFILES_DIR}}/_main/$TEX2PNG_EXE"
+fi
+""".format(
+            tex2png_short_path = tex2png_bin.short_path,
+            workspace_name = ctx.workspace_name,
+        )
+
     script_content = """#!/usr/bin/env bash
 set -euo pipefail
 
@@ -17,7 +40,7 @@ if [ -n "$PACKAGE_PATH" ]; then
 else
     TARGET_DIR="${{BUILD_WORKING_DIRECTORY:-$(pwd)}}"
 fi
-
+{tex2png_cmd}
 if command -v python3 >/dev/null 2>&1; then
     PYTHON_BIN="python3"
 elif command -v python >/dev/null 2>&1; then
@@ -58,6 +81,7 @@ exec "$PYTHON_BIN" "$SCRIPT_PATH" \\
         tool_short_path = py_tool.short_path,
         workspace_name = ctx.workspace_name,
         package_path = package_path,
+        tex2png_cmd = tex2png_cmd,
     )
 
     ctx.actions.write(
@@ -66,10 +90,14 @@ exec "$PYTHON_BIN" "$SCRIPT_PATH" \\
         is_executable = True,
     )
 
+    default_runfiles = ctx.runfiles(files = runfiles_list)
+    if ctx.attr.tex2png:
+        default_runfiles = default_runfiles.merge(ctx.attr.tex2png[DefaultInfo].default_runfiles)
+
     return [
         DefaultInfo(
             executable = runner,
-            runfiles = ctx.runfiles(files = [py_tool]),
+            runfiles = default_runfiles,
         ),
     ]
 
@@ -80,6 +108,11 @@ org2html = rule(
         "_compiler": attr.label(
             default = "//:org2html.py",
             allow_single_file = True,
+        ),
+        "tex2png": attr.label(
+            executable = True,
+            cfg = "exec",
+            doc = "Optional tex2png target to execute before compiling org files.",
         ),
     },
     doc = "Compiles Org files to HTML with incremental build avoidance.",

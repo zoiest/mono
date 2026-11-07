@@ -17,6 +17,7 @@ bazel-*
 __pycache__/
 **/.org2html_cache.json
 **/.org2pdf_cache.json
+**/.tex2png_cache.json
 
 # emacs latex images
 **/ltximg/

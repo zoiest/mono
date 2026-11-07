@@ -9,6 +9,10 @@
 .org2pdf_cache.json
 **/.org2pdf_cache.json
 
+# Tex2png cache file
+.tex2png_cache.json
+**/.tex2png_cache.json
+
 # Bazel symlinks and outputs
 bazel-*
 .bazelrc.user
