@@ -1,0 +1,356 @@
+:PROPERTIES:
+:ID:       c5a12d35-314a-4e31-bf9b-a7e310c57252
+:ROAM_ALIASES: "MAST31051 Chapter 1" "Lebesgue Outer Measure Notes"
+:END:
+#+title: Chapter 1: Geometry of $\mathbb{R}^n$ and Lebesgue Outer Measure
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:outer-measure:lebesgue:intervals:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch00-prerequisites.org][← Chapter 0]] | [[file:ch02-measurable-sets.org][Chapter 2: Measurable Sets →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In introductory calculus, we learn to compute the length of an interval $[a, b]$ as $b - a$, the area of a rectangle as $\text{width} \times \text{height}$, and the volume of a box as the product of its side lengths. 
+
+However, advanced analysis and probability require measuring the "size" of sets far more complicated than boxes:
+- What is the size of the set of rational numbers $\mathbb{Q} \cap [0, 1]$?
+- What is the size of a fractal like the Cantor set?
+- What is the size of the set of points where a sequence of functions converges?
+
+Our goal is to construct a function $m$ that assigns to every subset $A \subset \mathbb{R}^n$ a generalized volume $m(A) \in [0, +\infty]$ satisfying three natural geometric axioms:
+1. *Normalization:* For any $n$-interval $I = [a_1, b_1] \times \dots \times [a_n, b_n]$, $m(I) = \prod_{j=1}^n (b_j - a_j)$.
+2. *Translation Invariance:* Moving a set does not change its size: $m(x + A) = m(A)$ for all $x \in \mathbb{R}^n$.
+3. *Countable Additivity ($\sigma$-additivity):* If $A_1, A_2, \dots$ are pairwise disjoint sets, then
+   \[
+   m\left( \bigcup_{j=1}^\infty A_j \right) = \sum_{j=1}^\infty m(A_j).
+   \]
+
+*The Fundamental Obstruction:* It turns out (as proved by Vitali in 1905, see Chapter 3) that *no such function can exist on the entire power set $\mathcal{P}(\mathbb{R}^n)$*!
+To circumvent this, Henri Lebesgue introduced a two-stage strategy:
+- *Stage 1 (This Chapter):* Construct an *outer measure* $m^*(A)$ defined on *all* subsets $A \subset \mathbb{R}^n$. It satisfies normalization, monotonicity, and translation invariance, but only satisfies *countable subadditivity* ($m^*(\bigcup A_j) \le \sum m^*(A_j)$).
+- *Stage 2 (Chapter 2):* Identify the class of "well-behaved" sets (the *measurable sets*) on which $m^*$ becomes strictly countably additive.
+
+** Roadmap
+- *1.1 Shortcomings of the Riemann Integral:* Why Riemann integration fails for discontinuous functions and pointwise limits.
+- *1.2 Geometry of $n$-Intervals and Elementary Volume:* Definitions of open, closed, and bounded intervals in $\mathbb{R}^n$.
+- *1.3 Lebesgue Covers and Outer Measure:* Definition of $m^*(A)$ via infimum over coverings by open $n$-intervals.
+- *1.4 Core Properties of Outer Measure:* Monotonicity, translation invariance, scaling, and countable subadditivity.
+- *1.5 Outer Measure of Intervals and Null Sets:* Proving $m^*(I) = \ell(I)$, singletons, and countable sets have measure zero.
+- *Worked Exercises:* Solutions to foundational homework and exam problems.
+- *Summary Cheat-Sheet:* Quick-reference table of outer measure rules and properties.
+
+---
+
+* Shortcomings of the Classical Riemann Integral
+
+** Intuition: Slicing the Domain vs Slicing the Range
+The Riemann integral partitions the *domain* (the $x$-axis) into small subintervals $[x_{k-1}, x_k]$. If a function oscillates violently on every tiny interval, the upper Darboux sum and the lower Darboux sum will never meet.
+
+Henri Lebesgue's revolutionary insight was:
+#+begin_quote
+"Instead of partitioning the domain of $f$, partition its *range* (the $y$-axis) into intervals $[y_{k-1}, y_k]$, and measure the size of the set of points in the domain where $f(x) \approx y_k$."
+#+end_quote
+To make Lebesgue's idea work, we must be able to measure the size of the preimage set $\{x : y_{k-1} \le f(x) < y_k\}$, which can be an extraordinarily jagged set.
+
+** Three Fatal Defects of the Riemann Integral
+1. *Discontinuous and Indicator Functions:*
+   Consider Dirichlet's function on $[0, 1]$:
+   \[
+   \chi_{\mathbb{Q} \cap [0, 1]}(x) = \begin{cases} 1, & x \in \mathbb{Q} \cap [0, 1], \\ 0, & x \in [0, 1] \setminus \mathbb{Q}. \end{cases}
+   \]
+   In any subinterval $[x_{k-1}, x_k]$, there exist both rational and irrational numbers. Thus every upper Darboux sum is $1$ and every lower Darboux sum is $0$. The function is not Riemann integrable, even though the rationals form a tiny, countable set!
+2. *Fragility of Pointwise Limits:*
+   Let $(q_k)_{k=1}^\infty$ be an enumeration of $\mathbb{Q} \cap [0, 1]$. Define $f_k(x) = 1$ if $x \in \{q_1, \dots, q_k\}$ and $0$ otherwise.
+   Each $f_k$ is Riemann integrable (it is non-zero at only finitely many points, so $\int_0^1 f_k(x)\,dx = 0$).
+   However, the pointwise limit is Dirichlet's function:
+   \[
+   \lim_{k \to \infty} f_k(x) = \chi_{\mathbb{Q} \cap [0, 1]}(x),
+   \]
+   which is not Riemann integrable. The limit of Riemann integrable functions failed to be Riemann integrable!
+3. *Incompleteness of $L^1$:*
+   The normed space of Riemann integrable functions equipped with $\|f\|_1 = \int_a^b |f(x)|\,dx$ is not complete: Cauchy sequences do not necessarily converge to a Riemann integrable function.
+
+---
+
+* Geometry of $n$-Intervals and Elementary Volume
+
+** Definition of $n$-Intervals
+Let $n \in \mathbb{N}$. 
+- An *open $n$-interval* in $\mathbb{R}^n$ is the Cartesian product of $n$ bounded open intervals in $\mathbb{R}$:
+  \[
+  I = ]a_1, b_1[ \times \dots \times ]a_n, b_n[ = \{x = (x_1, \dots, x_n) \in \mathbb{R}^n : a_j < x_j < b_j \text{ for all } j = 1, \dots, n\},
+  \]
+  where $-\infty < a_j < b_j < +\infty$ for each $j \in \{1, \dots, n\}$.
+- A *closed $n$-interval* is $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$.
+- A *half-open $n$-interval* is any product of bounded intervals where each factor is of the form $[a_j, b_j[$ or $]a_j, b_j]$.
+- If $a_j = b_j$ for some $j$, the interval is *degenerate* (a flat boundary with empty interior).
+
+** Elementary Volume
+#+begin_quote
+*Definition 1.1 (Elementary Volume).* The *elementary volume* (or elementary measure) of an $n$-interval $I$ (open, closed, or half-open) with endpoints $a_j \le b_j$ is
+\[
+\ell(I) = \prod_{j=1}^n (b_j - a_j).
+\]
+For the empty set $\emptyset$ or any degenerate interval, $\ell(\emptyset) = 0$.
+#+end_quote
+
+Note that the volume is independent of whether the boundary faces are included:
+\[
+\ell(I) = \ell(\bar{I}).
+\]
+
+---
+
+* Lebesgue Covers and Outer Measure
+
+** Intuition: Wrapping an Arbitrary Set with Boxes
+How do we find the volume of an arbitrary, possibly irregular set $A \subset \mathbb{R}^n$?
+We wrap $A$ from the outside with a countable collection of open boxes $\{I_j\}_{j=1}^\infty$.
+The sum of the elementary volumes $\sum_{j=1}^\infty \ell(I_j)$ represents an *overestimate* of the volume of $A$. 
+To obtain the tightest possible estimate, we take the *infimum* over all possible countable coverings.
+
+#+begin_quote
+*Definition 1.2 (Lebesgue Cover).* Let $A \subset \mathbb{R}^n$. A countable collection $\mathcal{F} = \{I_1, I_2, \dots\}$ of open $n$-intervals is called a *Lebesgue cover* of $A$ if
+\[
+A \subset \bigcup_{j=1}^\infty I_j.
+\]
+#+end_quote
+
+> [!NOTE]
+> Every subset $A \subset \mathbb{R}^n$ has at least one Lebesgue cover. For example, $\mathbb{R}^n$ can be covered by the countable collection of open cubes $]-k, k[^n$ for $k \in \mathbb{N}$.
+
+#+begin_quote
+*Definition 1.3 (Lebesgue Outer Measure).* The *Lebesgue outer measure* of a set $A \subset \mathbb{R}^n$ is defined by
+\[
+m^*(A) = \inf \left\{ \sum_{j=1}^\infty \ell(I_j) : I_j \text{ is an open } n\text{-interval and } A \subset \bigcup_{j=1}^\infty I_j \right\} \in [0, +\infty].
+\]
+#+end_quote
+
+---
+
+* Core Properties of Outer Measure
+
+#+begin_quote
+*Theorem 1.4 (Basic Properties of $m^*$).*
+1. *Null Empty Set:* $m^*(\emptyset) = 0$.
+2. *Monotonicity:* If $A \subset B \subset \mathbb{R}^n$, then $m^*(A) \le m^*(B)$.
+3. *Countable Subadditivity:* If $A_1, A_2, A_3, \dots \subset \mathbb{R}^n$ is any sequence of sets, then
+   \[
+   m^*\left( \bigcup_{j=1}^\infty A_j \right) \le \sum_{j=1}^\infty m^*(A_j).
+   \]
+4. *Translation Invariance:* For any $A \subset \mathbb{R}^n$ and $x \in \mathbb{R}^n$:
+   \[
+   m^*(x + A) = m^*(A), \quad \text{where } x + A = \{x + y : y \in A\}.
+   \]
+5. *Scaling Behavior:* For any $A \subset \mathbb{R}^n$ and $c \in \mathbb{R}$:
+   \[
+   m^*(cA) = |c|^n m^*(A), \quad \text{where } cA = \{cy : y \in A\}.
+   \]
+#+end_quote
+
+#+begin_proof
+1. *Empty set:* For any $\varepsilon > 0$, the open cube $I = ]-\varepsilon, \varepsilon[^n$ covers $\emptyset$, and $\ell(I) = (2\varepsilon)^n$. Letting $\varepsilon \to 0$ gives $m^*(\emptyset) = 0$.
+2. *Monotonicity:* If $B \subset \bigcup_{j=1}^\infty I_j$, then also $A \subset \bigcup_{j=1}^\infty I_j$ since $A \subset B$. Thus every Lebesgue cover of $B$ is also a Lebesgue cover of $A$. Taking the infimum gives $m^*(A) \le m^*(B)$.
+3. *Countable Subadditivity (The $\varepsilon/2^j$ trick):*
+   If $\sum_{j=1}^\infty m^*(A_j) = +\infty$, the inequality is trivially true. 
+   Assume therefore that $\sum_{j=1}^\infty m^*(A_j) < \infty$, so each $m^*(A_j) < \infty$.
+   Fix an arbitrary $\varepsilon > 0$.
+   By the definition of the infimum, for each $j \in \mathbb{N}$ there exists a Lebesgue cover $\{I_{j, k}\}_{k=1}^\infty$ of $A_j$ such that
+   \[
+   \sum_{k=1}^\infty \ell(I_{j, k}) < m^*(A_j) + \frac{\varepsilon}{2^j}.
+   \]
+   Now collect all intervals into a single doubly indexed family $\{I_{j, k} : j, k \in \mathbb{N}\}$.
+   Since $A_j \subset \bigcup_{k=1}^\infty I_{j, k}$ for every $j$, we have
+   \[
+   \bigcup_{j=1}^\infty A_j \subset \bigcup_{j=1}^\infty \bigcup_{k=1}^\infty I_{j, k}.
+   \]
+   Thus $\{I_{j, k}\}_{j, k=1}^\infty$ is a countable Lebesgue cover of $\bigcup_{j=1}^\infty A_j$. By definition of $m^*$:
+   \[
+   m^*\left( \bigcup_{j=1}^\infty A_j \right) \le \sum_{j=1}^\infty \sum_{k=1}^\infty \ell(I_{j, k}) < \sum_{j=1}^\infty \left( m^*(A_j) + \frac{\varepsilon}{2^j} \right) = \sum_{j=1}^\infty m^*(A_j) + \varepsilon \sum_{j=1}^\infty 2^{-j} = \sum_{j=1}^\infty m^*(A_j) + \varepsilon.
+   \]
+   Since this holds for every $\varepsilon > 0$, letting $\varepsilon \to 0$ yields the result.
+4. *Translation invariance:* If $\{I_j\}$ covers $A$, then $\{x + I_j\}$ covers $x + A$. The shifted interval $x + I_j$ is still an open $n$-interval, and its side lengths are unchanged: $\ell(x + I_j) = \ell(I_j)$. Thus $m^*(x + A) \le m^*(A)$. Applying this to $-x$ and $x + A$ gives the reverse inequality.
+5. *Scaling:* Scaling each side of an $n$-interval by $c$ multiplies each of the $n$ side lengths by $|c|$, so $\ell(c I) = |c|^n \ell(I)$. Taking infima gives $m^*(cA) = |c|^n m^*(A)$.
+#+end_proof
+
+---
+
+* Outer Measure of Intervals and Null Sets
+
+** Outer Measure of an $n$-Interval Equals its Volume
+
+#+begin_quote
+*Theorem 1.5.* For any bounded $n$-interval $I \subset \mathbb{R}^n$ (open, closed, or half-open):
+\[
+m^*(I) = \ell(I).
+\]
+#+end_quote
+
+#+begin_proof
+1. *Upper Bound ($m^*(I) \le \ell(I)$):*
+   Let $I = [a_1, b_1] \times \dots \times [a_n, b_n]$ be closed. 
+   For any $\varepsilon > 0$, expand each side by $\varepsilon$:
+   \[
+   I_\varepsilon = ]a_1 - \varepsilon, b_1 + \varepsilon[ \times \dots \times ]a_n - \varepsilon, b_n + \varepsilon[.
+   \]
+   $I_\varepsilon$ is an open $n$-interval and $I \subset I_\varepsilon$. Thus $\{I_\varepsilon\}$ is a one-interval cover of $I$:
+   \[
+   m^*(I) \le \ell(I_\varepsilon) = \prod_{j=1}^n (b_j - a_j + 2\varepsilon).
+   \]
+   Letting $\varepsilon \to 0$ gives $m^*(I) \le \ell(I)$.
+2. *Lower Bound ($m^*(I) \ge \ell(I)$ via Compactness):*
+   Fix $\varepsilon > 0$. Let $\{I_j\}_{j=1}^\infty$ be any open cover of the closed interval $\bar{I}$.
+   Since $\bar{I}$ is closed and bounded, by the *Heine--Borel Theorem* (Theorem 0.6), $\bar{I}$ is compact!
+   Therefore, there exists a *finite subcover* $\{I_1, \dots, I_N\}$ such that
+   \[
+   \bar{I} \subset \bigcup_{j=1}^N I_j.
+   \]
+   By elementary geometry (partitioning the boxes into a finite grid of non-overlapping sub-boxes), the elementary volume is finitely subadditive:
+   \[
+   \ell(\bar{I}) \le \sum_{j=1}^N \ell(I_j) \le \sum_{j=1}^\infty \ell(I_j).
+   \]
+   Taking the infimum over all countable open covers $\{I_j\}$ yields $\ell(\bar{I}) \le m^*(\bar{I})$.
+Since $\ell(I) = \ell(\bar{I})$ and $I \subset \bar{I}$, monotonicity and the bounds squeeze $m^*(I) = \ell(I)$.
+#+end_proof
+
+** Null Sets and Countable Sets
+
+#+begin_quote
+*Definition 1.6 (Null Set).* A subset $N \subset \mathbb{R}^n$ is called a *null set* (or set of measure zero) if $m^*(N) = 0$.
+#+end_quote
+
+#+begin_quote
+*Theorem 1.7.*
+1. Every singleton $\{x\} \subset \mathbb{R}^n$ has $m^*(\{x\}) = 0$.
+2. Every countable subset $A \subset \mathbb{R}^n$ has $m^*(A) = 0$.
+#+end_quote
+
+#+begin_proof
+1. For any $\varepsilon > 0$, the cube $I_\varepsilon = ]x_1 - \varepsilon, x_1 + \varepsilon[ \times \dots \times ]x_n - \varepsilon, x_n + \varepsilon[$ covers $\{x\}$, with $\ell(I_\varepsilon) = (2\varepsilon)^n$. Letting $\varepsilon \to 0$ shows $m^*(\{x\}) = 0$.
+2. Let $A = \{a_1, a_2, a_3, \dots\}$ be countable. By countable subadditivity:
+   \[
+   m^*(A) = m^*\left( \bigcup_{j=1}^\infty \{a_j\} \right) \le \sum_{j=1}^\infty m^*(\{a_j\}) = \sum_{j=1}^\infty 0 = 0.
+   \]
+   Since $m^*(A) \ge 0$, we conclude $m^*(A) = 0$.
+#+end_proof
+
+*Example 1.8 (Rationals have measure zero):*
+The set of rational numbers in $[0, 1]$ has $m^*(\mathbb{Q} \cap [0, 1]) = 0$. 
+In fact, the entire set of rationals on the real line has $m^*(\mathbb{Q}) = 0$!
+
+---
+
+* Worked Exercises
+
+** Exercise 1.1 (Fall 2026 Exam Problem 3a: Positive measure vs open sets)
+Is the following statement true or false? 
+"If $m^*(A) > 0$, then $A$ contains a non-empty open set."
+If true, prove it; if false, provide a counterexample.
+
+*Solution:*
+*The statement is FALSE.*
+*Counterexample 1:*
+Let $A = [0, 1] \setminus \mathbb{Q}$ be the set of irrational numbers in $[0, 1]$.
+- First, does $A$ contain any non-empty open set? 
+  No. Any non-empty open set in $\mathbb{R}$ contains an open interval $]a, b[$ with $a < b$. By the density of the rational numbers, $]a, b[$ must contain at least one rational number. Hence $]a, b[ \not\subset A$. Therefore, the interior of $A$ is completely empty: $\text{int}(A) = \emptyset$.
+- Second, what is the outer measure of $A$?
+  Notice that $[0, 1] = A \cup (\mathbb{Q} \cap [0, 1])$. 
+  By subadditivity:
+  \[
+  m^*([0, 1]) \le m^*(A) + m^*(\mathbb{Q} \cap [0, 1]).
+  \]
+  We know $m^*([0, 1]) = 1$ and $m^*(\mathbb{Q} \cap [0, 1]) = 0$ (Theorem 1.7). Thus:
+  \[
+  1 \le m^*(A) + 0 \implies m^*(A) \ge 1.
+  \]
+  (Since $A \subset [0, 1]$, $m^*(A) = 1 > 0$.)
+Hence $m^*(A) = 1 > 0$, yet $A$ contains *no* non-empty open set.
+
+** Exercise 1.2 (Fall 2026 Exam Problem 3b: Finite measure vs boundedness)
+Is the following statement true or false?
+"If $m^*(A) < \infty$, then $A$ is bounded, i.e., there exists $R > 0$ such that $A \subset B(0, R)$."
+If true, prove it; if false, provide a counterexample.
+
+*Solution:*
+*The statement is FALSE.*
+*Counterexample:*
+For each integer $k \ge 1$, let $I_k$ be the open interval centered at $k$ of length $1/2^k$:
+\[
+I_k = \left] k - \frac{1}{2^{k+1}}, \, k + \frac{1}{2^{k+1}} \right[.
+\]
+Define $A = \bigcup_{k=1}^\infty I_k \subset \mathbb{R}$.
+- Is $A$ bounded?
+  No: for every $k \in \mathbb{N}$, the integer $k \in I_k \subset A$. Since $k \to \infty$, $A$ contains arbitrarily large numbers. For any $R > 0$, choosing $k > R$ gives $k \in A \setminus B(0, R)$. Thus $A$ is unbounded.
+- Is $m^*(A)$ finite?
+  By countable subadditivity:
+  \[
+  m^*(A) = m^*\left(\bigcup_{k=1}^\infty I_k\right) \le \sum_{k=1}^\infty \ell(I_k) = \sum_{k=1}^\infty \frac{1}{2^k} = 1 < \infty.
+  \]
+Thus $m^*(A) \le 1 < \infty$, but $A$ is unbounded.
+
+** Exercise 1.3 (Homework 2, Problem 4: Graph of a continuous function)
+Let $f: [0, 1] \to \mathbb{R}$ be a continuous function. The *graph* of $f$ is
+\[
+\Gamma(f) = \{(x, f(x)) \in \mathbb{R}^2 : x \in [0, 1]\}.
+\]
+Prove that $m^*(\Gamma(f)) = 0$ in $\mathbb{R}^2$.
+
+*Solution:*
+1. Since $[0, 1]$ is a compact interval and $f$ is continuous, $f$ is *uniformly continuous* on $[0, 1]$ (Heine--Cantor theorem).
+2. Fix $\varepsilon > 0$. By uniform continuity, there exists $\delta > 0$ such that for all $x, y \in [0, 1]$:
+   \[
+   \lvert x - y \rvert < \delta \implies |f(x) - f(y)| < \varepsilon.
+   \]
+3. Choose $N \in \mathbb{N}$ large enough such that $1/N < \delta$. Partition $[0, 1]$ into $N$ equal subintervals:
+   \[
+   J_k = \left[ \frac{k-1}{N}, \frac{k}{N} \right], \quad k = 1, \dots, N.
+   \]
+4. On each subinterval $J_k$, the oscillation of $f$ is at most $\varepsilon$:
+   \[
+   M_k = \max_{x \in J_k} f(x), \quad m_k = \min_{x \in J_k} f(x) \implies M_k - m_k < \varepsilon.
+   \]
+5. For each $k$, the portion of the graph over $J_k$ is contained in the 2-dimensional closed rectangle:
+   \[
+   R_k = J_k \times [m_k, M_k] = \left[ \frac{k-1}{N}, \frac{k}{N} \right] \times [m_k, M_k].
+   \]
+   The elementary area of $R_k$ is
+   \[
+   \ell(R_k) = \frac{1}{N} (M_k - m_k) < \frac{\varepsilon}{N}.
+   \]
+6. Clearly $\Gamma(f) \subset \bigcup_{k=1}^N R_k$. By finite subadditivity:
+   \[
+   m^*(\Gamma(f)) \le \sum_{k=1}^N m^*(R_k) = \sum_{k=1}^N \ell(R_k) < \sum_{k=1}^N \frac{\varepsilon}{N} = N \cdot \frac{\varepsilon}{N} = \varepsilon.
+   \]
+7. Since $\varepsilon > 0$ was arbitrary, letting $\varepsilon \to 0$ gives $m^*(\Gamma(f)) = 0$.
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Lebesgue Outer Measure Reference
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Property | Mathematical Statement | Interpretation / Pitfall |
+|----------+-------------------------+--------------------------|
+| *Definition* | $m^*(A) = \inf \{ \sum \ell(I_j) : A \subset \bigcup I_j \}$ | Infimum over all countable covers by open $n$-intervals. |
+| *Empty set* | $m^*(\emptyset) = 0$ | Always zero. |
+| *Monotonicity* | $A \subset B \implies m^*(A) \le m^*(B)$ | Bigger sets have larger or equal outer measure. |
+| *Countable Subadditivity* | $m^*(\bigcup_{j=1}^\infty A_j) \le \sum_{j=1}^\infty m^*(A_j)$ | Always holds, but strict equality is NOT guaranteed for arbitrary disjoint sets! |
+| *Intervals* | $m^*(I) = \ell(I) = \prod (b_j - a_j)$ | Outer measure extends classical elementary volume. |
+| *Countable Sets* | $A$ countable $\implies m^*(A) = 0$ | $\mathbb{Q}$, $\mathbb{Z}$, singletons all have measure zero. |
+| *Translation Invariance* | $m^*(x + A) = m^*(A)$ | Rigid shifts do not alter outer measure. |
+| *Scaling* | $m^*(cA) = \lvert c\rvert^n m^*(A)$ | Volume scales with power $n$ of the dilation factor. |
+| *Empty Interior $\not\Rightarrow$ Zero Measure* | $\text{int}(A) = \emptyset \centernot\implies m^*(A) = 0$ | Example: $[0, 1] \setminus \mathbb{Q}$ has empty interior but $m^* = 1$. |
+| *Finite Measure $\not\Rightarrow$ Bounded* | $m^*(A) < \infty \centernot\implies A$ bounded | Example: $\bigcup_{k=1}^\infty ]k - 2^{-k-1}, k + 2^{-k-1}[$. |

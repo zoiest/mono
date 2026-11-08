@@ -1,0 +1,383 @@
+:PROPERTIES:
+:ID:       c6d0c60c-dc6e-41c4-b111-45ce33fc09f3
+:ROAM_ALIASES: "MAST31051 Chapter 10" "Lp Spaces and Completeness Notes"
+:END:
+#+title: Chapter 10: The $L^p$ Spaces and Completeness
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:lp-spaces:holder:minkowski:riesz-fischer:banach:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch09-fubini-tonelli.org][← Chapter 9]]
+
+* Overview
+
+** What problem does this chapter solve?
+In calculus and differential equations, functions are not isolated objects; they live in *function spaces*. 
+To solve partial differential equations, minimize energy functionals, or analyze Fourier series, we need a metric or norm to measure the "distance" between two functions:
+\[
+\|f - g\|.
+\]
+For a function space to be useful in analysis, it must be *complete*: every Cauchy sequence must converge to an element *inside* the space. 
+A complete normed vector space is called a *Banach space*.
+
+The classical space of continuous or Riemann integrable functions equipped with the $L^1$-norm is *incomplete*: Cauchy sequences of continuous functions can converge to discontinuous step functions or fractals that do not belong to the space.
+
+Lebesgue integration permanently solves this crisis. 
+In this concluding chapter, we construct the *Lebesgue spaces $L^p(E)$* for $1 \le p \le \infty$:
+1. *The $L^p$ Norm:* Measuring the size of functions via $\left(\int |f|^p\right)^{1/p}$.
+2. *Almost Everywhere Equivalence:* Why identifying functions that agree almost everywhere transforms $L^p$ into a genuine normed space.
+3. *Fundamental Inequalities:* Young's inequality, Hölder's inequality (generalizing Cauchy--Schwarz), and Minkowski's inequality (the triangle inequality).
+4. *The Riesz--Fischer Theorem:* Proving that every $L^p(E)$ is a Banach space.
+5. *Modes of Convergence:* Exploring the relationships between convergence in $L^p$, pointwise almost everywhere convergence, and uniform convergence.
+
+** Roadmap
+- *10.1 Definition of $L^p(E)$ and the $L^p$ Norm:* For $1 \le p < \infty$ and $p = \infty$.
+- *10.2 Equivalence Classes a.e.:* Overcoming the pseudo-norm issue.
+- *10.3 The Big Inequalities:* Young, Hölder, and Minkowski.
+- *10.4 The Riesz--Fischer Completeness Theorem:* Full proof of completeness of $L^p$.
+- *10.5 Subsequences and Convergence Modes:* Pointwise a.e. subsequences and the "typewriter" counterexample.
+- *Worked Exercises:* Solutions to problems on $L^p$ inclusions and norms.
+- *Summary Cheat-Sheet:* Quick-reference table of $L^p$ inequalities and properties.
+
+---
+
+* Definition of $L^p(E)$ and the $L^p$ Norm
+
+Let $(X, \mathcal{M}, \mu)$ be a measure space (for instance, $(\mathbb{R}^n, \mathcal{M}(\mathbb{R}^n), m)$) and let $E \in \mathcal{M}$.
+
+** The Spaces $L^p(E)$ for $1 \le p < \infty$
+#+begin_quote
+*Definition 10.1 ($L^p$ Spaces).* For $1 \le p < \infty$, the space $\mathcal{L}^p(E)$ is the set of all measurable functions $f: E \to \overline{\mathbb{R}}$ such that
+\[
+\int_E |f|^p \, d\mu < \infty.
+\]
+The *$L^p$-norm* of $f$ is defined by:
+\[
+\|f\|_p = \left( \int_E |f|^p \, d\mu \right)^{1/p}.
+\]
+#+end_quote
+
+Special cases:
+- $p = 1$: The space of integrable functions $L^1(E)$, with norm $\|f\|_1 = \int_E |f| \, d\mu$.
+- $p = 2$: The space of square-integrable functions $L^2(E)$, which is a *Hilbert space* with inner product $\langle f, g \rangle = \int_E f g \, d\mu$.
+
+** The Space $L^\infty(E)$ and Essential Supremum
+For $p = \infty$, we measure the maximum height of a function, ignoring values on sets of measure zero.
+
+#+begin_quote
+*Definition 10.2 (Essential Supremum and $L^\infty$).* 
+Let $f: E \to \overline{\mathbb{R}}$ be measurable. 
+The *essential supremum* of $|f|$ on $E$ is defined by:
+\[
+\|f\|_\infty = \text{ess\,sup}_{x \in E} |f(x)| = \inf \{M \ge 0 : \mu(\{x \in E : |f(x)| > M\}) = 0\}.
+\]
+If no such $M$ exists, $\|f\|_\infty = +\infty$.
+The space $\mathcal{L}^\infty(E)$ consists of all measurable functions $f$ with $\|f\|_\infty < \infty$ (essentially bounded functions).
+#+end_quote
+
+---
+
+* Equivalence Classes Almost Everywhere
+
+Recall that a true mathematical norm on a vector space $V$ must satisfy three axioms:
+1. *Positivity & Non-degeneracy:* $\|f\| \ge 0$, and $\|f\| = 0 \iff f = 0$.
+2. *Homogeneity:* $\|\alpha f\| = |\alpha| \, \|f\|$.
+3. *Triangle Inequality:* $\|f + g\| \le \|f\| + \|g\|$.
+
+Notice that for $\mathcal{L}^p(E)$:
+\[
+\|f\|_p = 0 \iff \int_E |f|^p \, d\mu = 0 \iff f(x) = 0 \quad \text{for } \mu\text{-almost every } x \in E.
+\]
+If $f(x) \neq 0$ on a non-empty null set (e.g. $f = \chi_{\mathbb{Q}}$), then $\|f\|_p = 0$ even though $f$ is not the zero function! 
+Thus $\|\cdot\|_p$ is technically only a *seminorm* on $\mathcal{L}^p(E)$.
+
+To resolve this, we define an equivalence relation:
+\[
+f \sim g \iff f(x) = g(x) \quad \text{for almost every } x \in E.
+\]
+#+begin_quote
+*Definition 10.3 (The True $L^p$ Space).* The space $L^p(E)$ is the quotient space:
+\[
+L^p(E) = \mathcal{L}^p(E) / \sim.
+\]
+An element of $L^p(E)$ is an *equivalence class* of functions that agree almost everywhere.
+On this quotient space, $\|f\|_p = 0 \implies f = 0$ in $L^p(E)$, making $L^p(E)$ a genuine normed space!
+#+end_quote
+
+> [!NOTE]
+> In practice, we follow standard mathematical convention and refer to "the function $f \in L^p$", always remembering that modifying $f$ on a null set does not change the element.
+
+---
+
+* The Big Inequalities: Young, Hölder, and Minkowski
+
+Let $p, q \in ]1, \infty[$ be *conjugate exponents* (or Hölder conjugates), meaning:
+\[
+\frac{1}{p} + \frac{1}{q} = 1 \iff p + q = p q \iff q = \frac{p}{p - 1}.
+\]
+For $p = 1$, the conjugate exponent is $q = \infty$.
+
+** Young's Inequality
+
+#+begin_quote
+*Lemma 10.4 (Young's Inequality).* Let $1 < p < \infty$ and $1/p + 1/q = 1$. 
+For any non-negative real numbers $a, b \ge 0$:
+\[
+a b \le \frac{a^p}{p} + \frac{b^q}{q}.
+\]
+Equality holds if and only if $a^p = b^q$.
+#+end_quote
+
+#+begin_proof
+If $a = 0$ or $b = 0$, the inequality is trivially $0 \le 0$.
+Assume $a > 0$ and $b > 0$. Use the strict concavity of the natural logarithm function $\ln(x)$:
+\[
+\ln(a b) = \ln(a) + \ln(b) = \frac{1}{p} \ln(a^p) + \frac{1}{q} \ln(b^q).
+\]
+Because $1/p + 1/q = 1$ and $\ln$ is strictly concave:
+\[
+\frac{1}{p} \ln(a^p) + \frac{1}{q} \ln(b^q) \le \ln\left( \frac{a^p}{p} + \frac{b^q}{q} \right).
+\]
+Exponentiating both sides yields $a b \le \frac{a^p}{p} + \frac{b^q}{q}$.
+#+end_proof
+
+** Hölder's Inequality
+
+#+begin_quote
+*Theorem 10.5 (Hölder's Inequality).* Let $1 \le p \le \infty$ and $1/p + 1/q = 1$. 
+If $f \in L^p(E)$ and $g \in L^q(E)$, then $f g \in L^1(E)$ and
+\[
+\|f g\|_1 = \int_E |f g| \, d\mu \le \|f\|_p \|g\|_q.
+\]
+#+end_quote
+
+#+begin_proof
+- If $\|f\|_p = 0$ or $\|g\|_q = 0$, then $f = 0$ a.e. or $g = 0$ a.e., so $f g = 0$ a.e., giving $0 \le 0$.
+- If $p = 1$ and $q = \infty$: $|f(x) g(x)| \le |f(x)| \|g\|_\infty$ a.e. Integrating gives $\|f g\|_1 \le \|g\|_\infty \int |f| = \|f\|_1 \|g\|_\infty$.
+- Now assume $1 < p < \infty$ and $\|f\|_p > 0, \|g\|_q > 0$.
+  Normalize the functions:
+  \[
+  u(x) = \frac{|f(x)|}{\|f\|_p}, \qquad v(x) = \frac{|g(x)|}{\|g\|_q}.
+  \]
+  By Young's Inequality (Lemma 10.4):
+  \[
+  u(x) v(x) \le \frac{u(x)^p}{p} + \frac{v(x)^q}{q}.
+  \]
+  Integrate both sides over $E$:
+  \[
+  \int_E u v \, d\mu \le \frac{1}{p} \int_E u^p \, d\mu + \frac{1}{q} \int_E v^q \, d\mu = \frac{1}{p} \cdot 1 + \frac{1}{q} \cdot 1 = \frac{1}{p} + \frac{1}{q} = 1.
+  \]
+  Substituting $u$ and $v$ back:
+  \[
+  \frac{\int_E |f g| \, d\mu}{\|f\|_p \|g\|_q} \le 1 \implies \int_E |f g| \, d\mu \le \|f\|_p \|g\|_q.
+  \]
+#+end_proof
+
+*Special Case:* For $p = q = 2$, this is the famous *Cauchy--Schwarz inequality*:
+\[
+\int_E |f g| \, d\mu \le \sqrt{\int_E |f|^2 \, d\mu} \sqrt{\int_E |g|^2 \, d\mu}.
+\]
+
+** Minkowski's Inequality
+
+#+begin_quote
+*Theorem 10.6 (Minkowski's Inequality).* For $1 \le p \le \infty$, if $f, g \in L^p(E)$, then $f + g \in L^p(E)$ and
+\[
+\|f + g\|_p \le \|f\|_p + \|g\|_p.
+\]
+#+end_quote
+
+#+begin_proof
+- For $p = 1$: $\|f + g\|_1 = \int |f + g| \le \int (|f| + |g|) = \|f\|_1 + \|g\|_1$.
+- For $p = \infty$: $|f(x) + g(x)| \le |f(x)| + |g(x)| \le \|f\|_\infty + \|g\|_\infty$ a.e.
+- For $1 < p < \infty$:
+  \[
+  \lvert f + g \rvert^p = |f + g| \cdot |f + g|^{p-1} \le (|f| + |g|) |f + g|^{p-1} = |f| |f + g|^{p-1} + |g| |f + g|^{p-1}.
+  \]
+  Integrate both sides and apply Hölder's Inequality to each term with conjugate exponent $q = p/(p-1)$ (so $(p-1)q = p$):
+  \[
+  \int_E |f| |f + g|^{p-1} \le \|f\|_p \left( \int_E |f + g|^{(p-1)q} \right)^{1/q} = \|f\|_p \left( \int_E |f + g|^p \right)^{(p-1)/p} = \|f\|_p \, \|f + g\|_p^{p-1}.
+  \]
+  Similarly:
+  \[
+  \int_E |g| |f + g|^{p-1} \le \|g\|_p \, \|f + g\|_p^{p-1}.
+  \]
+  Adding the two inequalities:
+  \[
+  \|f + g\|_p^p \le \bigl( \|f\|_p + \|g\|_p \bigr) \|f + g\|_p^{p-1}.
+  \]
+  Dividing by $\|f + g\|_p^{p-1}$ yields $\|f + g\|_p \le \|f\|_p + \|g\|_p$.
+#+end_proof
+
+---
+
+* The Riesz--Fischer Completeness Theorem
+
+#+begin_quote
+*Theorem 10.7 (Riesz--Fischer Theorem, 1907).* 
+For every $1 \le p \le \infty$, the space $L^p(E)$ is a *complete normed space* (a *Banach space*).
+That is, every Cauchy sequence in $L^p(E)$ converges in the $L^p$-norm to some function in $L^p(E)$:
+\[
+\lim_{j, k \to \infty} \|f_j - f_k\|_p = 0 \implies \exists f \in L^p(E) \text{ such that } \lim_{k \to \infty} \|f_k - f\|_p = 0.
+\]
+#+end_quote
+
+#+begin_proof
+*Proof for $1 \le p < \infty$:*
+1. *Extract a rapidly converging subsequence:*
+   Let $(f_k)_{k=1}^\infty$ be a Cauchy sequence in $L^p(E)$.
+   Choose a subsequence $(f_{k_j})_{j=1}^\infty$ such that:
+   \[
+   \|f_{k_{j+1}} - f_{k_j}\|_p \le \frac{1}{2^j} \quad \text{for all } j \in \mathbb{N}.
+   \]
+2. *Construct the dominating function:*
+   Define the non-negative functions:
+   \[
+   g_N(x) = \sum_{j=1}^N |f_{k_{j+1}}(x) - f_{k_j}(x)|, \qquad g(x) = \sum_{j=1}^\infty |f_{k_{j+1}}(x) - f_{k_j}(x)|.
+   \]
+   By Minkowski's Inequality (Theorem 10.6):
+   \[
+   \|g_N\|_p \le \sum_{j=1}^N \|f_{k_{j+1}} - f_{k_j}\|_p \le \sum_{j=1}^N \frac{1}{2^j} < 1.
+   \]
+   Since $g_N(x) \nearrow g(x)$, by the Monotone Convergence Theorem (Theorem 7.6):
+   \[
+   \int_E g^p \, d\mu = \lim_{N \to \infty} \int_E g_N^p \, d\mu \le 1^p = 1 < \infty.
+   \]
+   Thus $g \in L^p(E)$.
+3. *Pointwise convergence almost everywhere:*
+   Because $\int_E g^p < \infty$, by Theorem 8.3(5), $g(x) < \infty$ for almost every $x \in E$.
+   For any such $x$, the series of numbers $\sum_{j=1}^\infty (f_{k_{j+1}}(x) - f_{k_j}(x))$ is *absolutely convergent*!
+   Therefore, the telescoping series converges:
+   \[
+   f_{k_1}(x) + \sum_{j=1}^\infty \bigl(f_{k_{j+1}}(x) - f_{k_j}(x)\bigr) = \lim_{j \to \infty} f_{k_j}(x) =: f(x) \in \mathbb{R}.
+   \]
+   Define $f(x) = 0$ on the null set where $g(x) = \infty$. Then $f_{k_j} \to f$ pointwise a.e. on $E$.
+4. *$L^p$ convergence of the subsequence:*
+   Notice that for any $j \in \mathbb{N}$ and almost all $x$:
+   \[
+   \lvert f(x) - f_{k_j}(x) \rvert = \lim_{m \to \infty} |f_{k_m}(x) - f_{k_j}(x)| \le \sum_{l=j}^\infty |f_{k_{l+1}}(x) - f_{k_l}(x)| \le g(x).
+   \]
+   By Fatou's Lemma (applied to $|f - f_{k_j}|^p$):
+   \[
+   \int_E |f - f_{k_j}|^p \, d\mu \le \liminf_{m \to \infty} \int_E |f_{k_m} - f_{k_j}|^p \, d\mu \le \left( \sum_{l=j}^\infty \frac{1}{2^l} \right)^p = \left( \frac{1}{2^{j-1}} \right)^p.
+   \]
+   Taking $p$-th roots: $\|f - f_{k_j}\|_p \le \frac{1}{2^{j-1}} \to 0$ as $j \to \infty$.
+   Thus $f_{k_j} \to f$ in $L^p(E)$, and since $f = (f - f_{k_1}) + f_{k_1}$, $f \in L^p(E)$.
+5. *$L^p$ convergence of the full sequence:*
+   Finally, by the triangle inequality:
+   \[
+   \|f_k - f\|_p \le \|f_k - f_{k_j}\|_p + \|f_{k_j} - f\|_p.
+   \]
+   Given $\varepsilon > 0$, since $(f_k)$ is Cauchy, $\|f_k - f_{k_j}\|_p < \varepsilon/2$ for large $k, k_j$. 
+   Since $\|f_{k_j} - f\|_p \to 0$, choosing $j$ large gives $\|f_k - f\|_p < \varepsilon$.
+   Thus $\lim_{k \to \infty} \|f_k - f\|_p = 0$.
+#+end_proof
+
+---
+
+* Subsequences and Convergence Modes
+
+#+begin_quote
+*Corollary 10.8 (Subsequence Property).* If $f_k \to f$ in $L^p(E)$, then there exists a subsequence $(f_{k_j})_{j=1}^\infty$ that converges *pointwise almost everywhere* to $f$:
+\[
+f_{k_j}(x) \to f(x) \quad \text{for a.e. } x \in E.
+\]
+#+end_quote
+
+> [!WARNING]
+> *Convergence in $L^p$ does NOT imply pointwise convergence!*
+> The full sequence $f_k$ can converge to $0$ in $L^p$ while *failing to converge at any single point*!
+
+*The Typewriter (Sliding Interval) Counterexample:*
+On $[0, 1]$, define the sequence of indicator functions:
+- Level 1: $f_1 = \chi_{[0, 1]}$.
+- Level 2: $f_2 = \chi_{[0, 1/2]}, \, f_3 = \chi_{[1/2, 1]}$.
+- Level 3: $f_4 = \chi_{[0, 1/4]}, \, f_5 = \chi_{[1/4, 2/4]}, \, f_6 = \chi_{[2/4, 3/4]}, \, f_7 = \chi_{[3/4, 1]}$.
+- In general, at level $m$, we have $2^m$ intervals of width $2^{-m}$.
+Notice:
+1. *Convergence in $L^p$:* For any $f_k$ at level $m$:
+   \[
+   \|f_k\|_p = \left( \int_0^1 \chi^p \right)^{1/p} = (2^{-m})^{1/p} \to 0 \quad \text{as } m \to \infty.
+   \]
+   Thus $f_k \to 0$ in $L^p([0, 1])$.
+2. *Pointwise Behavior:* For *every* point $x \in [0, 1]$, $x$ is covered by infinitely many intervals, and missed by infinitely many intervals.
+   Therefore, the sequence of numbers $f_k(x)$ oscillates endlessly: $1, 0, 1, 0, 1, 0 \dots$!
+   The limit $\lim_{k \to \infty} f_k(x)$ *does not exist at any point in $[0, 1]$*!
+   (Yet, the subsequence $f_{2^m} = \chi_{[0, 2^{-m}]}$ converges pointwise to $0$ everywhere on $]0, 1]$, illustrating Corollary 10.8).
+
+---
+
+* Worked Exercises
+
+** Exercise 10.1 (Inclusion of $L^p$ Spaces on Finite Measure Spaces)
+Assume $(X, \mathcal{M}, \mu)$ has finite measure: $\mu(X) < \infty$.
+Let $1 \le p < q \le \infty$.
+Prove that $L^q(X) \subset L^p(X)$, and that for all $f \in L^q(X)$:
+\[
+\|f\|_p \le \|f\|_q \, \mu(X)^{\frac{1}{p} - \frac{1}{q}}.
+\]
+
+*Solution:*
+1. Case $q = \infty$: If $f \in L^\infty(X)$, then $|f(x)| \le \|f\|_\infty$ a.e.
+   \[
+   \int_X |f|^p \, d\mu \le \int_X \|f\|_\infty^p \, d\mu = \|f\|_\infty^p \mu(X) < \infty.
+   \]
+   Taking $p$-th roots: $\|f\|_p \le \|f\|_\infty \mu(X)^{1/p}$.
+2. Case $1 \le p < q < \infty$:
+   We want to apply Hölder's Inequality to $\int_X |f|^p \cdot 1 \, d\mu$.
+   Choose the exponent $r = q/p > 1$. Its Hölder conjugate is $s = \frac{r}{r - 1} = \frac{q/p}{q/p - 1} = \frac{q}{q - p}$.
+   By Hölder's Inequality (Theorem 10.5):
+   \[
+   \int_X |f|^p \cdot 1 \, d\mu \le \left( \int_X (|f|^p)^r \, d\mu \right)^{1/r} \left( \int_X 1^s \, d\mu \right)^{1/s} = \left( \int_X |f|^q \, d\mu \right)^{p/q} \bigl( \mu(X) \bigr)^{(q - p)/q}.
+   \]
+3. Taking the $p$-th root of both sides:
+   \[
+   \|f\|_p = \left( \int_X |f|^p \, d\mu \right)^{1/p} \le \left( \int_X |f|^q \, d\mu \right)^{1/q} \bigl( \mu(X) \bigr)^{\frac{q - p}{p q}} = \|f\|_q \, \mu(X)^{\frac{1}{p} - \frac{1}{q}}.
+   \]
+4. Since $\mu(X) < \infty$, the factor $\mu(X)^{\frac{1}{p} - \frac{1}{q}}$ is finite.
+   Therefore, $\|f\|_q < \infty \implies \|f\|_p < \infty$.
+   Thus $L^q(X) \subset L^p(X)$.
+
+** Exercise 10.2 (Counterexample to Inclusion on Infinite Measure Spaces)
+Show that on $(\mathbb{R}, \mathcal{M}, m)$ (where $m(\mathbb{R}) = \infty$), neither $L^1(\mathbb{R}) \subset L^2(\mathbb{R})$ nor $L^2(\mathbb{R}) \subset L^1(\mathbb{R})$ holds!
+
+*Solution:*
+1. *In $L^1$ but NOT in $L^2$:*
+   Consider $f(x) = \frac{1}{\sqrt{x}} \chi_{]0, 1[}(x)$.
+   - $\int_{\mathbb{R}} |f| \, dx = \int_0^1 x^{-1/2} \, dx = [2 x^{1/2}]_0^1 = 2 < \infty \implies f \in L^1(\mathbb{R})$.
+   - $\int_{\mathbb{R}} |f|^2 \, dx = \int_0^1 \frac{1}{x} \, dx = [\ln x]_0^1 = \infty \implies f \notin L^2(\mathbb{R})$.
+   Thus $L^1(\mathbb{R}) \not\subset L^2(\mathbb{R})$.
+2. *In $L^2$ but NOT in $L^1$:*
+   Consider $g(x) = \frac{1}{x} \chi_{[1, \infty[}(x)$.
+   - $\int_{\mathbb{R}} |g| \, dx = \int_1^\infty \frac{1}{x} \, dx = [\ln x]_1^\infty = \infty \implies g \notin L^1(\mathbb{R})$.
+   - $\int_{\mathbb{R}} |g|^2 \, dx = \int_1^\infty \frac{1}{x^2} \, dx = \left[ -\frac{1}{x} \right]_1^\infty = 1 < \infty \implies g \in L^2(\mathbb{R})$.
+   Thus $L^2(\mathbb{R}) \not\subset L^1(\mathbb{R})$.
+On spaces of infinite measure, $L^p$ spaces cross each other without containment!
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: $L^p$ Spaces and Inequalities Reference
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Inequality / Theorem | Exact Formula | Exponents / Conditions |
+|----------------------+---------------+------------------------|
+| *Conjugate Exponents* | $1/p + 1/q = 1$ | $1 \le p, q \le \infty$ |
+| *Young's Inequality* | $a b \le \frac{a^p}{p} + \frac{b^q}{q}$ | $a, b \ge 0, \, 1 < p < \infty$ |
+| *Hölder's Inequality* | $\lVert f g\rVert_1 \le \lVert f\rVert_p \lVert g\rVert_q$ | Cauchy--Schwarz when $p = q = 2$ |
+| *Minkowski's Inequality* | $\lVert f + g\rVert_p \le \lVert f\rVert_p + \lVert g\rVert_p$ | Triangle inequality for $L^p$ norm |
+| *Riesz--Fischer Theorem* | $L^p(E)$ is a Banach space | Every Cauchy sequence in $L^p$ converges in $L^p$ |
+| *Subsequence Property* | $f_k \xrightarrow{L^p} f \implies \exists f_{k_j} \to f$ a.e. | Pointwise a.e. convergence along a subsequence |
+| *Typewriter Sequence* | Converges in $L^p$, diverges pointwise everywhere | Warns that $L^p$ convergence $\not\implies$ pointwise convergence |
+| *Inclusions on $\mu(X) < \infty$* | $L^q(X) \subset L^p(X)$ for $1 \le p \le q \le \infty$ | Smaller $p$ spaces are larger when domain has finite measure |

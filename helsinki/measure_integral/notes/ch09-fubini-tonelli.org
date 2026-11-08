@@ -1,0 +1,296 @@
+:PROPERTIES:
+:ID:       1e75e998-ee9a-4d47-8a87-80bf1056d28a
+:ROAM_ALIASES: "MAST31051 Chapter 9" "Fubini and Tonelli Theorems Notes"
+:END:
+#+title: Chapter 9: Product Measures and Fubini--Tonelli Theorems
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:product-measure:fubini:tonelli:iterated-integrals:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch08-general-integral-and-convergence.org][← Chapter 8]] | [[file:ch10-lp-spaces-and-completeness.org][Chapter 10: $L^p$ Spaces & Completeness →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In multivariable calculus, we routinely evaluate double and triple integrals by converting them into iterated single integrals:
+\[
+\iint_{\mathbb{R}^2} f(x, y) \, dx \, dy \overset{?}{=} \int_{-\infty}^\infty \left( \int_{-\infty}^\infty f(x, y) \, dy \right) dx \overset{?}{=} \int_{-\infty}^\infty \left( \int_{-\infty}^\infty f(x, y) \, dx \right) dy.
+\]
+In elementary courses, this interchange of integration order is taken for granted. 
+However, in advanced analysis, swapping the order of integration can easily produce mathematical nonsense: one order might equal $+\pi/4$, while the reverse order equals $-\pi/4$!
+
+The goal of this chapter is to place multivariable integration on an unshakeable measure-theoretic foundation:
+1. *Product Measure:* How does Lebesgue measure on $\mathbb{R}^{n+k}$ relate to the product of Lebesgue measures on $\mathbb{R}^n$ and $\mathbb{R}^k$?
+2. *Tonelli's Theorem (for $f \ge 0$):* For *any* non-negative measurable function, the order of integration can *always* be interchanged without checking integrability. If the integral diverges, both iterated integrals equal $+\infty$.
+3. *Fubini's Theorem (for $f \in L^1$):* If $\int |f| < \infty$, the slice functions are integrable almost everywhere, and both iterated integrals agree with the double integral.
+4. *The Standard Analytical Workflow:* How mathematicians use Tonelli to prove integrability, and then Fubini to compute the value.
+
+** Roadmap
+- *9.1 Product Spaces and Sections:* Definitions of $x$-sections of sets and slice functions.
+- *9.2 Tonelli's Theorem:* Swapping integrals for non-negative functions ($f \ge 0$).
+- *9.3 Fubini's Theorem:* Swapping integrals for integrable functions ($f \in L^1$).
+- *9.4 The Two-Step Working Procedure:* Tonelli first, then Fubini.
+- *9.5 The Classic Counterexample:* When Tonelli warns that Fubini fails.
+- *Worked Exercises:* Calculation of the Gaussian integral $\int_{-\infty}^\infty e^{-x^2} dx = \sqrt{\pi}$ and area of circles.
+- *Summary Cheat-Sheet:* Quick-reference table comparing Tonelli and Fubini.
+
+---
+
+* Product Spaces and Sections
+
+Let $n, k \in \mathbb{N}$. We identify the Euclidean space $\mathbb{R}^{n+k}$ with the Cartesian product $\mathbb{R}^n \times \mathbb{R}^k$, so a point is written $z = (x, y)$ with $x \in \mathbb{R}^n$ and $y \in \mathbb{R}^k$.
+Let $m_n$, $m_k$, and $m_{n+k}$ denote Lebesgue measures on $\mathbb{R}^n$, $\mathbb{R}^k$, and $\mathbb{R}^{n+k}$, respectively.
+
+** Sections of Sets
+#+begin_quote
+*Definition 9.1 (Sections of Sets).* Let $E \subset \mathbb{R}^{n+k}$.
+- For any fixed $x \in \mathbb{R}^n$, the *$x$-section* of $E$ is
+  \[
+  E_x = \{y \in \mathbb{R}^k : (x, y) \in E\} \subset \mathbb{R}^k.
+  \]
+- For any fixed $y \in \mathbb{R}^k$, the *$y$-section* of $E$ is
+  \[
+  E^y = \{x \in \mathbb{R}^n : (x, y) \in E\} \subset \mathbb{R}^n.
+  \]
+#+end_quote
+
+#+begin_quote
+*Theorem 9.2.* If $E \in \mathcal{M}(\mathbb{R}^{n+k})$ is a measurable set, then:
+1. For almost every $x \in \mathbb{R}^n$, the section $E_x$ is a measurable set in $\mathbb{R}^k$ ($E_x \in \mathcal{M}(\mathbb{R}^k)$).
+2. The function $x \mapsto m_k(E_x)$ is a measurable function on $\mathbb{R}^n$.
+3. The measure of $E$ is obtained by integrating the cross-sectional measures (Cavalieri's Principle):
+   \[
+   m_{n+k}(E) = \int_{\mathbb{R}^n} m_k(E_x) \, dm_n(x) = \int_{\mathbb{R}^k} m_n(E^y) \, dm_k(y).
+   \]
+#+end_quote
+
+** Slice Functions
+#+begin_quote
+*Definition 9.3 (Slice Functions).* Let $f: \mathbb{R}^{n+k} \to \overline{\mathbb{R}}$.
+- For fixed $x \in \mathbb{R}^n$, the slice function $f_x: \mathbb{R}^k \to \overline{\mathbb{R}}$ is defined by $f_x(y) = f(x, y)$.
+- For fixed $y \in \mathbb{R}^k$, the slice function $f^y: \mathbb{R}^n \to \overline{\mathbb{R}}$ is defined by $f^y(x) = f(x, y)$.
+#+end_quote
+
+---
+
+* Tonelli's Theorem (Non-Negative Functions)
+
+Tonelli's Theorem (1909) is the engine of product integration. 
+Its miraculous feature is that **it requires no finiteness or integrability assumptions whatsoever**—only non-negativity and measurability!
+
+#+begin_quote
+*Theorem 9.4 (Tonelli's Theorem).* Let $f: \mathbb{R}^{n+k} \to [0, +\infty]$ be a non-negative Lebesgue measurable function.
+Then:
+1. For almost every $x \in \mathbb{R}^n$, the slice function $y \mapsto f(x, y)$ is measurable on $\mathbb{R}^k$.
+2. The function $x \mapsto \int_{\mathbb{R}^k} f(x, y) \, dm_k(y)$ is measurable on $\mathbb{R}^n$.
+3. The iterated integrals and the product integral are strictly equal:
+   \[
+   \int_{\mathbb{R}^{n+k}} f \, dm_{n+k} = \int_{\mathbb{R}^n} \left( \int_{\mathbb{R}^k} f(x, y) \, dm_k(y) \right) dm_n(x) = \int_{\mathbb{R}^k} \left( \int_{\mathbb{R}^n} f(x, y) \, dm_n(x) \right) dm_k(y).
+   \]
+(If any of the three integrals is infinite, all three are $+\infty$).
+#+end_quote
+
+#+begin_proof
+*Proof Architecture:*
+1. *Indicator functions of measurable rectangles:* Let $f = \chi_{A \times B}$, where $A \in \mathcal{M}(\mathbb{R}^n)$ and $B \in \mathcal{M}(\mathbb{R}^k)$.
+   Then $f(x, y) = \chi_A(x) \chi_B(y)$.
+   The inner integral is $\int_{\mathbb{R}^k} \chi_A(x) \chi_B(y) \, dy = \chi_A(x) m_k(B)$.
+   The outer integral is $\int_{\mathbb{R}^n} \chi_A(x) m_k(B) \, dx = m_n(A) m_k(B) = m_{n+k}(A \times B)$.
+   The equality holds identically for rectangles.
+2. *Simple functions:* By linearity of non-negative integrals (Theorem 7.7), Tonelli holds for all non-negative simple functions $s = \sum c_i \chi_{E_i}$.
+3. *General non-negative measurable functions:* By the Simple Function Approximation Theorem (Theorem 6.10), choose simple functions $0 \le s_1 \le s_2 \le \dots \nearrow f$.
+   Apply Tonelli to each $s_j$.
+   By the Monotone Convergence Theorem (Theorem 7.6), we pass the limit $j \to \infty$ through both the inner and outer integrals.
+   The equality carries over to $f$.
+#+end_proof
+
+---
+
+* Fubini's Theorem (Integrable Functions)
+
+When a function $f$ takes both positive and negative values, we cannot apply Tonelli directly. 
+Instead, Guido Fubini (1907) proved that if the function is *integrable* ($\int |f| < \infty$), the order of integration can be reversed.
+
+#+begin_quote
+*Theorem 9.5 (Fubini's Theorem).* Let $f: \mathbb{R}^{n+k} \to \overline{\mathbb{R}}$ be Lebesgue integrable:
+\[
+\int_{\mathbb{R}^{n+k}} |f| \, dm_{n+k} < \infty \quad (f \in L^1(\mathbb{R}^{n+k})).
+\]
+Then:
+1. For almost every $x \in \mathbb{R}^n$, the slice function $y \mapsto f(x, y)$ is Lebesgue integrable on $\mathbb{R}^k$:
+   \[
+   f_x \in L^1(\mathbb{R}^k) \quad \text{for a.e. } x \in \mathbb{R}^n.
+   \]
+2. The function defined almost everywhere on $\mathbb{R}^n$ by
+   \[
+   F(x) = \int_{\mathbb{R}^k} f(x, y) \, dm_k(y)
+   \]
+   is Lebesgue integrable on $\mathbb{R}^n$ ($F \in L^1(\mathbb{R}^n)$).
+3. The iterated integrals equal the product integral:
+   \[
+   \int_{\mathbb{R}^{n+k}} f \, dm_{n+k} = \int_{\mathbb{R}^n} \left( \int_{\mathbb{R}^k} f(x, y) \, dm_k(y) \right) dm_n(x) = \int_{\mathbb{R}^k} \left( \int_{\mathbb{R}^n} f(x, y) \, dm_n(x) \right) dm_k(y).
+   \]
+#+end_quote
+
+#+begin_proof
+1. Decompose $f = f^+ - f^-$ into its positive and negative parts.
+2. Since $f \in L^1(\mathbb{R}^{n+k})$, both $\int f^+ < \infty$ and $\int f^- < \infty$.
+3. Since $f^+ \ge 0$ and $f^- \ge 0$, Tonelli's Theorem (Theorem 9.4) applies to each part separately:
+   \[
+   \int f^+ = \int \left( \int f^+(x, y) \, dy \right) dx < \infty, \qquad \int f^- = \int \left( \int f^-(x, y) \, dy \right) dx < \infty.
+   \]
+4. Because the outer integrals are finite, their integrands must be finite almost everywhere:
+   $\int f^+(x, y) \, dy < \infty$ and $\int f^-(x, y) \, dy < \infty$ for almost every $x \in \mathbb{R}^n$.
+   This means $y \mapsto f(x, y)$ is integrable on $\mathbb{R}^k$ for almost every $x$.
+5. By linearity of the integral (Theorem 8.3):
+   \[
+   \int_{\mathbb{R}^k} f(x, y) \, dy = \int_{\mathbb{R}^k} f^+(x, y) \, dy - \int_{\mathbb{R}^k} f^-(x, y) \, dy.
+   \]
+6. Integrating over $x \in \mathbb{R}^n$ and using linearity again completes the proof.
+#+end_proof
+
+---
+
+* The Standard Two-Step Working Procedure
+
+> [!TIP]
+> In mathematical practice, whenever you encounter an iterated integral, you should follow this exact two-step recipe:
+> 1. *Step 1 (Test integrability using Tonelli):* Place absolute values inside the integrand and evaluate the iterated integral:
+>    \[
+>    I_{\text{abs}} = \int \left( \int |f(x, y)| \, dy \right) dx.
+>    \]
+>    Because $|f| \ge 0$, Tonelli guarantees you can compute this in whichever order is easiest.
+> 2. *Step 2 (Evaluate using Fubini):*
+>    - If $I_{\text{abs}} < \infty$, then $f \in L^1$! You are legally licensed by Fubini's Theorem to swap the order of integration and evaluate the original integral $\iint f$.
+>    - If $I_{\text{abs}} = \infty$, Fubini does *not* apply, and swapping the order of integration may produce incorrect results!
+
+---
+
+* The Classic Counterexample: When Fubini Fails
+
+Consider the function defined on the unit square $[0, 1] \times [0, 1]$:
+\[
+f(x, y) = \frac{x^2 - y^2}{(x^2 + y^2)^2} \quad \text{for } (x, y) \neq (0, 0), \quad f(0, 0) = 0.
+\]
+
+** Calculation 1: Integrate with respect to $y$ first
+Notice that $\frac{\partial}{\partial y} \left( \frac{y}{x^2 + y^2} \right) = \frac{(x^2 + y^2) - y(2y)}{(x^2 + y^2)^2} = \frac{x^2 - y^2}{(x^2 + y^2)^2} = f(x, y)$.
+Therefore, for any fixed $x \in ]0, 1]$:
+\[
+\int_0^1 f(x, y) \, dy = \left[ \frac{y}{x^2 + y^2} \right]_{y=0}^{y=1} = \frac{1}{x^2 + 1} - 0 = \frac{1}{1 + x^2}.
+\]
+Now integrate with respect to $x$:
+\[
+\int_0^1 \left( \int_0^1 f(x, y) \, dy \right) dx = \int_0^1 \frac{1}{1 + x^2} \, dx = [\arctan(x)]_0^1 = \frac{\pi}{4}.
+\]
+
+** Calculation 2: Integrate with respect to $x$ first
+Because $f(x, y) = -f(y, x)$, by exact symmetry:
+\[
+\int_0^1 f(x, y) \, dx = -\frac{1}{1 + y^2}.
+\]
+Integrating with respect to $y$:
+\[
+\int_0^1 \left( \int_0^1 f(x, y) \, dx \right) dy = \int_0^1 -\frac{1}{1 + y^2} \, dy = -\frac{\pi}{4}.
+\]
+
+** The Discrepancy
+\[
+\int_0^1 \left( \int_0^1 f(x, y) \, dy \right) dx = \frac{\pi}{4} \;\neq\; -\frac{\pi}{4} = \int_0^1 \left( \int_0^1 f(x, y) \, dx \right) dy!
+\]
+*Why did Fubini fail?*
+Let's check Tonelli's integrability condition:
+Convert to polar coordinates: $|f(r, \theta)| = \frac{|r^2 \cos^2\theta - r^2 \sin^2\theta|}{r^4} = \frac{|\cos(2\theta)|}{r^2}$.
+Then:
+\[
+\iint_{[0, 1]^2} |f(x, y)| \, dx \, dy \ge \int_0^{\pi/2} |\cos(2\theta)| \, d\theta \int_0^1 \frac{1}{r^2} \, r \, dr = \text{const} \times \int_0^1 \frac{1}{r} \, dr = \infty.
+\]
+Because $\int |f| = \infty$, $f$ is *not integrable*: $f \notin L^1([0, 1]^2)$. 
+Fubini's hypothesis was violated!
+
+---
+
+* Worked Exercises
+
+** Exercise 9.1 (The Gaussian Integral via Fubini--Tonelli)
+Compute the famous Gaussian integral:
+\[
+I = \int_{-\infty}^\infty e^{-x^2} \, dx.
+\]
+
+*Solution:*
+1. Consider the function $f: \mathbb{R}^2 \to \mathbb{R}$ given by $f(x, y) = e^{-(x^2 + y^2)} = e^{-x^2} e^{-y^2}$.
+2. Notice that $f(x, y) \ge 0$ for all $(x, y) \in \mathbb{R}^2$.
+   By *Tonelli's Theorem* (Theorem 9.4), we can compute the product integral as an iterated integral:
+   \[
+   \iint_{\mathbb{R}^2} e^{-(x^2 + y^2)} \, dm_2 = \int_{-\infty}^\infty e^{-x^2} \left( \int_{-\infty}^\infty e^{-y^2} \, dy \right) dx = \left( \int_{-\infty}^\infty e^{-x^2} \, dx \right) \left( \int_{-\infty}^\infty e^{-y^2} \, dy \right) = I^2.
+   \]
+3. On the other hand, compute the double integral using polar coordinates $x = r \cos\theta$, $y = r \sin\theta$ ($dx \, dy = r \, dr \, d\theta$):
+   Since the integrand is non-negative, Tonelli allows switching to polar slices:
+   \[
+   \iint_{\mathbb{R}^2} e^{-(x^2 + y^2)} \, dm_2 = \int_0^{2\pi} d\theta \int_0^\infty e^{-r^2} r \, dr.
+   \]
+4. Evaluate the single integrals:
+   \[
+   \int_0^{2\pi} d\theta = 2\pi, \qquad \int_0^\infty e^{-r^2} r \, dr = \left[ -\frac{1}{2} e^{-r^2} \right]_0^\infty = 0 - \left(-\frac{1}{2}\right) = \frac{1}{2}.
+   \]
+5. Multiplying:
+   \[
+   I^2 = 2\pi \cdot \frac{1}{2} = \pi \implies I = \sqrt{\pi}.
+   \]
+Thus $\int_{-\infty}^\infty e^{-x^2} \, dx = \sqrt{\pi}$.
+
+** Exercise 9.2 (Volume under Graph / Hypograph)
+Let $E \in \mathcal{M}(\mathbb{R}^n)$ and let $f: E \to [0, +\infty]$ be measurable. 
+The *subgraph* (or hypograph) of $f$ is
+\[
+\mathcal{U}(f) = \{(x, y) \in \mathbb{R}^n \times \mathbb{R} : x \in E, \, 0 \le y \le f(x)\}.
+\]
+Prove that $\mathcal{U}(f)$ is a measurable set in $\mathbb{R}^{n+1}$ and that its measure equals the integral of $f$:
+\[
+m_{n+1}(\mathcal{U}(f)) = \int_E f \, dm_n.
+\]
+
+*Solution:*
+1. Consider the indicator function $\chi_{\mathcal{U}(f)}(x, y)$ on $\mathbb{R}^n \times \mathbb{R}$.
+2. Notice that $\chi_{\mathcal{U}(f)}(x, y) \ge 0$.
+3. By Tonelli's Theorem (Theorem 9.4), we integrate with respect to $y \in \mathbb{R}$ first:
+   For a fixed $x \in E$, the $x$-section of the hypograph is the 1-dimensional interval:
+   \[
+   (\mathcal{U}(f))_x = \{y \in \mathbb{R} : 0 \le y \le f(x)\} = [0, f(x)].
+   \]
+4. The 1-dimensional measure of this interval is:
+   \[
+   m_1\bigl((\mathcal{U}(f))_x\bigr) = f(x) - 0 = f(x).
+   \]
+5. Integrating over $x \in E$ using Cavalieri's principle (Theorem 9.2):
+   \[
+   m_{n+1}(\mathcal{U}(f)) = \int_E m_1\bigl((\mathcal{U}(f))_x\bigr) \, dm_n(x) = \int_E f(x) \, dm_n(x).
+   \]
+This proves that the abstract Lebesgue integral is geometrically identical to the $(n+1)$-dimensional volume beneath the graph!
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Fubini and Tonelli Comparison
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
+| Feature | Tonelli's Theorem | Fubini's Theorem |
+|---------+-------------------+-------------------|
+| *Integrand Sign* | Requires $f(x, y) \ge 0$ | $f(x, y)$ can have any sign |
+| *Integrability Check* | *Not required!* Works even if $\int f = \infty$ | *Required!* Must check $\int \lvert f\rvert < \infty$ first |
+| *Conclusion* | $\int f = \int (\int f \, dy) dx = \int (\int f \, dx) dy$ | Same, plus slice functions are in $L^1$ a.e. |
+| *Primary Role* | Step 1: Establish finiteness of $\int \lvert f\rvert$ | Step 2: Swap integration order to calculate |
+| *Counterexample* | $\frac{x^2 - y^2}{(x^2 + y^2)^2}$ on $[0, 1]^2$ | Shows order swap fails when $\int \lvert f\rvert = \infty$ |
+| *Sections of Sets* | $m_{n+k}(E) = \int m_k(E_x) \, dx$ | Cavalieri's principle for arbitrary measurable sets |

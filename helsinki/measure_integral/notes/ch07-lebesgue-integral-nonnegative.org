@@ -1,0 +1,434 @@
+:PROPERTIES:
+:ID:       4716bdae-7695-4164-a1cd-4ead45c6bfc1
+:ROAM_ALIASES: "MAST31051 Chapter 7" "Lebesgue Integral Nonnegative Functions Notes"
+:END:
+#+title: Chapter 7: The Lebesgue Integral of Non-Negative Functions
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:lebesgue-integral:mct:fatou:nonnegative:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch06-sequences-and-simple-functions.org][← Chapter 6]] | [[file:ch08-general-integral-and-convergence.org][Chapter 8: General Integral & DCT →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In Chapter 6, we discovered that any non-negative measurable function $f: E \to [0, +\infty]$ can be approximated from below by an increasing sequence of simple step functions:
+\[
+0 \le s_1 \le s_2 \le s_3 \le \dots \nearrow f.
+\]
+This makes defining the integral straightforward and beautiful:
+1. *First step:* Define the integral for a non-negative simple function $s = \sum_{i=1}^k a_i \chi_{A_i}$. Since $s$ takes the constant value $a_i$ on the set $A_i$, its integral is simply the elementary geometric sum:
+   \[
+   \int_E s \, dm = \sum_{i=1}^k a_i \, m(A_i \cap E).
+   \]
+2. *Second step:* Define the integral of *any* non-negative measurable function $f \ge 0$ as the supremum of the integrals of all simple functions lying underneath $f$:
+   \[
+   \int_E f \, dm = \sup \left\{ \int_E s \, dm : 0 \le s \le f, \, s \text{ is simple and measurable} \right\}.
+   \]
+
+With this definition, the fundamental limit theorems of calculus, which were fragile or false under the Riemann integral, become astonishingly robust:
+- *The Monotone Convergence Theorem (MCT / Beppo Levi):* If $0 \le f_1 \le f_2 \le \dots \nearrow f$, then $\lim_{j \to \infty} \int f_j = \int f$. Limits and integrals can *always* be interchanged for monotone sequences!
+- *Additivity:* $\int (f + g) = \int f + \int g$ for all non-negative measurable functions.
+- *Fatou's Lemma:* For *any* sequence of non-negative functions, $\int \liminf f_j \le \liminf \int f_j$.
+
+** Roadmap
+- *7.1 The Integral of Simple Functions:* Definition, independence of representation, linearity, and monotonicity.
+- *7.2 The Lebesgue Integral of Non-Negative Functions:* Definition via supremum, elementary properties.
+- *7.3 The Monotone Convergence Theorem (MCT):* Complete proof and consequences.
+- *7.4 Additivity and Series of Functions:* Proving $\int (f + g) = \int f + \int g$ and term-by-term integration.
+- *7.5 Fatou's Lemma:* Statement, proof, and the classic counterexamples to strict equality (escaping mass and shrinking spikes).
+- *Worked Exercises:* Solutions to exam-level problems and integral calculations.
+- *Summary Cheat-Sheet:* Quick-reference table of non-negative integration theorems.
+
+---
+
+* The Integral of Simple Functions
+
+Let $(X, \mathcal{M}, \mu)$ be a measure space (or $(\mathbb{R}^n, \mathcal{M}(\mathbb{R}^n), m)$). Let $E \in \mathcal{M}$.
+
+** Definition
+#+begin_quote
+*Definition 7.1 (Integral of a Simple Function).* Let $s: E \to [0, +\infty[$ be a non-negative simple measurable function with standard representation
+\[
+s(x) = \sum_{i=1}^k a_i \chi_{A_i}(x),
+\]
+where $a_i \ge 0$, the $a_i$ are distinct, and $A_i = s^{-1}(\{a_i\}) \in \mathcal{M}$ are pairwise disjoint.
+The *integral* of $s$ over $E$ with respect to $\mu$ is defined by:
+\[
+I(s, E) = \int_E s \, d\mu = \sum_{i=1}^k a_i \, \mu(A_i \cap E) \in [0, +\infty].
+\]
+(We adhere to the convention $0 \cdot \infty = 0$: if $a_i = 0$ and $\mu(A_i \cap E) = \infty$, the product $a_i \mu(A_i \cap E) = 0$).
+#+end_quote
+
+** Independence of Representation
+
+A simple function can be written as a linear combination of indicator functions in many different ways: $s = \sum_{j=1}^m b_j \chi_{B_j}$, where the $B_j$ might overlap or the $b_j$ might not be distinct. 
+Before proceeding, we must prove that the integral does not depend on the choice of representation!
+
+#+begin_quote
+*Lemma 7.2 (Well-Definedness).* If $s = \sum_{j=1}^m b_j \chi_{B_j}$ is any representation of $s$ with $b_j \ge 0$ and $B_j \in \mathcal{M}$, then
+\[
+\sum_{j=1}^m b_j \, \mu(B_j \cap E) = \int_E s \, d\mu.
+\]
+#+end_quote
+
+#+begin_proof
+Let $s = \sum_{i=1}^k a_i \chi_{A_i}$ be the standard representation (where $A_i$ are disjoint and partition $E$).
+Notice that for each $x \in A_i$, $s(x) = a_i = \sum_{j : x \in B_j} b_j$.
+Decompose each set $B_j \cap E = \bigcup_{i=1}^k (B_j \cap A_i)$. By additivity of $\mu$:
+\[
+\mu(B_j \cap E) = \sum_{i=1}^k \mu(B_j \cap A_i).
+\]
+Multiply by $b_j$ and sum over $j$:
+\[
+\sum_{j=1}^m b_j \mu(B_j \cap E) = \sum_{j=1}^m \sum_{i=1}^k b_j \mu(B_j \cap A_i) = \sum_{i=1}^k \sum_{j=1}^m b_j \mu(B_j \cap A_i).
+\]
+For fixed $i$, on the set $A_i \cap B_j$, the sum $\sum_{j=1}^m b_j \chi_{B_j}(x) = a_i$. Thus:
+\[
+\sum_{j=1}^m b_j \mu(B_j \cap A_i) = a_i \mu(A_i \cap E).
+\]
+Summing over $i$ yields $\sum_{i=1}^k a_i \mu(A_i \cap E) = \int_E s \, d\mu$.
+#+end_proof
+
+#+begin_quote
+*Theorem 7.3 (Properties of Simple Integrals).* Let $s, t: E \to [0, +\infty[$ be simple measurable functions, and $c \ge 0$.
+1. *Linearity:* $\int_E (c s + t) \, d\mu = c \int_E s \, d\mu + \int_E t \, d\mu$.
+2. *Monotonicity:* If $s(x) \le t(x)$ for all $x \in E$, then $\int_E s \, d\mu \le \int_E t \, d\mu$.
+3. *Measure Property:* The set function $\nu(A) = \int_A s \, d\mu$ defined for $A \in \mathcal{M}$ is a measure on $(X, \mathcal{M})$.
+#+end_quote
+
+---
+
+* The Lebesgue Integral of Non-Negative Functions
+
+** Definition via Supremum
+#+begin_quote
+*Definition 7.4 (Lebesgue Integral for $f \ge 0$).* Let $A \in \mathcal{M}$ and let $f: A \to [0, +\infty]$ be a non-negative measurable function. 
+The *Lebesgue integral* of $f$ over $A$ is defined by:
+\[
+\int_A f \, d\mu = \sup \left\{ \int_A s \, d\mu : s \text{ is simple, measurable, and } 0 \le s(x) \le f(x) \text{ for all } x \in A \right\}.
+\]
+If $E \in \mathcal{M}$ is a measurable subset of $A$, we define $\int_E f \, d\mu = \int_A f \chi_E \, d\mu$.
+#+end_quote
+
+** Fundamental Properties
+
+#+begin_quote
+*Theorem 7.5.* Let $f, g: A \to [0, +\infty]$ be measurable, and $c \ge 0$.
+1. *Positivity:* $\int_A f \, d\mu \in [0, +\infty]$.
+2. *Monotonicity:* If $f(x) \le g(x)$ for all $x \in A$, then $\int_A f \, d\mu \le \int_A g \, d\mu$.
+3. *Scaling:* $\int_A c f \, d\mu = c \int_A f \, d\mu$.
+4. *Domain Monotonicity:* If $E_1 \subset E_2 \subset A$, then $\int_{E_1} f \, d\mu \le \int_{E_2} f \, d\mu$.
+5. *Null Domain:* If $\mu(E) = 0$, then $\int_E f \, d\mu = 0$ (even if $f(x) = +\infty$ on $E$!).
+6. *Null Function Characterization:* $\int_A f \, d\mu = 0 \iff f(x) = 0$ for $\mu$-almost every $x \in A$.
+#+end_quote
+
+#+begin_proof
+Properties (1)--(4) follow immediately from the definition of the supremum.
+5. If $\mu(E) = 0$, then for any simple $s = \sum a_i \chi_{A_i}$, $\int_E s = \sum a_i \mu(A_i \cap E) \le \sum a_i \mu(E) = \sum a_i \cdot 0 = 0$. Taking the supremum over $s \le f$ gives $\int_E f = 0$.
+6. $(\impliedby)$ If $f = 0$ a.e., then any simple $0 \le s \le f$ satisfies $s = 0$ a.e., so $\int_A s = 0$, giving $\int_A f = 0$.
+   $(\implies)$ Suppose $\int_A f = 0$. For each $k \in \mathbb{N}$, define $E_k = \{x \in A : f(x) \ge 1/k\}$.
+   Notice that $\frac{1}{k} \chi_{E_k}(x) \le f(x)$ on $A$. By monotonicity:
+   \[
+   \frac{1}{k} \mu(E_k) = \int_A \frac{1}{k} \chi_{E_k} \, d\mu \le \int_A f \, d\mu = 0.
+   \]
+   Thus $\mu(E_k) = 0$ for all $k \in \mathbb{N}$.
+   The set where $f(x) > 0$ is the countable union $\bigcup_{k=1}^\infty E_k$. By subadditivity:
+   \[
+   \mu(\{x \in A : f(x) > 0\}) = \mu\left( \bigcup_{k=1}^\infty E_k \right) \le \sum_{k=1}^\infty \mu(E_k) = 0.
+   \]
+   Thus $f = 0$ almost everywhere on $A$.
+#+end_proof
+
+---
+
+* The Monotone Convergence Theorem (MCT)
+
+The Monotone Convergence Theorem (also known as *Beppo Levi's Theorem*) is the centerpiece of integration theory.
+
+#+begin_quote
+*Theorem 7.6 (Monotone Convergence Theorem - MCT).* 
+Let $(X, \mathcal{M}, \mu)$ be a measure space and $E \in \mathcal{M}$. 
+Suppose $(f_j)_{j=1}^\infty$ is an increasing sequence of non-negative measurable functions:
+\[
+0 \le f_1(x) \le f_2(x) \le f_3(x) \le \dots \quad \text{for all } x \in E,
+\]
+and let $f(x) = \lim_{j \to \infty} f_j(x)$ be its pointwise limit. Then:
+\[
+\lim_{j \to \infty} \int_E f_j \, d\mu = \int_E f \, d\mu.
+\]
+In other words: $\lim_{j \to \infty} \int_E f_j \, d\mu = \int_E \left( \lim_{j \to \infty} f_j \right) \, d\mu$.
+#+end_quote
+
+#+begin_proof
+1. *Inequality ($\le$):*
+   For each $j \in \mathbb{N}$, $f_j(x) \le f(x)$ on $E$. By monotonicity:
+   \[
+   \int_E f_j \, d\mu \le \int_E f \, d\mu.
+   \]
+   Since the sequence of numbers $\int_E f_j$ is increasing, its limit exists in $[0, +\infty]$, and:
+   \[
+   \lim_{j \to \infty} \int_E f_j \, d\mu \le \int_E f \, d\mu.
+   \]
+2. *Reverse Inequality ($\ge$):*
+   Let $s$ be any simple measurable function satisfying $0 \le s(x) \le f(x)$ on $E$.
+   Fix a constant $c \in ]0, 1[$. 
+   For each $j \in \mathbb{N}$, define the set:
+   \[
+   E_j = \{x \in E : f_j(x) \ge c \, s(x)\}.
+   \]
+   - Since $f_j$ and $s$ are measurable, $E_j \in \mathcal{M}$.
+   - Because $f_j \le f_{j+1}$, the sets form an increasing chain: $E_1 \subset E_2 \subset E_3 \subset \dots$.
+   - We claim that $\bigcup_{j=1}^\infty E_j = E$:
+     Let $x \in E$. If $s(x) = 0$, then $c s(x) = 0 \le f_1(x)$, so $x \in E_1$.
+     If $s(x) > 0$, then $c s(x) < s(x) \le f(x)$. Since $f_j(x) \nearrow f(x)$, for sufficiently large $j$ we must have $f_j(x) \ge c s(x)$, so $x \in E_j$.
+     Thus $\bigcup_{j=1}^\infty E_j = E$.
+   - For every $j$:
+     \[
+     \int_E f_j \, d\mu \ge \int_{E_j} f_j \, d\mu \ge \int_{E_j} c s \, d\mu = c \int_{E_j} s \, d\mu.
+     \]
+   - By Theorem 7.3(3), $\nu(A) = \int_A s \, d\mu$ is a measure. By Theorem 4.6 (Continuity of Measure from Below applied to $E_j \nearrow E$):
+     \[
+     \lim_{j \to \infty} \int_{E_j} s \, d\mu = \int_E s \, d\mu.
+     \]
+   - Taking the limit as $j \to \infty$:
+     \[
+     \lim_{j \to \infty} \int_E f_j \, d\mu \ge c \int_E s \, d\mu.
+     \]
+   - This holds for *every* $c \in ]0, 1[$. Letting $c \to 1^-$:
+     \[
+     \lim_{j \to \infty} \int_E f_j \, d\mu \ge \int_E s \, d\mu.
+     \]
+   - Since this holds for *every* simple function $0 \le s \le f$, taking the supremum over all such $s$:
+     \[
+     \lim_{j \to \infty} \int_E f_j \, d\mu \ge \int_E f \, d\mu.
+     \]
+Combining both inequalities gives $\lim_{j \to \infty} \int_E f_j \, d\mu = \int_E f \, d\mu$.
+#+end_proof
+
+---
+
+* Additivity and Integration of Series
+
+Now we harvest the fruits of the Monotone Convergence Theorem.
+
+#+begin_quote
+*Theorem 7.7 (Linearity of the Integral for $f, g \ge 0$).* 
+If $f, g: E \to [0, +\infty]$ are measurable, then
+\[
+\int_E (f + g) \, d\mu = \int_E f \, d\mu + \int_E g \, d\mu.
+\]
+#+end_quote
+
+#+begin_proof
+1. By the Simple Function Approximation Theorem (Theorem 6.10), there exist increasing sequences of non-negative simple functions:
+   \[
+   0 \le s_1 \le s_2 \le \dots \nearrow f \quad \text{and} \quad 0 \le t_1 \le t_2 \le \dots \nearrow g.
+   \]
+2. Then $(s_k + t_k)_{k=1}^\infty$ is an increasing sequence of simple functions, and:
+   \[
+   s_k(x) + t_k(x) \nearrow f(x) + g(x) \quad \text{for all } x \in E.
+   \]
+3. By Theorem 7.3(1), linearity holds for simple functions:
+   \[
+   \int_E (s_k + t_k) \, d\mu = \int_E s_k \, d\mu + \int_E t_k \, d\mu.
+   \]
+4. By the Monotone Convergence Theorem (Theorem 7.6), we take limits on both sides:
+   \[
+   \lim_{k \to \infty} \int_E (s_k + t_k) \, d\mu = \int_E (f + g) \, d\mu,
+   \]
+   and
+   \[
+   \lim_{k \to \infty} \left( \int_E s_k \, d\mu + \int_E t_k \, d\mu \right) = \int_E f \, d\mu + \int_E g \, d\mu.
+   \]
+Therefore, $\int_E (f + g) \, d\mu = \int_E f \, d\mu + \int_E g \, d\mu$.
+#+end_proof
+
+#+begin_quote
+*Corollary 7.8 (Term-by-Term Integration of Non-Negative Series).* 
+If $(u_k)_{k=1}^\infty$ is a sequence of non-negative measurable functions on $E$, then
+\[
+\int_E \left( \sum_{k=1}^\infty u_k \right) d\mu = \sum_{k=1}^\infty \int_E u_k \, d\mu.
+\]
+#+end_quote
+
+#+begin_proof
+Define the partial sums $f_N = \sum_{k=1}^N u_k$.
+By finite linearity (Theorem 7.7), $\int_E f_N = \sum_{k=1}^N \int_E u_k$.
+Since $u_k \ge 0$, the sequence $(f_N)_{N=1}^\infty$ is monotonically increasing: $f_N \nearrow \sum_{k=1}^\infty u_k$.
+By the Monotone Convergence Theorem, $\lim_{N \to \infty} \int_E f_N = \int_E (\lim f_N)$, which gives the identity.
+#+end_proof
+
+---
+
+* Fatou's Lemma and Counterexamples to Strict Equality
+
+What happens if the sequence $(f_j)_{j=1}^\infty$ is *not* increasing? 
+Can we still say anything about the limit of the integrals?
+
+#+begin_quote
+*Theorem 7.9 (Fatou's Lemma).* Let $(X, \mathcal{M}, \mu)$ be a measure space and $E \in \mathcal{M}$. 
+If $(f_j)_{j=1}^\infty$ is *any* sequence of non-negative measurable functions $f_j: E \to [0, +\infty]$, then
+\[
+\int_E \left( \liminf_{j \to \infty} f_j \right) d\mu \le \liminf_{j \to \infty} \int_E f_j \, d\mu.
+\]
+#+end_quote
+
+#+begin_proof
+1. For each $k \in \mathbb{N}$, define the tail infimum:
+   \[
+   g_k(x) = \inf_{j \ge k} f_j(x).
+   \]
+2. By Theorem 6.1, each $g_k$ is measurable. 
+3. Because the infimum is taken over smaller sets of indices as $k$ increases:
+   \[
+   0 \le g_1(x) \le g_2(x) \le g_3(x) \le \dots \nearrow \liminf_{j \to \infty} f_j(x).
+   \]
+4. Apply the Monotone Convergence Theorem (Theorem 7.6) to the sequence $(g_k)_{k=1}^\infty$:
+   \[
+   \lim_{k \to \infty} \int_E g_k \, d\mu = \int_E \left( \lim_{k \to \infty} g_k \right) d\mu = \int_E \left( \liminf_{j \to \infty} f_j \right) d\mu.
+   \]
+5. On the other hand, for each $j \ge k$, $g_k(x) \le f_j(x)$ for all $x \in E$. By monotonicity:
+   \[
+   \int_E g_k \, d\mu \le \int_E f_j \, d\mu \quad \text{for all } j \ge k.
+   \]
+6. Taking the infimum over all $j \ge k$ on the right-hand side:
+   \[
+   \int_E g_k \, d\mu \le \inf_{j \ge k} \int_E f_j \, d\mu.
+   \]
+7. Taking the limit as $k \to \infty$ on both sides:
+   \[
+   \int_E \left( \liminf_{j \to \infty} f_j \right) d\mu = \lim_{k \to \infty} \int_E g_k \, d\mu \le \lim_{k \to \infty} \left( \inf_{j \ge k} \int_E f_j \, d\mu \right) = \liminf_{j \to \infty} \int_E f_j \, d\mu.
+   \]
+#+end_proof
+
+** Classic Counterexamples: Where Mass Escapes
+
+> [!WARNING]
+> In Fatou's Lemma, strict inequality $\int \liminf f_j < \liminf \int f_j$ often occurs!
+> There are two classic mechanisms causing mass to escape:
+
+*Counterexample 1: Mass Escaping to Spatial Infinity (Moving Bump)*
+Consider $(\mathbb{R}, \mathcal{M}, m)$ and the sequence of indicator functions:
+\[
+f_j(x) = \chi_{[j, j+1]}(x).
+\]
+- For any fixed point $x \in \mathbb{R}$, once $j > x$, $x \notin [j, j+1]$, so $f_j(x) = 0$.
+  Thus the pointwise limit is $f(x) = \lim_{j \to \infty} f_j(x) = 0$.
+- The integral of the limit is:
+  \[
+  \int_{\mathbb{R}} \lim_{j \to \infty} f_j \, dm = \int_{\mathbb{R}} 0 \, dm = 0.
+  \]
+- However, for every $j \in \mathbb{N}$, the integral of $f_j$ is:
+  \[
+  \int_{\mathbb{R}} f_j \, dm = m([j, j+1]) = 1.
+  \]
+- Thus:
+  \[
+  0 = \int_{\mathbb{R}} \liminf_{j \to \infty} f_j \, dm < \liminf_{j \to \infty} \int_{\mathbb{R}} f_j \, dm = 1.
+  \]
+The mass of $1$ escaped to $+\infty$!
+
+*Counterexample 2: Mass Crushed into a Singularity (Shrinking Spike)*
+Consider the interval $[0, 1]$ and the sequence of tall, narrowing rectangles:
+\[
+f_j(x) = j \, \chi_{]0, 1/j[}(x).
+\]
+- For $x = 0$: $f_j(0) = 0$ for all $j$.
+- For any $x \in ]0, 1]$: choose $j > 1/x$. Then $1/j < x$, so $f_j(x) = 0$.
+- Thus $f_j(x) \to 0$ for *all* $x \in [0, 1]$. The pointwise limit is identically $0$.
+- The integral of the limit is $\int_0^1 0 \, dm = 0$.
+- However, for every $j \in \mathbb{N}$:
+  \[
+  \int_0^1 f_j \, dm = j \cdot m(]0, 1/j[) = j \cdot \frac{1}{j} = 1.
+  \]
+- Once again:
+  \[
+  0 = \int_0^1 \liminf f_j \, dm < \liminf \int_0^1 f_j \, dm = 1.
+  \]
+Here, the mass of $1$ did not escape to spatial infinity; it was concentrated into a spike of infinite height at $x = 0$!
+
+---
+
+* Worked Exercises
+
+** Exercise 7.1 (Fall 2026 Exam Problem 5: Continuity of Cumulative Integral)
+Assume that $f: \mathbb{R} \to [0, +\infty]$ is a non-negative measurable function such that $\int_{\mathbb{R}} f \, dm < \infty$.
+For each $a \in \mathbb{R}$, let $E(a) = ]-\infty, a] \subset \mathbb{R}$. 
+Define the function $F: \mathbb{R} \to [0, +\infty[$ by:
+\[
+F(a) = \int_{E(a)} f \, dm = \int_{-\infty}^a f(x) \, dx.
+\]
+Prove that $F$ is a *continuous function* on $\mathbb{R}$.
+
+*Solution:*
+Let $a \in \mathbb{R}$. We show that $F$ is both right-continuous and left-continuous at $a$.
+1. *Right-continuity ($\lim_{n \to \infty} F(a + 1/n) = F(a)$):*
+   Let $a_n \searrow a$ as $n \to \infty$ (e.g. $a_n = a + 1/n$).
+   The sets $E(a_n) = ]-\infty, a_n]$ form a decreasing sequence: $E(a_1) \supset E(a_2) \supset \dots$.
+   Their intersection is:
+   \[
+   \bigcap_{n=1}^\infty E(a_n) = ]-\infty, a] = E(a).
+   \]
+   Notice that $f \chi_{E(a_n)} \to f \chi_{E(a)}$ pointwise as $n \to \infty$.
+   Also, $0 \le f \chi_{E(a_n)} \le f$, and by assumption $\int_{\mathbb{R}} f \, dm < \infty$.
+   Consider the difference functions $g_n = f \chi_{E(a_1)} - f \chi_{E(a_n)} = f \chi_{]a_n, a_1]}$.
+   The sequence $(g_n)_{n=1}^\infty$ is non-negative and monotonically increasing: $g_n \nearrow f \chi_{]a, a_1]}$.
+   By the Monotone Convergence Theorem (Theorem 7.6):
+   \[
+   \lim_{n \to \infty} \int_{\mathbb{R}} g_n \, dm = \int_{\mathbb{R}} f \chi_{]a, a_1]} \, dm = \int_{E(a_1)} f - \int_{E(a)} f.
+   \]
+   On the other hand, $\int g_n = \int_{E(a_1)} f - \int_{E(a_n)} f$.
+   Since $\int_{E(a_1)} f < \infty$, canceling gives:
+   \[
+   \lim_{n \to \infty} F(a_n) = F(a).
+   \]
+2. *Left-continuity ($\lim_{n \to \infty} F(a - 1/n) = F(a)$):*
+   Let $b_n \nearrow a$ as $n \to \infty$ (e.g. $b_n = a - 1/n$).
+   The sets $E(b_n) = ]-\infty, b_n]$ form an increasing sequence: $E(b_1) \subset E(b_2) \subset \dots$.
+   Their union is:
+   \[
+   \bigcup_{n=1}^\infty E(b_n) = ]-\infty, a[.
+   \]
+   Define $h_n = f \chi_{E(b_n)}$. Then $0 \le h_1 \le h_2 \le \dots \nearrow f \chi_{]-\infty, a[}$.
+   By the Monotone Convergence Theorem (Theorem 7.6):
+   \[
+   \lim_{n \to \infty} F(b_n) = \lim_{n \to \infty} \int_{E(b_n)} f \, dm = \int_{]-\infty, a[} f \, dm.
+   \]
+   Notice that $E(a) = ]-\infty, a[ \cup \{a\}$.
+   The singleton $\{a\}$ is a null set: $m(\{a\}) = 0$. By Theorem 7.5(5), $\int_{\{a\}} f \, dm = 0$.
+   By additivity over disjoint domains:
+   \[
+   \int_{E(a)} f \, dm = \int_{]-\infty, a[} f \, dm + \int_{\{a\}} f \, dm = \int_{]-\infty, a[} f \, dm + 0 = \int_{]-\infty, a[} f \, dm.
+   \]
+   Thus $\lim_{n \to \infty} F(b_n) = F(a)$.
+Since $F$ is both right-continuous and left-continuous at $a$, $F$ is continuous at every $a \in \mathbb{R}$.
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Non-Negative Integration Cheat-Sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Theorem / Concept | Exact Mathematical Formula | Required Conditions / Meaning |
+|-------------------+----------------------------+-------------------------------|
+| *Simple Integral* | $\int_E s = \sum a_i m(A_i \cap E)$ | Well-defined; independent of representation. |
+| *General $f \ge 0$* | $\int_E f = \sup \{ \int_E s : 0 \le s \le f \}$ | Built from below by simple functions. |
+| *MCT (Beppo Levi)* | $0 \le f_j \nearrow f \implies \int f_j \to \int f$ | *Always valid* for monotone increasing sequences. |
+| *Linearity* | $\int (f + g) = \int f + \int g$ | Holds for *all* non-negative measurable functions. |
+| *Series* | $\int \sum_{k=1}^\infty u_k = \sum_{k=1}^\infty \int u_k$ | Holds for *all* non-negative measurable functions. |
+| *Fatou's Lemma* | $\int \liminf f_j \le \liminf \int f_j$ | Holds for *any* non-negative sequence. |
+| *Strict Inequality* | Escaping mass to $\infty$ or singularity | Example: $\chi_{[j, j+1]}$ or $j \chi_{]0, 1/j[}$. |
+| *Null Sets* | $m(E) = 0 \implies \int_E f = 0$ | Even if $f \equiv +\infty$. |
+| *Zero Integral* | $\int_E f = 0 \iff f = 0$ a.e. on $E$ | A non-negative function with zero integral vanishes a.e. |

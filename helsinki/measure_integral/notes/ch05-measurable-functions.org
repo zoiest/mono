@@ -1,0 +1,383 @@
+:PROPERTIES:
+:ID:       f7e34f89-c5b7-4ca2-8b89-a4250ebb8af7
+:ROAM_ALIASES: "MAST31051 Chapter 5" "Measurable Functions Notes"
+:END:
+#+title: Chapter 5: Measurable Functions and Mappings
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:measurable-functions:borel:indicator:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch04-abstract-measures.org][← Chapter 4]] | [[file:ch06-sequences-and-simple-functions.org][Chapter 6: Sequences & Simple Functions →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In Chapters 1--4, we constructed the geometric foundation: the $\sigma$-algebra $\mathcal{M}(\mathbb{R}^n)$ of measurable sets and the Lebesgue measure $m$. 
+Now, we turn from measuring *sets* to integrating *functions*.
+
+In calculus, we integrate functions like $f(x) = \sin(x)$ or $e^{-x^2}$. 
+In Lebesgue integration, we define the integral by slicing the *range* into horizontal bands $[y_{k-1}, y_k]$ and computing the measure of the preimage set:
+\[
+E_k = f^{-1}([y_{k-1}, y_k]) = \{x \in \mathbb{R}^n : y_{k-1} \le f(x) \le y_k\}.
+\]
+If the set $E_k$ is not measurable, we cannot assign a size $m(E_k)$ to it, and the Lebesgue integral cannot even be formulated!
+
+Therefore, a function $f$ is suitable for Lebesgue integration if and only if the preimages of all standard intervals are measurable sets. Such functions are called *measurable functions*. 
+
+This chapter systematically examines:
+1. The equivalent preimage definitions of measurable functions.
+2. Why continuous functions are automatically measurable.
+3. Why indicator functions $\chi_E$ bridge set theory and integration.
+4. Why measurable functions form an algebra (closed under addition, multiplication, quotients, and max/min).
+5. The subtle behavior of function composition.
+
+** Roadmap
+- *5.1 Definition of Measurable Functions:* Mappings into $\overline{\mathbb{R}}$ and $\mathbb{R}^m$.
+- *5.2 The Four Equivalent Ray Criteria:* Testing measurability using $\{x : f(x) > a\}$.
+- *5.3 Continuity and Borel Preimages:* Continuous maps are measurable; preimages of Borel sets are measurable.
+- *5.4 Indicator Functions:* $\chi_E$ is measurable $\iff E$ is measurable.
+- *5.5 Algebraic Operations:* Sums, products, absolute values, and positive/negative parts.
+- *5.6 Composition and Vector-Valued Mappings:* When is $g \circ f$ measurable?
+- *Worked Exercises:* Solutions to exam and homework problems.
+- *Summary Cheat-Sheet:* Quick-reference table of measurability tests.
+
+---
+
+* Definition of Measurable Functions
+
+Let $A \subset \mathbb{R}^n$ be a Lebesgue measurable set ($A \in \mathcal{M}(\mathbb{R}^n)$).
+Recall from Chapter 0 that $\overline{\mathbb{R}} = [-\infty, +\infty]$.
+
+#+begin_quote
+*Definition 5.1 (Measurable Function).* 
+1. A function $f: A \to \overline{\mathbb{R}}$ is called *Lebesgue measurable* (or simply *measurable*) if:
+   - For every open set $U \subset \mathbb{R}$, the preimage $f^{-1}(U) = \{x \in A : f(x) \in U\}$ is a Lebesgue measurable set in $\mathbb{R}^n$.
+   - Both $f^{-1}(\{+\infty\}) = \{x \in A : f(x) = +\infty\}$ and $f^{-1}(\{-\infty\}) = \{x \in A : f(x) = -\infty\}$ are Lebesgue measurable sets in $\mathbb{R}^n$.
+2. A mapping $f: A \to \mathbb{R}^m$ is called *measurable* if for every open set $U \subset \mathbb{R}^m$, the preimage $f^{-1}(U)$ is a Lebesgue measurable set in $\mathbb{R}^n$.
+#+end_quote
+
+> [!NOTE]
+> If the domain $A$ itself is not measurable, no function on $A$ can be measurable under this definition, because $f^{-1}(\mathbb{R}) = A$ must be measurable! We therefore always assume the domain $A \in \mathcal{M}(\mathbb{R}^n)$.
+
+---
+
+* The Four Equivalent Ray Criteria
+
+In calculus and analysis, checking all open sets $U \subset \mathbb{R}$ is impractical. 
+Fortunately, because open intervals generate all open sets, we only need to test *semi-infinite rays*.
+
+#+begin_quote
+*Theorem 5.2 (Equivalent Criteria for Measurability).* Let $A \in \mathcal{M}(\mathbb{R}^n)$ and $f: A \to \overline{\mathbb{R}}$. 
+The following four conditions are logically equivalent:
+1. For every $a \in \mathbb{R}$, the set $\{x \in A : f(x) > a\} = f^{-1}(]a, +\infty])$ is measurable.
+2. For every $a \in \mathbb{R}$, the set $\{x \in A : f(x) \ge a\} = f^{-1}([a, +\infty])$ is measurable.
+3. For every $a \in \mathbb{R}$, the set $\{x \in A : f(x) < a\} = f^{-1}([-\infty, a[)$ is measurable.
+4. For every $a \in \mathbb{R}$, the set $\{x \in A : f(x) \le a\} = f^{-1}([-\infty, a])$ is measurable.
+
+Moreover, each of these conditions is equivalent to $f$ being measurable in the sense of Definition 5.1.
+#+end_quote
+
+#+begin_proof
+We show the chain of equivalences between the four ray conditions:
+- *(1 $\implies$ 2):* Notice that $f(x) \ge a \iff \forall k \in \mathbb{N},\, f(x) > a - \frac{1}{k}$. Therefore:
+  \[
+  \{x \in A : f(x) \ge a\} = \bigcap_{k=1}^\infty \left\{x \in A : f(x) > a - \frac{1}{k}\right\}.
+  \]
+  If each set on the right is measurable, their countable intersection is measurable (Theorem 2.8).
+- *(2 $\implies$ 3):* The set where $f(x) < a$ is the complement in $A$ of the set where $f(x) \ge a$:
+  \[
+  \{x \in A : f(x) < a\} = A \setminus \{x \in A : f(x) \ge a\}.
+  \]
+  Since $\mathcal{M}$ is closed under differences, this set is measurable.
+- *(3 $\implies$ 4):* Similar to (1 $\implies$ 2):
+  \[
+  \{x \in A : f(x) \le a\} = \bigcap_{k=1}^\infty \left\{x \in A : f(x) < a + \frac{1}{k}\right\},
+  \]
+  which is a countable intersection of measurable sets, hence measurable.
+- *(4 $\implies$ 1):* Complement in $A$:
+  \[
+  \{x \in A : f(x) > a\} = A \setminus \{x \in A : f(x) \le a\} \in \mathcal{M}.
+  \]
+Finally, any open set $U \subset \mathbb{R}$ is a countable union of open intervals $]a_j, b_j[ = (]a_j, \infty]) \cap ([-\infty, b_j[) \cap \mathbb{R}$. 
+Since preimages preserve unions and intersections (Theorem 0.3), any of the four conditions guarantees that $f^{-1}(U)$ is measurable for all open $U$.
+#+end_proof
+
+#+begin_quote
+*Theorem 5.3 (Rational Ray Criterion).* 
+In Theorem 5.2, it suffices to check the condition for all *rational numbers* $q \in \mathbb{Q}$.
+For example, $f$ is measurable if and only if
+\[
+\{x \in A : f(x) > q\} \in \mathcal{M}(\mathbb{R}^n) \quad \text{for all } q \in \mathbb{Q}.
+\]
+#+end_quote
+
+#+begin_proof
+For any real number $a \in \mathbb{R}$, by the density of $\mathbb{Q}$, we can choose a sequence of rationals $q_k \in \mathbb{Q}$ such that $q_k \searrow a$. Then:
+\[
+\{x \in A : f(x) > a\} = \bigcup_{k=1}^\infty \{x \in A : f(x) > q_k\}.
+\]
+Since a countable union of measurable sets is measurable, measurability for all rationals implies measurability for all reals!
+#+end_proof
+
+---
+
+* Continuity and Preimages of Borel Sets
+
+#+begin_quote
+*Theorem 5.4 (Continuous functions are measurable).* 
+Let $A \subset \mathbb{R}^n$ be a measurable set. If $f: A \to \mathbb{R}^m$ is continuous, then $f$ is measurable.
+#+end_quote
+
+#+begin_proof
+By the definition of continuity in metric spaces, for every open set $U \subset \mathbb{R}^m$, the preimage $f^{-1}(U)$ is open in the subspace topology on $A$.
+This means there exists an open set $V \subset \mathbb{R}^n$ such that
+\[
+f^{-1}(U) = V \cap A.
+\]
+By Theorem 3.2, every open set $V \subset \mathbb{R}^n$ is Lebesgue measurable ($V \in \mathcal{M}$).
+Since $A \in \mathcal{M}$ and $\mathcal{M}$ is a $\sigma$-algebra, the intersection $f^{-1}(U) = V \cap A \in \mathcal{M}$.
+Thus $f$ is measurable.
+#+end_proof
+
+#+begin_quote
+*Theorem 5.5 (Preimages of Borel Sets).* 
+Let $f: A \to \mathbb{R}^m$ be measurable. If $B \in \mathcal{B}(\mathbb{R}^m)$ is any Borel set, then
+\[
+f^{-1}(B) \in \mathcal{M}(\mathbb{R}^n).
+\]
+#+end_quote
+
+#+begin_proof
+Consider the collection of all subsets of $\mathbb{R}^m$ whose preimages are measurable:
+\[
+\mathcal{F} = \{S \subset \mathbb{R}^m : f^{-1}(S) \in \mathcal{M}(\mathbb{R}^n)\}.
+\]
+We verify that $\mathcal{F}$ is a $\sigma$-algebra on $\mathbb{R}^m$:
+1. $f^{-1}(\mathbb{R}^m) = A \in \mathcal{M}(\mathbb{R}^n)$, so $\mathbb{R}^m \in \mathcal{F}$.
+2. If $S \in \mathcal{F}$, then $f^{-1}(S^c) = A \setminus f^{-1}(S) \in \mathcal{M}$, so $S^c \in \mathcal{F}$.
+3. If $S_1, S_2, \dots \in \mathcal{F}$, then $f^{-1}(\bigcup S_j) = \bigcup f^{-1}(S_j) \in \mathcal{M}$, so $\bigcup S_j \in \mathcal{F}$.
+Thus $\mathcal{F}$ is a $\sigma$-algebra. 
+Since $f$ is measurable, $\mathcal{F}$ contains all open sets in $\mathbb{R}^m$.
+Because the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^m)$ is the *smallest* $\sigma$-algebra containing all open sets, we must have $\mathcal{B}(\mathbb{R}^m) \subset \mathcal{F}$.
+Therefore, for every $B \in \mathcal{B}(\mathbb{R}^m)$, $f^{-1}(B) \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+---
+
+* The Indicator / Characteristic Function $\chi_E$
+
+The fundamental bridge between sets and functions is the *indicator function* (often called the characteristic function and denoted $\chi_E$ or $\mathbf{1}_E$).
+
+#+begin_quote
+*Definition 5.6 (Indicator Function).* Let $E \subset \mathbb{R}^n$. The *indicator function* of $E$ is
+\[
+\chi_E(x) = \begin{cases} 1, & \text{if } x \in E, \\ 0, & \text{if } x \notin E. \end{cases}
+\]
+#+end_quote
+
+#+begin_quote
+*Theorem 5.7.* Let $E \subset \mathbb{R}^n$. 
+The function $\chi_E: \mathbb{R}^n \to \mathbb{R}$ is Lebesgue measurable if and only if the set $E$ is Lebesgue measurable:
+\[
+\chi_E \text{ is measurable} \iff E \in \mathcal{M}(\mathbb{R}^n).
+\]
+#+end_quote
+
+#+begin_proof
+$(\implies)$ Suppose $\chi_E$ is measurable. Consider the open interval $U = ]1/2, 3/2[$.
+The preimage is:
+\[
+\chi_E^{-1}(]1/2, 3/2[) = \{x \in \mathbb{R}^n : \chi_E(x) = 1\} = E.
+\]
+Since preimages of open sets under measurable functions are measurable, $E \in \mathcal{M}(\mathbb{R}^n)$.
+
+$(\impliedby)$ Suppose $E \in \mathcal{M}(\mathbb{R}^n)$. For any $a \in \mathbb{R}$, examine the set $\{x : \chi_E(x) > a\}$:
+\[
+\{x \in \mathbb{R}^n : \chi_E(x) > a\} = \begin{cases}
+\emptyset, & \text{if } a \ge 1, \\
+E, & \text{if } 0 \le a < 1, \\
+\mathbb{R}^n, & \text{if } a < 0.
+\end{cases}
+\]
+Since $\emptyset$, $E$, and $\mathbb{R}^n$ all belong to $\mathcal{M}(\mathbb{R}^n)$, condition (1) of Theorem 5.2 holds for all $a \in \mathbb{R}$. 
+Thus $\chi_E$ is measurable.
+#+end_proof
+
+---
+
+* Algebraic Operations on Measurable Functions
+
+#+begin_quote
+*Theorem 5.8.* Let $A \in \mathcal{M}(\mathbb{R}^n)$ and let $f, g: A \to \mathbb{R}$ be measurable functions. Let $c \in \mathbb{R}$. Then:
+1. $c f$ is measurable.
+2. $f + g$ and $f - g$ are measurable.
+3. $f \cdot g$ is measurable.
+4. If $g(x) \neq 0$ for all $x \in A$, then $f / g$ is measurable.
+5. $|f|$ is measurable.
+6. $\max(f, g)$ and $\min(f, g)$ are measurable.
+7. The positive part $f^+(x) = \max(f(x), 0)$ and negative part $f^-(x) = \max(-f(x), 0)$ are measurable.
+#+end_quote
+
+#+begin_proof
+1. *Scalar multiplication:* If $c = 0$, $c f = 0$ is a constant function, which is continuous and hence measurable. If $c > 0$, $\{x : c f(x) > a\} = \{x : f(x) > a/c\} \in \mathcal{M}$. If $c < 0$, $\{x : c f(x) > a\} = \{x : f(x) < a/c\} \in \mathcal{M}$.
+2. *Sum $f + g$:*
+   Fix $a \in \mathbb{R}$. If $f(x) + g(x) > a$, then $f(x) > a - g(x)$.
+   By the density of rational numbers, there exists $q \in \mathbb{Q}$ such that
+   \[
+   f(x) > q > a - g(x) \implies f(x) > q \quad \text{and} \quad g(x) > a - q.
+   \]
+   Conversely, if there exists $q \in \mathbb{Q}$ such that $f(x) > q$ and $g(x) > a - q$, then adding them gives $f(x) + g(x) > a$.
+   Therefore:
+   \[
+   \{x \in A : f(x) + g(x) > a\} = \bigcup_{q \in \mathbb{Q}} \Bigl( \{x \in A : f(x) > q\} \cap \{x \in A : g(x) > a - q\} \Bigr).
+   \]
+   Since $f$ and $g$ are measurable, each set in the parentheses is measurable.
+   Their intersection is measurable.
+   Since $\mathbb{Q}$ is countable, the union is a countable union of measurable sets, which is measurable!
+   Hence $f + g$ is measurable. Setting $f - g = f + (-1)g$ proves differences are measurable.
+3. *Product $f \cdot g$:*
+   Notice the polarization identity:
+   \[
+   f(x) g(x) = \frac{1}{4} \bigl( (f(x) + g(x))^2 - (f(x) - g(x))^2 \bigr).
+   \]
+   Since sums and differences are measurable, it suffices to prove that the square of a measurable function $h^2$ is measurable.
+   For $a < 0$, $\{x : h(x)^2 > a\} = A \in \mathcal{M}$.
+   For $a \ge 0$, $\{x : h(x)^2 > a\} = \{x : h(x) > \sqrt{a}\} \cup \{x : h(x) < -\sqrt{a}\} \in \mathcal{M}$.
+   Thus $h^2$ is measurable, and so is $f \cdot g$.
+4. *Quotient $f / g$:*
+   It suffices to show $1/g$ is measurable.
+   For $a > 0$, $\{x : 1/g(x) > a\} = \{x : 0 < g(x) < 1/a\} = \{x : g(x) > 0\} \cap \{x : g(x) < 1/a\} \in \mathcal{M}$.
+   Similar cases hold for $a \le 0$. Thus $1/g$ is measurable, and $f/g = f \cdot (1/g)$ is measurable.
+5. *Absolute value:* $|f(x)| = \max(f(x), -f(x))$. For $a \ge 0$, $\{x : |f(x)| > a\} = \{x : f(x) > a\} \cup \{x : f(x) < -a\} \in \mathcal{M}$.
+6. *Max and Min:*
+   \[
+   \max(f, g) = \frac{f + g + |f - g|}{2}, \qquad \min(f, g) = \frac{f + g - |f - g|}{2}.
+   \]
+   Since sums, differences, and absolute values are measurable, max and min are measurable.
+7. $f^+ = \max(f, 0)$ and $f^- = \max(-f, 0) = -\min(f, 0)$ are measurable as special cases of max and min.
+#+end_proof
+
+---
+
+* Composition and Vector-Valued Mappings
+
+** Composition with Continuous Functions
+#+begin_quote
+*Theorem 5.9.* If $f: A \to \mathbb{R}^m$ is measurable and $g: \mathbb{R}^m \to \mathbb{R}^k$ is *continuous*, then the composition
+\[
+g \circ f: A \to \mathbb{R}^k
+\]
+is measurable.
+#+end_quote
+
+#+begin_proof
+Let $U \subset \mathbb{R}^k$ be open. 
+Since $g$ is continuous, $g^{-1}(U)$ is open in $\mathbb{R}^m$.
+Since $f$ is measurable, the preimage of an open set $f^{-1}(g^{-1}(U))$ is measurable in $\mathbb{R}^n$.
+By Exercise 0.1, $(g \circ f)^{-1}(U) = f^{-1}(g^{-1}(U)) \in \mathcal{M}(\mathbb{R}^n)$.
+Thus $g \circ f$ is measurable.
+#+end_proof
+
+> [!WARNING]
+> *Failure of Composition of two Measurable Functions:*
+> If $f$ is Lebesgue measurable and $g$ is Lebesgue measurable, $g \circ f$ is **not necessarily Lebesgue measurable**!
+> *Reason:* $f^{-1}(E)$ is only guaranteed to be measurable if $E$ is a *Borel* set (Theorem 5.5). If $E$ is a Lebesgue measurable set that is not Borel, $f^{-1}(E)$ can fail to be measurable! (A classic counterexample uses the Cantor staircase function to map a non-measurable subset of a Cantor set).
+
+** Vector-Valued Mappings
+#+begin_quote
+*Theorem 5.10.* A mapping $f = (f_1, \dots, f_m): A \to \mathbb{R}^m$ is measurable if and only if each coordinate function $f_j: A \to \mathbb{R}$ is measurable for all $j = 1, \dots, m$.
+#+end_quote
+
+#+begin_proof
+$(\implies)$ Let $p_j: \mathbb{R}^m \to \mathbb{R}$ be the projection map $p_j(x_1, \dots, x_m) = x_j$. Since $p_j$ is continuous, by Theorem 5.9 the composition $f_j = p_j \circ f$ is measurable.
+
+$(\impliedby)$ Any open box in $\mathbb{R}^m$ is of the form $B = \prod_{j=1}^m ]a_j, b_j[$. Its preimage is
+\[
+f^{-1}(B) = \bigcap_{j=1}^m f_j^{-1}(]a_j, b_j[).
+\]
+Since each $f_j$ is measurable, each factor is measurable, and so is their finite intersection.
+Since every open set in $\mathbb{R}^m$ is a countable union of open boxes (Theorem 3.2), $f^{-1}(U)$ is measurable for every open $U$.
+#+end_proof
+
+---
+
+* Worked Exercises
+
+** Exercise 5.1 (Fall 2026 Exam Problem 1b: Definition of Measurable Mapping)
+State precisely the definition of a measurable mapping.
+
+*Solution:*
+Let $A \subset \mathbb{R}^n$ be a Lebesgue measurable set. 
+A mapping $f: A \to \mathbb{R}^m$ is called *measurable* (or Lebesgue measurable) if for every open set $U \subset \mathbb{R}^m$, the preimage
+\[
+f^{-1}(U) = \{x \in A : f(x) \in U\}
+\]
+is a Lebesgue measurable set in $\mathbb{R}^n$ (i.e. $f^{-1}(U) \in \mathcal{M}(\mathbb{R}^n)$).
+For an extended real-valued function $f: A \to [-\infty, +\infty]$, $f$ is measurable if $f^{-1}(U)$ is measurable for all open $U \subset \mathbb{R}$, and both $f^{-1}(\{+\infty\})$ and $f^{-1}(\{-\infty\})$ are measurable in $\mathbb{R}^n$.
+
+** Exercise 5.2 (Homework 5, Problem 2: Slicing Sets by Constants)
+Let $A \subset \mathbb{R}^n$ and assume $f: A \to \mathbb{R}$ is measurable. 
+Given $r \in \mathbb{R}$, define the level set:
+\[
+E_r = \{x \in A : f(x) = r\}.
+\]
+Prove that $E_r$ is a Lebesgue measurable set for every $r \in \mathbb{R}$.
+
+*Solution:*
+1. Notice that $f(x) = r \iff f(x) \ge r$ and $f(x) \le r$.
+2. Therefore, the level set can be written as the intersection of two sets:
+   \[
+   E_r = \{x \in A : f(x) \ge r\} \cap \{x \in A : f(x) \le r\}.
+   \]
+3. By Theorem 5.2 (conditions 2 and 4), because $f$ is measurable, both $\{x \in A : f(x) \ge r\}$ and $\{x \in A : f(x) \le r\}$ belong to $\mathcal{M}(\mathbb{R}^n)$.
+4. Because $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, it is closed under finite intersections.
+Hence $E_r \in \mathcal{M}(\mathbb{R}^n)$.
+
+** Exercise 5.3 (Homework 5, Problem 5: Continuity Set of an Arbitrary Function)
+Let $f: \mathbb{R}^n \to \mathbb{R}$ be an *arbitrary* function (not necessarily measurable).
+Let $C_f \subset \mathbb{R}^n$ denote the set of points where $f$ is continuous:
+\[
+C_f = \{x \in \mathbb{R}^n : f \text{ is continuous at } x\}.
+\]
+Prove that $C_f$ is a $G_\delta$ set, and therefore $C_f$ is always Borel measurable!
+
+*Solution:*
+1. By the $(\varepsilon, \delta)$ definition, $f$ is continuous at $x$ if for every $k \in \mathbb{N}$ (taking $\varepsilon = 1/k$), there exists an open ball $B(x, r)$ such that for all $y, z \in B(x, r)$, $|f(y) - f(z)| < 1/k$.
+2. For each $k \in \mathbb{N}$, define the set:
+   \[
+   U_k = \bigcup \{B \subset \mathbb{R}^n : B \text{ is an open ball such that } \sup_{y, z \in B} |f(y) - f(z)| < \frac{1}{k}\}.
+   \]
+3. As a union of open balls, each $U_k$ is an *open set* in $\mathbb{R}^n$!
+4. We claim that $C_f = \bigcap_{k=1}^\infty U_k$:
+   - If $x \in C_f$, for every $k \in \mathbb{N}$ there is a ball around $x$ with oscillation $< 1/k$, so $x \in U_k$ for all $k$, hence $x \in \bigcap U_k$.
+   - Conversely, if $x \in \bigcap_{k=1}^\infty U_k$, then for each $k$, $x$ belongs to some ball on which the oscillation of $f$ is $< 1/k$. This implies that as $y \to x$, $|f(y) - f(x)| \le 1/k$ for all $k$, so $f$ is continuous at $x$.
+5. Thus $C_f = \bigcap_{k=1}^\infty U_k$ is a countable intersection of open sets.
+By Definition 3.4, $C_f$ is a $G_\delta$ set, and therefore $C_f \in \mathcal{B}(\mathbb{R}^n) \subset \mathcal{M}(\mathbb{R}^n)$.
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Measurable Functions Cheat-Sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Test / Concept | Formal Characterization | Key Significance |
+|----------------+-------------------------+-------------------|
+| *Preimage of Open Sets* | $f^{-1}(U) \in \mathcal{M}$ for all open $U$ | The official topological definition of a measurable mapping. |
+| *Ray Criteria* | $\{x : f(x) > a\} \in \mathcal{M}$ for all $a \in \mathbb{R}$ | Equivalent to testing $>a$, $\ge a$, $<a$, or $\le a$. |
+| *Rational Ray Test* | $\{x : f(x) > q\} \in \mathcal{M}$ for all $q \in \mathbb{Q}$ | Only countably many tests are required to establish measurability. |
+| *Continuous Functions* | $f$ continuous $\implies f$ measurable | All standard functions of calculus are measurable. |
+| *Indicator Function* | $\chi_E$ measurable $\iff E$ measurable | Fundamental bridge between sets and functions. |
+| *Algebraic Operations* | $f \pm g, fg, f/g, \lvert f\rvert, \max, \min \in \text{Meas}$ | Measurable functions form an algebra and a vector space. |
+| *Decomposition* | $f = f^+ - f^-$, $\lvert f\rvert = f^+ + f^-$ | Essential representation used to define general integrals. |
+| *Composition Rule* | $g$ continuous, $f$ measurable $\implies g \circ f$ measurable | Safe when outer function is continuous. |
