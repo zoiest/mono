@@ -31,9 +31,9 @@ However, advanced analysis and probability require measuring the "size" of sets 
 - What is the size of the set of points where a sequence of functions converges?
 
 Our goal is to construct a function $m$ that assigns to every subset $A \subset \mathbb{R}^n$ a generalized volume $m(A) \in [0, +\infty]$ satisfying three natural geometric axioms:
-1. *Normalization:* For any $n$-interval $I = [a_1, b_1] \times \dots \times [a_n, b_n]$, $m(I) = \prod_{j=1}^n (b_j - a_j)$.
+1. *Normalization:* For any \(n\)-interval $I = [a_1, b_1] \times \dots \times [a_n, b_n]$, $m(I) = \prod_{j=1}^n (b_j - a_j)$.
 2. *Translation Invariance:* Moving a set does not change its size: $m(x + A) = m(A)$ for all $x \in \mathbb{R}^n$.
-3. *Countable Additivity ($\sigma$-additivity):* If $A_1, A_2, \dots$ are pairwise disjoint sets, then
+3. *Countable Additivity (\(\sigma\)-additivity):* If $A_1, A_2, \dots$ are pairwise disjoint sets, then
    \[
    m\left( \bigcup_{j=1}^\infty A_j \right) = \sum_{j=1}^\infty m(A_j).
    \]
@@ -45,8 +45,8 @@ To circumvent this, Henri Lebesgue introduced a two-stage strategy:
 
 ** Roadmap
 - *1.1 Shortcomings of the Riemann Integral:* Why Riemann integration fails for discontinuous functions and pointwise limits.
-- *1.2 Geometry of $n$-Intervals and Elementary Volume:* Definitions of open, closed, and bounded intervals in $\mathbb{R}^n$.
-- *1.3 Lebesgue Covers and Outer Measure:* Definition of $m^*(A)$ via infimum over coverings by open $n$-intervals.
+- *1.2 Geometry of \(n\)-Intervals and Elementary Volume:* Definitions of open, closed, and bounded intervals in $\mathbb{R}^n$.
+- *1.3 Lebesgue Covers and Outer Measure:* Definition of $m^*(A)$ via infimum over coverings by open \(n\)-intervals.
 - *1.4 Core Properties of Outer Measure:* Monotonicity, translation invariance, scaling, and countable subadditivity.
 - *1.5 Outer Measure of Intervals and Null Sets:* Proving $m^*(I) = \ell(I)$, singletons, and countable sets have measure zero.
 - *Worked Exercises:* Solutions to foundational homework and exam problems.
@@ -57,11 +57,11 @@ To circumvent this, Henri Lebesgue introduced a two-stage strategy:
 * Shortcomings of the Classical Riemann Integral
 
 ** Intuition: Slicing the Domain vs Slicing the Range
-The Riemann integral partitions the *domain* (the $x$-axis) into small subintervals $[x_{k-1}, x_k]$. If a function oscillates violently on every tiny interval, the upper Darboux sum and the lower Darboux sum will never meet.
+The Riemann integral partitions the *domain* (the \(x\)-axis) into small subintervals $[x_{k-1}, x_k]$. If a function oscillates violently on every tiny interval, the upper Darboux sum and the lower Darboux sum will never meet.
 
 Henri Lebesgue's revolutionary insight was:
 #+begin_quote
-"Instead of partitioning the domain of $f$, partition its *range* (the $y$-axis) into intervals $[y_{k-1}, y_k]$, and measure the size of the set of points in the domain where $f(x) \approx y_k$."
+"Instead of partitioning the domain of $f$, partition its *range* (the \(y\)-axis) into intervals $[y_{k-1}, y_k]$, and measure the size of the set of points in the domain where $f(x) \approx y_k$."
 #+end_quote
 To make Lebesgue's idea work, we must be able to measure the size of the preimage set $\{x : y_{k-1} \le f(x) < y_k\}$, which can be an extraordinarily jagged set.
 
@@ -85,22 +85,22 @@ To make Lebesgue's idea work, we must be able to measure the size of the preimag
 
 ---
 
-* Geometry of $n$-Intervals and Elementary Volume
+* Geometry of \(n\)-Intervals and Elementary Volume
 
-** Definition of $n$-Intervals
+** Definition of \(n\)-Intervals
 Let $n \in \mathbb{N}$. 
-- An *open $n$-interval* in $\mathbb{R}^n$ is the Cartesian product of $n$ bounded open intervals in $\mathbb{R}$:
+- An *open \(n\)-interval* in $\mathbb{R}^n$ is the Cartesian product of $n$ bounded open intervals in $\mathbb{R}$:
   \[
   I = ]a_1, b_1[ \times \dots \times ]a_n, b_n[ = \{x = (x_1, \dots, x_n) \in \mathbb{R}^n : a_j < x_j < b_j \text{ for all } j = 1, \dots, n\},
   \]
   where $-\infty < a_j < b_j < +\infty$ for each $j \in \{1, \dots, n\}$.
-- A *closed $n$-interval* is $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$.
-- A *half-open $n$-interval* is any product of bounded intervals where each factor is of the form $[a_j, b_j[$ or $]a_j, b_j]$.
+- A *closed \(n\)-interval* is $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$.
+- A *half-open \(n\)-interval* is any product of bounded intervals where each factor is of the form $[a_j, b_j[$ or $]a_j, b_j]$.
 - If $a_j = b_j$ for some $j$, the interval is *degenerate* (a flat boundary with empty interior).
 
 ** Elementary Volume
 #+begin_quote
-*Definition 1.1 (Elementary Volume).* The *elementary volume* (or elementary measure) of an $n$-interval $I$ (open, closed, or half-open) with endpoints $a_j \le b_j$ is
+*Definition 1.1 (Elementary Volume).* The *elementary volume* (or elementary measure) of an \(n\)-interval $I$ (open, closed, or half-open) with endpoints $a_j \le b_j$ is
 \[
 \ell(I) = \prod_{j=1}^n (b_j - a_j).
 \]
@@ -123,14 +123,15 @@ The sum of the elementary volumes $\sum_{j=1}^\infty \ell(I_j)$ represents an *o
 To obtain the tightest possible estimate, we take the *infimum* over all possible countable coverings.
 
 #+begin_quote
-*Definition 1.2 (Lebesgue Cover).* Let $A \subset \mathbb{R}^n$. A countable collection $\mathcal{F} = \{I_1, I_2, \dots\}$ of open $n$-intervals is called a *Lebesgue cover* of $A$ if
+*Definition 1.2 (Lebesgue Cover).* Let $A \subset \mathbb{R}^n$. A countable collection $\mathcal{F} = \{I_1, I_2, \dots\}$ of open \(n\)-intervals is called a *Lebesgue cover* of $A$ if
 \[
 A \subset \bigcup_{j=1}^\infty I_j.
 \]
 #+end_quote
 
-> [!NOTE]
-> Every subset $A \subset \mathbb{R}^n$ has at least one Lebesgue cover. For example, $\mathbb{R}^n$ can be covered by the countable collection of open cubes $]-k, k[^n$ for $k \in \mathbb{N}$.
+#+begin_quote
+*Note:* Every subset $A \subset \mathbb{R}^n$ has at least one Lebesgue cover. For example, $\mathbb{R}^n$ can be covered by the countable collection of open cubes $]-k, k[^n$ for $k \in \mathbb{N}$.
+#+end_quote
 
 #+begin_quote
 *Definition 1.3 (Lebesgue Outer Measure).* The *Lebesgue outer measure* of a set $A \subset \mathbb{R}^n$ is defined by
@@ -182,18 +183,18 @@ m^*(A) = \inf \left\{ \sum_{j=1}^\infty \ell(I_j) : I_j \text{ is an open } n\te
    m^*\left( \bigcup_{j=1}^\infty A_j \right) \le \sum_{j=1}^\infty \sum_{k=1}^\infty \ell(I_{j, k}) < \sum_{j=1}^\infty \left( m^*(A_j) + \frac{\varepsilon}{2^j} \right) = \sum_{j=1}^\infty m^*(A_j) + \varepsilon \sum_{j=1}^\infty 2^{-j} = \sum_{j=1}^\infty m^*(A_j) + \varepsilon.
    \]
    Since this holds for every $\varepsilon > 0$, letting $\varepsilon \to 0$ yields the result.
-4. *Translation invariance:* If $\{I_j\}$ covers $A$, then $\{x + I_j\}$ covers $x + A$. The shifted interval $x + I_j$ is still an open $n$-interval, and its side lengths are unchanged: $\ell(x + I_j) = \ell(I_j)$. Thus $m^*(x + A) \le m^*(A)$. Applying this to $-x$ and $x + A$ gives the reverse inequality.
-5. *Scaling:* Scaling each side of an $n$-interval by $c$ multiplies each of the $n$ side lengths by $|c|$, so $\ell(c I) = |c|^n \ell(I)$. Taking infima gives $m^*(cA) = |c|^n m^*(A)$.
+4. *Translation invariance:* If $\{I_j\}$ covers $A$, then $\{x + I_j\}$ covers $x + A$. The shifted interval $x + I_j$ is still an open \(n\)-interval, and its side lengths are unchanged: $\ell(x + I_j) = \ell(I_j)$. Thus $m^*(x + A) \le m^*(A)$. Applying this to $-x$ and $x + A$ gives the reverse inequality.
+5. *Scaling:* Scaling each side of an \(n\)-interval by $c$ multiplies each of the $n$ side lengths by $|c|$, so $\ell(c I) = |c|^n \ell(I)$. Taking infima gives $m^*(cA) = |c|^n m^*(A)$.
 #+end_proof
 
 ---
 
 * Outer Measure of Intervals and Null Sets
 
-** Outer Measure of an $n$-Interval Equals its Volume
+** Outer Measure of an \(n\)-Interval Equals its Volume
 
 #+begin_quote
-*Theorem 1.5.* For any bounded $n$-interval $I \subset \mathbb{R}^n$ (open, closed, or half-open):
+*Theorem 1.5.* For any bounded \(n\)-interval $I \subset \mathbb{R}^n$ (open, closed, or half-open):
 \[
 m^*(I) = \ell(I).
 \]
@@ -206,7 +207,7 @@ m^*(I) = \ell(I).
    \[
    I_\varepsilon = ]a_1 - \varepsilon, b_1 + \varepsilon[ \times \dots \times ]a_n - \varepsilon, b_n + \varepsilon[.
    \]
-   $I_\varepsilon$ is an open $n$-interval and $I \subset I_\varepsilon$. Thus $\{I_\varepsilon\}$ is a one-interval cover of $I$:
+   $I_\varepsilon$ is an open \(n\)-interval and $I \subset I_\varepsilon$. Thus $\{I_\varepsilon\}$ is a one-interval cover of $I$:
    \[
    m^*(I) \le \ell(I_\varepsilon) = \prod_{j=1}^n (b_j - a_j + 2\varepsilon).
    \]
@@ -344,7 +345,7 @@ Prove that $m^*(\Gamma(f)) = 0$ in $\mathbb{R}^2$.
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
 | Property | Mathematical Statement | Interpretation / Pitfall |
 |----------+-------------------------+--------------------------|
-| *Definition* | $m^*(A) = \inf \{ \sum \ell(I_j) : A \subset \bigcup I_j \}$ | Infimum over all countable covers by open $n$-intervals. |
+| *Definition* | $m^*(A) = \inf \{ \sum \ell(I_j) : A \subset \bigcup I_j \}$ | Infimum over all countable covers by open \(n\)-intervals. |
 | *Empty set* | $m^*(\emptyset) = 0$ | Always zero. |
 | *Monotonicity* | $A \subset B \implies m^*(A) \le m^*(B)$ | Bigger sets have larger or equal outer measure. |
 | *Countable Subadditivity* | $m^*(\bigcup_{j=1}^\infty A_j) \le \sum_{j=1}^\infty m^*(A_j)$ | Always holds, but strict equality is NOT guaranteed for arbitrary disjoint sets! |

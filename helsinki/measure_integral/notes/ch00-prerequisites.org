@@ -111,9 +111,11 @@ Let $f: X \to Y$ be a mapping between sets.
 - For a subset $A \subset X$, the *image* is $f(A) = \{f(x) \in Y : x \in A\}$.
 - For a subset $B \subset Y$, the *preimage* (or inverse image) is $f^{-1}(B) = \{x \in X : f(x) \in B\}$.
 
-> [!IMPORTANT]
-> In measure theory, measurable functions are defined *exclusively* via preimages, never via images! 
-> Why? Because preimages preserve *all* set-theoretic operations (unions, intersections, complements, differences), whereas images fail to preserve intersections and complements unless $f$ is injective!
+#+begin_quote
+*Important:* In measure theory, measurable functions are defined *exclusively* via preimages, never via images! 
+
+*Why?* Because preimages preserve *all* set-theoretic operations (unions, intersections, complements, differences), whereas images fail to preserve intersections and complements unless $f$ is injective!
+#+end_quote
 
 ** Algebraic Properties of Preimages
 
@@ -161,14 +163,14 @@ is countable.
 
 #+begin_proof
 Without loss of generality, assume $\mathcal{A} = \mathbb{N}$ and each $E_j = \{x_{j, 1}, x_{j, 2}, x_{j, 3}, \dots\}$ is countably infinite. Arrange the elements in a two-dimensional infinite grid:
-\[
+\begin{equation*}
 \begin{matrix}
 x_{1,1} & x_{1,2} & x_{1,3} & x_{1,4} & \dots \\
 x_{2,1} & x_{2,2} & x_{2,3} & x_{2,4} & \dots \\
 x_{3,1} & x_{3,2} & x_{3,3} & x_{3,4} & \dots \\
 \vdots & \vdots & \vdots & \vdots & \ddots
 \end{matrix}
-\]
+\end{equation*}
 Traverse the array along diagonals where the sum of indices $j + k$ is constant:
 \[
 x_{1,1} \;\to\; x_{1,2} \;\to\; x_{2,1} \;\to\; x_{3,1} \;\to\; x_{2,2} \;\to\; x_{1,3} \;\to\; \dots
@@ -192,20 +194,20 @@ Suppose for contradiction that $]0, 1[$ is countable. Then its elements can be e
 ]0, 1[ \;=\; \{x_1, x_2, x_3, \dots\}.
 \]
 Write each $x_n$ in its decimal expansion (avoiding trailing infinite sequences of $9$'s to guarantee uniqueness):
-\[
+\begin{equation*}
 \begin{aligned}
 x_1 &= 0.d_{1,1} d_{1,2} d_{1,3} d_{1,4} \dots \\
 x_2 &= 0.d_{2,1} d_{2,2} d_{2,3} d_{2,4} \dots \\
 x_3 &= 0.d_{3,1} d_{3,2} d_{3,3} d_{3,4} \dots \\
 &\;\;\vdots
 \end{aligned}
-\]
+\end{equation*}
 Now construct a real number $y = 0.c_1 c_2 c_3 \dots \in ]0, 1[$ by modifying the diagonal digits:
 \[
 c_n = \begin{cases} 4, & \text{if } d_{n,n} \neq 4, \\ 5, & \text{if } d_{n,n} = 4. \end{cases}
 \]
 By construction, $c_n \in \{4, 5\}$, so $y \in ]0, 1[$ has a unique decimal expansion.
-For every $n \in \mathbb{N}$, the $n$-th digit of $y$ differs from the $n$-th digit of $x_n$ ($c_n \neq d_{n,n}$), which implies $y \neq x_n$.
+For every $n \in \mathbb{N}$, the \(n\)-th digit of $y$ differs from the \(n\)-th digit of $x_n$ ($c_n \neq d_{n,n}$), which implies $y \neq x_n$.
 Thus $y$ cannot be in the list $\{x_1, x_2, \dots\}$, contradicting the assumption that the list contained all of $]0, 1[$. 
 Therefore, $]0, 1[$ is uncountable.
 #+end_proof
@@ -226,8 +228,9 @@ For any $a \in \mathbb{R}$:
    \[
    a + (+\infty) = +\infty, \quad a + (-\infty) = -\infty, \quad (+\infty) + (+\infty) = +\infty, \quad (-\infty) + (-\infty) = -\infty.
    \]
-   > [!WARNING]
-   > The expressions $(+\infty) + (-\infty)$ and $(-\infty) + (+\infty)$ are **strictly undefined**!
+   #+begin_quote
+   *Warning:* The expressions $(+\infty) + (-\infty)$ and $(-\infty) + (+\infty)$ are *strictly undefined*!
+   #+end_quote
 2. *Multiplication:*
    For $c > 0$: $c \cdot (+\infty) = +\infty$ and $c \cdot (-\infty) = (-\infty)$.
    For $c < 0$: $c \cdot (+\infty) = -\infty$ and $c \cdot (-\infty) = +\infty$.
@@ -278,14 +281,14 @@ Show that $(g \circ f)^{-1}(C) = f^{-1}(g^{-1}(C))$.
 
 *Solution:*
 Let $x \in X$. By definition of function composition and preimages:
-\[
+\begin{equation*}
 \begin{aligned}
 x \in (g \circ f)^{-1}(C) &\iff (g \circ f)(x) \in C \\
 &\iff g(f(x)) \in C \\
 &\iff f(x) \in g^{-1}(C) \\
 &\iff x \in f^{-1}\bigl(g^{-1}(C)\bigr).
 \end{aligned}
-\]
+\end{equation*}
 Since the logical equivalences hold for every $x \in X$, the two sets are identical.
 
 ** Exercise 0.2 (Countability of algebraic numbers)
@@ -323,9 +326,9 @@ Thus $U \cap \mathbb{Q}^n \neq \emptyset$.
 | Concept | Key Formula / Rule | Crucial Consequence in Measure Theory |
 |---------+---------------------+---------------------------------------|
 | *de Morgan's Laws* | $(\bigcup V_\alpha)^c = \bigcap V_\alpha^c$, $(\bigcap V_\alpha)^c = \bigcup V_\alpha^c$ | Allows switching between unions and intersections via complementation. |
-| *Preimages* | $f^{-1}(\bigcup B_\alpha) = \bigcup f^{-1}(B_\alpha)$, $f^{-1}(B^c) = (f^{-1}(B))^c$ | Ensures that preimages preserve $\sigma$-algebras and measurability. |
+| *Preimages* | $f^{-1}(\bigcup B_\alpha) = \bigcup f^{-1}(B_\alpha)$, $f^{-1}(B^c) = (f^{-1}(B))^c$ | Ensures that preimages preserve \(\sigma\)-algebras and measurability. |
 | *Images (Warning)* | $f(A \cap B) \neq f(A) \cap f(B)$ in general | Never use direct images to define measurable functions. |
 | *Countable Sets* | Countable union of countable sets is countable | $\mathbb{Q}$ is countable; every countable set in $\mathbb{R}^n$ will have Lebesgue measure zero. |
 | *Continuum* | $\mathbb{R}$ and intervals $]a, b[$ are uncountable | Uncountable sets can carry non-zero geometric measure. |
 | *Extended Arithmetic* | $0 \cdot (\pm \infty) = 0$, $a + \infty = \infty$ | Resolves values of integrals on sets of measure zero. |
-| *Open / Closed* | $U$ open $\iff U^c$ closed | Open sets generate the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^n)$. |
+| *Open / Closed* | $U$ open $\iff U^c$ closed | Open sets generate the Borel \(\sigma\)-algebra $\mathcal{B}(\mathbb{R}^n)$. |

@@ -75,7 +75,7 @@ Then $g$ and $h$ are measurable functions on $A$.
    \{x \in A : g(x) > a\} = \bigcup_{j=1}^\infty \{x \in A : f_j(x) > a\}.
    \]
    Because each $f_j$ is measurable, each set $\{x \in A : f_j(x) > a\}$ belongs to $\mathcal{M}(\mathbb{R}^n)$.
-   Since $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, it is closed under countable unions.
+   Since $\mathcal{M}(\mathbb{R}^n)$ is a \(\sigma\)-algebra, it is closed under countable unions.
    Thus $\{x \in A : g(x) > a\} \in \mathcal{M}(\mathbb{R}^n)$.
    By Theorem 5.2 (Ray Criterion 1), $g = \sup f_j$ is measurable.
 2. *Infimum:* Dually, $\inf_{j} f_j(x) < a \iff \exists j \in \mathbb{N}$ such that $f_j(x) < a$:
@@ -257,7 +257,7 @@ Then there exists a sequence of simple measurable functions $(s_k)_{k=1}^\infty$
 
 #+begin_proof
 *The Dyadic Slicing Construction:*
-Fix $k \in \mathbb{N}$. We divide the interval $[0, k[$ on the $y$-axis into $k \cdot 2^k$ subintervals of width $1/2^k$:
+Fix $k \in \mathbb{N}$. We divide the interval $[0, k[$ on the \(y\)-axis into $k \cdot 2^k$ subintervals of width $1/2^k$:
 \[
 I_{k, j} = \left[ \frac{j}{2^k}, \, \frac{j+1}{2^k} \right[, \quad j = 0, 1, \dots, k 2^k - 1.
 \]

@@ -39,7 +39,7 @@ The crowning achievement of this chapter is the study of *limits of measures*:
 We will discover that continuity from below *always* holds, while continuity from above holds *if and only if* at least one of the sets in the chain has finite measure!
 
 ** Roadmap
-- *4.1 Abstract Measure Spaces:* Axioms, finite, $\sigma$-finite, and complete measures.
+- *4.1 Abstract Measure Spaces:* Axioms, finite, \(\sigma\)-finite, and complete measures.
 - *4.2 Canonical Examples:* Lebesgue measure, counting measure, Dirac point mass.
 - *4.3 Elementary Properties:* Monotonicity, subadditivity, subtractivity.
 - *4.4 Continuity of Measures:* Continuity from below and continuity from above.
@@ -53,10 +53,10 @@ We will discover that continuity from below *always* holds, while continuity fro
 
 ** Formal Definition
 #+begin_quote
-*Definition 4.1 (Measure Space).* Let $X$ be a non-empty set and let $\mathcal{M}$ be a $\sigma$-algebra of subsets of $X$. 
+*Definition 4.1 (Measure Space).* Let $X$ be a non-empty set and let $\mathcal{M}$ be a \(\sigma\)-algebra of subsets of $X$. 
 A function $\mu: \mathcal{M} \to [0, +\infty]$ is called a *measure* on $(X, \mathcal{M})$ if:
 1. *Null Empty Set:* $\mu(\emptyset) = 0$.
-2. *Countable Additivity ($\sigma$-additivity):* For every sequence $E_1, E_2, E_3, \dots \in \mathcal{M}$ of pairwise disjoint sets:
+2. *Countable Additivity (\(\sigma\)-additivity):* For every sequence $E_1, E_2, E_3, \dots \in \mathcal{M}$ of pairwise disjoint sets:
    \[
    \mu\left( \bigcup_{j=1}^\infty E_j \right) = \sum_{j=1}^\infty \mu(E_j).
    \]
@@ -66,7 +66,7 @@ The triple $(X, \mathcal{M}, \mu)$ is called a *measure space*. The pair $(X, \m
 ** Classification of Measures
 - *Finite Measure:* $\mu$ is a finite measure if $\mu(X) < \infty$.
 - *Probability Measure:* $\mu$ is a probability measure (often denoted $P$) if $\mu(X) = 1$.
-- *$\sigma$-Finite Measure:* $\mu$ is $\sigma$-finite if $X$ can be written as a countable union of sets of finite measure:
+- *\(\sigma\)-Finite Measure:* $\mu$ is \(\sigma\)-finite if $X$ can be written as a countable union of sets of finite measure:
   \[
   X = \bigcup_{k=1}^\infty X_k, \quad \text{with } X_k \in \mathcal{M} \text{ and } \mu(X_k) < \infty \text{ for all } k \in \mathbb{N}.
   \]
@@ -80,9 +80,9 @@ The triple $(X, \mathcal{M}, \mu)$ is called a *measure space*. The pair $(X, \m
 * Canonical Examples
 
 ** Example 4.2 (Lebesgue Measure Space)
-$(\mathbb{R}^n, \mathcal{M}(\mathbb{R}^n), m)$, where $\mathcal{M}(\mathbb{R}^n)$ is the $\sigma$-algebra of Lebesgue measurable sets and $m$ is Lebesgue measure.
+$(\mathbb{R}^n, \mathcal{M}(\mathbb{R}^n), m)$, where $\mathcal{M}(\mathbb{R}^n)$ is the \(\sigma\)-algebra of Lebesgue measurable sets and $m$ is Lebesgue measure.
 - $m(\mathbb{R}^n) = +\infty$, so it is not a finite measure.
-- However, $\mathbb{R}^n = \bigcup_{k=1}^\infty [-k, k]^n$, where $m([-k, k]^n) = (2k)^n < \infty$. Thus Lebesgue measure is *$\sigma$-finite*.
+- However, $\mathbb{R}^n = \bigcup_{k=1}^\infty [-k, k]^n$, where $m([-k, k]^n) = (2k)^n < \infty$. Thus Lebesgue measure is *\(\sigma\)-finite*.
 - By Theorem 2.2, Lebesgue measure is *complete*.
 
 ** Example 4.3 (Counting Measure)
@@ -90,11 +90,11 @@ Let $X$ be any non-empty set and $\mathcal{M} = \mathcal{P}(X)$. For any $A \sub
 \[
 \mu_{\text{count}}(A) = \begin{cases} |A|, & \text{if } A \text{ is finite}, \\ +\infty, & \text{if } A \text{ is infinite}. \end{cases}
 \]
-- If $X$ is countable, $\mu_{\text{count}}$ is $\sigma$-finite.
-- If $X$ is uncountable (e.g. $X = \mathbb{R}$), $\mu_{\text{count}}$ is *not* $\sigma$-finite!
+- If $X$ is countable, $\mu_{\text{count}}$ is \(\sigma\)-finite.
+- If $X$ is uncountable (e.g. $X = \mathbb{R}$), $\mu_{\text{count}}$ is *not* \(\sigma\)-finite!
 
 ** Example 4.4 (Dirac Measure / Point Mass)
-Fix a point $x_0 \in X$ and let $\mathcal{M}$ be any $\sigma$-algebra on $X$. Define:
+Fix a point $x_0 \in X$ and let $\mathcal{M}$ be any \(\sigma\)-algebra on $X$. Define:
 \[
 \delta_{x_0}(A) = \begin{cases} 1, & \text{if } x_0 \in A, \\ 0, & \text{if } x_0 \notin A. \end{cases}
 \]
@@ -218,9 +218,10 @@ Without loss of generality, assume $\mu(E_1) < \infty$.
 
 * The Infinite Counterexample
 
-> [!CAUTION]
-> The condition $\mu(E_1) < \infty$ in Theorem 4.7 is **strictly necessary**! 
-> If all sets have infinite measure, continuity from above can fail spectacularly.
+#+begin_quote
+*Caution:* The condition $\mu(E_1) < \infty$ in Theorem 4.7 is *strictly necessary*! 
+If all sets have infinite measure, continuity from above can fail spectacularly.
+#+end_quote
 
 *Counterexample (Fall 2026 Lectures, p. 39--40):*
 Consider the real line $(\mathbb{R}, \mathcal{M}, m)$ with Lebesgue measure.

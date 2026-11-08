@@ -31,7 +31,7 @@ To solve partial differential equations, minimize energy functionals, or analyze
 For a function space to be useful in analysis, it must be *complete*: every Cauchy sequence must converge to an element *inside* the space. 
 A complete normed vector space is called a *Banach space*.
 
-The classical space of continuous or Riemann integrable functions equipped with the $L^1$-norm is *incomplete*: Cauchy sequences of continuous functions can converge to discontinuous step functions or fractals that do not belong to the space.
+The classical space of continuous or Riemann integrable functions equipped with the \(L^1\)-norm is *incomplete*: Cauchy sequences of continuous functions can converge to discontinuous step functions or fractals that do not belong to the space.
 
 Lebesgue integration permanently solves this crisis. 
 In this concluding chapter, we construct the *Lebesgue spaces $L^p(E)$* for $1 \le p \le \infty$:
@@ -62,7 +62,7 @@ Let $(X, \mathcal{M}, \mu)$ be a measure space (for instance, $(\mathbb{R}^n, \m
 \[
 \int_E |f|^p \, d\mu < \infty.
 \]
-The *$L^p$-norm* of $f$ is defined by:
+The *\(L^p\)-norm* of $f$ is defined by:
 \[
 \|f\|_p = \left( \int_E |f|^p \, d\mu \right)^{1/p}.
 \]
@@ -115,8 +115,9 @@ An element of $L^p(E)$ is an *equivalence class* of functions that agree almost 
 On this quotient space, $\|f\|_p = 0 \implies f = 0$ in $L^p(E)$, making $L^p(E)$ a genuine normed space!
 #+end_quote
 
-> [!NOTE]
-> In practice, we follow standard mathematical convention and refer to "the function $f \in L^p$", always remembering that modifying $f$ on a null set does not change the element.
+#+begin_quote
+*Note:* In practice, we follow standard mathematical convention and refer to "the function $f \in L^p$", always remembering that modifying $f$ on a null set does not change the element.
+#+end_quote
 
 ---
 
@@ -227,7 +228,7 @@ If $f \in L^p(E)$ and $g \in L^q(E)$, then $f g \in L^1(E)$ and
 #+begin_quote
 *Theorem 10.7 (Riesz--Fischer Theorem, 1907).* 
 For every $1 \le p \le \infty$, the space $L^p(E)$ is a *complete normed space* (a *Banach space*).
-That is, every Cauchy sequence in $L^p(E)$ converges in the $L^p$-norm to some function in $L^p(E)$:
+That is, every Cauchy sequence in $L^p(E)$ converges in the \(L^p\)-norm to some function in $L^p(E)$:
 \[
 \lim_{j, k \to \infty} \|f_j - f_k\|_p = 0 \implies \exists f \in L^p(E) \text{ such that } \lim_{k \to \infty} \|f_k - f\|_p = 0.
 \]
@@ -272,7 +273,7 @@ That is, every Cauchy sequence in $L^p(E)$ converges in the $L^p$-norm to some f
    \[
    \int_E |f - f_{k_j}|^p \, d\mu \le \liminf_{m \to \infty} \int_E |f_{k_m} - f_{k_j}|^p \, d\mu \le \left( \sum_{l=j}^\infty \frac{1}{2^l} \right)^p = \left( \frac{1}{2^{j-1}} \right)^p.
    \]
-   Taking $p$-th roots: $\|f - f_{k_j}\|_p \le \frac{1}{2^{j-1}} \to 0$ as $j \to \infty$.
+   Taking \(p\)-th roots: $\|f - f_{k_j}\|_p \le \frac{1}{2^{j-1}} \to 0$ as $j \to \infty$.
    Thus $f_{k_j} \to f$ in $L^p(E)$, and since $f = (f - f_{k_1}) + f_{k_1}$, $f \in L^p(E)$.
 5. *$L^p$ convergence of the full sequence:*
    Finally, by the triangle inequality:
@@ -295,9 +296,10 @@ f_{k_j}(x) \to f(x) \quad \text{for a.e. } x \in E.
 \]
 #+end_quote
 
-> [!WARNING]
-> *Convergence in $L^p$ does NOT imply pointwise convergence!*
-> The full sequence $f_k$ can converge to $0$ in $L^p$ while *failing to converge at any single point*!
+#+begin_quote
+*Warning (Convergence in $L^p$ does NOT imply pointwise convergence):*
+The full sequence $f_k$ can converge to $0$ in $L^p$ while *failing to converge at any single point*!
+#+end_quote
 
 *The Typewriter (Sliding Interval) Counterexample:*
 On $[0, 1]$, define the sequence of indicator functions:
@@ -333,7 +335,7 @@ Prove that $L^q(X) \subset L^p(X)$, and that for all $f \in L^q(X)$:
    \[
    \int_X |f|^p \, d\mu \le \int_X \|f\|_\infty^p \, d\mu = \|f\|_\infty^p \mu(X) < \infty.
    \]
-   Taking $p$-th roots: $\|f\|_p \le \|f\|_\infty \mu(X)^{1/p}$.
+   Taking \(p\)-th roots: $\|f\|_p \le \|f\|_\infty \mu(X)^{1/p}$.
 2. Case $1 \le p < q < \infty$:
    We want to apply Hölder's Inequality to $\int_X |f|^p \cdot 1 \, d\mu$.
    Choose the exponent $r = q/p > 1$. Its Hölder conjugate is $s = \frac{r}{r - 1} = \frac{q/p}{q/p - 1} = \frac{q}{q - p}$.
@@ -341,7 +343,7 @@ Prove that $L^q(X) \subset L^p(X)$, and that for all $f \in L^q(X)$:
    \[
    \int_X |f|^p \cdot 1 \, d\mu \le \left( \int_X (|f|^p)^r \, d\mu \right)^{1/r} \left( \int_X 1^s \, d\mu \right)^{1/s} = \left( \int_X |f|^q \, d\mu \right)^{p/q} \bigl( \mu(X) \bigr)^{(q - p)/q}.
    \]
-3. Taking the $p$-th root of both sides:
+3. Taking the \(p\)-th root of both sides:
    \[
    \|f\|_p = \left( \int_X |f|^p \, d\mu \right)^{1/p} \le \left( \int_X |f|^q \, d\mu \right)^{1/q} \bigl( \mu(X) \bigr)^{\frac{q - p}{p q}} = \|f\|_q \, \mu(X)^{\frac{1}{p} - \frac{1}{q}}.
    \]
