@@ -23,7 +23,7 @@
 * Overview
 
 ** What problem does this chapter solve?
-In Chapters 1--4, we constructed the geometric foundation: the $\sigma$-algebra $\mathcal{M}(\mathbb{R}^n)$ of measurable sets and the Lebesgue measure $m$. 
+In Chapters 1--4, we constructed the geometric foundation: the \(\sigma\)-algebra $\mathcal{M}(\mathbb{R}^n)$ of measurable sets and the Lebesgue measure $m$. 
 Now, we turn from measuring *sets* to integrating *functions*.
 
 In calculus, we integrate functions like $f(x) = \sin(x)$ or $e^{-x^2}$. 
@@ -67,8 +67,9 @@ Recall from Chapter 0 that $\overline{\mathbb{R}} = [-\infty, +\infty]$.
 2. A mapping $f: A \to \mathbb{R}^m$ is called *measurable* if for every open set $U \subset \mathbb{R}^m$, the preimage $f^{-1}(U)$ is a Lebesgue measurable set in $\mathbb{R}^n$.
 #+end_quote
 
-> [!NOTE]
-> If the domain $A$ itself is not measurable, no function on $A$ can be measurable under this definition, because $f^{-1}(\mathbb{R}) = A$ must be measurable! We therefore always assume the domain $A \in \mathcal{M}(\mathbb{R}^n)$.
+#+begin_quote
+*Note:* If the domain $A$ itself is not measurable, no function on $A$ can be measurable under this definition, because $f^{-1}(\mathbb{R}) = A$ must be measurable! We therefore always assume the domain $A \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
 
 ---
 
@@ -146,7 +147,7 @@ This means there exists an open set $V \subset \mathbb{R}^n$ such that
 f^{-1}(U) = V \cap A.
 \]
 By Theorem 3.2, every open set $V \subset \mathbb{R}^n$ is Lebesgue measurable ($V \in \mathcal{M}$).
-Since $A \in \mathcal{M}$ and $\mathcal{M}$ is a $\sigma$-algebra, the intersection $f^{-1}(U) = V \cap A \in \mathcal{M}$.
+Since $A \in \mathcal{M}$ and $\mathcal{M}$ is a \(\sigma\)-algebra, the intersection $f^{-1}(U) = V \cap A \in \mathcal{M}$.
 Thus $f$ is measurable.
 #+end_proof
 
@@ -163,13 +164,13 @@ Consider the collection of all subsets of $\mathbb{R}^m$ whose preimages are mea
 \[
 \mathcal{F} = \{S \subset \mathbb{R}^m : f^{-1}(S) \in \mathcal{M}(\mathbb{R}^n)\}.
 \]
-We verify that $\mathcal{F}$ is a $\sigma$-algebra on $\mathbb{R}^m$:
+We verify that $\mathcal{F}$ is a \(\sigma\)-algebra on $\mathbb{R}^m$:
 1. $f^{-1}(\mathbb{R}^m) = A \in \mathcal{M}(\mathbb{R}^n)$, so $\mathbb{R}^m \in \mathcal{F}$.
 2. If $S \in \mathcal{F}$, then $f^{-1}(S^c) = A \setminus f^{-1}(S) \in \mathcal{M}$, so $S^c \in \mathcal{F}$.
 3. If $S_1, S_2, \dots \in \mathcal{F}$, then $f^{-1}(\bigcup S_j) = \bigcup f^{-1}(S_j) \in \mathcal{M}$, so $\bigcup S_j \in \mathcal{F}$.
-Thus $\mathcal{F}$ is a $\sigma$-algebra. 
+Thus $\mathcal{F}$ is a \(\sigma\)-algebra. 
 Since $f$ is measurable, $\mathcal{F}$ contains all open sets in $\mathbb{R}^m$.
-Because the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^m)$ is the *smallest* $\sigma$-algebra containing all open sets, we must have $\mathcal{B}(\mathbb{R}^m) \subset \mathcal{F}$.
+Because the Borel \(\sigma\)-algebra $\mathcal{B}(\mathbb{R}^m)$ is the *smallest* \(\sigma\)-algebra containing all open sets, we must have $\mathcal{B}(\mathbb{R}^m) \subset \mathcal{F}$.
 Therefore, for every $B \in \mathcal{B}(\mathbb{R}^m)$, $f^{-1}(B) \in \mathcal{M}(\mathbb{R}^n)$.
 #+end_proof
 
@@ -289,10 +290,12 @@ By Exercise 0.1, $(g \circ f)^{-1}(U) = f^{-1}(g^{-1}(U)) \in \mathcal{M}(\mathb
 Thus $g \circ f$ is measurable.
 #+end_proof
 
-> [!WARNING]
-> *Failure of Composition of two Measurable Functions:*
-> If $f$ is Lebesgue measurable and $g$ is Lebesgue measurable, $g \circ f$ is **not necessarily Lebesgue measurable**!
-> *Reason:* $f^{-1}(E)$ is only guaranteed to be measurable if $E$ is a *Borel* set (Theorem 5.5). If $E$ is a Lebesgue measurable set that is not Borel, $f^{-1}(E)$ can fail to be measurable! (A classic counterexample uses the Cantor staircase function to map a non-measurable subset of a Cantor set).
+#+begin_quote
+*Warning (Failure of Composition of two Measurable Functions):*
+If $f$ is Lebesgue measurable and $g$ is Lebesgue measurable, $g \circ f$ is *not necessarily Lebesgue measurable*!
+
+*Reason:* $f^{-1}(E)$ is only guaranteed to be measurable if $E$ is a *Borel* set (Theorem 5.5). If $E$ is a Lebesgue measurable set that is not Borel, $f^{-1}(E)$ can fail to be measurable! (A classic counterexample uses the Cantor staircase function to map a non-measurable subset of a Cantor set).
+#+end_quote
 
 ** Vector-Valued Mappings
 #+begin_quote
@@ -341,7 +344,7 @@ Prove that $E_r$ is a Lebesgue measurable set for every $r \in \mathbb{R}$.
    E_r = \{x \in A : f(x) \ge r\} \cap \{x \in A : f(x) \le r\}.
    \]
 3. By Theorem 5.2 (conditions 2 and 4), because $f$ is measurable, both $\{x \in A : f(x) \ge r\}$ and $\{x \in A : f(x) \le r\}$ belong to $\mathcal{M}(\mathbb{R}^n)$.
-4. Because $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, it is closed under finite intersections.
+4. Because $\mathcal{M}(\mathbb{R}^n)$ is a \(\sigma\)-algebra, it is closed under finite intersections.
 Hence $E_r \in \mathcal{M}(\mathbb{R}^n)$.
 
 ** Exercise 5.3 (Homework 5, Problem 5: Continuity Set of an Arbitrary Function)

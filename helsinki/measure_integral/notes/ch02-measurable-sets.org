@@ -2,7 +2,7 @@
 :ID:       474cc3b2-82d0-4abd-abe6-04fd6ff5a797
 :ROAM_ALIASES: "MAST31051 Chapter 2" "Caratheodory Measurable Sets Notes"
 :END:
-#+title: Chapter 2: Carathéodory's Measurability Criterion and $\sigma$-Algebras
+#+title: Chapter 2: Carathéodory's Measurability Criterion and \(\sigma\)-Algebras
 #+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
 #+author: Antigravity Notes
 #+date: [2026-11-08]
@@ -33,7 +33,7 @@ For two disjoint sets $A \cap B = \emptyset$, we *desperately want* equality: $m
 Unfortunately, if we allow arbitrary subsets of $\mathbb{R}^n$, strict additivity fails (as we will see with the Vitali set in Chapter 3). 
 Therefore, we must find a subcollection of "well-behaved" subsets $\mathcal{M}(\mathbb{R}^n) \subset \mathcal{P}(\mathbb{R}^n)$ such that:
 1. Every geometric shape we encounter in practice (intervals, open sets, closed sets, compact sets) belongs to $\mathcal{M}(\mathbb{R}^n)$.
-2. $\mathcal{M}(\mathbb{R}^n)$ is closed under countable unions, intersections, and complements (a *$\sigma$-algebra*).
+2. $\mathcal{M}(\mathbb{R}^n)$ is closed under countable unions, intersections, and complements (a *\(\sigma\)-algebra*).
 3. On $\mathcal{M}(\mathbb{R}^n)$, the outer measure $m^*$ becomes *strictly countably additive*.
 
 In 1914, Constantin Carathéodory discovered an extraordinarily elegant, general criterion that accomplishes this without referencing coordinates, intervals, or topology.
@@ -42,9 +42,9 @@ In 1914, Constantin Carathéodory discovered an extraordinarily elegant, general
 - *2.1 Carathéodory's Measurability Condition:* The splitting test $m^*(A) = m^*(A \cap E) + m^*(A \setminus E)$.
 - *2.2 Null Sets and Complements:* Proving null sets and complements are measurable.
 - *2.3 Finite Unions and Intersections:* Additivity over finite disjoint measurable sets.
-- *2.4 Countable Unions and the $\sigma$-Algebra Property:* Proving $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra.
+- *2.4 Countable Unions and the \(\sigma\)-Algebra Property:* Proving $\mathcal{M}(\mathbb{R}^n)$ is a \(\sigma\)-algebra.
 - *2.5 Countable Additivity on $\mathcal{M}(\mathbb{R}^n)$:* The triumph of the Carathéodory construction.
-- *2.6 The $\varepsilon$-Sandwich Characterization:* A necessary and sufficient condition for measurability (Fall 2026 Exam Problem 2).
+- *2.6 The \(\varepsilon\)-Sandwich Characterization:* A necessary and sufficient condition for measurability (Fall 2026 Exam Problem 2).
 - *Worked Exercises:* Solutions to exam and homework problems.
 - *Summary Cheat-Sheet:* Quick-reference table of measurable set operations.
 
@@ -73,13 +73,14 @@ m^*(A) = m^*(A \cap E) + m^*(A \setminus E).
 \]
 #+end_quote
 
-> [!TIP]
-> *How to verify measurability in practice:* 
-> Because $m^*(A) \le m^*(A \cap E) + m^*(A \setminus E)$ is automatically true for *any* set $E$ by subadditivity, to prove that $E$ is measurable you only ever need to prove the reverse inequality:
-> \[
-> m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E) \quad \text{for all } A \subset \mathbb{R}^n.
-> \]
-> Moreover, if $m^*(A) = +\infty$, this inequality is trivially satisfied. Thus it suffices to test sets $A$ with $m^*(A) < \infty$.
+#+begin_quote
+*Tip (How to verify measurability in practice):* 
+Because $m^*(A) \le m^*(A \cap E) + m^*(A \setminus E)$ is automatically true for *any* set $E$ by subadditivity, to prove that $E$ is measurable you only ever need to prove the reverse inequality:
+\[
+m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E) \quad \text{for all } A \subset \mathbb{R}^n.
+\]
+Moreover, if $m^*(A) = +\infty$, this inequality is trivially satisfied. Thus it suffices to test sets $A$ with $m^*(A) < \infty$.
+#+end_quote
 
 When $E \in \mathcal{M}(\mathbb{R}^n)$, we drop the asterisk and write simply $m(E)$ for its *Lebesgue measure*:
 \[
@@ -197,23 +198,23 @@ Adding $m^*(A \cap E_k)$ completes the induction step.
 
 ---
 
-* Countable Unions and the $\sigma$-Algebra Property
+* Countable Unions and the \(\sigma\)-Algebra Property
 
-** Definition of an Algebra and a $\sigma$-Algebra
+** Definition of an Algebra and a \(\sigma\)-Algebra
 #+begin_quote
 *Definition 2.7.* Let $X$ be a set. A collection $\mathcal{A} \subset \mathcal{P}(X)$ is called an *algebra* (or Boolean algebra) on $X$ if:
 1. $\emptyset \in \mathcal{A}$ and $X \in \mathcal{A}$.
 2. $E \in \mathcal{A} \implies E^c = X \setminus E \in \mathcal{A}$.
 3. $E_1, \dots, E_k \in \mathcal{A} \implies \bigcup_{i=1}^k E_i \in \mathcal{A}$ (closed under finite unions).
 
-The collection $\mathcal{A}$ is called a *$\sigma$-algebra* (or $\sigma$-field) if condition (3) is strengthened to:
+The collection $\mathcal{A}$ is called a *\(\sigma\)-algebra* (or \(\sigma\)-field) if condition (3) is strengthened to:
 3'. For every countable sequence $E_1, E_2, E_3, \dots \in \mathcal{A}$, the union $\bigcup_{j=1}^\infty E_j \in \mathcal{A}$ (closed under countable unions).
 #+end_quote
 
-** $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-Algebra
+** $\mathcal{M}(\mathbb{R}^n)$ is a \(\sigma\)-Algebra
 
 #+begin_quote
-*Theorem 2.8.* $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra on $\mathbb{R}^n$.
+*Theorem 2.8.* $\mathcal{M}(\mathbb{R}^n)$ is a \(\sigma\)-algebra on $\mathbb{R}^n$.
 #+end_quote
 
 #+begin_proof
@@ -285,7 +286,7 @@ Combining both inequalities gives exact equality.
 
 ---
 
-* The $\varepsilon$-Sandwich Characterization of Measurability
+* The \(\varepsilon\)-Sandwich Characterization of Measurability
 
 A central theorem in measure theory—and Question 2 on the Fall 2026 exam—provides an intuitive geometric characterization of measurable sets: a set is measurable if and only if it can be sandwiched between measurable sets whose difference is arbitrarily small.
 
@@ -308,7 +309,7 @@ Define:
 \[
 A = \bigcup_{k=1}^\infty A_k \quad \text{and} \quad B = \bigcap_{k=1}^\infty B_k.
 \]
-Because $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, both $A$ and $B$ are measurable sets!
+Because $\mathcal{M}(\mathbb{R}^n)$ is a \(\sigma\)-algebra, both $A$ and $B$ are measurable sets!
 Moreover, for every $k$:
 \[
 A_k \subset A \subset E \subset B \subset B_k.
@@ -401,6 +402,6 @@ Prove that $m(A) = m(B)$.
 | *Carathéodory Condition* | $m^*(A) = m^*(A \cap E) + m^*(A \setminus E)$ for all $A$ | Clean knife: $E$ splits every test set additively. |
 | *Sufficient Test* | Check only $m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E)$ | The reverse inequality ($\le$) is automatic from subadditivity. |
 | *Null Sets* | $m^*(E) = 0 \implies E \in \mathcal{M}(\mathbb{R}^n)$ | Singletons, countable sets ($\mathbb{Q}^n$), and subsets of null sets are measurable. |
-| *$\sigma$-Algebra* | $\mathcal{M}(\mathbb{R}^n)$ is closed under $E^c$ and $\bigcup_{j=1}^\infty E_j$ | All standard set operations on countably many sets keep you inside $\mathcal{M}$. |
+| *\(\sigma\)-Algebra* | $\mathcal{M}(\mathbb{R}^n)$ is closed under $E^c$ and $\bigcup_{j=1}^\infty E_j$ | All standard set operations on countably many sets keep you inside $\mathcal{M}$. |
 | *Countable Additivity* | $E_j \in \mathcal{M}$ disjoint $\implies m(\bigcup E_j) = \sum m(E_j)$ | Strict additivity is fully restored on measurable sets! |
-| *$\varepsilon$-Sandwich* | $E \in \mathcal{M} \iff \forall \varepsilon > 0,\, \exists A \subset E \subset B$ with $m(B \setminus A) < \varepsilon$ | Core characterization used on exams to prove measurability. |
+| *\(\varepsilon\)-Sandwich* | $E \in \mathcal{M} \iff \forall \varepsilon > 0,\, \exists A \subset E \subset B$ with $m(B \setminus A) < \varepsilon$ | Core characterization used on exams to prove measurability. |

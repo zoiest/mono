@@ -37,7 +37,7 @@ The goal of this chapter is to place multivariable integration on an unshakeable
 4. *The Standard Analytical Workflow:* How mathematicians use Tonelli to prove integrability, and then Fubini to compute the value.
 
 ** Roadmap
-- *9.1 Product Spaces and Sections:* Definitions of $x$-sections of sets and slice functions.
+- *9.1 Product Spaces and Sections:* Definitions of \(x\)-sections of sets and slice functions.
 - *9.2 Tonelli's Theorem:* Swapping integrals for non-negative functions ($f \ge 0$).
 - *9.3 Fubini's Theorem:* Swapping integrals for integrable functions ($f \in L^1$).
 - *9.4 The Two-Step Working Procedure:* Tonelli first, then Fubini.
@@ -55,11 +55,11 @@ Let $m_n$, $m_k$, and $m_{n+k}$ denote Lebesgue measures on $\mathbb{R}^n$, $\ma
 ** Sections of Sets
 #+begin_quote
 *Definition 9.1 (Sections of Sets).* Let $E \subset \mathbb{R}^{n+k}$.
-- For any fixed $x \in \mathbb{R}^n$, the *$x$-section* of $E$ is
+- For any fixed $x \in \mathbb{R}^n$, the *\(x\)-section* of $E$ is
   \[
   E_x = \{y \in \mathbb{R}^k : (x, y) \in E\} \subset \mathbb{R}^k.
   \]
-- For any fixed $y \in \mathbb{R}^k$, the *$y$-section* of $E$ is
+- For any fixed $y \in \mathbb{R}^k$, the *\(y\)-section* of $E$ is
   \[
   E^y = \{x \in \mathbb{R}^n : (x, y) \in E\} \subset \mathbb{R}^n.
   \]
@@ -164,16 +164,18 @@ Then:
 
 * The Standard Two-Step Working Procedure
 
-> [!TIP]
-> In mathematical practice, whenever you encounter an iterated integral, you should follow this exact two-step recipe:
-> 1. *Step 1 (Test integrability using Tonelli):* Place absolute values inside the integrand and evaluate the iterated integral:
->    \[
->    I_{\text{abs}} = \int \left( \int |f(x, y)| \, dy \right) dx.
->    \]
->    Because $|f| \ge 0$, Tonelli guarantees you can compute this in whichever order is easiest.
-> 2. *Step 2 (Evaluate using Fubini):*
->    - If $I_{\text{abs}} < \infty$, then $f \in L^1$! You are legally licensed by Fubini's Theorem to swap the order of integration and evaluate the original integral $\iint f$.
->    - If $I_{\text{abs}} = \infty$, Fubini does *not* apply, and swapping the order of integration may produce incorrect results!
+#+begin_quote
+*Tip (Standard Two-Step Recipe for Iterated Integrals):*
+In mathematical practice, whenever you encounter an iterated integral, you should follow this exact two-step recipe:
+1. *Step 1 (Test integrability using Tonelli):* Place absolute values inside the integrand and evaluate the iterated integral:
+   \[
+   I_{\text{abs}} = \int \left( \int \lvert f(x, y)\rvert \, dy \right) dx.
+   \]
+   Because $\lvert f\rvert \ge 0$, Tonelli guarantees you can compute this in whichever order is easiest.
+2. *Step 2 (Evaluate using Fubini):*
+   - If $I_{\text{abs}} < \infty$, then $f \in L^1$! You are legally licensed by Fubini's Theorem to swap the order of integration and evaluate the original integral $\iint f$.
+   - If $I_{\text{abs}} = \infty$, Fubini does *not* apply, and swapping the order of integration may produce incorrect results!
+#+end_quote
 
 ---
 
@@ -266,7 +268,7 @@ m_{n+1}(\mathcal{U}(f)) = \int_E f \, dm_n.
 1. Consider the indicator function $\chi_{\mathcal{U}(f)}(x, y)$ on $\mathbb{R}^n \times \mathbb{R}$.
 2. Notice that $\chi_{\mathcal{U}(f)}(x, y) \ge 0$.
 3. By Tonelli's Theorem (Theorem 9.4), we integrate with respect to $y \in \mathbb{R}$ first:
-   For a fixed $x \in E$, the $x$-section of the hypograph is the 1-dimensional interval:
+   For a fixed $x \in E$, the \(x\)-section of the hypograph is the 1-dimensional interval:
    \[
    (\mathcal{U}(f))_x = \{y \in \mathbb{R} : 0 \le y \le f(x)\} = [0, f(x)].
    \]
@@ -278,7 +280,7 @@ m_{n+1}(\mathcal{U}(f)) = \int_E f \, dm_n.
    \[
    m_{n+1}(\mathcal{U}(f)) = \int_E m_1\bigl((\mathcal{U}(f))_x\bigr) \, dm_n(x) = \int_E f(x) \, dm_n(x).
    \]
-This proves that the abstract Lebesgue integral is geometrically identical to the $(n+1)$-dimensional volume beneath the graph!
+This proves that the abstract Lebesgue integral is geometrically identical to the \((n+1)\)-dimensional volume beneath the graph!
 
 ---
 

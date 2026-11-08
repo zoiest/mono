@@ -98,13 +98,14 @@ If $f \in L^1(E)$, the *Lebesgue integral* of $f$ over $E$ is defined by:
 \]
 #+end_quote
 
-> [!NOTE]
-> Since $|f| = f^+ + f^-$, by linearity of non-negative integrals (Theorem 7.7):
-> \[
-> \int_E |f| \, d\mu = \int_E f^+ \, d\mu + \int_E f^- \, d\mu.
-> \]
-> Therefore, $\int_E |f| \, d\mu < \infty$ if and only if *both* $\int_E f^+ \, d\mu < \infty$ and $\int_E f^- \, d\mu < \infty$. 
-> This guarantees that the subtraction $\int f^+ - \int f^-$ never encounters $\infty - \infty$!
+#+begin_quote
+*Note:* Since $\lvert f\rvert = f^+ + f^-$, by linearity of non-negative integrals (Theorem 7.7):
+\[
+\int_E \lvert f\rvert \, d\mu = \int_E f^+ \, d\mu + \int_E f^- \, d\mu.
+\]
+Therefore, $\int_E \lvert f\rvert \, d\mu < \infty$ if and only if *both* $\int_E f^+ \, d\mu < \infty$ and $\int_E f^- \, d\mu < \infty$. 
+This guarantees that the subtraction $\int f^+ - \int f^-$ never encounters $\infty - \infty$!
+#+end_quote
 
 #+begin_quote
 *Theorem 8.3 (Properties of the General Integral).* Let $f, g \in L^1(E)$ and $\alpha, \beta \in \mathbb{R}$.
@@ -290,7 +291,7 @@ In this case, $f$ is also Lebesgue integrable on $[a, b]$, and the two integrals
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.4\textwidth} >{\RaggedRight}X :booktabs t
 | Feature | Classical Riemann Integral | Modern Lebesgue Integral |
 |---------+----------------------------+--------------------------|
-| *Domain Partition* | Partitions the $x$-axis into intervals | Partitions the $y$-axis via preimages |
+| *Domain Partition* | Partitions the \(x\)-axis into intervals | Partitions the \(y\)-axis via preimages |
 | *Dirichlet Function* | Not integrable ($\overline{\int}=1, \underline{\int}=0$) | Integrable: $\int \chi_{\mathbb{Q}} = 0$ |
 | *Limit under Integral* | Requires uniform convergence | Requires only pointwise a.e. + domination (DCT) or monotonicity (MCT) |
 | *Space of Functions* | Not complete ($L^1_{\text{Riemann}}$ is not Banach) | Complete: $L^1$ is a Banach space |
@@ -325,11 +326,11 @@ Prove that:
      Hence $\lim_{n \to \infty} f_n(x, y) = 0$.
    - If $x = 0$, then $(0, y) \in A_n$ for all $n$, so $f_n(0, y) = f(0, y)$.
    Therefore, $f_n(x, y) \to 0$ for all points $(x, y)$ with $x \neq 0$.
-   The set of exceptional points is the $y$-axis:
+   The set of exceptional points is the \(y\)-axis:
    \[
    Y = \{(0, y) \in \mathbb{R}^2 : y \in \mathbb{R}\}.
    \]
-   The $y$-axis is a line in $\mathbb{R}^2$, which has two-dimensional Lebesgue measure zero: $m(Y) = 0$!
+   The \(y\)-axis is a line in $\mathbb{R}^2$, which has two-dimensional Lebesgue measure zero: $m(Y) = 0$!
    Therefore:
    \[
    f_n(x, y) \to 0 \quad \text{for almost every } (x, y) \in \mathbb{R}^2.

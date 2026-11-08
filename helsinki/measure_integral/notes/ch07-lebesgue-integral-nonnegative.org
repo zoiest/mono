@@ -131,7 +131,7 @@ If $E \in \mathcal{M}$ is a measurable subset of $A$, we define $\int_E f \, d\m
 3. *Scaling:* $\int_A c f \, d\mu = c \int_A f \, d\mu$.
 4. *Domain Monotonicity:* If $E_1 \subset E_2 \subset A$, then $\int_{E_1} f \, d\mu \le \int_{E_2} f \, d\mu$.
 5. *Null Domain:* If $\mu(E) = 0$, then $\int_E f \, d\mu = 0$ (even if $f(x) = +\infty$ on $E$!).
-6. *Null Function Characterization:* $\int_A f \, d\mu = 0 \iff f(x) = 0$ for $\mu$-almost every $x \in A$.
+6. *Null Function Characterization:* $\int_A f \, d\mu = 0 \iff f(x) = 0$ for \(\mu\)-almost every $x \in A$.
 #+end_quote
 
 #+begin_proof
@@ -315,9 +315,10 @@ If $(f_j)_{j=1}^\infty$ is *any* sequence of non-negative measurable functions $
 
 ** Classic Counterexamples: Where Mass Escapes
 
-> [!WARNING]
-> In Fatou's Lemma, strict inequality $\int \liminf f_j < \liminf \int f_j$ often occurs!
-> There are two classic mechanisms causing mass to escape:
+#+begin_quote
+*Warning:* In Fatou's Lemma, strict inequality $\int \liminf f_j < \liminf \int f_j$ often occurs!
+There are two classic mechanisms causing mass to escape:
+#+end_quote
 
 *Counterexample 1: Mass Escaping to Spatial Infinity (Moving Bump)*
 Consider $(\mathbb{R}, \mathcal{M}, m)$ and the sequence of indicator functions:
