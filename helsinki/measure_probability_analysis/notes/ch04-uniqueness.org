@@ -659,7 +659,7 @@ Let \(\Omega = \{1, 2, 3, 4\}\). Let \(A = \{1, 2\}\) and \(B = \{2, 3\}\).
    \(\mu(A) = \frac12 = \nu(A)\) and \(\mu(B) = \frac12 = \nu(B)\).
    A subset \(E \subseteq \Omega\) has \(\mu(E) = \nu(E)\) iff
    \[
-   |E \cap \{2, 4\}| = |E \cap \{1, 3\}|.
+   \lvert E \cap \{2, 4\} \rvert = \lvert E \cap \{1, 3\} \rvert.
    \]
    There are \(1 + 4 + 1 = 6\) such sets:
    - \(0\) from each: \(\emptyset\) (1 set).

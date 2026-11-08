@@ -42,7 +42,7 @@ required:
 1. *Premeasure on an algebra (\(\mu_0\) on \(\mathcal A\)):* Check that the initial assignment \(\mu_0\)
    is countably additive whenever a countable disjoint union happens to land back inside \(\mathcal A\)
    (Definition 5.2, Proposition 5.5).
-2. *Outer measure on all subsets (\(\mu^*\) on \(2^\Omega\)):* Cover any subset \(E \subseteq \Omega\) by
+2. *Outer measure on all subsets (\(\mu^{\ast}\) on \(2^\Omega\)):* Cover any subset \(E \subseteq \Omega\) by
    countable families of sets from \(\mathcal A\) and take the infimum of their total sizes
    (Definition 5.6, Lemma 5.7). This defines \(\mu^*(E)\) for *every* subset of \(\Omega\), but \(\mu^*\)
    is only countably *subadditive*, not additive on all subsets (Example 5.8).
@@ -785,10 +785,10 @@ Lebesgue measure \(\lambda\) (the *Lebesgue \(\sigma\)-algebra*) is strictly sma
 - *"Every finitely additive set function on an algebra extends to a measure":* False! Example 5.4 (the
   finite/cofinite lottery on \(\mathbb N\)) is finitely additive on \(\mathcal A\) with total mass \(1\),
   yet fails to be a premeasure and has no countably additive extension.
-- *"Outer measure \(\mu^*\) is a measure":* False! \(\mu^*\) is defined on *all* of \(2^\Omega\), and on
+- *"Outer measure \(\mu^{\ast}\) is a measure":* False! \(\mu^*\) is defined on *all* of \(2^\Omega\), and on
   sets outside \(\mathcal M\) it is only subadditive, not additive (Example 5.8). It becomes a measure
   only when restricted to \(\mathcal M\) (or \(\sigma(\mathcal A)\)).
-- *"To check Carathéodory measurability of \(E\), it suffices to check \(\mu^*(\Omega) = \mu^*(E) + \mu^*(E^c)\)":*
+- *"To check Carathéodory measurability of \(E\), it suffices to check \(\mu^{\ast}(\Omega) = \mu^{\ast}(E) + \mu^{\ast}(E^c)\)":*
   False in general (especially when \(\mu^*(\Omega) = \infty\))! Criterion (5.2) requires \(E\) to split
   **every** test set \(T \subseteq \Omega\) additively, which is what allows Step 1 and Step 2 of
   Theorem 5.9 to chain splits together (\(T \to T \setminus E \to (T \setminus E) \setminus F\)).
@@ -869,7 +869,7 @@ Let \(\Omega\) be a nonempty set and define \(\mu^* : 2^\Omega \to [0, 1]\) by \
 
 ** Exercise 3
 Let \(\mu^*\) be any outer measure on \(\Omega\), and suppose \(N \subseteq \Omega\) has
-\(\mu^*(N) = 0\) (we call \(N\) an *\(\mu^*\)-null set*).
+\(\mu^*(N) = 0\) (we call \(N\) a *\(\mu^{\ast}\)-null set*).
 1. Prove directly from (5.2) that \(N \in \mathcal M\).
 2. Conclude that for *any* outer measure \(\mu^*\), the \(\sigma\)-algebra \(\mathcal M\) contains all
    subsets of \(\Omega\) of outer measure zero, and for any \(A \in \mathcal M\) and \(N \subseteq \Omega\)
@@ -996,8 +996,8 @@ Let \(\Omega = \mathbb N\) and let \(\mathcal A\) be the finite/cofinite algebra
 | Proposition 5.5         | Finite finitely-additive \(\mu_0\) is a premeasure \(\iff [A_n \in \mathcal A,\ A_n \downarrow \emptyset \implies \mu_0(A_n) \to 0]\) | Practical tool to verify premeasures (cylinders, intervals)|
 | Outer measure \(\mu^*\) (5.6, 5.1) | \(\mu^*(E) = \inf\{\sum_{n=1}^\infty \mu_0(A_n) : E \subseteq \bigcup_n A_n,\ A_n \in \mathcal A\}\); monotone & countably subadditive | Extends \(\mu_0\) to *all* subsets \(2^\Omega\) (Lemma 5.7)|
 | Carathéodory set \(\mathcal M\) (5.2) | \(E \in \mathcal M \iff \mu^*(T) = \mu^*(T \cap E) + \mu^*(T \setminus E)\) for all \(T \subseteq \Omega\) | Selects sets that split every test set additively          |
-| Theorem 5.9             | \(\mathcal M\) is a \(\sigma\)-algebra and \(\mu^*|_{\mathcal M}\) is a complete measure                     | Abstract engine turning any outer measure into a measure   |
-| Theorem 5.10            | \(\mathcal A \subseteq \mathcal M\), so \(\mu^*|_{\sigma(\mathcal A)}\) is a measure extending \(\mu_0\) (unique if \(\sigma\)-finite on \(\mathcal A\)) | Carathéodory's Extension Theorem                           |
+| Theorem 5.9             | \(\mathcal M\) is a \(\sigma\)-algebra and \(\mu^{\ast}\vert_{\mathcal M}\) is a complete measure          | Abstract engine turning any outer measure into a measure   |
+| Theorem 5.10            | \(\mathcal A \subseteq \mathcal M\), so \(\mu^{\ast}\vert_{\sigma(\mathcal A)}\) is a measure extending \(\mu_0\) (unique if \(\sigma\)-finite on \(\mathcal A\)) | Carathéodory's Extension Theorem                           |
 | Completion (5.12, 5.14) | \(\overline{\mathcal F} = \{E : A \subseteq E \subseteq B \text{ in }\mathcal F,\ \mu(B \setminus A)=0\}\), \(\overline{\mu}(E)=\mu(A)\) | Adjoins all subsets of \(\mu\)-null sets                   |
 
 *Key takeaways*
