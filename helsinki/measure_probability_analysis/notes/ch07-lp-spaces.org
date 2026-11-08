@@ -138,7 +138,7 @@ When the measure \(\mu\) is understood from context, we abbreviate these norms b
 
 *Crucial property of the essential supremum (the infimum is actually attained!).* Unlike the regularity infimum in Chapter 8, the infimum defining \(\|f\|_\infty\) is always attained: if \(M = \|f\|_\infty < \infty\), then
 \[
-|f| \le \|f\|_\infty \quad \text{almost everywhere.}
+\lvert f \rvert \le \|f\|_\infty \quad \text{almost everywhere.}
 \]
 Why? By definition of infimum, for each integer \(n \ge 1\), \(M + 1/n\) is greater than the infimum, so there is a measurable null set \(E_n = \{|f| > M + 1/n\}\) with \(\mu(E_n) = 0\). Let \(E = \bigcup_{n=1}^\infty E_n\). As a countable union of null sets, \(\mu(E) = 0\). For every \(\omega \notin E\), we have \(|f(\omega)| \le M + 1/n\) for *all* \(n \ge 1\), and passing to the limit as \(n \to \infty\) gives \(|f(\omega)| \le M\). Thus the essential supremum is itself an almost-everywhere bound, not merely an infimum of possible bounds!
 
@@ -219,7 +219,7 @@ At the endpoints we use the pair \(p = 1, q = \infty\) (or \(p = \infty, q = 1\)
 *Case 1: The endpoint \(p = 1, q = \infty\) (or vice versa).*
 By the property of the essential supremum proved in Section 7.1, \(|g| \le \|g\|_\infty\) holds outside a \(\mu\)-null set. Multiplying both sides by \(|f| \ge 0\) gives
 \[
-|f(\omega)g(\omega)| \le |f(\omega)| \, \|g\|_\infty \quad \text{for } \mu\text{-a.e. } \omega \in \Omega.
+\lvert f(\omega)g(\omega) \rvert \le \lvert f(\omega) \rvert \, \|g\|_\infty \quad \text{for } \mu\text{-a.e. } \omega \in \Omega.
 \]
 Integrating over \(\Omega\) (using monotonicity of the integral off a null set) yields
 \[
@@ -294,19 +294,19 @@ Integrating over \(\Omega\) (using monotonicity of the integral off a null set) 
 
 *Case 2: \(p = \infty\).* Outside a null set \(N_1\) we have \(|f| \le \|f\|_\infty\), and outside a null set \(N_2\) we have \(|g| \le \|g\|_\infty\). Outside the union \(N_1 \cup N_2\) (which is still a null set!), the pointwise triangle inequality gives
 \[
-|f(\omega) + g(\omega)| \le |f(\omega)| + |g(\omega)| \le \|f\|_\infty + \|g\|_\infty.
+\lvert f(\omega) + g(\omega) \rvert \le \lvert f(\omega) \rvert + \lvert g(\omega) \rvert \le \|f\|_\infty + \|g\|_\infty.
 \]
 Thus \(\|f\|_\infty + \|g\|_\infty\) is an almost-everywhere upper bound for \(|f + g|\). Since \(\|f + g\|_\infty\) is the *infimum* of all such bounds, \(\|f + g\|_\infty \le \|f\|_\infty + \|g\|_\infty < \infty\).
 
 *Case 3: \(1 < p < \infty\).*
 - *Step 3a: Check finiteness of \(\|f + g\|_p\) first (why?).* In Step 3c we will want to divide an inequality by \(\|f + g\|_p^{p-1}\). Dividing by \(\infty\) is illegal! So we first verify that \(\|f + g\|_p < \infty\). By convexity of \(t \mapsto t^p\) (reviewed in the Overview),
   \[
-  |f + g|^p \le (|f| + |g|)^p \le 2^{p-1}\big(|f|^p + |g|^p\big).
+  \lvert f + g \rvert^p \le (\lvert f \rvert + \lvert g \rvert)^p \le 2^{p-1}\big(\lvert f \rvert^p + \lvert g \rvert^p\big).
   \]
   Integrating over \(\Omega\) gives \(\int_\Omega |f + g|^p \, d\mu \le 2^{p-1}(\|f\|_p^p + \|g\|_p^p) < \infty\), so indeed \(\|f + g\|_p < \infty\).
 - *Step 3b: Apply Hölder's inequality.* Split one factor of \(|f + g|\) using the pointwise triangle inequality:
   \[
-  |f + g|^p = |f + g| \cdot |f + g|^{p-1} \le |f|\,|f + g|^{p-1} + |g|\,|f + g|^{p-1}.
+  \lvert f + g \rvert^p = \lvert f + g \rvert \cdot \lvert f + g \rvert^{p-1} \le \lvert f \rvert\,\lvert f + g \rvert^{p-1} + \lvert g \rvert\,\lvert f + g \rvert^{p-1}.
   \]
   Let \(q = p/(p-1)\) be the conjugate exponent of \(p\), so \((p - 1)q = p\). What is the \(L^q\) norm of the helper function \(h := |f + g|^{p-1}\)?
   \[
@@ -406,7 +406,7 @@ the sequence of real numbers \(f_{n_k}(\omega)\) converges to a finite limit as 
 *Step 3. Estimate the norm of the remainder and conclude for the full sequence.*
 Subtracting \(f_{n_k}\) from the telescoping series for \(f\) leaves the tail from \(j = k\) onwards:
 \[
-|f - f_{n_k}| = \left| \sum_{j=k}^\infty (f_{n_{j+1}} - f_{n_j}) \right| \le \sum_{j=k}^\infty |f_{n_{j+1}} - f_{n_j}| \quad \text{almost everywhere.}
+\lvert f - f_{n_k} \rvert = \left| \sum_{j=k}^\infty (f_{n_{j+1}} - f_{n_j}) \right| \le \sum_{j=k}^\infty \lvert f_{n_{j+1}} - f_{n_j} \rvert \quad \text{almost everywhere.}
 \]
 For any finite cutoff \(N \ge k\), Minkowski's inequality gives
 \[
@@ -431,22 +431,22 @@ Since \(\varepsilon > 0\) was arbitrary, \(\|f_n - f\|_p \to 0\) as \(n \to \inf
 Let \((f_n)\) be Cauchy in \(L^\infty(\mu)\), and choose measurable representatives.
 - *Countable union of bad null sets:* For each pair of indices \((n, m) \in \mathbb{N}^2\), the inequality
   \[
-  |f_n(\omega) - f_m(\omega)| \le \|f_n - f_m\|_\infty
+  \lvert f_n(\omega) - f_m(\omega) \rvert \le \|f_n - f_m\|_\infty
   \]
   holds outside a measurable null set \(A_{n,m}\). Also, for each \(n \in \mathbb{N}\), the bound \(|f_n(\omega)| \le \|f_n\|_\infty\) holds outside a measurable null set \(B_n\). Since \(\mathbb{N}^2\) and \(\mathbb{N}\) are countable, the union of all these exceptional sets,
   \[
   E := \left(\bigcup_{n,m=1}^\infty A_{n,m}\right) \cup \left(\bigcup_{n=1}^\infty B_n\right),
   \]
   is a measurable null set (\(\mu(E) = 0\)).
-- *Uniform convergence off \(E\):* Outside \(E\), *all* the inequalities \(|f_n(\omega) - f_m(\omega)| \le \|f_n - f_m\|_\infty\) and \(|f_n(\omega)| \le \|f_n\|_\infty\) hold simultaneously at every single point \(\omega \in \Omega \setminus E\)! In particular, for each \(\omega \notin E\), \((f_n(\omega))\) is a Cauchy sequence of real numbers and therefore has a finite limit \(f(\omega) := \lim_{n \to \infty} f_n(\omega)\). Set \(f(\omega) := 0\) on \(E\).
+- *Uniform convergence off \(E\):* Outside \(E\), *all* the inequalities \(\lvert f_n(\omega) - f_m(\omega) \rvert \le \|f_n - f_m\|_\infty\) and \(|f_n(\omega)| \le \|f_n\|_\infty\) hold simultaneously at every single point \(\omega \in \Omega \setminus E\)! In particular, for each \(\omega \notin E\), \((f_n(\omega))\) is a Cauchy sequence of real numbers and therefore has a finite limit \(f(\omega) := \lim_{n \to \infty} f_n(\omega)\). Set \(f(\omega) := 0\) on \(E\).
 - *Measurability and essential boundedness:* As in Step 2, setting every \(f_n\) to \(0\) on \(E\) shows that \(f\) is the everywhere pointwise limit of measurable functions, hence measurable. To check \(f \in L^\infty(\mu)\), choose \(N\) so that \(\|f_n - f_N\|_\infty \le 1\) for all \(n \ge N\). Then for \(\omega \notin E\) and \(n \ge N\),
   \[
-  |f_n(\omega)| \le |f_N(\omega)| + |f_n(\omega) - f_N(\omega)| \le \|f_N\|_\infty + 1,
+  \lvert f_n(\omega) \rvert \le \lvert f_N(\omega) \rvert + \lvert f_n(\omega) - f_N(\omega) \rvert \le \|f_N\|_\infty + 1,
   \]
   and letting \(n \to \infty\) gives \(|f(\omega)| \le \|f_N\|_\infty + 1\) for all \(\omega \notin E\). Thus \(f \in L^\infty(\mu)\).
 - *Convergence in \(\|\cdot\|_\infty\):* Given \(\varepsilon > 0\), choose a Cauchy index \(M\) so that \(\|f_n - f_m\|_\infty \le \varepsilon\) for all \(n, m \ge M\). Then for every \(\omega \notin E\) and \(n, m \ge M\), we have \(|f_n(\omega) - f_m(\omega)| \le \varepsilon\). Holding \(n \ge M\) fixed and letting \(m \to \infty\) gives
   \[
-  |f_n(\omega) - f(\omega)| \le \varepsilon \quad \text{for all } \omega \notin E.
+  \lvert f_n(\omega) - f(\omega) \rvert \le \varepsilon \quad \text{for all } \omega \notin E.
   \]
   Since \(E\) is a null set, this means \(\|f_n - f\|_\infty \le \varepsilon\) for all \(n \ge M\). \(\blacksquare\)
 

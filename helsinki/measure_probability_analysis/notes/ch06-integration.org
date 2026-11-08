@@ -802,7 +802,7 @@ real-valued measurable functions such that:
 2. *(Domination)* There exists a nonnegative **integrable** function \(g : \Omega \to [0, \infty]\)
    (meaning \(\int_\Omega g\,d\mu < \infty\)) such that
    \[
-   |f_n| \le g \quad \text{almost everywhere, for every } n \ge 1.
+   \lvert f_n \rvert \le g \quad \text{almost everywhere, for every } n \ge 1.
    \]
 Then \(f_n\) and \(f\) are integrable, and as \(n \to \infty\),
 \[
@@ -908,7 +908,7 @@ f(\omega), & \text{if } -n \le f(\omega) \le n,\\
 Then each \(f_n\) is bounded (\(|f_n| \le n\)), \(f_n(\omega) \to f(\omega)\) pointwise everywhere on
 \(\Omega\) (in fact \(f_n(\omega) = f(\omega)\) as soon as \(n \ge |f(\omega)|\)), and
 \[
-|f_n(\omega)| \le |f(\omega)| \quad \text{for every } n \ge 1 \text{ and } \omega \in \Omega.
+\lvert f_n(\omega) \rvert \le \lvert f(\omega) \rvert \quad \text{for every } n \ge 1 \text{ and } \omega \in \Omega.
 \]
 Since \(g := |f|\) is integrable by hypothesis, the Dominated Convergence Theorem immediately gives
 \[
@@ -1037,7 +1037,7 @@ f_n(x) := \frac{n \sin(x/n)}{x (1 + x^2)} = \frac{\sin(x/n)}{x/n} \cdot \frac{1}
 2. *Domination:* Recall the elementary inequality \(|\sin u| \le |u|\) for all \(u \in \mathbb R\), so
    \(\left|\frac{\sin(x/n)}{x/n}\right| \le 1\) for all \(x > 0\) and all \(n \ge 1\). Consequently,
    \[
-   |f_n(x)| \le \frac{1}{1 + x^2} =: g(x) \quad \text{for all } x \in (0, \infty) \text{ and all } n \ge 1.
+   \lvert f_n(x) \rvert \le \frac{1}{1 + x^2} =: g(x) \quad \text{for all } x \in (0, \infty) \text{ and all } n \ge 1.
    \]
 3. *Integrability of the majorant \(g\):* On \((0, \infty)\), \(g(x) = \frac{1}{1+x^2} \ge 0\) is
    integrable with respect to Lebesgue measure because

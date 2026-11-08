@@ -406,7 +406,7 @@ Now pick any outcome \(\omega\) *outside* this probability-zero intersection.
   \(\omega \notin U_{m(\omega)} = \bigcup_{k \ge m(\omega)} E_k\).
 - That means for *every* \(k \ge m(\omega)\), \(\omega \notin E_k\), i.e.
   \[
-  |X_{n_k}(\omega) - X(\omega)| \le 2^{-k} \quad \text{for all } k \ge m(\omega) .
+  \lvert X_{n_k}(\omega) - X(\omega) \rvert \le 2^{-k} \quad \text{for all } k \ge m(\omega) .
   \]
 - Since \(2^{-k} \to 0\) as \(k \to \infty\), the squeeze theorem gives \(X_{n_k}(\omega) \to X(\omega)\).
 Because the exceptional intersection has probability \(0\), \(X_{n_k} \to X\) almost surely. \(\blacksquare\)
