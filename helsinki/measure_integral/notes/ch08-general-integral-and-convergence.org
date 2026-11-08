@@ -1,0 +1,400 @@
+:PROPERTIES:
+:ID:       3d384741-ed13-4539-97be-e65784ad1127
+:ROAM_ALIASES: "MAST31051 Chapter 8" "General Lebesgue Integral and DCT Notes"
+:END:
+#+title: Chapter 8: The General Lebesgue Integral and Dominated Convergence
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:lebesgue-integral:dct:dominated-convergence:riemann:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch07-lebesgue-integral-nonnegative.org][← Chapter 7]] | [[file:ch09-fubini-tonelli.org][Chapter 9: Product Measures & Fubini--Tonelli →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In Chapter 7, we defined the Lebesgue integral for non-negative functions $f \ge 0$. 
+In applications, functions regularly oscillate between positive and negative values (such as $\sin(x)$, wavefunctions, or financial returns).
+
+To integrate a general function $f: E \to [-\infty, +\infty]$, we split it into its positive and negative parts:
+\[
+f = f^+ - f^-, \quad \text{where } f^+ = \max(f, 0) \ge 0 \quad \text{and} \quad f^- = \max(-f, 0) \ge 0.
+\]
+Since both $f^+$ and $f^-$ are non-negative, their integrals $\int_E f^+$ and $\int_E f^-$ are already well-defined in $[0, +\infty]$. 
+We define the integral of $f$ as the difference:
+\[
+\int_E f \, dm = \int_E f^+ \, dm - \int_E f^- \, dm.
+\]
+To prevent the ambiguous arithmetic catastrophe $\infty - \infty$, we require both integrals to be finite. 
+This leads to the definition of *Lebesgue integrability*: $f$ is integrable if and only if $\int_E |f| \, dm < \infty$.
+
+The crowning theorem of Lebesgue integration is the *Dominated Convergence Theorem (DCT)*:
+If a sequence of functions converges pointwise almost everywhere ($f_j \to f$ a.e.), and the sequence is bounded in absolute value by a single integrable function ($|f_j(x)| \le g(x)$ with $\int g < \infty$), then *passing the limit under the integral sign is unconditionally valid*:
+\[
+\lim_{j \to \infty} \int_E f_j \, dm = \int_E f \, dm.
+\]
+This single theorem supersedes all the fragile uniform convergence criteria of classical calculus.
+
+** Roadmap
+- *8.1 Positive and Negative Decompositions:* Definition of $f^+$ and $f^-$.
+- *8.2 Integrability and the General Lebesgue Integral:* Definition of $L^1(E)$, linearity, triangle inequality.
+- *8.3 The Dominated Convergence Theorem (DCT):* Complete proof using Fatou's Lemma.
+- *8.4 Applications of DCT:* Bounded Convergence, parameter-dependent integrals, and differentiating under the integral sign.
+- *8.5 Lebesgue vs Riemann Integration:* Lebesgue's criterion for Riemann integrability and comparison.
+- *Worked Exercises:* Solutions to Fall 2026 Exam Problem 4 and homework problems.
+- *Summary Cheat-Sheet:* Quick-reference table of DCT and integrability rules.
+
+---
+
+* Positive and Negative Decompositions
+
+Let $E \in \mathcal{M}$ and let $f: E \to \overline{\mathbb{R}}$ be a measurable function.
+
+#+begin_quote
+*Definition 8.1 (Positive and Negative Parts).* The *positive part* $f^+$ and *negative part* $f^-$ of $f$ are defined by:
+\[
+f^+(x) = \max(f(x), 0) = \begin{cases} f(x), & \text{if } f(x) \ge 0, \\ 0, & \text{if } f(x) < 0, \end{cases}
+\]
+\[
+f^-(x) = \max(-f(x), 0) = \begin{cases} 0, & \text{if } f(x) \ge 0, \\ -f(x), & \text{if } f(x) < 0. \end{cases}
+\]
+#+end_quote
+
+Observe that:
+1. Both $f^+$ and $f^-$ are *non-negative*: $f^+(x) \ge 0$ and $f^-(x) \ge 0$ for all $x \in E$.
+2. Both $f^+$ and $f^-$ are *measurable* (Theorem 5.8).
+3. The original function is their difference:
+   \[
+   f(x) = f^+(x) - f^-(x).
+   \]
+4. The absolute value is their sum:
+   \[
+   \lvert f(x) \rvert = f^+(x) + f^-(x).
+   \]
+5. In particular, $0 \le f^+(x) \le |f(x)|$ and $0 \le f^-(x) \le |f(x)|$.
+
+---
+
+* Integrability and the General Lebesgue Integral
+
+#+begin_quote
+*Definition 8.2 (Lebesgue Integrable Function).* A measurable function $f: E \to \overline{\mathbb{R}}$ is called *Lebesgue integrable* on $E$ (denoted $f \in L^1(E)$ or $f \in L^1(E, \mu)$) if
+\[
+\int_E |f| \, d\mu < \infty.
+\]
+If $f \in L^1(E)$, the *Lebesgue integral* of $f$ over $E$ is defined by:
+\[
+\int_E f \, d\mu = \int_E f^+ \, d\mu - \int_E f^- \, d\mu \in \mathbb{R}.
+\]
+#+end_quote
+
+> [!NOTE]
+> Since $|f| = f^+ + f^-$, by linearity of non-negative integrals (Theorem 7.7):
+> \[
+> \int_E |f| \, d\mu = \int_E f^+ \, d\mu + \int_E f^- \, d\mu.
+> \]
+> Therefore, $\int_E |f| \, d\mu < \infty$ if and only if *both* $\int_E f^+ \, d\mu < \infty$ and $\int_E f^- \, d\mu < \infty$. 
+> This guarantees that the subtraction $\int f^+ - \int f^-$ never encounters $\infty - \infty$!
+
+#+begin_quote
+*Theorem 8.3 (Properties of the General Integral).* Let $f, g \in L^1(E)$ and $\alpha, \beta \in \mathbb{R}$.
+1. *Linearity:* $\alpha f + \beta g \in L^1(E)$ and
+   \[
+   \int_E (\alpha f + \beta g) \, d\mu = \alpha \int_E f \, d\mu + \beta \int_E g \, d\mu.
+   \]
+2. *Monotonicity:* If $f(x) \le g(x)$ for almost every $x \in E$, then
+   \[
+   \int_E f \, d\mu \le \int_E g \, d\mu.
+   \]
+3. *Triangle Inequality:*
+   \[
+   \left| \int_E f \, d\mu \right| \le \int_E |f| \, d\mu.
+   \]
+4. *Domain Additivity:* If $E = A \cup B$ with $A \cap B = \emptyset$ and $A, B \in \mathcal{M}$, then
+   \[
+   \int_E f \, d\mu = \int_A f \, d\mu + \int_B f \, d\mu.
+   \]
+5. *Finiteness a.e.:* If $f \in L^1(E)$, then $|f(x)| < +\infty$ for almost every $x \in E$.
+6. *Null-Set Equality:* If $f = g$ a.e. on $E$, then $\int_E f \, d\mu = \int_E g \, d\mu$.
+#+end_quote
+
+#+begin_proof
+3. *Triangle inequality:*
+   \[
+   \left| \int_E f \right| = \left| \int_E f^+ - \int_E f^- \right| \le \int_E f^+ + \int_E f^- = \int_E |f|.
+   \]
+5. *Finiteness a.e.:* Let $N = \{x \in E : |f(x)| = +\infty\}$. 
+   Notice that for every $k \in \mathbb{N}$, $k \chi_N(x) \le |f(x)|$. By monotonicity:
+   \[
+   k \, \mu(N) = \int_E k \chi_N \, d\mu \le \int_E |f| \, d\mu < \infty \implies \mu(N) \le \frac{1}{k} \int_E |f| \, d\mu.
+   \]
+   Taking $k \to \infty$ proves $\mu(N) = 0$.
+#+end_proof
+
+---
+
+* The Dominated Convergence Theorem (DCT)
+
+The Dominated Convergence Theorem (often abbreviated *DCT* or *LDCT* for *Lebesgue's Dominated Convergence Theorem*) is the premier convergence theorem in analysis.
+
+#+begin_quote
+*Theorem 8.4 (Dominated Convergence Theorem - DCT).* 
+Let $(X, \mathcal{M}, \mu)$ be a measure space and $E \in \mathcal{M}$. 
+Suppose $(f_j)_{j=1}^\infty$ is a sequence of measurable functions on $E$ such that:
+1. *Pointwise convergence a.e.:* 
+   \[
+   \lim_{j \to \infty} f_j(x) = f(x) \quad \text{for almost every } x \in E.
+   \]
+2. *Dominating function:* There exists an integrable function $g \in L^1(E)$ ($g \ge 0$, $\int_E g \, d\mu < \infty$) such that
+   \[
+   \lvert f_j(x) \rvert \le g(x) \quad \text{for all } j \in \mathbb{N} \text{ and almost every } x \in E.
+   \]
+Then $f \in L^1(E)$ and:
+\[
+\lim_{j \to \infty} \int_E f_j \, d\mu = \int_E f \, d\mu.
+\]
+Furthermore:
+\[
+\lim_{j \to \infty} \int_E |f_j - f| \, d\mu = 0 \quad (\text{convergence in } L^1).
+\]
+#+end_quote
+
+#+begin_proof
+1. *Integrability of the limit:*
+   Taking the limit as $j \to \infty$ of $|f_j(x)| \le g(x)$ gives $|f(x)| \le g(x)$ a.e.
+   Since $g \in L^1(E)$, monotonicity gives $\int_E |f| \le \int_E g < \infty$. Thus $f \in L^1(E)$.
+2. *Application of Fatou's Lemma to non-negative sequences:*
+   Because $|f_j(x)| \le g(x)$ a.e., we can construct two sequences of non-negative measurable functions:
+   \[
+   u_j(x) = g(x) + f_j(x) \ge 0 \quad \text{and} \quad v_j(x) = g(x) - f_j(x) \ge 0.
+   \]
+3. *Applying Fatou to $u_j$:*
+   The pointwise limit is $\liminf_{j \to \infty} u_j(x) = g(x) + f(x)$. 
+   By Fatou's Lemma (Theorem 7.9):
+   \[
+   \int_E (g + f) \, d\mu \le \liminf_{j \to \infty} \int_E (g + f_j) \, d\mu.
+   \]
+   By linearity:
+   \[
+   \int_E g + \int_E f \le \int_E g + \liminf_{j \to \infty} \int_E f_j.
+   \]
+   Since $\int_E g < \infty$, we can subtract $\int_E g$ from both sides:
+   \[
+   \int_E f \, d\mu \le \liminf_{j \to \infty} \int_E f_j \, d\mu.
+   \]
+4. *Applying Fatou to $v_j$:*
+   The pointwise limit is $\liminf_{j \to \infty} v_j(x) = g(x) - f(x)$.
+   By Fatou's Lemma:
+   \[
+   \int_E (g - f) \, d\mu \le \liminf_{j \to \infty} \int_E (g - f_j) \, d\mu = \int_E g - \limsup_{j \to \infty} \int_E f_j \, d\mu.
+   \]
+   Subtracting the finite quantity $\int_E g$:
+   \[
+   -\int_E f \, d\mu \le -\limsup_{j \to \infty} \int_E f_j \, d\mu \implies \limsup_{j \to \infty} \int_E f_j \, d\mu \le \int_E f \, d\mu.
+   \]
+5. *Combining both inequalities:*
+   \[
+   \int_E f \, d\mu \le \liminf_{j \to \infty} \int_E f_j \, d\mu \le \limsup_{j \to \infty} \int_E f_j \, d\mu \le \int_E f \, d\mu.
+   \]
+   All four quantities must be equal! 
+   Therefore, the limit of the integrals exists and equals $\int_E f \, d\mu$.
+6. *Convergence in $L^1$:*
+   Apply the identical argument to the sequence $|f_j - f|$, which converges pointwise to $0$ and is dominated by $2g \in L^1(E)$ (since $|f_j - f| \le |f_j| + |f| \le 2g$).
+   Then $\lim_{j \to \infty} \int_E |f_j - f| \, d\mu = \int_E 0 \, d\mu = 0$.
+#+end_proof
+
+---
+
+* Applications of the Dominated Convergence Theorem
+
+** Bounded Convergence Theorem
+#+begin_quote
+*Corollary 8.5 (Bounded Convergence Theorem).* 
+Let $E \in \mathcal{M}$ with $\mu(E) < \infty$. 
+Suppose $(f_j)_{j=1}^\infty$ is a sequence of measurable functions such that $f_j(x) \to f(x)$ a.e., and there exists a constant $M < \infty$ such that
+\[
+\lvert f_j(x) \rvert \le M \quad \text{for all } j \in \mathbb{N} \text{ and almost all } x \in E.
+\]
+Then $\lim_{j \to \infty} \int_E f_j \, d\mu = \int_E f \, d\mu$.
+#+end_quote
+
+#+begin_proof
+Take $g(x) = M \chi_E(x)$. 
+Its integral is $\int_E g = M \mu(E) < \infty$, because $\mu(E) < \infty$. 
+Thus $g \in L^1(E)$ is a valid dominating function. DCT immediately applies!
+#+end_proof
+
+** Differentiation Under the Integral Sign (Leibniz Rule)
+
+#+begin_quote
+*Theorem 8.6 (Leibniz Integral Rule).* 
+Let $E \in \mathcal{M}$ and let $I \subset \mathbb{R}$ be an open interval. 
+Suppose $f: E \times I \to \mathbb{R}$ satisfies:
+1. For each $t \in I$, the slice function $x \mapsto f(x, t)$ is integrable on $E$.
+2. For almost every $x \in E$, the partial derivative $\frac{\partial f}{\partial t}(x, t)$ exists for all $t \in I$.
+3. There exists an integrable function $g \in L^1(E)$ such that
+   \[
+   \left| \frac{\partial f}{\partial t}(x, t) \right| \le g(x) \quad \text{for all } t \in I \text{ and almost all } x \in E.
+   \]
+Then the function $F(t) = \int_E f(x, t) \, d\mu(x)$ is differentiable on $I$, and
+\[
+F'(t) = \frac{d}{dt} \int_E f(x, t) \, d\mu(x) = \int_E \frac{\partial f}{\partial t}(x, t) \, d\mu(x).
+\]
+#+end_quote
+
+#+begin_proof
+Fix $t \in I$. Let $(h_j)_{j=1}^\infty$ be any sequence of non-zero numbers converging to $0$. Consider the difference quotients:
+\[
+D_j(x) = \frac{f(x, t + h_j) - f(x, t)}{h_j}.
+\]
+By the Mean Value Theorem of calculus, for each $x$ there exists $\theta_j$ between $t$ and $t + h_j$ such that
+\[
+D_j(x) = \frac{\partial f}{\partial t}(x, \theta_j).
+\]
+By hypothesis (3), $|D_j(x)| \le g(x)$ for almost all $x \in E$, and $g \in L^1(E)$.
+Furthermore, $D_j(x) \to \frac{\partial f}{\partial t}(x, t)$ as $j \to \infty$ for almost all $x \in E$.
+By the Dominated Convergence Theorem:
+\[
+F'(t) = \lim_{j \to \infty} \frac{F(t + h_j) - F(t)}{h_j} = \lim_{j \to \infty} \int_E D_j(x) \, d\mu(x) = \int_E \lim_{j \to \infty} D_j(x) \, d\mu(x) = \int_E \frac{\partial f}{\partial t}(x, t) \, d\mu(x).
+\]
+#+end_proof
+
+---
+
+* Lebesgue vs Riemann Integration
+
+#+begin_quote
+*Theorem 8.7 (Lebesgue's Criterion for Riemann Integrability).* 
+A bounded function $f: [a, b] \to \mathbb{R}$ is Riemann integrable on $[a, b]$ if and only if its set of discontinuities has Lebesgue measure zero:
+\[
+m\bigl(\{x \in [a, b] : f \text{ is discontinuous at } x\}\bigr) = 0.
+\]
+In this case, $f$ is also Lebesgue integrable on $[a, b]$, and the two integrals are equal:
+\[
+\int_a^b f(x) \, dx = \int_{[a, b]} f \, dm.
+\]
+#+end_quote
+
+*Comparison Table:*
+#+caption: Riemann vs Lebesgue Integration
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.4\textwidth} >{\RaggedRight}X :booktabs t
+| Feature | Classical Riemann Integral | Modern Lebesgue Integral |
+|---------+----------------------------+--------------------------|
+| *Domain Partition* | Partitions the $x$-axis into intervals | Partitions the $y$-axis via preimages |
+| *Dirichlet Function* | Not integrable ($\overline{\int}=1, \underline{\int}=0$) | Integrable: $\int \chi_{\mathbb{Q}} = 0$ |
+| *Limit under Integral* | Requires uniform convergence | Requires only pointwise a.e. + domination (DCT) or monotonicity (MCT) |
+| *Space of Functions* | Not complete ($L^1_{\text{Riemann}}$ is not Banach) | Complete: $L^1$ is a Banach space |
+| *Improper Integrals* | Handles conditionally convergent integrals like $\int_0^\infty \frac{\sin x}{x}\,dx$ | Requires absolute integrability $\int \lvert f\rvert < \infty$ |
+
+---
+
+* Worked Exercises
+
+** Exercise 8.1 (Fall 2026 Exam Problem 4: DCT on Slices of $\mathbb{R}^2$)
+Let $A_n = \{(x, y) \in \mathbb{R}^2 : |x| < 1/n, \, y \in \mathbb{R}\}$ for all $n \in \mathbb{N}$. 
+Assume that $f: \mathbb{R}^2 \to \mathbb{R}$ is Lebesgue integrable over $\mathbb{R}^2$ ($f \in L^1(\mathbb{R}^2)$). 
+Prove that:
+\[
+\lim_{n \to \infty} \int_{A_n} f \, dm = 0.
+\]
+
+*Solution:*
+1. Write the integral over $A_n$ using indicator functions:
+   \[
+   \int_{A_n} f \, dm = \int_{\mathbb{R}^2} f(x, y) \, \chi_{A_n}(x, y) \, dm(x, y).
+   \]
+2. Define the sequence of functions $f_n: \mathbb{R}^2 \to \mathbb{R}$ by:
+   \[
+   f_n(x, y) = f(x, y) \, \chi_{A_n}(x, y).
+   \]
+3. *Pointwise convergence:*
+   For any fixed point $(x, y) \in \mathbb{R}^2$:
+   - If $x \neq 0$, choose $N \in \mathbb{N}$ large enough such that $1/N < |x|$.
+     Then for all $n \ge N$, $|x| \ge 1/n$, which means $(x, y) \notin A_n$.
+     Thus $\chi_{A_n}(x, y) = 0$, so $f_n(x, y) = 0$ for all $n \ge N$.
+     Hence $\lim_{n \to \infty} f_n(x, y) = 0$.
+   - If $x = 0$, then $(0, y) \in A_n$ for all $n$, so $f_n(0, y) = f(0, y)$.
+   Therefore, $f_n(x, y) \to 0$ for all points $(x, y)$ with $x \neq 0$.
+   The set of exceptional points is the $y$-axis:
+   \[
+   Y = \{(0, y) \in \mathbb{R}^2 : y \in \mathbb{R}\}.
+   \]
+   The $y$-axis is a line in $\mathbb{R}^2$, which has two-dimensional Lebesgue measure zero: $m(Y) = 0$!
+   Therefore:
+   \[
+   f_n(x, y) \to 0 \quad \text{for almost every } (x, y) \in \mathbb{R}^2.
+   \]
+4. *Dominating function:*
+   For all $n \in \mathbb{N}$ and all $(x, y) \in \mathbb{R}^2$:
+   \[
+   \lvert f_n(x, y) \rvert = \lvert f(x, y) \rvert \, \chi_{A_n}(x, y) \le |f(x, y)|.
+   \]
+   By assumption, $f \in L^1(\mathbb{R}^2)$, so $g(x, y) = |f(x, y)|$ is an integrable dominating function!
+5. *Application of DCT:*
+   By the Dominated Convergence Theorem (Theorem 8.4):
+   \[
+   \lim_{n \to \infty} \int_{A_n} f \, dm = \lim_{n \to \infty} \int_{\mathbb{R}^2} f_n \, dm = \int_{\mathbb{R}^2} \left( \lim_{n \to \infty} f_n \right) dm = \int_{\mathbb{R}^2} 0 \, dm = 0.
+   \]
+
+** Exercise 8.2 (Homework 6, Problem 4: Limit of Integrals via DCT)
+Determine the limit:
+\[
+\lim_{n \to \infty} \int_0^\infty \frac{n \sin(x/n)}{x(1 + x^2)} \, dx.
+\]
+
+*Solution:*
+1. Consider the integrand on $]0, \infty[$:
+   \[
+   f_n(x) = \frac{n \sin(x/n)}{x(1 + x^2)} = \frac{\sin(x/n)}{x/n} \cdot \frac{1}{1 + x^2}.
+   \]
+2. *Pointwise limit:*
+   For every fixed $x > 0$, as $n \to \infty$, $x/n \to 0$. 
+   Using the classical limit $\lim_{u \to 0} \frac{\sin u}{u} = 1$:
+   \[
+   \lim_{n \to \infty} f_n(x) = 1 \cdot \frac{1}{1 + x^2} = \frac{1}{1 + x^2}.
+   \]
+3. *Dominating function:*
+   Using the elementary inequality $|\sin u| \le |u|$ for all $u \in \mathbb{R}$:
+   \[
+   \lvert \sin(x/n) \rvert \le \frac{x}{n} \implies \left| \frac{n \sin(x/n)}{x} \right| \le 1.
+   \]
+   Therefore:
+   \[
+   \lvert f_n(x) \rvert \le \frac{1}{1 + x^2} =: g(x).
+   \]
+4. *Integrability of $g$:*
+   \[
+   \int_0^\infty g(x) \, dx = \int_0^\infty \frac{1}{1 + x^2} \, dx = \left[ \arctan(x) \right]_0^\infty = \frac{\pi}{2} - 0 = \frac{\pi}{2} < \infty.
+   \]
+   Thus $g \in L^1(]0, \infty[)$.
+5. *Application of DCT:*
+   By the Dominated Convergence Theorem:
+   \[
+   \lim_{n \to \infty} \int_0^\infty f_n(x) \, dx = \int_0^\infty \left( \lim_{n \to \infty} f_n(x) \right) dx = \int_0^\infty \frac{1}{1 + x^2} \, dx = \frac{\pi}{2}.
+   \]
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: General Integration and DCT Reference
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Theorem / Property | Exact Formula | Crucial Hypothesis |
+|--------------------+---------------+--------------------|
+| *Decomposition* | $f = f^+ - f^-$, $\lvert f\rvert = f^+ + f^-$ | Both $f^+, f^- \ge 0$ measurable. |
+| *Integrability* | $f \in L^1(E) \iff \int_E \lvert f\rvert < \infty$ | Equivalent to $\int f^+ < \infty$ and $\int f^- < \infty$. |
+| *Triangle Inequality* | $\lvert \int_E f \, d\mu \rvert \le \int_E \lvert f\rvert \, d\mu$ | Always holds for integrable $f$. |
+| *Dominated Convergence (DCT)* | $\lim \int_E f_j = \int_E f$ | Requires $f_j \to f$ a.e. AND $\lvert f_j\rvert \le g \in L^1(E)$. |
+| *Bounded Convergence* | $\lim \int_E f_j = \int_E f$ | Requires $m(E) < \infty$ and $\lvert f_j\rvert \le M$. |
+| *Leibniz Rule* | $\frac{d}{dt} \int f(x, t) = \int \frac{\partial f}{\partial t}(x, t)$ | Requires $\lvert \frac{\partial f}{\partial t} \rvert \le g \in L^1$. |
+| *Riemann Integrability* | $f \in \mathcal{R}[a, b] \iff m(\text{Discont}(f)) = 0$ | Discontinuities must form a Lebesgue null set. |

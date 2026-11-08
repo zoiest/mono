@@ -1,0 +1,325 @@
+:PROPERTIES:
+:ID:       d9e6f29d-e109-4f99-9934-2b12423241af
+:ROAM_ALIASES: "MAST31051 Chapter 3" "Borel Sets and Regularity Notes"
+:END:
+#+title: Chapter 3: Borel Sets, Regularity, and Non-Measurable Sets
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:borel:regularity:vitali:non-measurable:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch02-measurable-sets.org][← Chapter 2]] | [[file:ch04-abstract-measures.org][Chapter 4: Abstract Measures & Continuity →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In Chapter 2, we showed that the collection of Lebesgue measurable sets $\mathcal{M}(\mathbb{R}^n)$ forms a $\sigma$-algebra. 
+However, this leaves two urgent, fundamental questions unanswered:
+1. *Are ordinary geometric sets measurable?* Can we be certain that open balls, polygons, manifolds, and topological open/closed sets actually satisfy Carathéodory's criterion?
+2. *Do non-measurable sets actually exist?* Is the restriction to $\mathcal{M}(\mathbb{R}^n)$ strictly necessary, or was Carathéodory merely being overly cautious?
+
+This chapter provides definitive answers to both questions:
+- *Borel Sets:* We prove that *all open sets and closed sets are Lebesgue measurable*. The smallest $\sigma$-algebra containing all open sets is called the *Borel $\sigma$-algebra* $\mathcal{B}(\mathbb{R}^n)$. Thus $\mathcal{B}(\mathbb{R}^n) \subset \mathcal{M}(\mathbb{R}^n)$.
+- *Regularity:* Every Lebesgue measurable set can be approximated with arbitrary precision from the outside by open sets (outer regularity) and from the inside by compact sets (inner regularity), or squeezed between $F_\sigma$ and $G_\delta$ sets up to a set of measure zero.
+- *Non-Measurable Sets (Vitali):* Assuming the Axiom of Choice, we construct a subset $V \subset [0, 1]$ that *cannot* be assigned any translation-invariant, countably additive length. Non-measurable sets are not a technical artifact; they are an unavoidable consequence of classical mathematics.
+
+** Roadmap
+- *3.1 Measurability of Open and Closed Sets:* Proving open sets are countable unions of open cubes, hence measurable.
+- *3.2 The Borel $\sigma$-Algebra $\mathcal{B}(\mathbb{R}^n)$:* Definition, generators, $G_\delta$ and $F_\sigma$ sets.
+- *3.3 Regularity of Lebesgue Measure:* Approximating measurable sets by open and compact sets.
+- *3.4 The Vitali Non-Measurable Set:* Full construction and proof of non-measurability.
+- *Worked Exercises:* Solutions to exam and homework problems on Borel sets and approximation.
+- *Summary Cheat-Sheet:* Quick-reference table of Borel hierarchy and regularity theorems.
+
+---
+
+* Measurability of Open and Closed Sets
+
+** Proving Intervals are Measurable
+
+#+begin_quote
+*Lemma 3.1.* Every open $n$-interval $I \subset \mathbb{R}^n$ is Lebesgue measurable: $I \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+Let $I = ]a_1, b_1[ \times \dots \times ]a_n, b_n[$ be an open $n$-interval. 
+We must show that for any test set $A \subset \mathbb{R}^n$ with $m^*(A) < \infty$:
+\[
+m^*(A) \ge m^*(A \cap I) + m^*(A \setminus I).
+\]
+Fix $\varepsilon > 0$. By definition of $m^*(A)$, there exists a countable open interval cover $\{J_k\}_{k=1}^\infty$ of $A$ such that
+\[
+\sum_{k=1}^\infty \ell(J_k) \le m^*(A) + \varepsilon.
+\]
+For each box $J_k$, the intersection $J_k \cap I$ and difference $J_k \setminus I$ can be decomposed into finite collections of non-overlapping sub-boxes. By elementary geometry of boxes:
+\[
+\ell(J_k) = \ell(J_k \cap I) + \ell(J_k \setminus I) = m^*(J_k \cap I) + m^*(J_k \setminus I).
+\]
+Since $A \cap I \subset \bigcup_{k=1}^\infty (J_k \cap I)$ and $A \setminus I \subset \bigcup_{k=1}^\infty (J_k \setminus I)$, subadditivity gives:
+\[
+m^*(A \cap I) \le \sum_{k=1}^\infty m^*(J_k \cap I), \qquad m^*(A \setminus I) \le \sum_{k=1}^\infty m^*(J_k \setminus I).
+\]
+Summing these:
+\[
+m^*(A \cap I) + m^*(A \setminus I) \le \sum_{k=1}^\infty \bigl( m^*(J_k \cap I) + m^*(J_k \setminus I) \bigr) = \sum_{k=1}^\infty \ell(J_k) \le m^*(A) + \varepsilon.
+\]
+Letting $\varepsilon \to 0$ yields $m^*(A \cap I) + m^*(A \setminus I) \le m^*(A)$. Hence $I \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+** Open Sets are Countable Unions of Cubes
+
+#+begin_quote
+*Theorem 3.2.* Every open set $U \subset \mathbb{R}^n$ is a countable union of open $n$-cubes.
+Consequently, every open set is Lebesgue measurable: $U \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+1. For each $k \in \mathbb{N}$, consider the dyadic grid of cubes in $\mathbb{R}^n$ of side length $2^{-k}$ whose vertices have coordinates of the form $m / 2^k$ for $m \in \mathbb{Z}$.
+2. The collection of all such dyadic cubes across all levels $k \in \mathbb{N}$ is a countable collection of cubes $\mathcal{D} = \{Q_1, Q_2, Q_3, \dots\}$.
+3. Let $U \subset \mathbb{R}^n$ be any open set.
+   Let $\mathcal{D}_U = \{Q \in \mathcal{D} : Q \subset U\}$.
+   Since $\mathcal{D}_U \subset \mathcal{D}$, the subcollection $\mathcal{D}_U$ is countable.
+4. We claim that $U = \bigcup_{Q \in \mathcal{D}_U} Q$:
+   - If $x \in \bigcup_{Q \in \mathcal{D}_U} Q$, then $x \in Q \subset U$, so $x \in U$.
+   - Conversely, if $x \in U$, since $U$ is open there exists $r > 0$ such that $B(x, r) \subset U$. For sufficiently large $k$, any dyadic cube of side length $2^{-k}$ containing $x$ has diameter $\sqrt{n} 2^{-k} < r$, and thus $Q \subset B(x, r) \subset U$. Hence $x \in Q$ for some $Q \in \mathcal{D}_U$.
+5. Thus $U$ is the union of a countable family of open cubes.
+Since open cubes are measurable (Lemma 3.1) and $\mathcal{M}(\mathbb{R}^n)$ is closed under countable unions (Theorem 2.8), we conclude $U \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+#+begin_quote
+*Corollary 3.3.* Every closed set $F \subset \mathbb{R}^n$ and every compact set $K \subset \mathbb{R}^n$ is Lebesgue measurable: $F, K \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+If $F$ is closed, its complement $F^c = \mathbb{R}^n \setminus F$ is open, so $F^c \in \mathcal{M}(\mathbb{R}^n)$. 
+Because $\mathcal{M}(\mathbb{R}^n)$ is closed under complements, $F = (F^c)^c \in \mathcal{M}(\mathbb{R}^n)$. 
+Every compact set $K$ is closed and bounded (Theorem 0.6), hence $K \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+---
+
+* The Borel $\sigma$-Algebra $\mathcal{B}(\mathbb{R}^n)$
+
+** Definition and Generators
+#+begin_quote
+*Definition 3.4 (Borel $\sigma$-Algebra).* The *Borel $\sigma$-algebra* on $\mathbb{R}^n$, denoted by $\mathcal{B}(\mathbb{R}^n)$, is the smallest $\sigma$-algebra containing all open subsets of $\mathbb{R}^n$:
+\[
+\mathcal{B}(\mathbb{R}^n) = \sigma(\{U \subset \mathbb{R}^n : U \text{ is open}\}).
+\]
+Elements of $\mathcal{B}(\mathbb{R}^n)$ are called *Borel sets*.
+#+end_quote
+
+Because every open set is Lebesgue measurable, and $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, it automatically contains the smallest $\sigma$-algebra generated by open sets:
+\[
+\mathcal{B}(\mathbb{R}^n) \subset \mathcal{M}(\mathbb{R}^n).
+\]
+
+** The Borel Hierarchy: $G_\delta$ and $F_\sigma$ Sets
+From the German words *Gebiet* (open region) and *Durchschnitt* (intersection), and French *Fermé* (closed) and *Somme* (sum/union):
+- A *$G_\delta$ set* is a countable intersection of open sets: $G = \bigcap_{j=1}^\infty U_j$, where each $U_j$ is open.
+- An *$F_\sigma$ set* is a countable union of closed sets: $F = \bigcup_{j=1}^\infty F_j$, where each $F_j$ is closed.
+- Note that $(G_\delta)^c = F_\sigma$ and $(F_\sigma)^c = G_\delta$ by de Morgan's laws.
+
+*Example 3.5:*
+1. Any open set $U$ is both $G$ and $G_\delta$ (take $U_j = U$ for all $j$).
+2. The set of rational numbers $\mathbb{Q} = \bigcup_{q \in \mathbb{Q}} \{q\}$ is an $F_\sigma$ set, because each singleton $\{q\}$ is closed in $\mathbb{R}$!
+3. The set of irrational numbers $\mathbb{R} \setminus \mathbb{Q} = \bigcap_{q \in \mathbb{Q}} (\mathbb{R} \setminus \{q\})$ is a $G_\delta$ set, because each $\mathbb{R} \setminus \{q\}$ is open!
+
+---
+
+* Regularity of Lebesgue Measure
+
+Lebesgue measure on $\mathbb{R}^n$ is *regular*: any measurable set can be approximated arbitrarily well by nice topological sets (open sets from the outside, compact sets from the inside).
+
+#+begin_quote
+*Theorem 3.6 (Outer and Inner Regularity).* Let $E \in \mathcal{M}(\mathbb{R}^n)$.
+1. *Outer Regularity:* For every $\varepsilon > 0$, there exists an open set $U \supset E$ such that
+   \[
+   m(U \setminus E) < \varepsilon.
+   \]
+   Consequently, $m(E) = \inf \{ m(U) : E \subset U, \, U \text{ is open} \}$.
+2. *Inner Regularity:* For every $\varepsilon > 0$, there exists a closed set $F \subset E$ such that
+   \[
+   m(E \setminus F) < \varepsilon.
+   \]
+   If $m(E) < \infty$, $F$ can be chosen to be *compact* $K \subset E$.
+   Consequently, $m(E) = \sup \{ m(K) : K \subset E, \, K \text{ is compact} \}$.
+#+end_quote
+
+#+begin_proof
+1. *Outer Regularity:*
+   - Case 1: $m(E) < \infty$. By definition of $m^*(E) = \inf \sum \ell(I_j)$, for any $\varepsilon > 0$ there exists a sequence of open intervals $\{I_j\}$ covering $E$ such that $\sum \ell(I_j) < m(E) + \varepsilon$. 
+     Let $U = \bigcup_{j=1}^\infty I_j$. Then $U$ is open, $E \subset U$, and by subadditivity:
+     \[
+     m(U) \le \sum_{j=1}^\infty \ell(I_j) < m(E) + \varepsilon.
+     \]
+     Since $E$ and $U$ are measurable and $m(E) < \infty$, $m(U \setminus E) = m(U) - m(E) < \varepsilon$.
+   - Case 2: $m(E) = \infty$. Partition $\mathbb{R}^n$ into disjoint cubes $D_k$. Apply Case 1 to each finite-measure piece $E \cap D_k$ with error $\varepsilon / 2^k$, and take the union of the approximating open sets.
+2. *Inner Regularity:*
+   Apply outer regularity to the complement $E^c$: there exists an open set $U \supset E^c$ with $m(U \setminus E^c) < \varepsilon$.
+   Let $F = U^c$. Then $F$ is closed, $F \subset E$, and $E \setminus F = E \cap U = U \setminus E^c$, so $m(E \setminus F) < \varepsilon$.
+   If $m(E) < \infty$, intersect $F$ with closed balls $\bar{B}(0, R)$ for sufficiently large $R$ to obtain a compact set $K$.
+#+end_proof
+
+#+begin_quote
+*Theorem 3.7 (Approximation by $G_\delta$ and $F_\sigma$ Sets).* 
+A set $E \subset \mathbb{R}^n$ is Lebesgue measurable if and only if there exist an $F_\sigma$ set $F$ and a $G_\delta$ set $G$ such that
+\[
+F \subset E \subset G \quad \text{and} \quad m(G \setminus F) = 0.
+\]
+#+end_quote
+
+> [!NOTE]
+> *Relationship between Borel and Lebesgue Sets:*
+> Theorem 3.7 tells us that every Lebesgue measurable set is equal to a Borel set up to a null set: $E = F \cup N$, where $F \in \mathcal{B}(\mathbb{R}^n)$ and $m(N) = 0$.
+> Thus, the Lebesgue $\sigma$-algebra $\mathcal{M}(\mathbb{R}^n)$ is simply the *completion* of the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^n)$ with respect to Lebesgue measure!
+
+---
+
+* The Vitali Non-Measurable Set
+
+We now prove that it is *impossible* to define a non-trivial translation-invariant, countably additive measure on the full power set $\mathcal{P}(\mathbb{R})$.
+
+#+begin_quote
+*Theorem 3.8 (Vitali, 1905).* Assuming the Axiom of Choice, there exists a subset $V \subset [0, 1]$ that is *not Lebesgue measurable*: $V \notin \mathcal{M}(\mathbb{R})$.
+#+end_quote
+
+#+begin_proof
+1. *Equivalence Relation:*
+   Define an equivalence relation $\sim$ on the real interval $[0, 1]$:
+   \[
+   x \sim y \iff x - y \in \mathbb{Q}.
+   \]
+   This relation partitions $[0, 1]$ into disjoint equivalence classes:
+   \[
+   [x] = (x + \mathbb{Q}) \cap [0, 1].
+   \]
+2. *Using the Axiom of Choice:*
+   By the Axiom of Choice, there exists a choice set $V \subset [0, 1]$ containing *exactly one element from each equivalence class*.
+3. *Shifting $V$ by Rational Numbers:*
+   Let $Q = \mathbb{Q} \cap [-1, 1]$. Since $\mathbb{Q}$ is countable, $Q$ is a countably infinite set. Enumerate it as $Q = \{q_1, q_2, q_3, \dots\}$.
+   For each $q_k \in Q$, consider the translated set:
+   \[
+   V + q_k = \{v + q_k : v \in V\}.
+   \]
+4. *Pairwise Disjointness:*
+   The translated sets $\{V + q_k\}_{k=1}^\infty$ are *pairwise disjoint*.
+   Indeed, suppose $x \in (V + q_j) \cap (V + q_k)$ for $q_j \neq q_k$.
+   Then $x = v_1 + q_j = v_2 + q_k$ for some $v_1, v_2 \in V$.
+   This implies $v_1 - v_2 = q_k - q_j \in \mathbb{Q}$, so $v_1 \sim v_2$.
+   Since $V$ contains only one element from each equivalence class, we must have $v_1 = v_2$, which implies $q_j = q_k$, a contradiction!
+5. *Bounding the Union:*
+   Observe two inclusions:
+   - *Inner bound:* Every $x \in [0, 1]$ belongs to some equivalence class, so there is some $v \in V$ with $x - v = q \in \mathbb{Q}$. Since $x, v \in [0, 1]$, we have $-1 \le x - v \le 1$, so $q \in Q$. Thus $x = v + q \in V + q$. Hence:
+     \[
+     [0, 1] \subset \bigcup_{q \in Q} (V + q).
+     \]
+   - *Outer bound:* Since $V \subset [0, 1]$ and each $q \in [-1, 1]$, for every $v \in V$ we have $v + q \in [-1, 2]$. Thus:
+     \[
+     \bigcup_{q \in Q} (V + q) \subset [-1, 2].
+     \]
+   Putting the inclusions together:
+   \[
+   [0, 1] \subset \bigcup_{q \in Q} (V + q) \subset [-1, 2].
+   \]
+6. *The Contradiction:*
+   Suppose for contradiction that $V \in \mathcal{M}(\mathbb{R})$.
+   By translation invariance (Theorem 1.4), each translated set $V + q$ is measurable, with the *same* measure:
+   \[
+   m(V + q) = m(V).
+   \]
+   By countable additivity on disjoint measurable sets:
+   \[
+   m\left( \bigcup_{q \in Q} (V + q) \right) = \sum_{q \in Q} m(V + q) = \sum_{q \in Q} m(V).
+   \]
+   By monotonicity:
+   \[
+   m([0, 1]) \le \sum_{q \in Q} m(V) \le m([-1, 2]).
+   \]
+   Substituting the known lengths $m([0, 1]) = 1$ and $m([-1, 2]) = 3$:
+   \[
+   1 \le \sum_{q \in Q} m(V) \le 3.
+   \]
+   Now examine the two possible values of $m(V)$:
+   - If $m(V) = 0$, then $\sum_{q \in Q} m(V) = \sum 0 = 0 \implies 1 \le 0$, a contradiction!
+   - If $m(V) > 0$, then $\sum_{q \in Q} m(V) = +\infty$ (sum of infinitely many equal positive numbers) $\implies +\infty \le 3$, a contradiction!
+Neither case is possible. Therefore, $V$ *cannot be Lebesgue measurable*: $V \notin \mathcal{M}(\mathbb{R})$.
+#+end_proof
+
+---
+
+* Worked Exercises
+
+** Exercise 3.1 (Cantor Set Measure and Properties)
+The middle-thirds Cantor set $C \subset [0, 1]$ is obtained by starting with $C_0 = [0, 1]$ and at each stage $k \ge 1$ removing the open middle third of each remaining interval.
+1. Prove that $C$ is a compact, Borel measurable set.
+2. Calculate its Lebesgue measure $m(C)$.
+3. Show that $C$ is uncountable.
+
+*Solution:*
+1. At stage $k$, $C_k$ is a union of $2^k$ closed intervals of length $3^{-k}$.
+   Thus each $C_k$ is closed and bounded, hence compact.
+   The Cantor set is the intersection:
+   \[
+   C = \bigcap_{k=0}^\infty C_k.
+   \]
+   As a countable intersection of closed sets, $C$ is closed, bounded, and an element of $\mathcal{B}(\mathbb{R})$.
+2. The total length of the intervals removed at stage 1 is $1/3$.
+   At stage 2, 2 intervals of length $1/9$ are removed (total $2/9$).
+   At stage $k$, $2^{k-1}$ intervals of length $3^{-k}$ are removed.
+   The total measure of the removed open set $U = [0, 1] \setminus C$ is:
+   \[
+   m(U) = \sum_{k=1}^\infty \frac{2^{k-1}}{3^k} = \frac{1}{3} \sum_{j=0}^\infty \left(\frac{2}{3}\right)^j = \frac{1}{3} \cdot \frac{1}{1 - 2/3} = \frac{1}{3} \cdot 3 = 1.
+   \]
+   By additivity:
+   \[
+   m(C) = m([0, 1]) - m(U) = 1 - 1 = 0.
+   \]
+   Thus $C$ is a null set!
+3. Every point $x \in C$ has a ternary (base 3) expansion consisting entirely of digits $0$ and $2$:
+   \[
+   x = \sum_{j=1}^\infty \frac{a_j}{3^j}, \quad a_j \in \{0, 2\}.
+   \]
+   The map $f(x) = \sum_{j=1}^\infty (a_j / 2) 2^{-j}$ maps $C$ surjectively onto $[0, 1]$. Since $[0, 1]$ is uncountable, $C$ must be uncountable.
+
+** Exercise 3.2 (Homework 4, Problem 3: Measure of the Boundary)
+Let $E \subset \mathbb{R}^n$. The topological boundary is $\partial E = \overline{E} \setminus \text{int}(E)$.
+1. Prove that $\partial E$ is closed, hence Borel measurable.
+2. Give an example of a set $E \subset \mathbb{R}$ where $m(\partial E) > 0$.
+
+*Solution:*
+1. $\overline{E}$ is closed, and $\text{int}(E)$ is open.
+   The boundary is $\partial E = \overline{E} \cap (\text{int}(E))^c$.
+   Since the complement of an open set is closed, $(\text{int}(E))^c$ is closed.
+   The intersection of two closed sets is closed. Thus $\partial E$ is closed, hence $\partial E \in \mathcal{B}(\mathbb{R}^n)$.
+2. Let $E = \mathbb{Q} \cap [0, 1]$.
+   - The closure of $E$ is $\overline{E} = [0, 1]$ (because rationals are dense).
+   - The interior of $E$ is empty: $\text{int}(E) = \emptyset$ (every open interval contains irrational numbers).
+   - Thus $\partial E = \overline{E} \setminus \text{int}(E) = [0, 1] \setminus \emptyset = [0, 1]$.
+   Its measure is $m(\partial E) = m([0, 1]) = 1 > 0$, even though $m(E) = 0$!
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Borel Sets, Regularity, and Non-Measurability
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Concept | Formal Mathematical Statement | Key Takeaway |
+|---------+-------------------------------+--------------|
+| *Borel Sets $\mathcal{B}(\mathbb{R}^n)$* | $\sigma(\text{all open sets in } \mathbb{R}^n)$ | Contains all open, closed, compact, $G_\delta$, and $F_\sigma$ sets. |
+| *Inclusion* | $\mathcal{B}(\mathbb{R}^n) \subsetneq \mathcal{M}(\mathbb{R}^n)$ | Every Borel set is Lebesgue measurable. $\mathcal{M}$ is the completion of $\mathcal{B}$. |
+| *Outer Regularity* | $m(E) = \inf \{ m(U) : E \subset U, \, U \text{ open} \}$ | Measurable sets can be approximated from outside by open sets. |
+| *Inner Regularity* | $m(E) = \sup \{ m(K) : K \subset E, \, K \text{ compact} \}$ | Measurable sets can be approximated from inside by compact sets. |
+| *Borel Approximation* | $E = F \cup N$ with $F \in F_\sigma$ and $m(N) = 0$ | Any measurable set is a Borel set plus a null set. |
+| *Vitali Set* | Choice set of $[0, 1] / \mathbb{Q}$ | Proves non-measurable sets exist under the Axiom of Choice. |
+| *Cantor Set* | $C = \bigcap C_k$, $m(C) = 0$, uncountable | An uncountable, compact Borel set can have measure zero. |

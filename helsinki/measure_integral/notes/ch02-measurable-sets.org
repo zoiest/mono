@@ -1,0 +1,406 @@
+:PROPERTIES:
+:ID:       474cc3b2-82d0-4abd-abe6-04fd6ff5a797
+:ROAM_ALIASES: "MAST31051 Chapter 2" "Caratheodory Measurable Sets Notes"
+:END:
+#+title: Chapter 2: Carathéodory's Measurability Criterion and $\sigma$-Algebras
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:caratheodory:measurable-sets:sigma-algebra:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch01-outer-measure.org][← Chapter 1]] | [[file:ch03-borel-and-regularity.org][Chapter 3: Borel Sets & Regularity →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In Chapter 1, we defined the Lebesgue outer measure $m^*(A)$ for *every* subset $A \subset \mathbb{R}^n$. 
+However, outer measure suffers from a crucial mathematical defect: it is only *countably subadditive*:
+\[
+m^*(A \cup B) \le m^*(A) + m^*(B).
+\]
+For two disjoint sets $A \cap B = \emptyset$, we *desperately want* equality: $m^*(A \cup B) = m^*(A) + m^*(B)$. Without strict additivity, integration cannot be linear, and probabilities of mutually exclusive events would not sum to $1$.
+
+Unfortunately, if we allow arbitrary subsets of $\mathbb{R}^n$, strict additivity fails (as we will see with the Vitali set in Chapter 3). 
+Therefore, we must find a subcollection of "well-behaved" subsets $\mathcal{M}(\mathbb{R}^n) \subset \mathcal{P}(\mathbb{R}^n)$ such that:
+1. Every geometric shape we encounter in practice (intervals, open sets, closed sets, compact sets) belongs to $\mathcal{M}(\mathbb{R}^n)$.
+2. $\mathcal{M}(\mathbb{R}^n)$ is closed under countable unions, intersections, and complements (a *$\sigma$-algebra*).
+3. On $\mathcal{M}(\mathbb{R}^n)$, the outer measure $m^*$ becomes *strictly countably additive*.
+
+In 1914, Constantin Carathéodory discovered an extraordinarily elegant, general criterion that accomplishes this without referencing coordinates, intervals, or topology.
+
+** Roadmap
+- *2.1 Carathéodory's Measurability Condition:* The splitting test $m^*(A) = m^*(A \cap E) + m^*(A \setminus E)$.
+- *2.2 Null Sets and Complements:* Proving null sets and complements are measurable.
+- *2.3 Finite Unions and Intersections:* Additivity over finite disjoint measurable sets.
+- *2.4 Countable Unions and the $\sigma$-Algebra Property:* Proving $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra.
+- *2.5 Countable Additivity on $\mathcal{M}(\mathbb{R}^n)$:* The triumph of the Carathéodory construction.
+- *2.6 The $\varepsilon$-Sandwich Characterization:* A necessary and sufficient condition for measurability (Fall 2026 Exam Problem 2).
+- *Worked Exercises:* Solutions to exam and homework problems.
+- *Summary Cheat-Sheet:* Quick-reference table of measurable set operations.
+
+---
+
+* Carathéodory's Measurability Condition
+
+** Intuition: The "Clean Knife" Analogy
+Imagine you have an arbitrary chunk of space $A \subset \mathbb{R}^n$ (a "test set"). 
+Now take a candidate set $E$. We use $E$ to slice $A$ into two disjoint pieces:
+- The piece inside $E$: $A \cap E$,
+- The piece outside $E$: $A \setminus E$.
+
+By the subadditivity of outer measure (Theorem 1.4), we always know that the sum of the sizes of the two pieces is at least the size of the whole:
+\[
+m^*(A) \le m^*(A \cap E) + m^*(A \setminus E).
+\]
+If $E$ has a "fuzzy" or fractal-like pathological boundary, the act of slicing $A$ could introduce spurious boundary fragments, making the sum of the two pieces strictly larger than $m^*(A)$.
+
+A set $E$ is called *measurable* if it acts as a *clean knife*: it splits *every* test set $A$ without any artificial expansion of outer measure!
+
+#+begin_quote
+*Definition 2.1 (Carathéodory Measurability).* A subset $E \subset \mathbb{R}^n$ is said to be *Lebesgue measurable* (denoted $E \in \mathcal{M}(\mathbb{R}^n)$) if for *every* test set $A \subset \mathbb{R}^n$:
+\[
+m^*(A) = m^*(A \cap E) + m^*(A \setminus E).
+\]
+#+end_quote
+
+> [!TIP]
+> *How to verify measurability in practice:* 
+> Because $m^*(A) \le m^*(A \cap E) + m^*(A \setminus E)$ is automatically true for *any* set $E$ by subadditivity, to prove that $E$ is measurable you only ever need to prove the reverse inequality:
+> \[
+> m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E) \quad \text{for all } A \subset \mathbb{R}^n.
+> \]
+> Moreover, if $m^*(A) = +\infty$, this inequality is trivially satisfied. Thus it suffices to test sets $A$ with $m^*(A) < \infty$.
+
+When $E \in \mathcal{M}(\mathbb{R}^n)$, we drop the asterisk and write simply $m(E)$ for its *Lebesgue measure*:
+\[
+m(E) = m^*(E).
+\]
+
+---
+
+* Null Sets and Complements
+
+#+begin_quote
+*Theorem 2.2 (Null sets are measurable).* If $m^*(E) = 0$, then $E \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+Let $A \subset \mathbb{R}^n$ be an arbitrary test set.
+Since $A \cap E \subset E$, monotonicity of $m^*$ gives:
+\[
+m^*(A \cap E) \le m^*(E) = 0 \implies m^*(A \cap E) = 0.
+\]
+Also, since $A \setminus E \subset A$, monotonicity gives $m^*(A \setminus E) \le m^*(A)$.
+Summing these two:
+\[
+m^*(A \cap E) + m^*(A \setminus E) = 0 + m^*(A \setminus E) \le m^*(A).
+\]
+Hence $E$ satisfies Carathéodory's condition, so $E \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+*Consequences:*
+1. The empty set $\emptyset$ has $m^*(\emptyset) = 0$, so $\emptyset \in \mathcal{M}(\mathbb{R}^n)$ and $m(\emptyset) = 0$.
+2. Every singleton $\{x\}$ and every countable set (e.g. $\mathbb{Q}^n$) is Lebesgue measurable with measure $0$.
+3. *Completeness:* Every subset of a null set is automatically a null set (by monotonicity $m^*(E') \le m^*(E) = 0$), hence every subset of a null set is measurable! A measure space with this property is called *complete*.
+
+#+begin_quote
+*Theorem 2.3 (Complements).* If $E \in \mathcal{M}(\mathbb{R}^n)$, then $E^c = \mathbb{R}^n \setminus E \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+Carathéodory's condition is completely symmetric between $E$ and $E^c$:
+Notice that $A \cap E^c = A \setminus E$ and $A \setminus E^c = A \cap (E^c)^c = A \cap E$.
+Therefore:
+\[
+m^*(A \cap E^c) + m^*(A \setminus E^c) = m^*(A \setminus E) + m^*(A \cap E) = m^*(A).
+\]
+Thus $E^c \in \mathcal{M}(\mathbb{R}^n)$. In particular, $\mathbb{R}^n = \emptyset^c \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+---
+
+* Finite Unions and Intersections
+
+#+begin_quote
+*Theorem 2.4 (Finite Unions).* If $E_1, E_2 \in \mathcal{M}(\mathbb{R}^n)$, then $E_1 \cup E_2 \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+Let $A \subset \mathbb{R}^n$ be any test set. 
+1. Since $E_1$ is measurable, test it with $A$:
+   \[
+   m^*(A) = m^*(A \cap E_1) + m^*(A \setminus E_1).
+   \]
+2. Since $E_2$ is measurable, test it with the set $A \setminus E_1$:
+   \[
+   m^*(A \setminus E_1) = m^*\bigl((A \setminus E_1) \cap E_2\bigr) + m^*\bigl((A \setminus E_1) \setminus E_2\bigr).
+   \]
+3. Observe the set identities:
+   - $(A \setminus E_1) \setminus E_2 = A \setminus (E_1 \cup E_2)$.
+   - $(A \cap E_1) \cup \bigl((A \setminus E_1) \cap E_2\bigr) = A \cap (E_1 \cup E_2)$.
+4. Substitute (2) into (1):
+   \[
+   m^*(A) = m^*(A \cap E_1) + m^*\bigl((A \setminus E_1) \cap E_2\bigr) + m^*\bigl(A \setminus (E_1 \cup E_2)\bigr).
+   \]
+5. By subadditivity applied to the union of $A \cap E_1$ and $(A \setminus E_1) \cap E_2$:
+   \[
+   m^*(A \cap E_1) + m^*\bigl((A \setminus E_1) \cap E_2\bigr) \ge m^*\bigl( A \cap (E_1 \cup E_2) \bigr).
+   \]
+6. Putting these together yields:
+   \[
+   m^*(A) \ge m^*\bigl(A \cap (E_1 \cup E_2)\bigr) + m^*\bigl(A \setminus (E_1 \cup E_2)\bigr).
+   \]
+This proves $E_1 \cup E_2 \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+#+begin_quote
+*Corollary 2.5.* If $E_1, E_2 \in \mathcal{M}(\mathbb{R}^n)$, then:
+1. $E_1 \cap E_2 = (E_1^c \cup E_2^c)^c \in \mathcal{M}(\mathbb{R}^n)$.
+2. $E_1 \setminus E_2 = E_1 \cap E_2^c \in \mathcal{M}(\mathbb{R}^n)$.
+3. By induction, any finite union $\bigcup_{i=1}^k E_i$ and finite intersection $\bigcap_{i=1}^k E_i$ of measurable sets is measurable.
+#+end_quote
+
+#+begin_quote
+*Lemma 2.6 (Finite Additivity on Test Sets).* Let $E_1, \dots, E_k \in \mathcal{M}(\mathbb{R}^n)$ be pairwise disjoint. Then for any test set $A \subset \mathbb{R}^n$:
+\[
+m^*\left( A \cap \bigcup_{i=1}^k E_i \right) = \sum_{i=1}^k m^*(A \cap E_i).
+\]
+#+end_quote
+
+#+begin_proof
+We proceed by induction on $k$.
+For $k = 1$, this is trivial.
+Assume the statement holds for $k - 1$. Let $S = \bigcup_{i=1}^k E_i$. 
+Test the measurable set $E_k$ with the set $A \cap S$:
+\[
+m^*(A \cap S) = m^*\bigl((A \cap S) \cap E_k\bigr) + m^*\bigl((A \cap S) \setminus E_k\bigr).
+\]
+Since the $E_i$ are pairwise disjoint:
+- $(A \cap S) \cap E_k = A \cap E_k$.
+- $(A \cap S) \setminus E_k = A \cap \left( \bigcup_{i=1}^{k-1} E_i \right)$.
+By the induction hypothesis:
+\[
+m^*\left( A \cap \bigcup_{i=1}^{k-1} E_i \right) = \sum_{i=1}^{k-1} m^*(A \cap E_i).
+\]
+Adding $m^*(A \cap E_k)$ completes the induction step.
+#+end_proof
+
+---
+
+* Countable Unions and the $\sigma$-Algebra Property
+
+** Definition of an Algebra and a $\sigma$-Algebra
+#+begin_quote
+*Definition 2.7.* Let $X$ be a set. A collection $\mathcal{A} \subset \mathcal{P}(X)$ is called an *algebra* (or Boolean algebra) on $X$ if:
+1. $\emptyset \in \mathcal{A}$ and $X \in \mathcal{A}$.
+2. $E \in \mathcal{A} \implies E^c = X \setminus E \in \mathcal{A}$.
+3. $E_1, \dots, E_k \in \mathcal{A} \implies \bigcup_{i=1}^k E_i \in \mathcal{A}$ (closed under finite unions).
+
+The collection $\mathcal{A}$ is called a *$\sigma$-algebra* (or $\sigma$-field) if condition (3) is strengthened to:
+3'. For every countable sequence $E_1, E_2, E_3, \dots \in \mathcal{A}$, the union $\bigcup_{j=1}^\infty E_j \in \mathcal{A}$ (closed under countable unions).
+#+end_quote
+
+** $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-Algebra
+
+#+begin_quote
+*Theorem 2.8.* $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra on $\mathbb{R}^n$.
+#+end_quote
+
+#+begin_proof
+We have already verified that $\emptyset \in \mathcal{M}$ and that $\mathcal{M}$ is closed under complements and finite unions. It remains to show closure under countable unions.
+
+Let $E_1, E_2, E_3, \dots \in \mathcal{M}(\mathbb{R}^n)$. 
+We can replace the sequence $\{E_j\}$ by a sequence of *pairwise disjoint* measurable sets using the standard disjointification trick:
+\[
+F_1 = E_1, \quad F_2 = E_2 \setminus E_1, \quad F_3 = E_3 \setminus (E_1 \cup E_2), \quad \dots \quad F_j = E_j \setminus \left( \bigcup_{i=1}^{j-1} E_i \right).
+\]
+Each $F_j \in \mathcal{M}(\mathbb{R}^n)$, the $F_j$ are pairwise disjoint, and $\bigcup_{j=1}^\infty F_j = \bigcup_{j=1}^\infty E_j =: E$.
+
+Now take any test set $A \subset \mathbb{R}^n$. For any $k \in \mathbb{N}$, let $S_k = \bigcup_{j=1}^k F_j$. 
+Since $S_k \in \mathcal{M}$ and $S_k \subset E$, we have $A \setminus E \subset A \setminus S_k$. 
+Therefore:
+\[
+m^*(A) = m^*(A \cap S_k) + m^*(A \setminus S_k) \ge m^*(A \cap S_k) + m^*(A \setminus E).
+\]
+By Lemma 2.6 (finite additivity on test sets):
+\[
+m^*(A \cap S_k) = \sum_{j=1}^k m^*(A \cap F_j).
+\]
+Hence for *every* $k \in \mathbb{N}$:
+\[
+m^*(A) \ge \sum_{j=1}^k m^*(A \cap F_j) + m^*(A \setminus E).
+\]
+Since this holds for every $k$, taking the limit as $k \to \infty$:
+\[
+m^*(A) \ge \sum_{j=1}^\infty m^*(A \cap F_j) + m^*(A \setminus E).
+\]
+Finally, by countable subadditivity:
+\[
+\sum_{j=1}^\infty m^*(A \cap F_j) \ge m^*\left( \bigcup_{j=1}^\infty (A \cap F_j) \right) = m^*(A \cap E).
+\]
+Thus:
+\[
+m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E).
+\]
+This proves $E = \bigcup_{j=1}^\infty E_j \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+---
+
+* Countable Additivity on $\mathcal{M}(\mathbb{R}^n)$
+
+#+begin_quote
+*Theorem 2.9 (Countable Additivity).* If $E_1, E_2, E_3, \dots \in \mathcal{M}(\mathbb{R}^n)$ are pairwise disjoint, then
+\[
+m\left( \bigcup_{j=1}^\infty E_j \right) = \sum_{j=1}^\infty m(E_j).
+\]
+#+end_quote
+
+#+begin_proof
+Let $E = \bigcup_{j=1}^\infty E_j$.
+1. By countable subadditivity of outer measure (Theorem 1.4):
+   \[
+   m(E) \le \sum_{j=1}^\infty m(E_j).
+   \]
+2. For the reverse inequality, choose $A = E$ as the test set in the proof of Theorem 2.8:
+   \[
+   m^*(E) \ge \sum_{j=1}^k m^*(E \cap E_j) = \sum_{j=1}^k m(E_j) \quad \text{for every } k \in \mathbb{N}.
+   \]
+   Taking $k \to \infty$:
+   \[
+   m(E) \ge \sum_{j=1}^\infty m(E_j).
+   \]
+Combining both inequalities gives exact equality.
+#+end_proof
+
+---
+
+* The $\varepsilon$-Sandwich Characterization of Measurability
+
+A central theorem in measure theory—and Question 2 on the Fall 2026 exam—provides an intuitive geometric characterization of measurable sets: a set is measurable if and only if it can be sandwiched between measurable sets whose difference is arbitrarily small.
+
+#+begin_quote
+*Theorem 2.10 (Characterization of Measurability).* Let $E \subset \mathbb{R}^n$. 
+Then $E \in \mathcal{M}(\mathbb{R}^n)$ if and only if for every $\varepsilon > 0$ there exist measurable sets $A, B \in \mathcal{M}(\mathbb{R}^n)$ such that
+\[
+A \subset E \subset B \quad \text{and} \quad m(B \setminus A) < \varepsilon.
+\]
+#+end_quote
+
+#+begin_proof
+$(\implies)$ Suppose $E \in \mathcal{M}(\mathbb{R}^n)$. We can simply choose $A = E$ and $B = E$. Then $A \subset E \subset B$, both are measurable, and $B \setminus A = \emptyset$, so $m(B \setminus A) = m(\emptyset) = 0 < \varepsilon$. (More generally, in Chapter 3 we will see that $A$ can be chosen closed and $B$ open.)
+
+$(\impliedby)$ Suppose that for each $k \in \mathbb{N}$ (setting $\varepsilon = 1/k$), there exist measurable sets $A_k, B_k \in \mathcal{M}(\mathbb{R}^n)$ such that
+\[
+A_k \subset E \subset B_k \quad \text{and} \quad m(B_k \setminus A_k) < \frac{1}{k}.
+\]
+Define:
+\[
+A = \bigcup_{k=1}^\infty A_k \quad \text{and} \quad B = \bigcap_{k=1}^\infty B_k.
+\]
+Because $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, both $A$ and $B$ are measurable sets!
+Moreover, for every $k$:
+\[
+A_k \subset A \subset E \subset B \subset B_k.
+\]
+Therefore, $B \setminus A \subset B_k \setminus A_k$ for every $k \in \mathbb{N}$. 
+By monotonicity:
+\[
+m(B \setminus A) \le m(B_k \setminus A_k) < \frac{1}{k} \quad \text{for all } k \in \mathbb{N}.
+\]
+Taking $k \to \infty$ shows that $m(B \setminus A) = 0$.
+Now, observe that
+\[
+E = A \cup (E \setminus A).
+\]
+Since $E \setminus A \subset B \setminus A$ and $m(B \setminus A) = 0$, by monotonicity $m^*(E \setminus A) = 0$.
+By Theorem 2.2, every null set is measurable, so $E \setminus A \in \mathcal{M}(\mathbb{R}^n)$.
+Finally, $E$ is the union of two measurable sets:
+\[
+E = A \cup (E \setminus A) \in \mathcal{M}(\mathbb{R}^n).
+\]
+#+end_proof
+
+---
+
+* Worked Exercises
+
+** Exercise 2.1 (Fall 2026 Exam Problem 1a: Definition of Measurability)
+State precisely the definition of a Lebesgue measurable subset of $\mathbb{R}^n$.
+
+*Solution:*
+A subset $E \subset \mathbb{R}^n$ is said to be *Lebesgue measurable* (in $\mathbb{R}^n$) if for every test set $A \subset \mathbb{R}^n$,
+\[
+m^*(A) = m^*(A \cap E) + m^*(A \setminus E),
+\]
+where $m^*$ denotes the Lebesgue outer measure on $\mathbb{R}^n$. (Equivalently, $m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E)$ for all $A \subset \mathbb{R}^n$ with $m^*(A) < \infty$.)
+
+** Exercise 2.2 (Homework 3, Problem 3: Measurability via Subsets)
+Show that $E \subset \mathbb{R}^n$ is Lebesgue measurable if and only if for all $S \subset E$:
+\[
+m^*(A) \ge m^*(S) + m^*(A \setminus S) \quad \text{is not required, but rather:}
+\]
+Specifically: Show that $E$ is measurable if and only if for all test sets $A \subset \mathbb{R}^n$ such that $A \subset E$ or $A \cap E = \emptyset$, Carathéodory holds. 
+More directly (from HW3): Prove that $E \subset \mathbb{R}^n$ is measurable if and only if for all sets $S \subset \mathbb{R}^n$ with $m^*(S) < \infty$:
+\[
+m^*(S) = m^*(S \cap E) + m^*(S \setminus E).
+\]
+
+*Solution:*
+- $(\implies)$ If $E$ is measurable, Carathéodory holds for *all* $A \subset \mathbb{R}^n$, so in particular for all $S$ with $m^*(S) < \infty$.
+- $(\impliedby)$ Suppose the equality holds for all $S$ with $m^*(S) < \infty$. Let $A \subset \mathbb{R}^n$ be any set.
+  If $m^*(A) < \infty$, the equality holds by assumption.
+  If $m^*(A) = \infty$, then by subadditivity:
+  \[
+  m^*(A \cap E) + m^*(A \setminus E) \ge m^*(A) = \infty.
+  \]
+  Since outer measures are non-negative, the sum must also be $\infty = m^*(A)$.
+  Thus equality holds for all subsets $A \subset \mathbb{R}^n$. Hence $E \in \mathcal{M}(\mathbb{R}^n)$.
+
+** Exercise 2.3 (Homework 4, Problem 1: Sets Differing by a Null Set)
+Assume $A, B \subset \mathbb{R}^n$ are Lebesgue measurable and $m(A \triangle B) = 0$, where $A \triangle B = (A \setminus B) \cup (B \setminus A)$ is the symmetric difference.
+Prove that $m(A) = m(B)$.
+
+*Solution:*
+1. Notice that $A = (A \cap B) \cup (A \setminus B)$ and $B = (A \cap B) \cup (B \setminus A)$.
+2. Since $A \setminus B \subset A \triangle B$ and $B \setminus A \subset A \triangle B$, by monotonicity:
+   \[
+   m(A \setminus B) \le m(A \triangle B) = 0 \implies m(A \setminus B) = 0,
+   \]
+   \[
+   m(B \setminus A) \le m(A \triangle B) = 0 \implies m(B \setminus A) = 0.
+   \]
+3. The union $A = (A \cap B) \cup (A \setminus B)$ is disjoint. By additivity of measure:
+   \[
+   m(A) = m(A \cap B) + m(A \setminus B) = m(A \cap B) + 0 = m(A \cap B).
+   \]
+4. Similarly, $B = (A \cap B) \cup (B \setminus A)$ is disjoint, so:
+   \[
+   m(B) = m(A \cap B) + m(B \setminus A) = m(A \cap B) + 0 = m(A \cap B).
+   \]
+5. Therefore, $m(A) = m(B)$.
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Carathéodory Measurability Cheat-Sheet
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Topic | Exact Mathematical Statement | Key Insight |
+|-------+------------------------------+-------------|
+| *Carathéodory Condition* | $m^*(A) = m^*(A \cap E) + m^*(A \setminus E)$ for all $A$ | Clean knife: $E$ splits every test set additively. |
+| *Sufficient Test* | Check only $m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E)$ | The reverse inequality ($\le$) is automatic from subadditivity. |
+| *Null Sets* | $m^*(E) = 0 \implies E \in \mathcal{M}(\mathbb{R}^n)$ | Singletons, countable sets ($\mathbb{Q}^n$), and subsets of null sets are measurable. |
+| *$\sigma$-Algebra* | $\mathcal{M}(\mathbb{R}^n)$ is closed under $E^c$ and $\bigcup_{j=1}^\infty E_j$ | All standard set operations on countably many sets keep you inside $\mathcal{M}$. |
+| *Countable Additivity* | $E_j \in \mathcal{M}$ disjoint $\implies m(\bigcup E_j) = \sum m(E_j)$ | Strict additivity is fully restored on measurable sets! |
+| *$\varepsilon$-Sandwich* | $E \in \mathcal{M} \iff \forall \varepsilon > 0,\, \exists A \subset E \subset B$ with $m(B \setminus A) < \varepsilon$ | Core characterization used on exams to prove measurability. |

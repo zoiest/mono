@@ -1,0 +1,363 @@
+:PROPERTIES:
+:ID:       b43eae04-6130-414f-830c-f1d364a4203f
+:ROAM_ALIASES: "MAST31051 Chapter 6" "Sequences and Simple Functions Notes"
+:END:
+#+title: Chapter 6: Limits of Measurable Functions and Simple Functions
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:limits:simple-functions:approximation:almost-everywhere:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch05-measurable-functions.org][← Chapter 5]] | [[file:ch07-lebesgue-integral-nonnegative.org][Chapter 7: Lebesgue Integral: $f \ge 0$ →]]
+
+* Overview
+
+** What problem does this chapter solve?
+In Chapter 1, we highlighted one of the most frustrating failures of the classical Riemann integral: *the pointwise limit of Riemann integrable functions often fails to be Riemann integrable*. 
+
+In Lebesgue theory, limits are completely tamed. The first major triumph of this chapter is proving that the class of measurable functions is *closed under all standard limiting operations*:
+- Suprema and infima of countable sequences of measurable functions are measurable.
+- $\limsup$ and $\liminf$ of sequences of measurable functions are measurable.
+- Pointwise limits of measurable functions are measurable.
+
+The second major triumph is the *Simple Function Approximation Theorem*. 
+Just as any real number can be approximated by finite decimal fractions, *any non-negative measurable function can be approximated from below by an increasing sequence of simple step functions*:
+\[
+0 \le s_1(x) \le s_2(x) \le s_3(x) \le \dots \nearrow f(x).
+\]
+This constructive staircase approximation is the engine of Lebesgue integration: once we define the integral for simple functions (which is just a finite sum of heights times base measures), we define the integral of *any* non-negative measurable function by taking the limit of the integrals of its approximating simple functions.
+
+Finally, we introduce the indispensable concept of *almost everywhere* (a.e.): in measure theory, two functions that differ only on a set of measure zero are indistinguishable.
+
+** Roadmap
+- *6.1 Limits of Sequences of Measurable Functions:* Suprema, infima, $\limsup$, $\liminf$, and pointwise limits.
+- *6.2 The Domain of Convergence:* Proving that the set of points where a sequence converges is measurable.
+- *6.3 The Concept of "Almost Everywhere" (a.e.):* Definitions, null set modifications, and a.e. convergence.
+- *6.4 Simple Functions:* Standard canonical representation $s = \sum a_i \chi_{A_i}$.
+- *6.5 The Simple Function Approximation Theorem:* The dyadic staircase construction and proof.
+- *Worked Exercises:* Step-by-step solutions to homework problems on limits and approximations.
+- *Summary Cheat-Sheet:* Quick-reference table of limiting properties and simple function rules.
+
+---
+
+* Limits of Sequences of Measurable Functions
+
+Let $A \in \mathcal{M}(\mathbb{R}^n)$ and let $(f_j)_{j=1}^\infty$ be a sequence of measurable functions $f_j: A \to \overline{\mathbb{R}}$.
+
+** Suprema and Infima
+
+#+begin_quote
+*Theorem 6.1 (Measurability of Suprema and Infima).* 
+Let $f_j: A \to \overline{\mathbb{R}}$ be measurable for each $j \in \mathbb{N}$. Define:
+\[
+g(x) = \sup_{j \in \mathbb{N}} f_j(x) \quad \text{and} \quad h(x) = \inf_{j \in \mathbb{N}} f_j(x).
+\]
+Then $g$ and $h$ are measurable functions on $A$.
+#+end_quote
+
+#+begin_proof
+1. *Supremum:* For any $a \in \mathbb{R}$, observe that the supremum of a collection of numbers exceeds $a$ if and only if at least one number in the collection exceeds $a$:
+   \[
+   \sup_{j \in \mathbb{N}} f_j(x) > a \iff \exists j \in \mathbb{N} \text{ such that } f_j(x) > a.
+   \]
+   In terms of sets, this means:
+   \[
+   \{x \in A : g(x) > a\} = \bigcup_{j=1}^\infty \{x \in A : f_j(x) > a\}.
+   \]
+   Because each $f_j$ is measurable, each set $\{x \in A : f_j(x) > a\}$ belongs to $\mathcal{M}(\mathbb{R}^n)$.
+   Since $\mathcal{M}(\mathbb{R}^n)$ is a $\sigma$-algebra, it is closed under countable unions.
+   Thus $\{x \in A : g(x) > a\} \in \mathcal{M}(\mathbb{R}^n)$.
+   By Theorem 5.2 (Ray Criterion 1), $g = \sup f_j$ is measurable.
+2. *Infimum:* Dually, $\inf_{j} f_j(x) < a \iff \exists j \in \mathbb{N}$ such that $f_j(x) < a$:
+   \[
+   \{x \in A : h(x) < a\} = \bigcup_{j=1}^\infty \{x \in A : f_j(x) < a\}.
+   \]
+   Each set is measurable, so the countable union is measurable. By Theorem 5.2 (Criterion 3), $h = \inf f_j$ is measurable. (Alternatively, $h = -\sup(-f_j)$).
+#+end_proof
+
+** Limsup and Liminf
+
+Recall that for any sequence of numbers $(x_j)_{j=1}^\infty \subset \overline{\mathbb{R}}$:
+\[
+\limsup_{j \to \infty} x_j = \inf_{k \ge 1} \left( \sup_{j \ge k} x_j \right), \qquad \liminf_{j \to \infty} x_j = \sup_{k \ge 1} \left( \inf_{j \ge k} x_j \right).
+\]
+
+#+begin_quote
+*Theorem 6.2 (Measurability of $\limsup$ and $\liminf$).* 
+If $(f_j)_{j=1}^\infty$ is a sequence of measurable functions $f_j: A \to \overline{\mathbb{R}}$, then
+\[
+f^*(x) = \limsup_{j \to \infty} f_j(x) \quad \text{and} \quad f_*(x) = \liminf_{j \to \infty} f_j(x)
+\]
+are measurable functions on $A$.
+#+end_quote
+
+#+begin_proof
+For each $k \in \mathbb{N}$, define the tail supremum:
+\[
+u_k(x) = \sup_{j \ge k} f_j(x).
+\]
+By Theorem 6.1, each $u_k$ is measurable. 
+The limsup is the infimum over all $k \in \mathbb{N}$ of these functions:
+\[
+f^*(x) = \inf_{k \in \mathbb{N}} u_k(x).
+\]
+Applying Theorem 6.1 again to the sequence of measurable functions $(u_k)_{k=1}^\infty$, their infimum $f^*$ is measurable.
+The proof that $f_* = \liminf f_j$ is measurable is completely analogous.
+#+end_proof
+
+** Pointwise Limits
+
+#+begin_quote
+*Corollary 6.3 (Pointwise Limits are Measurable).* 
+If $f_j: A \to \overline{\mathbb{R}}$ is a sequence of measurable functions, and the pointwise limit
+\[
+f(x) = \lim_{j \to \infty} f_j(x)
+\]
+exists for all $x \in A$, then $f$ is a measurable function on $A$.
+#+end_quote
+
+#+begin_proof
+When the limit exists, $\limsup_{j \to \infty} f_j(x) = \liminf_{j \to \infty} f_j(x) = f(x)$. 
+Since $\limsup f_j$ is measurable by Theorem 6.2, $f$ is measurable.
+#+end_proof
+
+---
+
+* The Domain of Convergence
+
+What if the sequence $f_j(x)$ does not converge at every point?
+
+#+begin_quote
+*Theorem 6.4.* Let $f_j: A \to \mathbb{R}$ be measurable functions for each $j \in \mathbb{N}$. 
+The set of points $C \subset A$ where the sequence converges to a finite limit:
+\[
+C = \{x \in A : \lim_{j \to \infty} f_j(x) \text{ exists in } \mathbb{R}\}
+\]
+is a Lebesgue measurable set: $C \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_quote
+
+#+begin_proof
+A sequence of real numbers converges in $\mathbb{R}$ if and only if it is a Cauchy sequence!
+By the Cauchy criterion:
+\[
+x \in C \iff \forall k \in \mathbb{N},\, \exists N \in \mathbb{N} \text{ such that } \forall j, l \ge N,\, |f_j(x) - f_l(x)| < \frac{1}{k}.
+\]
+Translating the quantifiers into set operations:
+\[
+C = \bigcap_{k=1}^\infty \bigcup_{N=1}^\infty \bigcap_{j=N}^\infty \bigcap_{l=N}^\infty \left\{x \in A : |f_j(x) - f_l(x)| < \frac{1}{k}\right\}.
+\]
+Since $f_j$ and $f_l$ are measurable, their difference and absolute value $|f_j - f_l|$ is measurable (Theorem 5.8).
+Thus each set $\{x \in A : |f_j(x) - f_l(x)| < 1/k\}$ is measurable.
+Because $C$ is constructed using only countable intersections and countable unions of these measurable sets, $C \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+---
+
+* The Concept of "Almost Everywhere" (a.e.)
+
+** Intuition
+In classical analysis, if two functions differ at a single point, they are different functions.
+In measure theory, single points (and all countable sets) have measure zero. 
+Changing the values of a function on a set of measure zero has zero impact on its integrals or volumes.
+
+#+begin_quote
+*Definition 6.5 (Almost Everywhere).* Let $A \in \mathcal{M}(\mathbb{R}^n)$. 
+A mathematical statement $P(x)$ is said to hold *almost everywhere on $A$* (abbreviated *a.e.*, or in Finnish *melkein kaikkialla*, *m.k.*, or *p.k.* for *pisteittäin melkein kaikkialla*) if the set of points where it fails is a null set:
+\[
+m(\{x \in A : P(x) \text{ is false}\}) = 0.
+\]
+In particular:
+- *Equality a.e.:* $f = g$ a.e. on $A$ means $m(\{x \in A : f(x) \neq g(x)\}) = 0$.
+- *Convergence a.e.:* $f_j \to f$ a.e. on $A$ means $m(\{x \in A : f_j(x) \not\to f(x)\}) = 0$.
+#+end_quote
+
+#+begin_quote
+*Theorem 6.6 (Modification on Null Sets Preserves Measurability).* 
+Suppose $f: A \to \overline{\mathbb{R}}$ is measurable, and $g: A \to \overline{\mathbb{R}}$ satisfies $f = g$ a.e. on $A$. 
+Then $g$ is measurable.
+#+end_quote
+
+#+begin_proof
+Let $N = \{x \in A : f(x) \neq g(x)\}$. By assumption, $m(N) = 0$.
+By Theorem 2.2, $N \in \mathcal{M}$ and every subset of $N$ is measurable.
+For any $a \in \mathbb{R}$, examine the set where $g(x) > a$:
+\[
+\{x \in A : g(x) > a\} = \Bigl( \{x \in A \setminus N : f(x) > a\} \Bigr) \cup \Bigl( \{x \in N : g(x) > a\} \Bigr).
+\]
+The first set equals $\{x \in A : f(x) > a\} \setminus N$, which is measurable because $f$ is measurable and $N$ is measurable.
+The second set is a subset of $N$, hence it is a null set, and therefore measurable by completeness.
+The union of two measurable sets is measurable. Thus $g$ is measurable.
+#+end_proof
+
+#+begin_quote
+*Corollary 6.7 (Limit a.e. is Measurable).* 
+If $f_j: A \to \overline{\mathbb{R}}$ are measurable and $f_j(x) \to f(x)$ for almost every $x \in A$, then $f$ is measurable.
+#+end_quote
+
+---
+
+* Simple Functions
+
+** Canonical Representation
+#+begin_quote
+*Definition 6.8 (Simple Function).* A function $s: A \to \mathbb{R}$ is called a *simple function* if its image $s(A) \subset \mathbb{R}$ is a *finite set*:
+\[
+s(A) = \{a_1, a_2, \dots, a_k\},
+\]
+where $a_1, \dots, a_k$ are distinct real numbers.
+#+end_quote
+
+If we set $A_i = s^{-1}(\{a_i\}) = \{x \in A : s(x) = a_i\}$, then:
+1. The sets $A_1, \dots, A_k$ are *pairwise disjoint*.
+2. Their union is the entire domain: $\bigcup_{i=1}^k A_i = A$.
+3. We can write $s$ in its *standard (canonical) representation*:
+   \[
+   s(x) = \sum_{i=1}^k a_i \chi_{A_i}(x).
+   \]
+
+#+begin_quote
+*Theorem 6.9.* A simple function $s = \sum_{i=1}^k a_i \chi_{A_i}$ is measurable if and only if each set $A_i$ is measurable: $A_i \in \mathcal{M}(\mathbb{R}^n)$ for all $i = 1, \dots, k$.
+#+end_quote
+
+#+begin_proof
+If each $A_i$ is measurable, each indicator $\chi_{A_i}$ is measurable (Theorem 5.7). By Theorem 5.8, finite linear combinations of measurable functions are measurable, so $s$ is measurable.
+Conversely, if $s$ is measurable, each singleton $\{a_i\}$ is a closed set (hence a Borel set), so by Theorem 5.5, $A_i = s^{-1}(\{a_i\}) \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
+
+---
+
+* The Simple Function Approximation Theorem
+
+This is one of the most celebrated theorems in measure theory: *every non-negative measurable function can be built up monotonically from simple functions*.
+
+#+begin_quote
+*Theorem 6.10 (Monotone Simple Approximation).* 
+Let $A \in \mathcal{M}(\mathbb{R}^n)$ and let $f: A \to [0, +\infty]$ be a non-negative measurable function. 
+Then there exists a sequence of simple measurable functions $(s_k)_{k=1}^\infty$ such that:
+1. *Monotone Increasing:* For all $x \in A$ and all $k \in \mathbb{N}$:
+   \[
+   0 \le s_1(x) \le s_2(x) \le s_3(x) \le \dots \le f(x).
+   \]
+2. *Pointwise Convergence:* For every $x \in A$:
+   \[
+   \lim_{k \to \infty} s_k(x) = f(x).
+   \]
+3. *Uniform Convergence on Bounded Sets:* If $f$ is bounded on a subset $E \subset A$, the convergence $s_k \rightrightarrows f$ is uniform on $E$.
+#+end_quote
+
+#+begin_proof
+*The Dyadic Slicing Construction:*
+Fix $k \in \mathbb{N}$. We divide the interval $[0, k[$ on the $y$-axis into $k \cdot 2^k$ subintervals of width $1/2^k$:
+\[
+I_{k, j} = \left[ \frac{j}{2^k}, \, \frac{j+1}{2^k} \right[, \quad j = 0, 1, \dots, k 2^k - 1.
+\]
+Define the preimage sets in the domain $A$:
+\[
+E_{k, j} = f^{-1}(I_{k, j}) = \left\{ x \in A : \frac{j}{2^k} \le f(x) < \frac{j+1}{2^k} \right\},
+\]
+and for values exceeding the cutoff $k$:
+\[
+E_{k, \infty} = f^{-1}([k, +\infty]) = \{x \in A : f(x) \ge k\}.
+\]
+Because $f$ is measurable, each set $E_{k, j}$ and $E_{k, \infty}$ is measurable.
+Now define the step function $s_k: A \to \mathbb{R}$ by:
+\[
+s_k(x) = \sum_{j=0}^{k 2^k - 1} \frac{j}{2^k} \chi_{E_{k, j}}(x) + k \chi_{E_{k, \infty}}(x).
+\]
+
+*Verification of Properties:*
+1. *Measurability and Simplicity:* $s_k$ takes only $k 2^k + 1$ values (the fractions $j/2^k$ and $k$), each on a measurable set. Thus $s_k$ is a simple measurable function.
+2. *Monotonicity ($s_k \le s_{k+1}$):*
+   Going from $k$ to $k + 1$, each interval of width $1/2^k$ is split into two halves of width $1/2^{k+1}$. 
+   On the lower half, the value of $s_{k+1}$ matches $s_k$; on the upper half, $s_{k+1}$ increases by $1/2^{k+1}$.
+   If $f(x) \ge k$, $s_k(x) = k$, while $s_{k+1}(x) \ge k$.
+   Thus $s_k(x) \le s_{k+1}(x) \le f(x)$ for all $x \in A$.
+3. *Pointwise Convergence:*
+   Let $x \in A$.
+   - If $f(x) < +\infty$, choose $k > f(x)$. For all such $k$, $x$ belongs to some interval $I_{k, j}$, so:
+     \[
+     0 \le f(x) - s_k(x) < \frac{1}{2^k}.
+     \]
+     As $k \to \infty$, $1/2^k \to 0$, so $s_k(x) \to f(x)$.
+   - If $f(x) = +\infty$, then $f(x) \ge k$ for all $k$, so $s_k(x) = k$. As $k \to \infty$, $s_k(x) \to +\infty = f(x)$.
+4. *Uniform Convergence:* If $f(x) \le M$ for all $x \in E$, then for all $k > M$, $|f(x) - s_k(x)| < 1/2^k$ uniformly across $x \in E$.
+#+end_proof
+
+---
+
+* Worked Exercises
+
+** Exercise 6.1 (Pointwise limit of continuous functions need not be continuous)
+Consider $f_k: [0, 1] \to \mathbb{R}$ defined by $f_k(x) = x^k$.
+1. Show that each $f_k$ is continuous (hence measurable).
+2. Find the pointwise limit $f(x) = \lim_{k \to \infty} f_k(x)$.
+3. Is $f$ continuous? Is $f$ measurable?
+
+*Solution:*
+1. Each $f_k$ is a polynomial, hence continuous on $[0, 1]$. By Theorem 5.4, each $f_k$ is measurable.
+2. For $x \in [0, 1[$: $\lim_{k \to \infty} x^k = 0$.
+   For $x = 1$: $\lim_{k \to \infty} 1^k = 1$.
+   Thus:
+   \[
+   f(x) = \begin{cases} 0, & x \in [0, 1[, \\ 1, & x = 1. \end{cases}
+   \]
+3. The limit $f$ is *discontinuous* at $x = 1$ ($\lim_{x \to 1^-} f(x) = 0 \neq f(1) = 1$).
+   However, $f = \chi_{\{1\}}$, and $\{1\}$ is a closed set (hence measurable). 
+   By Theorem 5.7, $f$ is *measurable*! (Confirming Corollary 6.3: limits preserve measurability even when they destroy continuity).
+
+** Exercise 6.2 (Homework 5, Problem 6: Pointwise vs Uniform Convergence)
+Assume $A \subset \mathbb{R}^n$ is measurable with $m(A) < \infty$, and $f_j: A \to \mathbb{R}$ is a sequence of measurable functions such that $f_j(x) \to f(x)$ for all $x \in A$.
+Prove that for every $\varepsilon > 0$ and $\delta > 0$, there exists an integer $N \in \mathbb{N}$ and a measurable set $E \subset A$ such that:
+\[
+m(A \setminus E) < \delta \quad \text{and} \quad |f_j(x) - f(x)| < \varepsilon \quad \text{for all } j \ge N \text{ and all } x \in E.
+\]
+(This is the core step of *Egorov's Theorem*!)
+
+*Solution:*
+1. For each $k \in \mathbb{N}$, define the set of points where the error is small for all indices $j \ge k$:
+   \[
+   E_k = \bigcap_{j=k}^\infty \{x \in A : |f_j(x) - f(x)| < \varepsilon\}.
+   \]
+2. Since each $f_j$ and $f$ are measurable, each set in the intersection is measurable, so $E_k \in \mathcal{M}$.
+3. Notice that $E_1 \subset E_2 \subset E_3 \subset \dots$ is an increasing sequence of sets.
+4. Because $f_j(x) \to f(x)$ for every $x \in A$, for every $x$ there is some index $k$ such that $|f_j(x) - f(x)| < \varepsilon$ for all $j \ge k$. Thus:
+   \[
+   \bigcup_{k=1}^\infty E_k = A.
+   \]
+5. By Theorem 4.6 (Continuity of Measure from Below):
+   \[
+   \lim_{k \to \infty} m(E_k) = m(A).
+   \]
+6. Since $m(A) < \infty$, subtractivity gives $\lim_{k \to \infty} m(A \setminus E_k) = m(A) - m(A) = 0$.
+7. Therefore, for the given $\delta > 0$, there exists $N \in \mathbb{N}$ such that
+   \[
+   m(A \setminus E_N) < \delta.
+   \]
+8. Setting $E = E_N$, by definition of $E_N$, for all $j \ge N$ and all $x \in E$, $|f_j(x) - f(x)| < \varepsilon$.
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Limits, a.e., and Simple Functions Reference
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Operation / Theorem | Formal Statement | Importance in Analysis |
+|---------------------+------------------+-------------------------|
+| *Countable Supremum* | $\sup_j f_j$ is measurable | Follows from $\{x : \sup f_j > a\} = \bigcup \{x : f_j > a\}$. |
+| *Limsup / Liminf* | $\limsup f_j$ and $\liminf f_j$ are measurable | Always exist in $[-\infty, +\infty]$ for any sequence. |
+| *Pointwise Limit* | $f_j \to f \implies f$ is measurable | Closes the defect of Riemann integration. |
+| *Almost Everywhere* | $P(x)$ holds except on a set $N$ with $m(N) = 0$ | The natural language of measure theory and probability. |
+| *Null Modification* | $f = g$ a.e. and $f$ measurable $\implies g$ measurable | Functions differing on a null set are equivalent. |
+| *Simple Function* | $s = \sum_{i=1}^k a_i \chi_{A_i}$ ($A_i$ disjoint) | Measurable iff each $A_i$ is measurable. |
+| *Approximation Theorem* | $0 \le s_1 \le s_2 \le \dots \nearrow f$ | Any non-negative measurable function is a limit of simple functions. |
+| *Dyadic Mesh* | Side length $1/2^k$, cutoff at $k$ | The explicit construction used to define the Lebesgue integral. |

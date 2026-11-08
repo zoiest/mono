@@ -1,0 +1,337 @@
+:PROPERTIES:
+:ID:       69f50b1f-c21b-441b-b620-1f783d7b2f7d
+:ROAM_ALIASES: "MAST31051 Chapter 4" "Abstract Measures and Continuity Notes"
+:END:
+#+title: Chapter 4: Abstract Measure Spaces and Continuity of Measures
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:abstract-measure:continuity-of-measure:sigma-finite:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch03-borel-and-regularity.org][← Chapter 3]] | [[file:ch05-measurable-functions.org][Chapter 5: Measurable Functions →]]
+
+* Overview
+
+** What problem does this chapter solve?
+So far, we have focused primarily on the Lebesgue measure $m$ on Euclidean space $\mathbb{R}^n$. 
+However, modern mathematics and probability require measures on diverse spaces:
+- In probability theory, we measure abstract sample spaces $\Omega$ with total probability $P(\Omega) = 1$.
+- In discrete mathematics, we use counting measure.
+- In physics, we measure phase spaces, manifolds, or function spaces.
+
+Rather than reproving foundational theorems for each setting, we isolate the essential axioms that make measure theory work. 
+This yields the concept of an *abstract measure space* $(X, \mathcal{M}, \mu)$.
+
+The crowning achievement of this chapter is the study of *limits of measures*:
+- If a sequence of sets expands ($E_1 \subset E_2 \subset \dots$), does the measure of the union equal the limit of the measures?
+- If a sequence of sets shrinks ($E_1 \supset E_2 \supset \dots$), does the measure of the intersection equal the limit of the measures?
+
+We will discover that continuity from below *always* holds, while continuity from above holds *if and only if* at least one of the sets in the chain has finite measure!
+
+** Roadmap
+- *4.1 Abstract Measure Spaces:* Axioms, finite, $\sigma$-finite, and complete measures.
+- *4.2 Canonical Examples:* Lebesgue measure, counting measure, Dirac point mass.
+- *4.3 Elementary Properties:* Monotonicity, subadditivity, subtractivity.
+- *4.4 Continuity of Measures:* Continuity from below and continuity from above.
+- *4.5 The Infinite Counterexample:* Why $\mu(E_1) < \infty$ is strictly required for continuity from above.
+- *Worked Exercises:* Step-by-step solutions to exam-level problems on limits of sets.
+- *Summary Cheat-Sheet:* Quick-reference table of measure axioms and continuity theorems.
+
+---
+
+* Abstract Measure Spaces
+
+** Formal Definition
+#+begin_quote
+*Definition 4.1 (Measure Space).* Let $X$ be a non-empty set and let $\mathcal{M}$ be a $\sigma$-algebra of subsets of $X$. 
+A function $\mu: \mathcal{M} \to [0, +\infty]$ is called a *measure* on $(X, \mathcal{M})$ if:
+1. *Null Empty Set:* $\mu(\emptyset) = 0$.
+2. *Countable Additivity ($\sigma$-additivity):* For every sequence $E_1, E_2, E_3, \dots \in \mathcal{M}$ of pairwise disjoint sets:
+   \[
+   \mu\left( \bigcup_{j=1}^\infty E_j \right) = \sum_{j=1}^\infty \mu(E_j).
+   \]
+The triple $(X, \mathcal{M}, \mu)$ is called a *measure space*. The pair $(X, \mathcal{M})$ is called a *measurable space*, and elements of $\mathcal{M}$ are called *measurable sets*.
+#+end_quote
+
+** Classification of Measures
+- *Finite Measure:* $\mu$ is a finite measure if $\mu(X) < \infty$.
+- *Probability Measure:* $\mu$ is a probability measure (often denoted $P$) if $\mu(X) = 1$.
+- *$\sigma$-Finite Measure:* $\mu$ is $\sigma$-finite if $X$ can be written as a countable union of sets of finite measure:
+  \[
+  X = \bigcup_{k=1}^\infty X_k, \quad \text{with } X_k \in \mathcal{M} \text{ and } \mu(X_k) < \infty \text{ for all } k \in \mathbb{N}.
+  \]
+- *Complete Measure Space:* $(X, \mathcal{M}, \mu)$ is complete if every subset of a null set is measurable:
+  \[
+  E \in \mathcal{M}, \, \mu(E) = 0, \, A \subset E \implies A \in \mathcal{M} \text{ (and hence } \mu(A) = 0\text{)}.
+  \]
+
+---
+
+* Canonical Examples
+
+** Example 4.2 (Lebesgue Measure Space)
+$(\mathbb{R}^n, \mathcal{M}(\mathbb{R}^n), m)$, where $\mathcal{M}(\mathbb{R}^n)$ is the $\sigma$-algebra of Lebesgue measurable sets and $m$ is Lebesgue measure.
+- $m(\mathbb{R}^n) = +\infty$, so it is not a finite measure.
+- However, $\mathbb{R}^n = \bigcup_{k=1}^\infty [-k, k]^n$, where $m([-k, k]^n) = (2k)^n < \infty$. Thus Lebesgue measure is *$\sigma$-finite*.
+- By Theorem 2.2, Lebesgue measure is *complete*.
+
+** Example 4.3 (Counting Measure)
+Let $X$ be any non-empty set and $\mathcal{M} = \mathcal{P}(X)$. For any $A \subset X$, define:
+\[
+\mu_{\text{count}}(A) = \begin{cases} |A|, & \text{if } A \text{ is finite}, \\ +\infty, & \text{if } A \text{ is infinite}. \end{cases}
+\]
+- If $X$ is countable, $\mu_{\text{count}}$ is $\sigma$-finite.
+- If $X$ is uncountable (e.g. $X = \mathbb{R}$), $\mu_{\text{count}}$ is *not* $\sigma$-finite!
+
+** Example 4.4 (Dirac Measure / Point Mass)
+Fix a point $x_0 \in X$ and let $\mathcal{M}$ be any $\sigma$-algebra on $X$. Define:
+\[
+\delta_{x_0}(A) = \begin{cases} 1, & \text{if } x_0 \in A, \\ 0, & \text{if } x_0 \notin A. \end{cases}
+\]
+This is a probability measure, concentrated entirely at the single point $x_0$.
+
+---
+
+* Elementary Properties of Measures
+
+#+begin_quote
+*Proposition 4.5.* Let $(X, \mathcal{M}, \mu)$ be a measure space, and let $A, B \in \mathcal{M}$.
+1. *Monotonicity:* If $A \subset B$, then $\mu(A) \le \mu(B)$.
+2. *Subtractivity:* If $A \subset B$ and $\mu(A) < \infty$, then
+   \[
+   \mu(B \setminus A) = \mu(B) - \mu(A).
+   \]
+3. *Finite Subadditivity:* For any $A_1, \dots, A_k \in \mathcal{M}$:
+   \[
+   \mu\left( \bigcup_{i=1}^k A_i \right) \le \sum_{i=1}^k \mu(A_i).
+   \]
+4. *Countable Subadditivity:* For any sequence $A_1, A_2, A_3, \dots \in \mathcal{M}$:
+   \[
+   \mu\left( \bigcup_{j=1}^\infty A_j \right) \le \sum_{j=1}^\infty \mu(A_j).
+   \]
+#+end_quote
+
+#+begin_proof
+1. Decompose $B = A \cup (B \setminus A)$. This is a disjoint union of measurable sets. By additivity:
+   \[
+   \mu(B) = \mu(A) + \mu(B \setminus A).
+   \]
+   Since $\mu(B \setminus A) \ge 0$, we have $\mu(B) \ge \mu(A)$.
+2. If $\mu(A) < \infty$, we can subtract $\mu(A)$ from both sides of $\mu(B) = \mu(A) + \mu(B \setminus A)$, giving $\mu(B \setminus A) = \mu(B) - \mu(A)$.
+3. and 4. follow by disjointifying the sets: let $F_1 = A_1$ and $F_j = A_j \setminus (\bigcup_{i=1}^{j-1} A_i)$. Then the $F_j$ are disjoint, $F_j \subset A_j$, and $\bigcup F_j = \bigcup A_j$. By additivity and monotonicity:
+   \[
+   \mu\left( \bigcup_{j=1}^\infty A_j \right) = \mu\left( \bigcup_{j=1}^\infty F_j \right) = \sum_{j=1}^\infty \mu(F_j) \le \sum_{j=1}^\infty \mu(A_j).
+   \]
+#+end_proof
+
+---
+
+* Continuity of Measures
+
+** Continuity from Below (Increasing Sequences of Sets)
+
+#+begin_quote
+*Theorem 4.6 (Continuity from Below).* Let $(X, \mathcal{M}, \mu)$ be a measure space. 
+Suppose $E_1 \subset E_2 \subset E_3 \subset \dots$ is an increasing sequence of measurable sets ($E_j \nearrow E$), and let $E = \bigcup_{j=1}^\infty E_j$.
+Then:
+\[
+\lim_{j \to \infty} \mu(E_j) = \mu(E) = \mu\left( \bigcup_{j=1}^\infty E_j \right).
+\]
+#+end_quote
+
+#+begin_proof
+1. Disjointify the sequence: set $F_1 = E_1$ and $F_j = E_j \setminus E_{j-1}$ for $j \ge 2$.
+2. The sets $F_j$ are pairwise disjoint and belong to $\mathcal{M}$.
+3. For each $k \in \mathbb{N}$, the union is telescoping:
+   \[
+   \bigcup_{j=1}^k F_j = E_k.
+   \]
+   By finite additivity:
+   \[
+   \mu(E_k) = \sum_{j=1}^k \mu(F_j).
+   \]
+4. Moreover, $\bigcup_{j=1}^\infty F_j = \bigcup_{j=1}^\infty E_j = E$.
+5. By countable additivity of $\mu$:
+   \[
+   \mu(E) = \sum_{j=1}^\infty \mu(F_j) = \lim_{k \to \infty} \sum_{j=1}^k \mu(F_j) = \lim_{k \to \infty} \mu(E_k).
+   \]
+This completes the proof.
+#+end_proof
+
+** Continuity from Above (Decreasing Sequences of Sets)
+
+#+begin_quote
+*Theorem 4.7 (Continuity from Above).* Let $(X, \mathcal{M}, \mu)$ be a measure space.
+Suppose $E_1 \supset E_2 \supset E_3 \supset \dots$ is a decreasing sequence of measurable sets ($E_j \searrow E$), and let $E = \bigcap_{j=1}^\infty E_j$.
+*Assume that $\mu(E_1) < \infty$* (or $\mu(E_k) < \infty$ for some $k$).
+Then:
+\[
+\lim_{j \to \infty} \mu(E_j) = \mu(E) = \mu\left( \bigcap_{j=1}^\infty E_j \right).
+\]
+#+end_quote
+
+#+begin_proof
+Without loss of generality, assume $\mu(E_1) < \infty$.
+1. Convert the decreasing sequence into an increasing sequence by taking complements relative to $E_1$:
+   Define $A_j = E_1 \setminus E_j$ for each $j \in \mathbb{N}$.
+2. Since $E_1 \supset E_2 \supset E_3 \dots$, the complements increase:
+   \[
+   A_1 \subset A_2 \subset A_3 \subset \dots
+   \]
+3. By de Morgan's laws:
+   \[
+   \bigcup_{j=1}^\infty A_j = \bigcup_{j=1}^\infty (E_1 \setminus E_j) = E_1 \setminus \left( \bigcap_{j=1}^\infty E_j \right) = E_1 \setminus E.
+   \]
+4. Apply Theorem 4.6 (Continuity from Below) to the sequence $\{A_j\}$:
+   \[
+   \lim_{j \to \infty} \mu(A_j) = \mu(E_1 \setminus E).
+   \]
+5. Since $\mu(E_1) < \infty$, by subtractivity (Proposition 4.5):
+   \[
+   \mu(A_j) = \mu(E_1 \setminus E_j) = \mu(E_1) - \mu(E_j),
+   \]
+   and
+   \[
+   \mu(E_1 \setminus E) = \mu(E_1) - \mu(E).
+   \]
+6. Substituting these into the limit equation:
+   \[
+   \lim_{j \to \infty} \bigl( \mu(E_1) - \mu(E_j) \bigr) = \mu(E_1) - \mu(E).
+   \]
+7. Since $\mu(E_1) < \infty$, we can cancel $\mu(E_1)$ from both sides:
+   \[
+   -\lim_{j \to \infty} \mu(E_j) = -\mu(E) \implies \lim_{j \to \infty} \mu(E_j) = \mu(E).
+   \]
+#+end_proof
+
+---
+
+* The Infinite Counterexample
+
+> [!CAUTION]
+> The condition $\mu(E_1) < \infty$ in Theorem 4.7 is **strictly necessary**! 
+> If all sets have infinite measure, continuity from above can fail spectacularly.
+
+*Counterexample (Fall 2026 Lectures, p. 39--40):*
+Consider the real line $(\mathbb{R}, \mathcal{M}, m)$ with Lebesgue measure.
+For each $j \in \mathbb{N}$, define the half-line:
+\[
+E_j = [j, +\infty[.
+\]
+Notice:
+1. The sequence is decreasing:
+   \[
+   [1, \infty[ \;\supset\; [2, \infty[ \;\supset\; [3, \infty[ \;\supset\; \dots
+   \]
+2. What is the intersection?
+   For any $x \in \mathbb{R}$, by the Archimedean property there exists an integer $j > x$, which means $x \notin E_j$. 
+   Therefore, no real number belongs to all $E_j$:
+   \[
+   E = \bigcap_{j=1}^\infty E_j = \emptyset.
+   \]
+   Thus the measure of the intersection is:
+   \[
+   m(E) = m(\emptyset) = 0.
+   \]
+3. However, what is the measure of each individual set $E_j$?
+   Each $E_j$ is an infinite ray, so:
+   \[
+   m(E_j) = +\infty \quad \text{for every } j \in \mathbb{N}.
+   \]
+4. Taking the limit:
+   \[
+   \lim_{j \to \infty} m(E_j) = \lim_{j \to \infty} (+\infty) = +\infty \neq 0 = m\left( \bigcap_{j=1}^\infty E_j \right).
+   \]
+The limit of the measures is $+\infty$, but the measure of the limit set is $0$!
+This proves that without $\mu(E_1) < \infty$, continuity from above fails completely.
+
+---
+
+* Worked Exercises
+
+** Exercise 4.1 (Homework 4, Problem 2: Squeezing Sets by Sequences)
+Assume that $E_1, E_2, E_3, \dots \subset \mathbb{R}^n$ are Lebesgue measurable sets and that
+\[
+\sum_{j=1}^\infty m(E_j) < \infty.
+\]
+Define the set of points that belong to infinitely many $E_j$:
+\[
+E_\infty = \limsup_{j \to \infty} E_j = \bigcap_{k=1}^\infty \left( \bigcup_{j=k}^\infty E_j \right).
+\]
+Prove that $m(E_\infty) = 0$. (This is the set-theoretic *Borel--Cantelli Lemma*!)
+
+*Solution:*
+1. For each $k \in \mathbb{N}$, define $A_k = \bigcup_{j=k}^\infty E_j$.
+2. The sequence $\{A_k\}_{k=1}^\infty$ is decreasing:
+   \[
+   A_1 \supset A_2 \supset A_3 \supset \dots
+   \]
+   and by definition $E_\infty = \bigcap_{k=1}^\infty A_k$.
+3. By countable subadditivity:
+   \[
+   m(A_k) = m\left( \bigcup_{j=k}^\infty E_j \right) \le \sum_{j=k}^\infty m(E_j).
+   \]
+4. Since the series $\sum_{j=1}^\infty m(E_j) < \infty$ converges, the tail of the series converges to zero:
+   \[
+   \lim_{k \to \infty} \sum_{j=k}^\infty m(E_j) = 0.
+   \]
+5. In particular, for $k = 1$, $m(A_1) \le \sum_{j=1}^\infty m(E_j) < \infty$.
+6. Since $\{A_k\}$ is a decreasing sequence of measurable sets with $m(A_1) < \infty$, Theorem 4.7 (Continuity from Above) applies:
+   \[
+   m(E_\infty) = m\left( \bigcap_{k=1}^\infty A_k \right) = \lim_{k \to \infty} m(A_k) \le \lim_{k \to \infty} \sum_{j=k}^\infty m(E_j) = 0.
+   \]
+Since measure is non-negative, $m(E_\infty) = 0$.
+
+** Exercise 4.2 (Liminf of Sets)
+Let $(X, \mathcal{M}, \mu)$ be a measure space. For any sequence of sets $\{E_j\}$, define
+\[
+\liminf_{j \to \infty} E_j = \bigcup_{k=1}^\infty \left( \bigcap_{j=k}^\infty E_j \right).
+\]
+Prove that $\mu\left( \liminf_{j \to \infty} E_j \right) \le \liminf_{j \to \infty} \mu(E_j)$. (Fatou's lemma for sets!)
+
+*Solution:*
+1. Let $B_k = \bigcap_{j=k}^\infty E_j$.
+2. The sequence $\{B_k\}_{k=1}^\infty$ is increasing: $B_1 \subset B_2 \subset B_3 \subset \dots$.
+3. By Theorem 4.6 (Continuity from Below):
+   \[
+   \mu\left( \liminf_{j \to \infty} E_j \right) = \mu\left( \bigcup_{k=1}^\infty B_k \right) = \lim_{k \to \infty} \mu(B_k).
+   \]
+4. For every $j \ge k$, $B_k \subset E_j$. By monotonicity:
+   \[
+   \mu(B_k) \le \mu(E_j) \quad \text{for all } j \ge k.
+   \]
+5. Taking the infimum over all $j \ge k$:
+   \[
+   \mu(B_k) \le \inf_{j \ge k} \mu(E_j).
+   \]
+6. Taking the limit as $k \to \infty$:
+   \[
+   \mu\left( \liminf_{j \to \infty} E_j \right) = \lim_{k \to \infty} \mu(B_k) \le \lim_{k \to \infty} \inf_{j \ge k} \mu(E_j) = \liminf_{j \to \infty} \mu(E_j).
+   \]
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Measure Space Axioms and Limits Reference
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Property | Formula | Requirement / Warning |
+|----------+---------+-----------------------|
+| *Measure Space* | $(X, \mathcal{M}, \mu)$ | $\mu \ge 0$, $\mu(\emptyset) = 0$, countably additive on $\mathcal{M}$. |
+| *Monotonicity* | $A \subset B \implies \mu(A) \le \mu(B)$ | Always holds. |
+| *Subtractivity* | $\mu(B \setminus A) = \mu(B) - \mu(A)$ | Requires $A \subset B$ and $\mu(A) < \infty$. |
+| *Continuity from Below* | $E_j \nearrow E \implies \mu(E_j) \to \mu(E)$ | *Always holds*, even if $\mu(E) = \infty$. |
+| *Continuity from Above* | $E_j \searrow E \implies \mu(E_j) \to \mu(E)$ | *Requires $\mu(E_1) < \infty$!* |
+| *Counterexample* | $E_j = [j, \infty[$ in $\mathbb{R}$ | $\bigcap E_j = \emptyset$ (measure $0$), but $\lim m(E_j) = \infty$. |
+| *Borel--Cantelli* | $\sum \mu(E_j) < \infty \implies \mu(\limsup E_j) = 0$ | Points belonging to infinitely many sets form a null set. |
+| *Completeness* | $N \subset E$ with $\mu(E) = 0 \implies N \in \mathcal{M}$ | Lebesgue measure is complete; Borel measure is not. |

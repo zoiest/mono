@@ -1,0 +1,97 @@
+:PROPERTIES:
+:ID:       69b28988-426b-4ef4-b5c6-0a9bf7c52129
+:ROAM_ALIASES: "Measure and Integral Readable Notes Index" "Mitta ja integraali Notes"
+:END:
+#+title: Measure and Integral — Readable Self-Contained Notes
+#+subtitle: A comprehensive, example-rich companion to Fall 2026 Lectures & Ilkka Holopainen's Lecture Notes
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:integration:notes:index:
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:../index.org][← Course Master Index]] | [[file:ch00-prerequisites.org][Start: Chapter 0 →]]
+
+* How to Use These Notes
+
+These notes provide a completely self-contained, rigorous, yet intuitive exposition of the course *Measure and Integral* (/Mitta ja integraali/, University of Helsinki, Fall 2026), based directly on:
+- The Fall 2026 course lecture slides: =Lectures.pdf= (Part I: chapters 1--2) and =-Lectures Part II.pdf= (Part II: chapters 3--4),
+- Ilkka Holopainen's lecture notes (=MeasInt17.pdf=),
+- The Fall 2026 homework problem sets (HW1--HW6) and exam (=Measure_Integral_2K26.pdf=).
+
+Every chapter is written with the following pedagogy:
+1. *Intuition & Motivation first:* Before presenting technical definitions, we explain *why* the concept was invented, what failure of naive intuition it prevents, and the geometric or probabilistic mental picture.
+2. *Rigor without skips:* All definitions and theorems are stated with exact mathematical hypotheses. Proofs are presented step by step without dismissing crucial details as "trivial".
+3. *Examples and Non-Examples:* Every concept is illustrated with concrete calculations and counterexamples showing why each hypothesis is strictly necessary.
+4. *Worked Exercises with Full Solutions:* Each chapter concludes with carefully chosen problems reflecting homework assignments and past exam questions, accompanied by step-by-step solutions.
+5. *Summary Cheat-Sheets:* A reference table at the end of each chapter gives a quick review of definitions, theorems, and conditions.
+
+*Suggested Study Paths:*
+- *Foundations of Measure (Chapters 0--4):* Sets and countability $\to$ Outer measure on $\mathbb{R}^n$ $\to$ Carathéodory's criterion and measurable sets $\to$ Borel sets and regularity $\to$ Abstract measures and continuity of measures.
+- *Integration & Limit Theorems (Chapters 5--8):* Measurable functions $\to$ Simple functions and approximation $\to$ Lebesgue integral for non-negative functions (MCT, Fatou) $\to$ General Lebesgue integral (DCT, parameter integrals).
+- *Advanced Topics (Chapters 9--10):* Fubini--Tonelli product integration $\to$ $L^p$ spaces, inequalities, and Riesz--Fischer completeness.
+
+* Chapters Overview
+
+#+caption: Chapter Map of Measure and Integral
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}p{0.32\textwidth} >{\RaggedRight}X :booktabs t
+| Ch | Notes | Main Ideas and Core Results |
+|----+-------+-----------------------------|
+| 0  | [[file:ch00-prerequisites.org][Prerequisites & Foundations]] | Set algebra, de Morgan's laws, preimages vs images, countability, Cantor's theorem, extended reals $\overline{\mathbb{R}}$, topology of $\mathbb{R}^n$. |
+| 1  | [[file:ch01-outer-measure.org][Lebesgue Outer Measure]] | $n$-intervals, elementary volume $\ell(I)$, coverings, definition of $m^*(A)$, monotonicity, countable subadditivity, translation invariance, null sets. |
+| 2  | [[file:ch02-measurable-sets.org][Carathéodory's Measurable Sets]] | The Carathéodory splitting condition $m^*(A)=m^*(A\cap E)+m^*(A\setminus E)$, null sets are measurable, $\sigma$-algebra structure $\mathcal{M}(\mathbb{R}^n)$, countable additivity. |
+| 3  | [[file:ch03-borel-and-regularity.org][Borel Sets & Regularity]] | Open and closed sets are measurable, Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^n)$, approximation by open/closed sets, $G_\delta$ and $F_\sigma$ sets, Vitali non-measurable set. |
+| 4  | [[file:ch04-abstract-measures.org][Abstract Measures & Continuity]] | Abstract measure space $(X,\mathcal{M},\mu)$, finite and $\sigma$-finite measures, completeness, continuity from below and above, failure for infinite measure. |
+| 5  | [[file:ch05-measurable-functions.org][Measurable Functions]] | Measurable functions $f: A \to \overline{\mathbb{R}}$, equivalent preimage criteria, continuous functions, indicator functions $\chi_E$, algebraic operations, vectors. |
+| 6  | [[file:ch06-sequences-and-simple-functions.org][Limits & Simple Functions]] | $\limsup$, $\liminf$, pointwise limits of measurable functions are measurable, almost everywhere (a.e.) equality, simple functions, monotone simple approximation $s_k \nearrow f$. |
+| 7  | [[file:ch07-lebesgue-integral-nonnegative.org][Lebesgue Integral: $f \ge 0$]] | Integral of simple functions, definition of $\int f\,dm$ for $f \ge 0$, Monotone Convergence Theorem (MCT), linearity, Fatou's Lemma, strict inequality counterexamples. |
+| 8  | [[file:ch08-general-integral-and-convergence.org][General Integral & DCT]] | Integrability ($\int \lvert f\rvert < \infty$), $f = f^+ - f^-$, linearity, Dominated Convergence Theorem (DCT), Bounded Convergence, differentiating under the integral sign. |
+| 9  | [[file:ch09-fubini-tonelli.org][Product Measures & Fubini--Tonelli]] | Product $\sigma$-algebra in $\mathbb{R}^n \times \mathbb{R}^k$, sections of sets and functions, Tonelli's theorem ($f \ge 0$), Fubini's theorem ($f \in L^1$), counterexamples. |
+| 10 | [[file:ch10-lp-spaces-and-completeness.org][The $L^p$ Spaces & Completeness]] | $L^p$ norms, a.e. equivalence classes, Hölder's inequality, Minkowski's inequality, Riesz--Fischer completeness theorem, relations between convergence modes. |
+
+* Conceptual Architecture of Measure Theory
+
+The entire theory developed in these notes solves a single overarching historical problem: *How do we assign a consistent size ("volume" or "integral") to arbitrary geometric sets and functions without running into logical contradictions?*
+
+#+begin_src text
+  Elementary Volumes on n-intervals \ell(I)
+                  │
+                  ▼
+  Lebesgue Outer Measure m*(A) = inf sum \ell(I_j)   (defined for ALL subsets A of R^n)
+                  │
+                  │ [Defect: m* is only countably SUB-additive, not additive on all sets!]
+                  ▼
+  Carathéodory Splitting Criterion: m*(A) = m*(A ∩ E) + m*(A \ E)
+                  │
+                  ▼
+  Lebesgue Measurable Sets M(R^n)   (a σ-algebra! m is strictly countably additive on M)
+                  │
+                  ├── Contains all Borel sets B(R^n) (open, closed, compact, G_δ, F_σ)
+                  └── Excludes pathological sets (Vitali non-measurable set)
+                  │
+                  ▼
+  Measurable Functions f: A -> [-∞, ∞]   (preimages of open sets are measurable)
+                  │
+                  ▼
+  Approximation by Simple Functions: s_k \nearrow f  (s_k = sum a_i \chi_{A_i})
+                  │
+                  ▼
+  Lebesgue Integral:
+    1. Simple functions:  \int s = sum a_i m(A_i)
+    2. Non-negative:      \int f = sup {\int s : 0 \le s \le f, s simple}
+    3. General:           \int f = \int f^+ - \int f^-   (\int |f| < \infty)
+                  │
+                  ▼
+  Triumphs over Riemann Integration:
+    - Monotone Convergence Theorem (MCT)
+    - Fatou's Lemma
+    - Dominated Convergence Theorem (DCT)
+    - Complete Function Spaces: L^p(E) is a Banach space!
+    - Product Integration: Tonelli and Fubini Theorems
+#+end_src

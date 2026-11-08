@@ -1,0 +1,331 @@
+:PROPERTIES:
+:ID:       ae651b75-24f8-4efc-bca2-c01d4281d39e
+:ROAM_ALIASES: "MAST31051 Chapter 0" "Prerequisites and Foundations"
+:END:
+#+title: Chapter 0: Prerequisites and Foundations
+#+subtitle: Readable Self-Contained Notes for Measure and Integral (based on Fall 2026 Lectures & I. Holopainen)
+#+author: Antigravity Notes
+#+date: [2026-11-08]
+#+filetags: :math:helsinki:measure-theory:prerequisites:sets:topology:
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \RecustomVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\footnotesize,samepage=true}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{amsmath,amssymb,amsthm}
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{ragged2e}
+#+LATEX_HEADER: \usepackage{microtype}
+
+[[file:index.org][← Notes Index]] | [[file:ch01-outer-measure.org][Chapter 1: Lebesgue Outer Measure →]]
+
+* Overview
+
+** What problem does this chapter solve?
+Measure theory and modern Lebesgue integration are fundamentally mathematical theories of *sets* and *mappings between sets*. 
+Before assigning a numerical "length", "area", or "integral" to a set or function, we must understand the operations that produce new sets from old ones: unions, intersections, complements, preimages, and limits.
+
+In classical calculus, one is accustomed to working with finite operations. In measure theory, we must routinely take *countable unions* (e.g. covering a set by countably many rectangles) and work with functions taking values in the extended real line $[-\infty, +\infty]$. 
+
+This chapter establishes all necessary vocabulary and algebraic tools silently relied upon throughout the course:
+1. *Set algebra:* Power sets, indexed unions and intersections, de Morgan's laws, distributive laws.
+2. *Images and Preimages:* Why preimages preserve all Boolean operations, making them the cornerstone of measurability.
+3. *Countability and Cardinality:* Why countable sets behave like discrete collections (and have measure zero), while uncountable sets like $\mathbb{R}$ carry genuine geometric mass.
+4. *The Extended Real Numbers $\overline{\mathbb{R}}$:* Conventions for arithmetic involving $\pm\infty$, especially $0 \cdot \infty = 0$.
+5. *Topology of $\mathbb{R}^n$:* Open balls, open sets, closed sets, and compactness.
+
+** Roadmap
+- *0.1 Basic Operations on Sets:* Power sets, arbitrary families, complements, and de Morgan's laws.
+- *0.2 Mappings, Images, and Preimages:* Preimages preserve unions, intersections, and complements.
+- *0.3 Countability and Cardinality:* Countable sets, countable unions of countable sets, Cantor's diagonal argument.
+- *0.4 The Extended Real Line $\overline{\mathbb{R}}$:* Arithmetic conventions, suprema, and infima.
+- *0.5 Metric and Topological Background in $\mathbb{R}^n$:* Open and closed sets, boundary, compactness.
+- *Worked Exercises:* Step-by-step solutions to foundational exercises.
+- *Summary Cheat-Sheet:* Quick-reference table of core set-theoretic and topological facts.
+
+---
+
+* Basic Operations on Sets
+
+** Intuition
+Think of a set $X$ as a universe of discourse. Any property $P(x)$ selects a subset $A = \{x \in X : P(x)\}$. 
+When we combine statements using logical operators:
+- "Logical OR" corresponds to the *union* $A \cup B$,
+- "Logical AND" corresponds to the *intersection* $A \cap B$,
+- "Logical NOT" corresponds to the *complement* $A^c = X \setminus A$.
+
+Because measure theory deals with infinite approximations (e.g., approximating an irregular shape by a sequence of small grid squares), we must handle not just two sets, but arbitrary indexed families $\{V_\alpha\}_{\alpha \in \mathcal{A}}$.
+
+** Definitions and Notation
+Let $X$ be an arbitrary non-empty set.
+- *Power Set:* The collection of all subsets of $X$ is denoted by $\mathcal{P}(X)$ or $2^X$:
+  \[
+  \mathcal{P}(X) = \{A : A \subset X\}.
+  \]
+  Note that $\emptyset \in \mathcal{P}(X)$ and $X \in \mathcal{P}(X)$ always.
+- *Indexed Family:* Let $\mathcal{A}$ be an index set. If to each $\alpha \in \mathcal{A}$ there corresponds a subset $V_\alpha \subset X$, the collection $\mathcal{F} = \{V_\alpha : \alpha \in \mathcal{A}\}$ is called an *indexed family* of subsets of $X$.
+- *Union and Intersection:*
+  \[
+  \bigcup_{\alpha \in \mathcal{A}} V_\alpha = \{x \in X : x \in V_\alpha \text{ for some } \alpha \in \mathcal{A}\},
+  \]
+  \[
+  \bigcap_{\alpha \in \mathcal{A}} V_\alpha = \{x \in X : x \in V_\alpha \text{ for all } \alpha \in \mathcal{A}\}.
+  \]
+- *Set Difference and Complement:* For $A, B \subset X$, the difference is
+  \[
+  A \setminus B = \{x \in X : x \in A \text{ and } x \notin B\} = A \cap B^c,
+  \]
+  where $B^c = X \setminus B$ denotes the complement of $B$ with respect to $X$.
+
+** De Morgan's Laws and Distributive Laws
+The foundational duality between unions and intersections is given by de Morgan's laws:
+
+#+begin_quote
+*Theorem 0.1 (de Morgan's Laws).* Let $\{V_\alpha : \alpha \in \mathcal{A}\}$ be an indexed family of subsets of $X$. Then:
+1. $\left( \bigcup_{\alpha \in \mathcal{A}} V_\alpha \right)^c = \bigcap_{\alpha \in \mathcal{A}} V_\alpha^c$. ("The complement of a union is the intersection of complements.")
+2. $\left( \bigcap_{\alpha \in \mathcal{A}} V_\alpha \right)^c = \bigcup_{\alpha \in \mathcal{A}} V_\alpha^c$. ("The complement of an intersection is the union of complements.")
+#+end_quote
+
+#+begin_proof
+We prove (1); the proof of (2) is completely dual. Let $x \in X$. Then:
+\[
+x \in \left(\bigcup_{\alpha \in \mathcal{A}} V_\alpha\right)^c \iff x \notin \bigcup_{\alpha \in \mathcal{A}} V_\alpha \iff \forall \alpha \in \mathcal{A},\, x \notin V_\alpha \iff \forall \alpha \in \mathcal{A},\, x \in V_\alpha^c \iff x \in \bigcap_{\alpha \in \mathcal{A}} V_\alpha^c.
+\]
+Both sets contain precisely the same elements, so they are equal.
+#+end_proof
+
+#+begin_quote
+*Theorem 0.2 (Distributive Laws).* For any set $B \subset X$ and family $\{V_\alpha : \alpha \in \mathcal{A}\}$:
+\[
+B \cap \left( \bigcup_{\alpha \in \mathcal{A}} V_\alpha \right) = \bigcup_{\alpha \in \mathcal{A}} (B \cap V_\alpha), \qquad B \cup \left( \bigcap_{\alpha \in \mathcal{A}} V_\alpha \right) = \bigcap_{\alpha \in \mathcal{A}} (B \cup V_\alpha).
+\]
+#+end_quote
+
+---
+
+* Mappings, Images, and Preimages
+
+** Why Preimages are the "Good" Operation in Analysis
+Let $f: X \to Y$ be a mapping between sets.
+- For a subset $A \subset X$, the *image* is $f(A) = \{f(x) \in Y : x \in A\}$.
+- For a subset $B \subset Y$, the *preimage* (or inverse image) is $f^{-1}(B) = \{x \in X : f(x) \in B\}$.
+
+> [!IMPORTANT]
+> In measure theory, measurable functions are defined *exclusively* via preimages, never via images! 
+> Why? Because preimages preserve *all* set-theoretic operations (unions, intersections, complements, differences), whereas images fail to preserve intersections and complements unless $f$ is injective!
+
+** Algebraic Properties of Preimages
+
+#+begin_quote
+*Theorem 0.3 (Preimages preserve all Boolean operations).* Let $f: X \to Y$, let $\{B_\alpha\}_{\alpha \in \mathcal{A}}$ be an indexed family of subsets of $Y$, and let $B, B_1, B_2 \subset Y$. Then:
+1. $f^{-1}\left(\bigcup_{\alpha \in \mathcal{A}} B_\alpha\right) = \bigcup_{\alpha \in \mathcal{A}} f^{-1}(B_\alpha)$.
+2. $f^{-1}\left(\bigcap_{\alpha \in \mathcal{A}} B_\alpha\right) = \bigcap_{\alpha \in \mathcal{A}} f^{-1}(B_\alpha)$.
+3. $f^{-1}(Y \setminus B) = X \setminus f^{-1}(B)$, i.e., $f^{-1}(B^c) = (f^{-1}(B))^c$.
+4. $f^{-1}(B_1 \setminus B_2) = f^{-1}(B_1) \setminus f^{-1}(B_2)$.
+5. If $B_1 \subset B_2$, then $f^{-1}(B_1) \subset f^{-1}(B_2)$.
+#+end_quote
+
+#+begin_proof
+We demonstrate (2) and (3):
+- For (2): $x \in f^{-1}\left(\bigcap_{\alpha} B_\alpha\right) \iff f(x) \in \bigcap_{\alpha} B_\alpha \iff \forall \alpha,\, f(x) \in B_\alpha \iff \forall \alpha,\, x \in f^{-1}(B_\alpha) \iff x \in \bigcap_{\alpha} f^{-1}(B_\alpha)$.
+- For (3): $x \in f^{-1}(B^c) \iff f(x) \in B^c \iff f(x) \notin B \iff x \notin f^{-1}(B) \iff x \in (f^{-1}(B))^c$.
+#+end_proof
+
+*Non-Example (Failure of Images):*
+Consider $f: \mathbb{R} \to \mathbb{R}$ given by $f(x) = x^2$. 
+Let $A_1 = [-2, 0]$ and $A_2 = [0, 2]$. 
+- $A_1 \cap A_2 = \{0\}$, so $f(A_1 \cap A_2) = \{0\}$.
+- But $f(A_1) = [0, 4]$ and $f(A_2) = [0, 4]$, so $f(A_1) \cap f(A_2) = [0, 4] \neq \{0\}$.
+Thus $f(A_1 \cap A_2) \subsetneq f(A_1) \cap f(A_2)$. The image failed to preserve intersections!
+
+---
+
+* Countability and Uncountability
+
+** Definitions and Cardinality
+- A set $A$ is *finite* if there is a bijection between $A$ and $\{1, 2, \dots, n\}$ for some $n \in \mathbb{N}$, or if $A = \emptyset$.
+- A set $A$ is *countably infinite* if there exists a bijection $f: \mathbb{N} \to A$. We can list its elements as a sequence without repetition: $A = \{a_1, a_2, a_3, \dots\}$.
+- A set $A$ is *countable* if it is either finite or countably infinite.
+- A set $A$ is *uncountable* if it is not countable.
+
+** Countable Unions of Countable Sets
+
+#+begin_quote
+*Theorem 0.4.* Let $\mathcal{A}$ be a countable index set, and for each $\alpha \in \mathcal{A}$, let $E_\alpha$ be a countable set. Then the union
+\[
+E = \bigcup_{\alpha \in \mathcal{A}} E_\alpha
+\]
+is countable.
+#+end_quote
+
+#+begin_proof
+Without loss of generality, assume $\mathcal{A} = \mathbb{N}$ and each $E_j = \{x_{j, 1}, x_{j, 2}, x_{j, 3}, \dots\}$ is countably infinite. Arrange the elements in a two-dimensional infinite grid:
+\[
+\begin{matrix}
+x_{1,1} & x_{1,2} & x_{1,3} & x_{1,4} & \dots \\
+x_{2,1} & x_{2,2} & x_{2,3} & x_{2,4} & \dots \\
+x_{3,1} & x_{3,2} & x_{3,3} & x_{3,4} & \dots \\
+\vdots & \vdots & \vdots & \vdots & \ddots
+\end{matrix}
+\]
+Traverse the array along diagonals where the sum of indices $j + k$ is constant:
+\[
+x_{1,1} \;\to\; x_{1,2} \;\to\; x_{2,1} \;\to\; x_{3,1} \;\to\; x_{2,2} \;\to\; x_{1,3} \;\to\; \dots
+\]
+Skipping any duplicate elements produces a surjective map from $\mathbb{N}$ onto $E$. Hence $E$ is countable.
+#+end_proof
+
+*Consequences:*
+1. $\mathbb{Z} = \{0, 1, -1, 2, -2, \dots\}$ is countable.
+2. The set of rational numbers $\mathbb{Q} = \bigcup_{q \in \mathbb{N}} \{p/q : p \in \mathbb{Z}\}$ is a countable union of countable sets, hence $\mathbb{Q}$ is countable!
+
+** Uncountability of the Continuum (Cantor's Diagonal Argument)
+
+#+begin_quote
+*Theorem 0.5 (Cantor).* The open interval $]0, 1[ \subset \mathbb{R}$ (and therefore $\mathbb{R}$) is uncountable.
+#+end_quote
+
+#+begin_proof
+Suppose for contradiction that $]0, 1[$ is countable. Then its elements can be enumerated as a sequence:
+\[
+]0, 1[ \;=\; \{x_1, x_2, x_3, \dots\}.
+\]
+Write each $x_n$ in its decimal expansion (avoiding trailing infinite sequences of $9$'s to guarantee uniqueness):
+\[
+\begin{aligned}
+x_1 &= 0.d_{1,1} d_{1,2} d_{1,3} d_{1,4} \dots \\
+x_2 &= 0.d_{2,1} d_{2,2} d_{2,3} d_{2,4} \dots \\
+x_3 &= 0.d_{3,1} d_{3,2} d_{3,3} d_{3,4} \dots \\
+&\;\;\vdots
+\end{aligned}
+\]
+Now construct a real number $y = 0.c_1 c_2 c_3 \dots \in ]0, 1[$ by modifying the diagonal digits:
+\[
+c_n = \begin{cases} 4, & \text{if } d_{n,n} \neq 4, \\ 5, & \text{if } d_{n,n} = 4. \end{cases}
+\]
+By construction, $c_n \in \{4, 5\}$, so $y \in ]0, 1[$ has a unique decimal expansion.
+For every $n \in \mathbb{N}$, the $n$-th digit of $y$ differs from the $n$-th digit of $x_n$ ($c_n \neq d_{n,n}$), which implies $y \neq x_n$.
+Thus $y$ cannot be in the list $\{x_1, x_2, \dots\}$, contradicting the assumption that the list contained all of $]0, 1[$. 
+Therefore, $]0, 1[$ is uncountable.
+#+end_proof
+
+---
+
+* The Extended Real Line $\overline{\mathbb{R}}$
+
+In integration theory, functions can easily become infinite (e.g. $f(x) = 1/\sqrt{x}$ near $x = 0$), and infinite sets can have infinite measure (e.g. the length of $\mathbb{R}$). 
+We define the *extended real numbers*:
+\[
+\overline{\mathbb{R}} = [-\infty, +\infty] = \mathbb{R} \cup \{-\infty, +\infty\}.
+\]
+
+** Arithmetic Conventions in $\overline{\mathbb{R}}$
+For any $a \in \mathbb{R}$:
+1. *Addition:*
+   \[
+   a + (+\infty) = +\infty, \quad a + (-\infty) = -\infty, \quad (+\infty) + (+\infty) = +\infty, \quad (-\infty) + (-\infty) = -\infty.
+   \]
+   > [!WARNING]
+   > The expressions $(+\infty) + (-\infty)$ and $(-\infty) + (+\infty)$ are **strictly undefined**!
+2. *Multiplication:*
+   For $c > 0$: $c \cdot (+\infty) = +\infty$ and $c \cdot (-\infty) = (-\infty)$.
+   For $c < 0$: $c \cdot (+\infty) = -\infty$ and $c \cdot (-\infty) = +\infty$.
+3. *The Measure-Theoretic Zero Convention:*
+   \[
+   0 \cdot (+\infty) = 0 \quad \text{and} \quad 0 \cdot (-\infty) = 0.
+   \]
+   *Why?* If a function equals $+\infty$ on a set of measure $0$ (a single point), its contribution to the integral must be $\text{height} \times \text{base} = \infty \times 0 = 0$.
+
+** Supremum and Infimum in $\overline{\mathbb{R}}$
+Every subset $E \subset \overline{\mathbb{R}}$ has a least upper bound $\sup E \in \overline{\mathbb{R}}$ and a greatest lower bound $\inf E \in \overline{\mathbb{R}}$. In particular:
+\[
+\sup \emptyset = -\infty, \qquad \inf \emptyset = +\infty.
+\]
+
+---
+
+* Metric and Topological Background in $\mathbb{R}^n$
+
+Let $n \in \mathbb{N}$. The Euclidean space $\mathbb{R}^n$ consists of points $x = (x_1, \dots, x_n)$ equipped with the Euclidean norm:
+\[
+\lvert x \rvert = \sqrt{\sum_{j=1}^n x_j^2}.
+\]
+The Euclidean distance between $x, y \in \mathbb{R}^n$ is $|x - y|$.
+
+** Open and Closed Sets
+- *Open Ball:* For $x \in \mathbb{R}^n$ and $r > 0$, the open ball centered at $x$ with radius $r$ is
+  \[
+  B(x, r) = \{y \in \mathbb{R}^n : |y - x| < r\}.
+  \]
+- *Open Set:* A set $U \subset \mathbb{R}^n$ is *open* if for every $x \in U$, there exists $r > 0$ such that $B(x, r) \subset U$.
+- *Closed Set:* A set $F \subset \mathbb{R}^n$ is *closed* if its complement $\mathbb{R}^n \setminus F$ is open.
+- *Boundary:* The topological boundary of $E \subset \mathbb{R}^n$ is $\partial E = \overline{E} \setminus \text{int}(E)$, where $\overline{E}$ is the closure and $\text{int}(E)$ is the interior.
+
+** Compactness (Heine--Borel)
+A subset $K \subset \mathbb{R}^n$ is *compact* if every open cover of $K$ has a finite subcover.
+#+begin_quote
+*Theorem 0.6 (Heine--Borel).* A subset $K \subset \mathbb{R}^n$ is compact if and only if it is closed and bounded.
+#+end_quote
+
+---
+
+* Worked Exercises
+
+** Exercise 0.1 (Preimage identity for functions)
+Let $f: X \to Y$ and $g: Y \to Z$ be mappings. Let $C \subset Z$.
+Show that $(g \circ f)^{-1}(C) = f^{-1}(g^{-1}(C))$.
+
+*Solution:*
+Let $x \in X$. By definition of function composition and preimages:
+\[
+\begin{aligned}
+x \in (g \circ f)^{-1}(C) &\iff (g \circ f)(x) \in C \\
+&\iff g(f(x)) \in C \\
+&\iff f(x) \in g^{-1}(C) \\
+&\iff x \in f^{-1}\bigl(g^{-1}(C)\bigr).
+\end{aligned}
+\]
+Since the logical equivalences hold for every $x \in X$, the two sets are identical.
+
+** Exercise 0.2 (Countability of algebraic numbers)
+A real number $x$ is called *algebraic* if it is a root of a non-zero polynomial with integer coefficients:
+\[
+P(x) = a_k x^k + a_{k-1} x^{k-1} + \dots + a_1 x + a_0 = 0, \quad a_j \in \mathbb{Z}, \, a_k \neq 0.
+\]
+Prove that the set of all algebraic numbers is countable.
+
+*Solution:*
+1. Fix the degree $k \ge 1$. The set of polynomial coefficients $(a_0, a_1, \dots, a_k)$ with $a_k \neq 0$ is a subset of $\mathbb{Z}^{k+1}$.
+2. Since $\mathbb{Z}$ is countable, the finite Cartesian product $\mathbb{Z}^{k+1}$ is countable.
+3. Each polynomial of degree $k$ has at most $k$ real roots (by the Fundamental Theorem of Algebra).
+4. Thus, the set of roots of polynomials of degree $k$ is a countable union of finite sets, which is countable.
+5. Finally, the set of all algebraic numbers is the union over all degrees $k \in \mathbb{N}$ of these roots: a countable union of countable sets.
+By Theorem 0.4, the set of algebraic numbers is countable.
+
+** Exercise 0.3 (Non-empty intersection of open sets)
+Suppose $U \subset \mathbb{R}^n$ is a non-empty open set. Prove that $U$ contains a point with all rational coordinates: $U \cap \mathbb{Q}^n \neq \emptyset$.
+
+*Solution:*
+1. Since $U$ is non-empty and open, take any $x = (x_1, \dots, x_n) \in U$.
+2. By definition of openness, there exists $r > 0$ such that $B(x, r) \subset U$.
+3. In particular, the open cube centered at $x$ of side length $2\delta$ (where $\delta = r / \sqrt{n}$) satisfies $Q = \prod_{j=1}^n ]x_j - \delta, x_j + \delta[ \subset B(x, r) \subset U$.
+4. By the density of the rational numbers in $\mathbb{R}$, for each $j \in \{1, \dots, n\}$, there exists a rational number $q_j \in \mathbb{Q}$ such that $x_j - \delta < q_j < x_j + \delta$.
+5. The point $q = (q_1, \dots, q_n)$ belongs to $Q \subset U$ and has $q \in \mathbb{Q}^n$.
+Thus $U \cap \mathbb{Q}^n \neq \emptyset$.
+
+---
+
+* Summary Cheat-Sheet
+
+#+caption: Core Foundational Principles
+#+ATTR_LATEX: :environment tabularx :width \textwidth :align l >{\RaggedRight}X :booktabs t
+| Concept | Key Formula / Rule | Crucial Consequence in Measure Theory |
+|---------+---------------------+---------------------------------------|
+| *de Morgan's Laws* | $(\bigcup V_\alpha)^c = \bigcap V_\alpha^c$, $(\bigcap V_\alpha)^c = \bigcup V_\alpha^c$ | Allows switching between unions and intersections via complementation. |
+| *Preimages* | $f^{-1}(\bigcup B_\alpha) = \bigcup f^{-1}(B_\alpha)$, $f^{-1}(B^c) = (f^{-1}(B))^c$ | Ensures that preimages preserve $\sigma$-algebras and measurability. |
+| *Images (Warning)* | $f(A \cap B) \neq f(A) \cap f(B)$ in general | Never use direct images to define measurable functions. |
+| *Countable Sets* | Countable union of countable sets is countable | $\mathbb{Q}$ is countable; every countable set in $\mathbb{R}^n$ will have Lebesgue measure zero. |
+| *Continuum* | $\mathbb{R}$ and intervals $]a, b[$ are uncountable | Uncountable sets can carry non-zero geometric measure. |
+| *Extended Arithmetic* | $0 \cdot (\pm \infty) = 0$, $a + \infty = \infty$ | Resolves values of integrals on sets of measure zero. |
+| *Open / Closed* | $U$ open $\iff U^c$ closed | Open sets generate the Borel $\sigma$-algebra $\mathcal{B}(\mathbb{R}^n)$. |
