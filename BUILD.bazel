@@ -1,6 +1,7 @@
 load("//:sync.bzl", "sync", "sync_test")
 load("//:org2html.bzl", "org2html")
 load("//:org2pdf.bzl", "org2pdf")
+load("//:md2pdf.bzl", "md2pdf")
 load("//:tex2png.bzl", "tex2png")
 
 package(default_visibility = ["//visibility:public"])
@@ -12,6 +13,8 @@ exports_files([
     "org2html.bzl",
     "org2pdf.py",
     "org2pdf.bzl",
+    "md2pdf.py",
+    "md2pdf.bzl",
     "tex2png.py",
     "tex2png.bzl",
     "test_sync_drive.py",
@@ -27,6 +30,10 @@ org2html(
 
 org2pdf(
     name = "org2pdf",
+)
+
+md2pdf(
+    name = "md2pdf",
 )
 
 tex2png(

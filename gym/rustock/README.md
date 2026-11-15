@@ -1,4 +1,4 @@
-# rustock (in `gym/gostock`): Multi-Provider Stock Data Web Application & Rust Learning Project
+# rustock: Multi-Provider Stock Data Web Application & Rust Learning Project
 
 Welcome to the **`rustock`** project (located in `gym/gostock`)! This project is an end-to-end practical journey to master the **Rust programming language** and industry best practices by using ***The Rust Programming Language*** (Steve Klabnik & Carol Nichols — [doc.rust-lang.org/book](https://doc.rust-lang.org/book/)) as the primary reference.
 
