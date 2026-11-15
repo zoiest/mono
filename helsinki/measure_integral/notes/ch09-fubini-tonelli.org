@@ -103,12 +103,15 @@ Then:
 
 #+begin_proof
 *Proof Architecture:*
-1. *Indicator functions of measurable rectangles:* Let $f = \chi_{A \times B}$, where $A \in \mathcal{M}(\mathbb{R}^n)$ and $B \in \mathcal{M}(\mathbb{R}^k)$.
-   Then $f(x, y) = \chi_A(x) \chi_B(y)$.
-   The inner integral is $\int_{\mathbb{R}^k} \chi_A(x) \chi_B(y) \, dy = \chi_A(x) m_k(B)$.
-   The outer integral is $\int_{\mathbb{R}^n} \chi_A(x) m_k(B) \, dx = m_n(A) m_k(B) = m_{n+k}(A \times B)$.
-   The equality holds identically for rectangles.
-2. *Simple functions:* By linearity of non-negative integrals (Theorem 7.7), Tonelli holds for all non-negative simple functions $s = \sum c_i \chi_{E_i}$.
+1. *Indicator functions of measurable rectangles and general measurable sets:*
+   First, for a measurable rectangle $E = A \times B$ with $A \in \mathcal{M}(\mathbb{R}^n)$ and $B \in \mathcal{M}(\mathbb{R}^k)$, we have $\chi_{A \times B}(x, y) = \chi_A(x) \chi_B(y)$.
+   The inner integral is $\int_{\mathbb{R}^k} \chi_A(x) \chi_B(y) \, dy = \chi_A(x) m_k(B)$, and the outer integral is $\int_{\mathbb{R}^n} \chi_A(x) m_k(B) \, dx = m_n(A) m_k(B) = m_{n+k}(A \times B)$.
+   Next, this identity extends to $\chi_E$ for any general measurable set $E \in \mathcal{M}(\mathbb{R}^{n+k})$ (Theorem 9.2):
+   - Every open set $U \subset \mathbb{R}^{n+k}$ is a countable union of almost-disjoint dyadic cubes $Q_j = I_j \times J_j$, so Theorem 9.2 holds for open sets by the Monotone Convergence Theorem.
+   - By taking countable intersections of open sets on bounded pieces (using continuity from above), Theorem 9.2 extends to $G_\delta$ sets.
+   - For a null set $N$ ($m_{n+k}(N) = 0$), choosing a $G_\delta$ set $G \supset N$ with $m_{n+k}(G) = 0$ shows $\int_{\mathbb{R}^n} m_k(G_x) \, dm_n(x) = 0$, hence $m_k(G_x) = 0$ for a.e. $x \in \mathbb{R}^n$. Since $N_x \subset G_x$ and $m_k$ is complete, $N_x \in \mathcal{M}(\mathbb{R}^k)$ with $m_k(N_x) = 0$ for a.e. $x$.
+   - Since any $E \in \mathcal{M}(\mathbb{R}^{n+k})$ is of the form $E = G \setminus N$ for a $G_\delta$ set $G$ and a null set $N$ (Theorem 3.7), Theorem 9.2 holds for all indicator functions $\chi_E$ with $E \in \mathcal{M}(\mathbb{R}^{n+k})$.
+2. *Simple functions:* By linearity of non-negative integrals (Theorem 7.7), Tonelli holds for all non-negative simple functions $s = \sum c_i \chi_{E_i}$ with $E_i \in \mathcal{M}(\mathbb{R}^{n+k})$.
 3. *General non-negative measurable functions:* By the Simple Function Approximation Theorem (Theorem 6.10), choose simple functions $0 \le s_1 \le s_2 \le \dots \nearrow f$.
    Apply Tonelli to each $s_j$.
    By the Monotone Convergence Theorem (Theorem 7.6), we pass the limit $j \to \infty$ through both the inner and outer integrals.
@@ -265,18 +268,22 @@ m_{n+1}(\mathcal{U}(f)) = \int_E f \, dm_n.
 \]
 
 *Solution:*
-1. Consider the indicator function $\chi_{\mathcal{U}(f)}(x, y)$ on $\mathbb{R}^n \times \mathbb{R}$.
-2. Notice that $\chi_{\mathcal{U}(f)}(x, y) \ge 0$.
-3. By Tonelli's Theorem (Theorem 9.4), we integrate with respect to $y \in \mathbb{R}$ first:
+1. *Measurability of $\mathcal{U}(f)$:*
+   Choose an increasing sequence of non-negative simple measurable functions $0 \le s_k \nearrow f$ on $E$ (Theorem 6.10).
+   For each $k$, if $s_k = \sum_{i=1}^m a_i \chi_{A_i}$, then $\mathcal{U}(s_k) = \bigcup_{i=1}^m (A_i \times [0, a_i])$ is a finite union of measurable rectangles, hence $\mathcal{U}(s_k) \in \mathcal{M}(\mathbb{R}^{n+1})$.
+   Since $s_k(x) \nearrow f(x)$, the set $\mathcal{U}(f)$ (up to the horizontal slice $\{y = f(x)\}$ which is the union of boundaries of intervals) equals $\bigcup_{k=1}^\infty \mathcal{U}(s_k)$ when $f(x) = \infty$, or $\bigcap_{j=1}^\infty \bigcup_{k=1}^\infty \mathcal{U}(s_k + 1/j)$, which is a countable intersection of countable unions of measurable sets. Thus $\mathcal{U}(f) \in \mathcal{M}(\mathbb{R}^{n+1})$.
+2. *Computing the measure via Tonelli:*
+   Consider the indicator function $\chi_{\mathcal{U}(f)}(x, y) \ge 0$ on $\mathbb{R}^n \times \mathbb{R}$.
+   By Tonelli's Theorem (Theorem 9.4), we integrate with respect to $y \in \mathbb{R}$ first:
    For a fixed $x \in E$, the \(x\)-section of the hypograph is the 1-dimensional interval:
    \[
-   (\mathcal{U}(f))_x = \{y \in \mathbb{R} : 0 \le y \le f(x)\} = [0, f(x)].
+   (\mathcal{U}(f))_x = \{y \in \mathbb{R} : 0 \le y \le f(x)\} = [0, f(x)] \quad (\text{or } [0, +\infty[ \text{ if } f(x) = +\infty).
    \]
-4. The 1-dimensional measure of this interval is:
+3. The 1-dimensional measure of this interval is:
    \[
-   m_1\bigl((\mathcal{U}(f))_x\bigr) = f(x) - 0 = f(x).
+   m_1\bigl((\mathcal{U}(f))_x\bigr) = f(x).
    \]
-5. Integrating over $x \in E$ using Cavalieri's principle (Theorem 9.2):
+4. Integrating over $x \in E$ using Cavalieri's principle (Theorem 9.2):
    \[
    m_{n+1}(\mathcal{U}(f)) = \int_E m_1\bigl((\mathcal{U}(f))_x\bigr) \, dm_n(x) = \int_E f(x) \, dm_n(x).
    \]

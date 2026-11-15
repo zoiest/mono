@@ -346,13 +346,8 @@ m^*(A) = m^*(A \cap E) + m^*(A \setminus E),
 \]
 where $m^*$ denotes the Lebesgue outer measure on $\mathbb{R}^n$. (Equivalently, $m^*(A) \ge m^*(A \cap E) + m^*(A \setminus E)$ for all $A \subset \mathbb{R}^n$ with $m^*(A) < \infty$.)
 
-** Exercise 2.2 (Homework 3, Problem 3: Measurability via Subsets)
-Show that $E \subset \mathbb{R}^n$ is Lebesgue measurable if and only if for all $S \subset E$:
-\[
-m^*(A) \ge m^*(S) + m^*(A \setminus S) \quad \text{is not required, but rather:}
-\]
-Specifically: Show that $E$ is measurable if and only if for all test sets $A \subset \mathbb{R}^n$ such that $A \subset E$ or $A \cap E = \emptyset$, Carathéodory holds. 
-More directly (from HW3): Prove that $E \subset \mathbb{R}^n$ is measurable if and only if for all sets $S \subset \mathbb{R}^n$ with $m^*(S) < \infty$:
+** Exercise 2.2 (Homework 3, Problem 3: Finite-Measure Test Sets Suffice)
+Prove that $E \subset \mathbb{R}^n$ is Lebesgue measurable if and only if for all test sets $S \subset \mathbb{R}^n$ with $m^*(S) < \infty$:
 \[
 m^*(S) = m^*(S \cap E) + m^*(S \setminus E).
 \]

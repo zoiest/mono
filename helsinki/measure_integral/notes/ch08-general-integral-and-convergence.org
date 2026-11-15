@@ -174,8 +174,9 @@ Furthermore:
 1. *Integrability of the limit:*
    Taking the limit as $j \to \infty$ of $|f_j(x)| \le g(x)$ gives $|f(x)| \le g(x)$ a.e.
    Since $g \in L^1(E)$, monotonicity gives $\int_E |f| \le \int_E g < \infty$. Thus $f \in L^1(E)$.
+   Since $g, f, f_j \in L^1(E)$, they are finite a.e. on $E$ (Theorem 8.3(5)). By redefining $g, f, f_j$ to be $0$ on the null set where any of them is $\pm\infty$, where $|f_j(x)| > g(x)$, or where $f_j(x) \not\to f(x)$, all integrals are unchanged and $|f_j(x)| \le g(x) < \infty$ and $f_j(x) \to f(x)$ hold for *every* $x \in E$.
 2. *Application of Fatou's Lemma to non-negative sequences:*
-   Because $|f_j(x)| \le g(x)$ a.e., we can construct two sequences of non-negative measurable functions:
+   Because $|f_j(x)| \le g(x) < \infty$ on $E$, we can construct two sequences of non-negative measurable functions:
    \[
    u_j(x) = g(x) + f_j(x) \ge 0 \quad \text{and} \quad v_j(x) = g(x) - f_j(x) \ge 0.
    \]

@@ -382,16 +382,13 @@ Let $a \in \mathbb{R}$. We show that $F$ is both right-continuous and left-conti
    \[
    \bigcap_{n=1}^\infty E(a_n) = ]-\infty, a] = E(a).
    \]
-   Notice that $f \chi_{E(a_n)} \to f \chi_{E(a)}$ pointwise as $n \to \infty$.
-   Also, $0 \le f \chi_{E(a_n)} \le f$, and by assumption $\int_{\mathbb{R}} f \, dm < \infty$.
-   Consider the difference functions $g_n = f \chi_{E(a_1)} - f \chi_{E(a_n)} = f \chi_{]a_n, a_1]}$.
-   The sequence $(g_n)_{n=1}^\infty$ is non-negative and monotonically increasing: $g_n \nearrow f \chi_{]a, a_1]}$.
-   By the Monotone Convergence Theorem (Theorem 7.6):
+   Notice that $E(a_1) = E(a_n) \cup ]a_n, a_1]$ is a disjoint union, and for $g_n := f \chi_{]a_n, a_1]}$ we have $0 \le g_1 \le g_2 \le \dots \nearrow f \chi_{]a, a_1]}$.
+   By the Monotone Convergence Theorem (Theorem 7.6) and additivity (Theorem 7.7):
    \[
    \lim_{n \to \infty} \int_{\mathbb{R}} g_n \, dm = \int_{\mathbb{R}} f \chi_{]a, a_1]} \, dm = \int_{E(a_1)} f - \int_{E(a)} f.
    \]
-   On the other hand, $\int g_n = \int_{E(a_1)} f - \int_{E(a_n)} f$.
-   Since $\int_{E(a_1)} f < \infty$, canceling gives:
+   On the other hand, by additivity $\int_{E(a_1)} f = \int_{E(a_n)} f + \int g_n$, so $\int g_n = \int_{E(a_1)} f - \int_{E(a_n)} f$.
+   Since $\int_{E(a_1)} f \le \int_{\mathbb{R}} f < \infty$, subtracting $\int_{E(a_1)} f$ gives:
    \[
    \lim_{n \to \infty} F(a_n) = F(a).
    \]

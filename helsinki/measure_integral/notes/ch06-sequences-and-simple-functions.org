@@ -210,7 +210,7 @@ If $f_j: A \to \overline{\mathbb{R}}$ are measurable and $f_j(x) \to f(x)$ for a
 
 ** Canonical Representation
 #+begin_quote
-*Definition 6.8 (Simple Function).* A function $s: A \to \mathbb{R}$ is called a *simple function* if its image $s(A) \subset \mathbb{R}$ is a *finite set*:
+*Definition 6.8 (Simple Function).* Let $A \in \mathcal{M}(\mathbb{R}^n)$. A function $s: A \to \mathbb{R}$ is called a *simple function* if its image $s(A) \subset \mathbb{R}$ is a *finite set*:
 \[
 s(A) = \{a_1, a_2, \dots, a_k\},
 \]
@@ -252,7 +252,7 @@ Then there exists a sequence of simple measurable functions $(s_k)_{k=1}^\infty$
    \[
    \lim_{k \to \infty} s_k(x) = f(x).
    \]
-3. *Uniform Convergence on Bounded Sets:* If $f$ is bounded on a subset $E \subset A$, the convergence $s_k \rightrightarrows f$ is uniform on $E$.
+3. *Uniform Convergence Where $f$ is Bounded:* If $f$ is bounded on a subset $E \subset A$, the convergence $s_k \rightrightarrows f$ is uniform on $E$.
 #+end_quote
 
 #+begin_proof

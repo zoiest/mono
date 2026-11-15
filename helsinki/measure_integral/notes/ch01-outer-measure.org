@@ -184,7 +184,7 @@ m^*(A) = \inf \left\{ \sum_{j=1}^\infty \ell(I_j) : I_j \text{ is an open } n\te
    \]
    Since this holds for every $\varepsilon > 0$, letting $\varepsilon \to 0$ yields the result.
 4. *Translation invariance:* If $\{I_j\}$ covers $A$, then $\{x + I_j\}$ covers $x + A$. The shifted interval $x + I_j$ is still an open \(n\)-interval, and its side lengths are unchanged: $\ell(x + I_j) = \ell(I_j)$. Thus $m^*(x + A) \le m^*(A)$. Applying this to $-x$ and $x + A$ gives the reverse inequality.
-5. *Scaling:* Scaling each side of an \(n\)-interval by $c$ multiplies each of the $n$ side lengths by $|c|$, so $\ell(c I) = |c|^n \ell(I)$. Taking infima gives $m^*(cA) = |c|^n m^*(A)$.
+5. *Scaling:* If $c = 0$, then $cA$ is either $\emptyset$ (if $A = \emptyset$) or $\{0\}$ (if $A \neq \emptyset$), both of which have outer measure $0 = 0 \cdot m^*(A)$. For $c \neq 0$, scaling each side of an open \(n\)-interval by $c$ multiplies each of the $n$ side lengths by $|c|$, so $\ell(c I) = |c|^n \ell(I)$. Taking infima over all covers gives $m^*(cA) = |c|^n m^*(A)$.
 #+end_proof
 
 ---
@@ -202,18 +202,20 @@ m^*(I) = \ell(I).
 
 #+begin_proof
 1. *Upper Bound ($m^*(I) \le \ell(I)$):*
-   Let $I = [a_1, b_1] \times \dots \times [a_n, b_n]$ be closed. 
+   Let $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$ be the closure of $I$ (with $a_j \le b_j$).
    For any $\varepsilon > 0$, expand each side by $\varepsilon$:
    \[
    I_\varepsilon = ]a_1 - \varepsilon, b_1 + \varepsilon[ \times \dots \times ]a_n - \varepsilon, b_n + \varepsilon[.
    \]
-   $I_\varepsilon$ is an open \(n\)-interval and $I \subset I_\varepsilon$. Thus $\{I_\varepsilon\}$ is a one-interval cover of $I$:
+   $I_\varepsilon$ is an open \(n\)-interval and $I \subset \bar{I} \subset I_\varepsilon$. Thus $\{I_\varepsilon\}$ is a one-interval cover of $\bar{I}$:
    \[
-   m^*(I) \le \ell(I_\varepsilon) = \prod_{j=1}^n (b_j - a_j + 2\varepsilon).
+   m^*(I) \le m^*(\bar{I}) \le \ell(I_\varepsilon) = \prod_{j=1}^n (b_j - a_j + 2\varepsilon).
    \]
-   Letting $\varepsilon \to 0$ gives $m^*(I) \le \ell(I)$.
+   Letting $\varepsilon \to 0$ gives $m^*(I) \le m^*(\bar{I}) \le \ell(\bar{I}) = \ell(I)$.
 2. *Lower Bound ($m^*(I) \ge \ell(I)$ via Compactness):*
-   Fix $\varepsilon > 0$. Let $\{I_j\}_{j=1}^\infty$ be any open cover of the closed interval $\bar{I}$.
+   If $a_j = b_j$ for some $j$, then $\ell(I) = 0 \le m^*(I)$, so $m^*(I) = 0 = \ell(I)$.
+   Assume now that $a_j < b_j$ for all $j$. First consider a closed interval $\bar{I} = [a_1, b_1] \times \dots \times [a_n, b_n]$.
+   Let $\{I_j\}_{j=1}^\infty$ be any open cover of $\bar{I}$.
    Since $\bar{I}$ is closed and bounded, by the *Heine--Borel Theorem* (Theorem 0.6), $\bar{I}$ is compact!
    Therefore, there exists a *finite subcover* $\{I_1, \dots, I_N\}$ such that
    \[
@@ -223,8 +225,12 @@ m^*(I) = \ell(I).
    \[
    \ell(\bar{I}) \le \sum_{j=1}^N \ell(I_j) \le \sum_{j=1}^\infty \ell(I_j).
    \]
-   Taking the infimum over all countable open covers $\{I_j\}$ yields $\ell(\bar{I}) \le m^*(\bar{I})$.
-Since $\ell(I) = \ell(\bar{I})$ and $I \subset \bar{I}$, monotonicity and the bounds squeeze $m^*(I) = \ell(I)$.
+   Taking the infimum over all countable open covers $\{I_j\}$ yields $\ell(\bar{I}) \le m^*(\bar{I})$, so $m^*(\bar{I}) = \ell(\bar{I})$.
+   Finally, for any open or half-open interval $I$ with $a_j < b_j$, for sufficiently small $\varepsilon > 0$ the closed interval $J_\varepsilon = [a_1 + \varepsilon, b_1 - \varepsilon] \times \dots \times [a_n + \varepsilon, b_n - \varepsilon]$ satisfies $J_\varepsilon \subset I$, so
+   \[
+   m^*(I) \ge m^*(J_\varepsilon) = \ell(J_\varepsilon) = \prod_{j=1}^n (b_j - a_j - 2\varepsilon).
+   \]
+   Letting $\varepsilon \to 0^+$ gives $m^*(I) \ge \ell(I)$. Combining both bounds gives $m^*(I) = \ell(I)$.
 #+end_proof
 
 ** Null Sets and Countable Sets

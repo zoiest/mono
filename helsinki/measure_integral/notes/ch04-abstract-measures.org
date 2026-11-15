@@ -294,7 +294,7 @@ Prove that $m(E_\infty) = 0$. (This is the set-theoretic *Borel--Cantelli Lemma*
 Since measure is non-negative, $m(E_\infty) = 0$.
 
 ** Exercise 4.2 (Liminf of Sets)
-Let $(X, \mathcal{M}, \mu)$ be a measure space. For any sequence of sets $\{E_j\}$, define
+Let $(X, \mathcal{M}, \mu)$ be a measure space. For any sequence of measurable sets $\{E_j\}_{j=1}^\infty \subset \mathcal{M}$, define
 \[
 \liminf_{j \to \infty} E_j = \bigcup_{k=1}^\infty \left( \bigcap_{j=k}^\infty E_j \right).
 \]

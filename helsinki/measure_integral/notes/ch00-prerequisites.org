@@ -146,6 +146,7 @@ Thus $f(A_1 \cap A_2) \subsetneq f(A_1) \cap f(A_2)$. The image failed to preser
 * Countability and Uncountability
 
 ** Definitions and Cardinality
+Throughout these notes, we use the convention $\mathbb{N} = \{1, 2, 3, \dots\}$ for the set of positive integers.
 - A set $A$ is *finite* if there is a bijection between $A$ and $\{1, 2, \dots, n\}$ for some $n \in \mathbb{N}$, or if $A = \emptyset$.
 - A set $A$ is *countably infinite* if there exists a bijection $f: \mathbb{N} \to A$. We can list its elements as a sequence without repetition: $A = \{a_1, a_2, a_3, \dots\}$.
 - A set $A$ is *countable* if it is either finite or countably infinite.

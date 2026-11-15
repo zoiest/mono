@@ -203,6 +203,8 @@ If $f \in L^p(E)$ and $g \in L^q(E)$, then $f g \in L^1(E)$ and
 - For $p = 1$: $\|f + g\|_1 = \int |f + g| \le \int (|f| + |g|) = \|f\|_1 + \|g\|_1$.
 - For $p = \infty$: $|f(x) + g(x)| \le |f(x)| + |g(x)| \le \|f\|_\infty + \|g\|_\infty$ a.e.
 - For $1 < p < \infty$:
+  First note that $|f + g|^p \le \bigl(2 \max(|f|, |g|)\bigr)^p = 2^p \max(|f|^p, |g|^p) \le 2^p(|f|^p + |g|^p)$, so integrating gives $\|f + g\|_p < \infty$ (i.e. $f + g \in L^p(E)$). If $\|f + g\|_p = 0$, the inequality is trivial; assume $0 < \|f + g\|_p < \infty$.
+  Write:
   \[
   \lvert f + g \rvert^p = |f + g| \cdot |f + g|^{p-1} \le (|f| + |g|) |f + g|^{p-1} = |f| |f + g|^{p-1} + |g| |f + g|^{p-1}.
   \]
@@ -283,6 +285,9 @@ That is, every Cauchy sequence in $L^p(E)$ converges in the \(L^p\)-norm to some
    Given $\varepsilon > 0$, since $(f_k)$ is Cauchy, $\|f_k - f_{k_j}\|_p < \varepsilon/2$ for large $k, k_j$. 
    Since $\|f_{k_j} - f\|_p \to 0$, choosing $j$ large gives $\|f_k - f\|_p < \varepsilon$.
    Thus $\lim_{k \to \infty} \|f_k - f\|_p = 0$.
+
+*Proof for $p = \infty$:*
+Let $(f_k)_{k=1}^\infty$ be Cauchy in $L^\infty(E)$. For each pair $j, k \in \mathbb{N}$, the set $N_{j,k} = \{x \in E : |f_j(x) - f_k(x)| > \|f_j - f_k\|_\infty\}$ has measure zero, and $N_k = \{x \in E : |f_k(x)| > \|f_k\|_\infty\}$ has measure zero. Let $N = \bigl(\bigcup_{j,k} N_{j,k}\bigr) \cup \bigl(\bigcup_k N_k\bigr)$; as a countable union of null sets, $\mu(N) = 0$. On $E \setminus N$, $(f_k)$ is a uniformly Cauchy sequence of bounded real-valued functions, hence converges uniformly on $E \setminus N$ to a bounded function $f$ (set $f = 0$ on $N$), so $\|f_k - f\|_\infty \to 0$ and $f \in L^\infty(E)$.
 #+end_proof
 
 ---
@@ -303,10 +308,10 @@ The full sequence $f_k$ can converge to $0$ in $L^p$ while *failing to converge 
 
 *The Typewriter (Sliding Interval) Counterexample:*
 On $[0, 1]$, define the sequence of indicator functions:
-- Level 1: $f_1 = \chi_{[0, 1]}$.
-- Level 2: $f_2 = \chi_{[0, 1/2]}, \, f_3 = \chi_{[1/2, 1]}$.
-- Level 3: $f_4 = \chi_{[0, 1/4]}, \, f_5 = \chi_{[1/4, 2/4]}, \, f_6 = \chi_{[2/4, 3/4]}, \, f_7 = \chi_{[3/4, 1]}$.
-- In general, at level $m$, we have $2^m$ intervals of width $2^{-m}$.
+- Level $m = 0$: $f_1 = \chi_{[0, 1]}$.
+- Level $m = 1$: $f_2 = \chi_{[0, 1/2]}, \, f_3 = \chi_{[1/2, 1]}$.
+- Level $m = 2$: $f_4 = \chi_{[0, 1/4]}, \, f_5 = \chi_{[1/4, 2/4]}, \, f_6 = \chi_{[2/4, 3/4]}, \, f_7 = \chi_{[3/4, 1]}$.
+- In general, at level $m \ge 0$, we have $2^m$ intervals of width $2^{-m}$.
 Notice:
 1. *Convergence in $L^p$:* For any $f_k$ at level $m$:
    \[

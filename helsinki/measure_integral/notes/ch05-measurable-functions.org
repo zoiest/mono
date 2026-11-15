@@ -110,8 +110,9 @@ We show the chain of equivalences between the four ray conditions:
   \[
   \{x \in A : f(x) > a\} = A \setminus \{x \in A : f(x) \le a\} \in \mathcal{M}.
   \]
-Finally, any open set $U \subset \mathbb{R}$ is a countable union of open intervals $]a_j, b_j[ = (]a_j, \infty]) \cap ([-\infty, b_j[) \cap \mathbb{R}$. 
-Since preimages preserve unions and intersections (Theorem 0.3), any of the four conditions guarantees that $f^{-1}(U)$ is measurable for all open $U$.
+Finally, we connect the four ray conditions to Definition 5.1:
+- If $f$ is measurable in the sense of Definition 5.1, then for any $a \in \mathbb{R}$, $\{x \in A : f(x) > a\} = f^{-1}(]a, +\infty[) \cup f^{-1}(\{+\infty\})$ is the union of two measurable sets, hence measurable (giving (1)).
+- Conversely, if (1)--(4) hold, then $f^{-1}(\{+\infty\}) = \bigcap_{k=1}^\infty \{x \in A : f(x) > k\} \in \mathcal{M}$ and $f^{-1}(\{-\infty\}) = \bigcap_{k=1}^\infty \{x \in A : f(x) < -k\} \in \mathcal{M}$. Moreover, for any open interval $]a, b[ \subset \mathbb{R}$, $f^{-1}(]a, b[) = \{x \in A : f(x) > a\} \cap \{x \in A : f(x) < b\} \in \mathcal{M}$. Since any open set $U \subset \mathbb{R}$ is a countable union of open intervals $]a_j, b_j[$ and preimages preserve unions (Theorem 0.3), $f^{-1}(U) \in \mathcal{M}$ for all open $U \subset \mathbb{R}$.
 #+end_proof
 
 #+begin_quote

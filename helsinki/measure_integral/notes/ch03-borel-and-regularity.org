@@ -168,7 +168,7 @@ Lebesgue measure on $\mathbb{R}^n$ is *regular*: any measurable set can be appro
 2. *Inner Regularity:*
    Apply outer regularity to the complement $E^c$: there exists an open set $U \supset E^c$ with $m(U \setminus E^c) < \varepsilon$.
    Let $F = U^c$. Then $F$ is closed, $F \subset E$, and $E \setminus F = E \cap U = U \setminus E^c$, so $m(E \setminus F) < \varepsilon$.
-   If $m(E) < \infty$, intersect $F$ with closed balls $\bar{B}(0, R)$ for sufficiently large $R$ to obtain a compact set $K$.
+   If $m(E) < \infty$, write $F = \bigcup_{k=1}^\infty (F \cap \bar{B}(0, k))$. Then $K_k = F \cap \bar{B}(0, k)$ is closed and bounded (hence compact), and since $m(F) \le m(E) < \infty$, choosing $k$ sufficiently large ensures $m(F \setminus K_k) < \varepsilon - m(E \setminus F)$, giving a compact $K = K_k \subset E$ with $m(E \setminus K) < \varepsilon$. (Even if $m(E) = \infty$, taking $K_k = F \cap \bar{B}(0, k)$ shows $\sup \{m(K) : K \subset E \text{ compact}\} = \infty = m(E)$.)
 #+end_proof
 
 #+begin_quote
@@ -178,6 +178,11 @@ A set $E \subset \mathbb{R}^n$ is Lebesgue measurable if and only if there exist
 F \subset E \subset G \quad \text{and} \quad m(G \setminus F) = 0.
 \]
 #+end_quote
+
+#+begin_proof
+$(\implies)$ If $E \in \mathcal{M}(\mathbb{R}^n)$, then for each $k \in \mathbb{N}$, by Theorem 3.6 there exist a closed set $F_k \subset E$ and an open set $U_k \supset E$ such that $m(E \setminus F_k) < \frac{1}{2k}$ and $m(U_k \setminus E) < \frac{1}{2k}$, so $m(U_k \setminus F_k) < \frac{1}{k}$. Setting $F = \bigcup_{k=1}^\infty F_k$ ($F_\sigma$ set) and $G = \bigcap_{k=1}^\infty U_k$ ($G_\delta$ set) gives $F \subset E \subset G$ and $m(G \setminus F) \le m(U_k \setminus F_k) < \frac{1}{k}$ for all $k$, hence $m(G \setminus F) = 0$.
+$(\impliedby)$ Conversely, since $F, G \in \mathcal{B}(\mathbb{R}^n) \subset \mathcal{M}(\mathbb{R}^n)$ and $E \setminus F \subset G \setminus F$ has outer measure $0$, $E \setminus F$ is measurable (Theorem 2.2), so $E = F \cup (E \setminus F) \in \mathcal{M}(\mathbb{R}^n)$.
+#+end_proof
 
 #+begin_quote
 *Note (Relationship between Borel and Lebesgue Sets):*
