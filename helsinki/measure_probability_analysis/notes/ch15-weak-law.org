@@ -398,8 +398,8 @@ concentrate near \(m\)?
    directly on \(X_j\), because big spikes make the second moment infinite. Instead, we *truncate* each
    \(X_j\) at a high threshold \(K\):
    \[
-   X_j = \underbrace{X_j \mathbf 1_{\{|X_j| \le K\}}}_{Y_j\text{ (bounded, has finite variance!)}}
-       + \underbrace{X_j \mathbf 1_{\{|X_j| > K\}}}_{R_j\text{ (rare tail, has tiny } L^1\text{ norm!)}} .
+   X_j = \underbrace{X_j \mathbf 1_{\{|X_j| \le K\}}}_{Y_j\text{ (bounded, has finite variance!)}} +
+   \underbrace{X_j \mathbf 1_{\{|X_j| > K\}}}_{R_j\text{ (rare tail, has tiny } L^1\text{ norm!)}} .
    \]
    First we pick \(K\) large enough so the discarded tail \(R_j\) has tiny expectation \(\mathbb E|R_1|\)
    (which controls \(\frac{1}{n}\sum_{j=1}^n |R_j|\) via Markov's inequality *uniformly for all \(n\)*);
@@ -499,12 +499,12 @@ all \(n \ge N\),
   \]
 - *Three-term triangle inequality:* Write \(X_j - \mathbb E X_1 = (Y_j - \mathbb E Y_1) + R_j + (\mathbb E Y_1 - \mathbb E X_1)\).
   By the triangle inequality,
-  \[
+  \begin{equation*}
   \Big|\frac{1}{n}\sum_{j=1}^n X_j - \mathbb E X_1\Big|
     \le \Big|\frac{1}{n}\sum_{j=1}^n Y_j - \mathbb E Y_1\Big|
       + \frac{1}{n}\sum_{j=1}^n |R_j|
       + |\mathbb E Y_1 - \mathbb E X_1| .
-  \]
+  \end{equation*}
 - *Bound the deterministic third term:* Since \(Y_1 - X_1 = -R_1\), we have
   \[
   \lvert\mathbb E Y_1 - \mathbb E X_1\rvert = \lvert\mathbb E R_1\rvert \le \mathbb E\lvert R_1\rvert < \frac{\varepsilon}{3} .
@@ -515,8 +515,8 @@ all \(n \ge N\),
   By the union bound,
   \[
   \mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n X_j - \mathbb E X_1\Big| > \varepsilon\Big)
-    \le \mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n Y_j - \mathbb E Y_1\Big| > \frac{\varepsilon}{3}\Big)
-      + \mathbb P\Big(\frac{1}{n}\sum_{j=1}^n |R_j| > \frac{\varepsilon}{3}\Big) .
+    \le \mathbb P\Big(\Big|\frac{1}{n}\sum_{j=1}^n Y_j - \mathbb E Y_1\Big| > \frac{\varepsilon}{3}\Big) +
+    \mathbb P\Big(\frac{1}{n}\sum_{j=1}^n |R_j| > \frac{\varepsilon}{3}\Big) .
   \]
 - *Bound the second probability via Markov (uniformly in \(n\)):* The nonnegative random variable
   \(\frac{1}{n}\sum_{j=1}^n |R_j|\) has expectation \(\frac{1}{n}\sum_{j=1}^n \mathbb E|R_j| = \mathbb E|R_1|\)
@@ -704,11 +704,11 @@ Thus \(\overline X_n \to m\) in \(L^2\) and (by Chebyshev) in probability.
 | Theorem 15.1 (BC 1)     | \(\sum_n \mathbb P(A_n) < \infty \implies \mathbb P(\limsup_n A_n) = 0\)                                     | Needs NO independence; comes from tail union bound         |
 | Theorem 15.1 (BC 2)     | \(A_n\) independent, \(\sum_n \mathbb P(A_n) = \infty \implies \mathbb P(\limsup_n A_n) = 1\)                | Needs independence; uses \(1-x \le e^{-x}\)                |
 | Example 15.2            | Nested \((0, 1/n)\) vs. independent \(\{U_n < 1/n\}\)                                                        | Same marginal probabilities \(1/n\), opposite recurrence   |
-| Corollary 15.3          | \(\forall \varepsilon>0,\ \sum_n \mathbb P(|X_n-X|>\varepsilon)<\infty \implies X_n\to X\) a.s.              | Main workhorse for proving almost-sure convergence         |
-| Proposition 15.4        | Markov: \(\mathbb P(Y\ge a)\le \mathbb E Y/a\); Chebyshev: \(\mathbb P(|X-\mathbb E X|\ge\varepsilon)\le \operatorname{var}(X)/\varepsilon^2\) | Converts moment bounds into tail-probability bounds        |
-| Example 15.5            | \(\mathbb P(|\overline X_n - p| \ge \varepsilon) \le \frac{p(1-p)}{n\varepsilon^2} \le \frac{1}{4n\varepsilon^2}\) | Distribution-free sample size bound for proportions        |
+| Corollary 15.3          | \(\forall \varepsilon>0,\ \sum_n \mathbb P(\lvert X_n-X\rvert>\varepsilon)<\infty \implies X_n\to X\) a.s.              | Main workhorse for proving almost-sure convergence         |
+| Proposition 15.4        | Markov: \(\mathbb P(Y\ge a)\le \mathbb E Y/a\); Chebyshev: \(\mathbb P(\lvert X-\mathbb E X\rvert\ge\varepsilon)\le \operatorname{var}(X)/\varepsilon^2\) | Converts moment bounds into tail-probability bounds        |
+| Example 15.5            | \(\mathbb P(\lvert\overline X_n - p\rvert \ge \varepsilon) \le \frac{p(1-p)}{n\varepsilon^2} \le \frac{1}{4n\varepsilon^2}\) | Distribution-free sample size bound for proportions        |
 | Theorem 15.6            | WLLN (\(\sigma^2 < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to m\) in prob. (and \(L^2\))                   | One-line proof from \(\operatorname{var}(\overline X_n) = \sigma^2/n\) + Chebyshev |
-| Theorem 15.7            | WLLN (\(\mathbb E|X_1| < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) in prob.               | Truncation \(Y_j = X_j\mathbf 1_{\{|X_j|\le K\}}\) removes finite-variance hypothesis |
+| Theorem 15.7            | WLLN (\(\mathbb E\lvert X_1\rvert < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) in prob.               | Truncation \(Y_j = X_j\mathbf 1_{\{\lvert X_j\rvert\le K\}}\) removes finite-variance hypothesis |
 | Example 15.8            | \(\mathbb P(X=k) = c/k^3\): \(\mathbb E X < \infty\), \(\mathbb E[X^2] = \infty\)                            | Concrete law where Theorem 15.7 applies and 15.6 does not  |
 
 *Key takeaways*

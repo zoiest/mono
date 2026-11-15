@@ -847,7 +847,7 @@ measure? Compute \(\mu_F((a,b])\), \(\mu_F((-\infty, 0])\), and \(\int_0^1 x\,dF
 | CDF \(F_X\)             | \(F_X(x) := \mathbb P(X \le x) = \mu_X((-\infty, x])\)                                                       | Encodes the entire Borel law \(\mu_X\) on \(\mathbb R\)    |
 | Proposition 12.1        | Nondecreasing, right-continuous, \(F_X(-\infty)=0\), \(F_X(+\infty)=1\); \(\mathbb P(X=x)=F_X(x)-F_X(x-)\)   | Necessary conditions for a CDF; jumps = atoms              |
 | Countably many atoms    | At most \(m\) points can have mass \(\ge 1/m\)                                                               | Every CDF has at most countably many discontinuities       |
-| Example 12.2            | \(\mu = \frac12\delta_0 + \frac12\lambda|_{(0,1)}\) has \(F(x) = (1+x)/2\) on \([0,1]\)                     | A single law can have both atoms and a continuous part     |
+| Example 12.2            | \(\mu = \frac12\delta_0 + \frac12\lambda\vert_{(0,1)}\) has \(F(x) = (1+x)/2\) on \([0,1]\)                     | A single law can have both atoms and a continuous part     |
 | Theorem 12.3            | Right-continuous nondecreasing \(F \implies\) unique Borel measure \(\mu_F\) with \(\mu_F((a,b])=F(b)-F(a)\) | Complete characterization of CDFs & locally finite measures |
 | Lebesgue–Stieltjes int. | \(\int g\,dF := \int g\,d\mu_F\); \(\mathbb E[g(X)] = \int_{\mathbb R} g(x)\,dF_X(x)\)                       | Unifies sums, density integrals, and mixed expectations    |
 | Remark 12.5             | Density \(f \ge 0\): \(\mu(B) = \int_B f(x)\,dx \iff F(x) = \int_{-\infty}^x f(t)\,dt\)                      | Atoms rule out densities; continuous CDF \(\centernot\implies\) density |

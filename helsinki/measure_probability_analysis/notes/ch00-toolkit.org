@@ -484,14 +484,12 @@ formulation is the model for the definition of measurable functions (Chapter 3).
 #+end_quote
 
 Indicators turn set operations into arithmetic:
-\[
-\begin{aligned}
+\begin{align*}
 \mathbf 1_{A\cap B}&=\mathbf 1_A\mathbf 1_B=\min(\mathbf 1_A,\mathbf 1_B), &
 \mathbf 1_{A^c}&=1-\mathbf 1_A, \\
 \mathbf 1_{A\cup B}&=\mathbf 1_A+\mathbf 1_B-\mathbf 1_{A\cap B}=\max(\mathbf 1_A,\mathbf 1_B), &
 A\subseteq B&\iff \mathbf 1_A\le\mathbf 1_B .
-\end{aligned}
-\]
+\end{align*}
 If \(A_1,A_2,\dots\) are pairwise disjoint, \(\mathbf 1_{\bigcup_n A_n}=\sum_n\mathbf 1_{A_n}\) (at each point at most one term
 is \(1\)). For arbitrary sets, \(\sum_n\mathbf 1_{A_n}(\omega)\) *counts* how many \(A_n\) contain \(\omega\); thus
 \(\omega\in\limsup A_n\) iff \(\sum_n\mathbf 1_{A_n}(\omega)=\infty\).

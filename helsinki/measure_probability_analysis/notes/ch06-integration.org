@@ -566,8 +566,8 @@ linear, monotone, and satisfies the triangle inequality:
    them by ordinary real subtraction:
    \[
    \int_\Omega (f + g)^+\,d\mu - \int_\Omega (f + g)^-\,d\mu
-   = \left(\int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu\right)
-   + \left(\int_\Omega g^+\,d\mu - \int_\Omega g^-\,d\mu\right).
+   = \left(\int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu\right) +
+   \left(\int_\Omega g^+\,d\mu - \int_\Omega g^-\,d\mu\right).
    \]
 3. *Scalar multiplication \(\int (cf)\,d\mu = c \int f\,d\mu\):* For \(c \ge 0\), \((cf)^+ = c f^+\) and
    \((cf)^- = c f^-\); for \(c < 0\), \((cf)^+ = |c| f^-\) and \((cf)^- = |c| f^+\), which swaps the two
@@ -1171,10 +1171,10 @@ gives
 | Monotone Convergence — MCT (Thm. 6.5) | If \(0 \le f_n \uparrow f\) \(\mu\)-a.e., then \(\int_\Omega f_n\,d\mu \uparrow \int_\Omega f\,d\mu\) | Swaps \(\lim\) and \(\int\) for increasing nonnegative sequences |
 | Nonnegative series (Prop. 6.6)| For \(f_n \ge 0\), \(\int_\Omega (\sum_{n=1}^\infty f_n)\,d\mu = \sum_{n=1}^\infty \int_\Omega f_n\,d\mu\)   | Always swaps \(\sum_{n=1}^\infty\) and \(\int\) when \(f_n \ge 0\) (e.g. tail-sum \(\mathbb E[X] = \sum_{k\ge 1}\mathbb P(X\ge k)\)) |
 | Lemma 6.8               | For \(f \ge 0\), \(\int_\Omega f\,d\mu = 0 \iff f = 0\) \(\mu\)-a.e.                                         | Null sets do not affect integrals                          |
-| Integrable \(f\) (Def. 6.9)  | \(\int_\Omega |f|\,d\mu < \infty\); \(\int_\Omega f\,d\mu = \int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu\)  | Requires absolute integrability (no \(\infty - \infty\) or conditional sums) |
+| Integrable \(f\) (Def. 6.9)  | \(\int_\Omega \lvert f\rvert\,d\mu < \infty\); \(\int_\Omega f\,d\mu = \int_\Omega f^+\,d\mu - \int_\Omega f^-\,d\mu\)  | Requires absolute integrability (no \(\infty - \infty\) or conditional sums) |
 | Image-measure \(\int\) (Thm. 6.12) | \(\int_S h\,d(X_\#\mu) = \int_\Omega h(X(\omega))\,d\mu(\omega)\) (LOTUS: \(\mathbb E[h(X)] = \int h\,d\mu_X\)) | Compute expectations using only the law \(X_\#\mathbb P\)  |
 | Fatou's lemma (Thm. 6.13)    | For \(f_n \ge 0\), \(\int_\Omega (\liminf_n f_n)\,d\mu \le \liminf_n \int_\Omega f_n\,d\mu\)                 | Inequality that survives without monotonicity or domination|
-| Dominated Convergence — DCT (Thm. 6.15) | If \(f_n \to f\) a.e. and \(|f_n| \le g\) a.e. with \(\int_\Omega g\,d\mu < \infty\), then \(\int |f_n-f|\,d\mu \to 0\) and \(\int f_n\,d\mu \to \int f\,d\mu\) | Workhorse theorem for swapping limits/derivatives with \(\int\) |
+| Dominated Convergence — DCT (Thm. 6.15) | If \(f_n \to f\) a.e. and \(\lvert f_n\rvert \le g\) a.e. with \(\int_\Omega g\,d\mu < \infty\), then \(\int \lvert f_n-f\rvert\,d\mu \to 0\) and \(\int f_n\,d\mu \to \int f\,d\mu\) | Workhorse theorem for swapping limits/derivatives with \(\int\) |
 
 *Key takeaways*
 

@@ -338,7 +338,7 @@ Given a premeasure \(\mu_0\) on an algebra \(\mathcal A\), define \(\mu^* : 2^\O
   \(\varepsilon > 0\) was arbitrary, letting \(\varepsilon \downarrow 0\) gives
   \(\mu^*(\bigcup_{j=1}^\infty E_j) \le \sum_{j=1}^\infty \mu^*(E_j)\).
 
-*Step 2. Show that \(\mu^*(A) = \mu_0(A)\) for every \(A \in \mathcal A\).*
+*Step 2. Show that \(\mu^{\ast}(A) = \mu_0(A)\) for every \(A \in \mathcal A\).*
 - *(\(\le\)) Trivial cover:* If \(A \in \mathcal A\), then \(A_1 = A, A_2 = \emptyset, \dots\) is a valid
   cover of \(A\) by sets in \(\mathcal A\), so \(\mu^*(A) \le \mu_0(A) + 0 + \cdots = \mu_0(A)\).
 - *(\(\ge\)) Any cover is at least as big as \(\mu_0(A)\):* Let \(A \subseteq \bigcup_{n=1}^\infty A_n\)
@@ -507,7 +507,7 @@ First let \(E_1, E_2, \dots \in \mathcal M\) be **pairwise disjoint**, and set
   \(E_j \in \mathcal M\), they are pairwise disjoint, and \(\bigcup_{j=1}^\infty F_j = \bigsqcup_{j=1}^\infty E_j \in \mathcal M\).
   Thus \(\mathcal M\) is a \(\sigma\)-algebra!
 
-*Step 3. Countable additivity and completeness of \(\mu^*|_{\mathcal M}\).*
+*Step 3. Countable additivity and completeness of \(\mu^{\ast}\vert_{\mathcal M}\).*
 - *Countable additivity:* Take \(T = E = \bigsqcup_{j=1}^\infty E_j\) in \((\star)\) for pairwise disjoint
   \(E_j \in \mathcal M\). Since \(E \cap E_j = E_j\) and \(E \setminus E = \emptyset\) (with
   \(\mu^*(\emptyset) = 0\)), \((\star)\) and countable subadditivity give

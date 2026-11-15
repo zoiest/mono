@@ -418,7 +418,7 @@ Fubini gives the same conclusion for an *absolutely summable* signed array (\(\s
 a_{mn} = \begin{cases} 1 & \text{if } m = n, \\ -1 & \text{if } n = m + 1, \\ 0 & \text{otherwise.} \end{cases}
 \]
 Let us look at the infinite matrix \((a_{mn})_{m,n \ge 1}\):
-\[
+\begin{equation*}
 \begin{pmatrix}
 a_{11} & a_{12} & a_{13} & a_{14} & \cdots \\
 a_{21} & a_{22} & a_{23} & a_{24} & \cdots \\
@@ -437,7 +437,7 @@ a_{31} & a_{32} & a_{33} & a_{34} & \cdots \\
 \to \text{Row 2 sum} = 1 - 1 = 0 \\
 \to \text{Row 3 sum} = 1 - 1 = 0 \\
 \end{array}
-\]
+\end{equation*}
 - *Summing rows first:* Each row \(m\) has one \(+1\) and one \(-1\), so \(\sum_{n=1}^\infty a_{mn} = 0\). Therefore \(\sum_{m=1}^\infty \left(\sum_{n=1}^\infty a_{mn}\right) = \sum_{m=1}^\infty 0 = 0\).
 - *Summing columns first:* Column \(n = 1\) has a single \(+1\) at the top, so \(\sum_{m=1}^\infty a_{m1} = 1\). Every other column \(n \ge 2\) has one \(-1\) and one \(+1\), so \(\sum_{m=1}^\infty a_{mn} = 0\). Therefore \(\sum_{n=1}^\infty \left(\sum_{m=1}^\infty a_{mn}\right) = 1 + 0 + 0 + \cdots = 1 \ne 0\)!
 
@@ -761,8 +761,8 @@ which means \(f_s = g_s\) \(\nu\)-almost everywhere!
 | Theorem 9.2             | Unique \(\mu \otimes \nu\) on \(\sigma\)-finite spaces; \((\mu \otimes \nu)(E) = \int \nu(E_s)\,d\mu = \int \mu(E^t)\,d\nu\) | Cavalieri's principle; proved via Dynkin's \(\pi\)-\(\lambda\) lemma |
 | Example 9.3             | \(\nu(E_0) = \infty\) at \(s=0\), yet \((\lambda \otimes \#)(E) = 1\)                                        | Infinite slice measure on a null base set is harmless      |
 | Theorem 9.4 (Tonelli)   | For \(f \ge 0\) product measurable, \(\int_S \int_T f\,d\nu\,d\mu = \int_{S\times T} f = \int_T \int_S f\,d\mu\,d\nu\) | Swap integrals of \(f \ge 0\) with no integrability check! |
-| Theorem 9.5 (Fubini)    | If \(\int_{S\times T} |f| \, d(\mu\otimes\nu) < \infty\), sections are integrable a.e. and iterated integrals agree | Swap integrals of signed \(f\) once \(\|f\|_1 < \infty\)   |
-| Example 9.6             | Double series \(a_{mn}\): row sums \(= 0\), column sums \(= 1\)                                              | Signed exchange fails without \(\sum |a_{mn}| < \infty\)   |
+| Theorem 9.5 (Fubini)    | If \(\int_{S\times T} \lvert f\rvert \, d(\mu\otimes\nu) < \infty\), sections are integrable a.e. and iterated integrals agree | Swap integrals of signed \(f\) once \(\lVert f\rVert_1 < \infty\)   |
+| Example 9.6             | Double series \(a_{mn}\): row sums \(= 0\), column sums \(= 1\)                                              | Signed exchange fails without \(\sum \lvert a_{mn}\rvert < \infty\)   |
 | Example 9.8             | Diagonal \(\mathbf{1}_{\{s=t\}}\) with \(\lambda\) and counting measure \(\#\) on \([0,1]\): \(1 \ne 0\)     | Tonelli fails when \(\sigma\)-finiteness is dropped        |
 | Vitali set & completion | \(\{0\} \times V\) is in the completion of \(\lambda \otimes \lambda\), not in \(\mathcal{L} \otimes \mathcal{L}\) | Product of complete measures is not automatically complete |
 | Completed Fubini        | Approximate \(f\) by product-measurable \(g\) off a null set \(N\); slices are measurable a.e.               | Restores Fubini on complete \(\sigma\)-finite spaces       |

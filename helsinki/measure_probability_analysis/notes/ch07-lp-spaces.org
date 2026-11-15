@@ -624,18 +624,18 @@ Squaring both sides gives \((\mathbb{E}[X^2])^2 \le \mathbb{E}[X^4] \, \mathbb{P
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align >{\RaggedRight}p{0.2\textwidth} >{\RaggedRight}p{0.38\textwidth} >{\RaggedRight}X :booktabs t
 | Concept                 | Statement                                                                                                    | Why it matters                                             |
 |-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
-| Equivalence \(\sim\)    | \(f \sim g \iff f = g\) \(\mu\)-a.e.                                                                         | Ensures \(\|f\|_p = 0 \iff [f] = [0]\) (by Lemma 6.8)      |
-| Definition 7.1 (\(L^p\))| \(\|f\|_p = (\int_\Omega |f|^p \, d\mu)^{1/p} < \infty\) (\(1 \le p < \infty\))                              | Normed space of functions with finite \(p\)-th moment      |
-| Definition 7.1 (\(L^\infty\)) | \(\|f\|_\infty = \inf\{M \ge 0 : |f| \le M \text{ a.e.}\} < \infty\); attained (\(|f|\le\|f\|_\infty\) a.e.) | Essential supremum ignores spikes on \(\mu\)-null sets     |
-| Example 7.2             | \(\|\mathbf{1}_{\{0\}}\|_{L^p(\lambda)} = 0\), \(\|\mathbf{1}_{\{0\}}\|_{L^p(\delta_0)} = 1\)                | \(L^p(\mu)\) depends critically on the measure \(\mu\)     |
+| Equivalence \(\sim\)    | \(f \sim g \iff f = g\) \(\mu\)-a.e.                                                                         | Ensures \(\lVert f\rVert_p = 0 \iff [f] = [0]\) (by Lemma 6.8)      |
+| Definition 7.1 (\(L^p\))| \(\lVert f\rVert_p = (\int_\Omega \lvert f\rvert^p \, d\mu)^{1/p} < \infty\) (\(1 \le p < \infty\))                              | Normed space of functions with finite \(p\)-th moment      |
+| Definition 7.1 (\(L^\infty\)) | \(\lVert f\rVert_\infty = \inf\{M \ge 0 : \lvert f\rvert \le M \text{ a.e.}\} < \infty\); attained (\(\lvert f\rvert\le\lVert f\rVert_\infty\) a.e.) | Essential supremum ignores spikes on \(\mu\)-null sets     |
+| Example 7.2             | \(\lVert\mathbf{1}_{\{0\}}\rVert_{L^p(\lambda)} = 0\), \(\lVert\mathbf{1}_{\{0\}}\rVert_{L^p(\delta_0)} = 1\)                | \(L^p(\mu)\) depends critically on the measure \(\mu\)     |
 | Example 7.3             | \(x^{-\alpha} \in L^p((0,1)) \iff \alpha < 1/p\)                                                             | Controls how steep a blowup is integrable in \(L^p\)       |
 | Example 7.4             | \(L^p(\mathbb{N}, 2^{\mathbb{N}}, \#) = \ell^p\); \((1/n) \in \ell^2 \setminus \ell^1\)                      | Counting measure recovers sequence spaces                  |
 | Young's inequality      | \(ab \le \frac{a^p}{p} + \frac{b^q}{q}\) for \(a,b \ge 0\) and \(\frac{1}{p}+\frac{1}{q}=1\)                 | 1D calculus engine behind Hölder's inequality              |
-| Theorem 7.5 (Hölder)    | \(\int_\Omega |fg| \, d\mu \le \|f\|_p \|g\|_q\) for \(\frac{1}{p}+\frac{1}{q}=1\)                           | Controls products; \(p=q=2\) is Cauchy–Schwarz             |
-| Probability inclusion   | If \(\mathbb{P}(\Omega) = 1\) and \(1 \le p < q \le \infty\), then \(\|f\|_p \le \|f\|_q\)                   | Higher moments control lower moments on probability spaces |
-| Theorem 7.6 (Minkowski) | \(\|f + g\|_p \le \|f\|_p + \|g\|_p\) for \(1 \le p \le \infty\)                                             | Triangle inequality; makes \(L^p(\mu)\) a normed space     |
+| Theorem 7.5 (Hölder)    | \(\int_\Omega \lvert fg\rvert \, d\mu \le \lVert f\rVert_p \lVert g\rVert_q\) for \(\frac{1}{p}+\frac{1}{q}=1\)                           | Controls products; \(p=q=2\) is Cauchy–Schwarz             |
+| Probability inclusion   | If \(\mathbb{P}(\Omega) = 1\) and \(1 \le p < q \le \infty\), then \(\lVert f\rVert_p \le \lVert f\rVert_q\)                   | Higher moments control lower moments on probability spaces |
+| Theorem 7.6 (Minkowski) | \(\lVert f + g\rVert_p \le \lVert f\rVert_p + \lVert g\rVert_p\) for \(1 \le p \le \infty\)                                             | Triangle inequality; makes \(L^p(\mu)\) a normed space     |
 | Theorem 7.7 (Riesz–Fischer) | \(L^p(\mu)\) is complete (a Banach space) for all \(\mu\) and \(1 \le p \le \infty\)                     | Cauchy sequences converge in norm; fast subsequence converges a.e. |
-| Example 7.8             | \(e_n \to 0\) coordinatewise in \(\ell^p\) (\(p<\infty\)), but \(\|e_n\|_p = 1\)                             | Pointwise convergence does not imply \(L^p\) convergence   |
+| Example 7.8             | \(e_n \to 0\) coordinatewise in \(\ell^p\) (\(p<\infty\)), but \(\lVert e_n\rVert_p = 1\)                             | Pointwise convergence does not imply \(L^p\) convergence   |
 
 *Key takeaways*
 

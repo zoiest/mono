@@ -890,10 +890,10 @@ countable intersection \(\bigcap_{m=1}^\infty \Omega_m\), we have
 |-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
 | Theorem 16.1            | SLLN (\(\sigma^2 < \infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) a.s.                         | Elementary proof via square subsequence \(k^2\) + monotonicity |
 | Example 16.2            | \(\frac{1}{n}\,\#\{j \le n : X_j \in B\} \to \mu(B)\) a.s.                                                   | Empirical frequencies converge to true probabilities       |
-| Lemma 16.3              | Kolmogorov maximal: \(\mathbb P(\max_{1\le k\le n}|T_k|\ge a) \le \frac{1}{a^2}\sum_{j=1}^n \mathbb E[Z_j^2]\) | Bounds the entire running maximum for the price of \(|T_n|\) |
+| Lemma 16.3              | Kolmogorov maximal: \(\mathbb P(\max_{1\le k\le n}\lvert T_k\rvert\ge a) \le \frac{1}{a^2}\sum_{j=1}^n \mathbb E[Z_j^2]\) | Bounds the entire running maximum for the price of \(\lvert T_n\rvert\) |
 | Lemma 16.4              | Independent \(\mathbb E Z_j = 0\), \(\sum_j \mathbb E[Z_j^2] < \infty \implies \sum_j Z_j\) converges a.s.   | Turns summable variances into a.s. series convergence      |
 | Lemma 16.5              | Kronecker: \(\sum_{j\ge 1} a_j / j\) converges \(\implies \frac{1}{n}\sum_{j=1}^n a_j \to 0\)                 | Deterministic bridge from weighted series to averages      |
-| Theorem 16.6            | Kolmogorov SLLN (\(\mathbb E|X_1|<\infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) a.s.          | Optimal iid Strong Law; uses growing truncation \(|X_j|\le j\) |
+| Theorem 16.6            | Kolmogorov SLLN (\(\mathbb E\lvert X_1\rvert<\infty\)): \(\frac{1}{n}\sum_{j=1}^n X_j \to \mathbb E X_1\) a.s.          | Optimal iid Strong Law; uses growing truncation \(\lvert X_j\rvert\le j\) |
 | Example 16.7            | Monte Carlo: \(\frac{1}{n}\sum_{j=1}^n f(U_j) \to \int_0^1 f(x)\,dx\) a.s. for \(f\in L^1(0,1)\)             | Approximates integrals even when \(\int_0^1 f^2 = \infty\) |
 | Example 16.8            | Empirical CDF \(F_n(x) \to F(x)\) simultaneously at all continuity points of \(F\) a.s.                      | Uses countable grid \(\mathbb Q\) + monotonicity; avoids uncountable intersections |
 

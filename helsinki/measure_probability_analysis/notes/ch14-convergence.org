@@ -901,14 +901,14 @@ Because the error is uniformly bounded by \(1/n\) everywhere on \(\Omega\):
 | Concept                 | Statement                                                                                                    | Why it matters                                             |
 |-------------------------+--------------------------------------------------------------------------------------------------------------+------------------------------------------------------------|
 | Almost-sure (\(a.s.\))  | \(\mathbb P(\{\omega : X_n(\omega)\to X(\omega)\}) = 1\)                                                     | Trajectory-level convergence (Strong Law)                  |
-| In probability          | \(\forall \varepsilon>0,\ \mathbb P(|X_n-X|>\varepsilon)\to 0\)                                              | Single-index error control (Weak Law); measure-theory "in measure" |
-| In \(L^p\) (\(p<\infty\)) | \(\mathbb E|X_n-X|^p \to 0\)                                                                               | Controls average moments; sensitive to heavy tails/spikes  |
+| In probability          | \(\forall \varepsilon>0,\ \mathbb P(\lvert X_n-X\rvert>\varepsilon)\to 0\)                                              | Single-index error control (Weak Law); measure-theory "in measure" |
+| In \(L^p\) (\(p<\infty\)) | \(\mathbb E\lvert X_n-X\rvert^p \to 0\)                                                                               | Controls average moments; sensitive to heavy tails/spikes  |
 | In distribution (\(\Rightarrow\)) | \(F_{X_n}(x) \to F_X(x)\) at continuity points of \(F_X\)                                          | Compares laws only; no common space \(\Omega\) needed      |
 | Example 14.1            | \(X_n = 1/n \to 0\), but \(F_{X_n}(0)=0 \ne 1 = F_0(0)\)                                                     | Explains why jump points of \(F_X\) must be excluded       |
 | Proposition 14.2        | \(\text{a.s.} \implies \text{in prob.}\), \(L^p \implies \text{in prob.} \implies \text{in dist.}\)          | Master hierarchy of convergence modes                      |
 | Proposition 14.3        | \(X_n \to X\) in prob. \(\implies \exists X_{n_k} \to X\) a.s.                                               | Fast-decaying error probabilities (\(2^{-k}\)) upgrade to a.s. |
 | Example 14.4            | Typewriter sequence on \([0,1)\): \(L^p\) & in prob., not a.s.                                               | Moving blips can hit every \(\omega\) infinitely often     |
-| Example 14.5            | Shrinking spikes \(n\mathbf 1_{(0,1/n)}\): a.s., not in \(L^1\)                                              | Rare tall spikes keep \(\mathbb E|X_n|=1\)                 |
+| Example 14.5            | Shrinking spikes \(n\mathbf 1_{(0,1/n)}\): a.s., not in \(L^1\)                                              | Rare tall spikes keep \(\mathbb E\lvert X_n\rvert=1\)                 |
 | Example 14.6            | \(X_n = (-1)^n X\): \(X_n \Rightarrow X\), not in prob.                                                      | Equal laws do not mean close values                        |
 | Proposition 14.7        | \(X_n \Rightarrow c\) (constant) \(\implies X_n \to c\) in prob.                                             | Only case where \(\Rightarrow\) reverses to in probability |
 | Theorem 14.8            | \(X_n \Rightarrow X \iff \mathbb E[h(X_n)]\to\mathbb E[h(X)]\) \(\forall h\in C_b(\mathbb R)\)               | Identifies \(\Rightarrow\) with weak convergence of laws   |
